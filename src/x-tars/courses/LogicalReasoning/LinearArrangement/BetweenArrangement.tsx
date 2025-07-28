@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, Pause, ChevronDown, ArrowLeft, ArrowRight } from 'lucide-react';
 
+
 const SeatingArrangementBetween = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
