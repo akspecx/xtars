@@ -17,6 +17,10 @@ import LeftLinearArrangement2Dimension from './LeftLinearArrangement2Dimension'
 import WorkingWithInstruction from './WorkingWithInstruction'
 import ImmediateLeftModule from './ImmediateLeftModule'
 import ImmediateRightModule from './ImmediateRightModule'
+import PracticeLeftandImmediateLeft from './PracticeLeftandImmediateLeft'
+import PracticeRightandImmediateRight from './PracticeRightandImmediateRight'
+import LeftRightCombinationPractice from './LeftRightCombinationPractice'
+import ParallelSittingArrangementRight from './ParallelSittingArrangementRight'
 
 export const sampleCourse = {
   title: "Linear arrangment",
@@ -137,7 +141,37 @@ export const sampleCourse = {
         },
         {
           id: "2-2",
-          title: "Lesson 1: Important instructions",
+          title: "Lesson 2: Immediate Left and Immediate Right",
+          difficulty: "Medium",
+          duration: "25 min",
+          completed: false,
+          content: {
+            tabs: [
+              { id: 'concept', label: 'Left and Immediate Left', icon: BookOpen },
+              { id: 'concept1', label: 'Right and Immediate Right', icon: BookOpen },
+              { id: 'practice', label: 'Practice', icon: PenTool },
+              { id: 'practice1', label: 'Practice..', icon: PenTool },
+              { id: 'practice2', label: 'Practice More..', icon: PenTool }
+
+            ],
+            concept: <ImmediateLeftModule />,
+            concept1: <ImmediateRightModule />,
+            practice: <PracticeLeftandImmediateLeft/>,
+            practice1: <PracticeRightandImmediateRight />,
+            practice2: <LeftRightCombinationPractice />
+          }
+        }
+      ],
+    },
+    {
+      id: "3",
+      title: "Module 3: Sitting in Parallel",
+      completedLessons: 0,
+      totalLessons: 2,
+      subModules: [
+        {
+          id: "3-1",
+          title: "Lesson 1: Let's understand right when people are sitting in parallel",
           difficulty: "Medium",
           duration: "25 min",
           completed: false,
@@ -146,20 +180,20 @@ export const sampleCourse = {
               { id: 'concept', label: 'Concept', icon: BookOpen },
               { id: 'test', label: 'Test', icon: FileText }
             ],
-            concept: <ImmediateLeftModule />,
-            test: <ImmediateRightModule />
+            concept: <ParallelSittingArrangementRight />,
+            test: "Test questions for Lesson 1: What is the primary function of an end-effector in a robotic system?"
           }
         }
       ],
     },
     {
-      id: "3",
-      title: "Module 3: 2 Dimensions",
+      id: "4",
+      title: "Module 4: 2 Dimensions",
       completedLessons: 0,
       totalLessons: 2,
       subModules: [
         {
-          id: "3-1",
+          id: "4-1",
           title: "Lesson 1: Let's work on 2 dimensions",
           difficulty: "Medium",
           duration: "25 min",
@@ -172,24 +206,7 @@ export const sampleCourse = {
             concept: <LeftLinearArrangement2Dimension />,
             test: "Test questions for Lesson 1: What is the primary function of an end-effector in a robotic system?"
           }
-        },
-        {
-          id: "3-2",
-          title: "Lesson 2: Forward and Inverse Kinematics",
-          difficulty: "Hard",
-          duration: "40 min",
-          completed: false,
-          content: {
-            tabs: [
-              { id: 'concept', label: 'Concept', icon: BookOpen },
-              { id: 'practice', label: 'Practice', icon: PenTool },
-              { id: 'test', label: 'Test', icon: FileText },
-            ],
-            concept: "Forward kinematics involves calculating the position and orientation of the robot's end-effector given the known joint angles. Inverse kinematics, conversely, determines the required joint angles to achieve a desired end-effector position and orientation.",
-            practice: "Practice exercises for Lesson 2: For a simple 2-DOF robotic arm, given the length of each link and the joint angles, calculate the (x, y) coordinates of the end-effector. (Assumes a 2D planar arm).",
-            test: "Test questions for Lesson 2: Explain the fundamental difference between forward and inverse kinematics in the context of robotics. Why is inverse kinematics generally more complex to solve?"
-          }
-        },
+        }
       ],
     },
   ],
