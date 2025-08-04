@@ -21,6 +21,7 @@ import PracticeLeftandImmediateLeft from './PracticeLeftandImmediateLeft'
 import PracticeRightandImmediateRight from './PracticeRightandImmediateRight'
 import LeftRightCombinationPractice from './LeftRightCombinationPractice'
 import ParallelSittingArrangementRight from './ParallelSittingArrangementRight'
+import ParallelSittingArrangementLeft from './ParallelSittingArrangementLeft'
 
 export const sampleCourse = {
   title: "Linear arrangment",
@@ -177,11 +178,22 @@ export const sampleCourse = {
           completed: false,
           content: {
             tabs: [
-              { id: 'concept', label: 'Concept', icon: BookOpen },
-              { id: 'test', label: 'Test', icon: FileText }
+              { id: 'concept', label: 'Concept', icon: BookOpen }
             ],
-            concept: <ParallelSittingArrangementRight />,
-            test: "Test questions for Lesson 1: What is the primary function of an end-effector in a robotic system?"
+            concept: <ParallelSittingArrangementRight />
+          }
+        },
+        {
+          id: "3-2",
+          title: "Lesson 1: Let's understand left when people are sitting in parallel",
+          difficulty: "Medium",
+          duration: "25 min",
+          completed: false,
+          content: {
+            tabs: [
+              { id: 'concept', label: 'Concept', icon: BookOpen }
+            ],
+            concept: <ParallelSittingArrangementLeft />
           }
         }
       ],
