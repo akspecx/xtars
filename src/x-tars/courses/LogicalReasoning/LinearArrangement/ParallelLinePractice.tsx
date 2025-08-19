@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-// Removed local image imports as they are not supported in this environment
+// Reverted to placeholder images for compilation in the Canvas environment as local image imports are not supported
 import Annie from './Images/Annie.jpeg'
 import Minnie from './Images/Minnie.jpeg'
 import Ninnie from './Images/Ninnie.jpeg'
@@ -32,7 +32,7 @@ const translations = {
     feedbackHeading: "Arrangement Feedback:",
     correctPlacement: (name) => `${name} is correctly placed! 🎉`,
     incorrectPlacement: (name, expected) => `${name} is incorrectly placed. Expected: ${expected}. 🤔`,
-    emptySpot: (spot) => `Spot ${spot} is empty. �`,
+    emptySpot: (spot) => `Spot ${spot} is empty. 🚨`,
     allCorrect: "Congratulations! All characters are correctly placed! ✨",
     notAllCorrect: "Keep trying! Some characters are not in their correct positions. 🚧",
     speechInstructions: "Drag and drop the characters as per the instructions.",
@@ -96,7 +96,7 @@ const translations = {
     feedbackHeading: "Commentaires sur l'Arrangement:",
     correctPlacement: (name) => `${name} est correctement placé ! 🎉`,
     incorrectPlacement: (name, expected) => `${name} est mal placé. Attendu : ${expected}. 🤔`,
-    emptySpot: (spot) => `L'emplacement ${spot} est vide. 🚨`,
+    emptySpot: (spot) => `L'emplacement ${spot} est vide. �`,
     allCorrect: "Félicitations ! Tous les personnages sont correctement placés ! ✨",
     notAllCorrect: "Continuez d'essayer ! Certains personnages ne sont pas à leurs bonnes positions. 🚧",
     speechInstructions: "Faites glisser et déposez les personnages selon les instructions.",
@@ -107,7 +107,7 @@ const translations = {
     languageEn: "Anglais",
     languageEs: "Español",
     languageFr: "Francés",
-    readInstructionsCheckboxOverall: "J'ai lu et compris toutes les instructions."
+    readInstructionsCheckboxOverall: "I have read and understood all instructions."
   }
 };
 
@@ -155,9 +155,10 @@ const DraggableCharacter = ({ character, onDragStart, isPlaced, characterImage }
 // Component for a droppable placeholder
 const Placeholder = ({ id, character, onDrop, onDragOver, onRemoveCharacter, characterImages }) => {
   const { t } = useContext(LanguageContext);
+  
   return (
     <div
-      className="relative flex items-center justify-center bg-gray-200 dark:bg-gray-700 border-dashed border-4 border-gray-400 dark:border-gray-500 rounded-xl m-2
+      className="relative flex flex-col items-center justify-center bg-gray-200 dark:bg-gray-700 border-dashed border-4 border-gray-400 dark:border-gray-500 rounded-xl m-2
       w-[120px] h-[150px] transition-all duration-300 ease-in-out overflow-hidden group" // Fixed outer dimensions
       onDragOver={onDragOver}
       onDrop={(e) => onDrop(e, id)}
@@ -181,7 +182,7 @@ const Placeholder = ({ id, character, onDrop, onDragOver, onRemoveCharacter, cha
           </button>
         </div>
       ) : (
-        <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base font-medium"> {/* Standard font size */}
+        <span className="text-gray-500 dark:text-gray-400 text-sm sm:text-base font-medium mb-2"> {/* Standard font size */}
           {`Spot ${id.split('P')[1]}`}
         </span>
       )}
@@ -210,17 +211,17 @@ function App() {
     P4: 'annie', P5: 'minnie', P6: 'ninnie', // Second line (Annie, Minnie, Ninnie from left to right on screen)
   };
 
-// Reverted to placeholder images for compilation in the Canvas environment
-// const characterImages = {
-//     annie: "https://placehold.co/150x150/FFD700/000000?text=Annie",
-//     minnie: "https://placehold.co/150x150/ADFF2F/000000?text=Minnie",
-//     ninnie: "https://placehold.co/150x150/40E0D0/000000?text=Ninnie",
-//     binny: "https://placehold.co/150x150/FF6347/000000?text=Binny",
-//     sunny: "https://placehold.co/150x150/DA70D6/000000?text=Sunny",
-//     vinny: "https://placehold.co/150x150/8A2BE2/000000?text=Vinny",
-//   };
+  // Using placeholder images for compatibility in the Canvas environment
+  // const characterImages = {
+  //   annie: "https://placehold.co/150x150/FFD700/000000?text=Annie",
+  //   minnie: "https://placehold.co/150x150/ADFF2F/000000?text=Minnie",
+  //   ninnie: "https://placehold.co/150x150/40E0D0/000000?text=Ninnie",
+  //   binny: "https://placehold.co/150x150/FF6347/000000?text=Binny",
+  //   sunny: "https://placehold.co/150x150/DA70D6/000000?text=Sunny",
+  //   vinny: "https://placehold.co/150x150/8A2BE2/000000?text=Vinny",
+  // };
 
-const characterImages = {
+  const characterImages = {
     annie: Annie,
     minnie: Minnie,
     ninnie: Ninnie,
@@ -418,6 +419,36 @@ const characterImages = {
           /* Removed .rounded-full from global styles as it's now controlled on specific elements */
           .rounded-xl { border-radius: 0.75rem; }
           .group:hover .group-hover\\:opacity-100 { opacity: 1; }
+
+          @keyframes pulse-arrow {
+            0%, 100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+            50% {
+              transform: scale(1.1);
+              opacity: 0.7;
+            }
+          }
+
+          .animate-pulse-arrow {
+            animation: pulse-arrow 1.5s infinite ease-in-out;
+          }
+
+          @keyframes fadeInScale {
+            0% {
+              opacity: 0;
+              transform: scale(0.95);
+            }
+            100% {
+              opacity: 1;
+              transform: scale(1);
+            }
+          }
+
+          .animate-fadeInScale {
+            animation: fadeInScale 0.5s ease-out forwards;
+          }
           `}
         </style>
 
@@ -528,7 +559,13 @@ const characterImages = {
               <div className="border-t-2 border-dashed border-gray-400 dark:border-gray-500 w-full"></div>
             </div>
             {/* Top row facing bottom row */}
-            <div className="flex justify-center gap-4 w-full mb-4">
+            <div className="flex items-center justify-center gap-4 w-full mb-4">
+              {/* Single arrow for the first line, outside the placeholders */}
+              <div className="flex-shrink-0 mr-4 animate-pulse-arrow">
+                <svg className="w-16 h-16 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+              </div>
               <Placeholder
                 id="P1"
                 character={placeholders.P1}
@@ -554,22 +591,20 @@ const characterImages = {
                 characterImages={characterImages}
               />
             </div>
-            {/* Arrow/Visual Separator indicating facing */}
-            <div className="w-full flex justify-center py-4">
-              <svg className="w-16 h-16 text-gray-400 dark:text-gray-500 transform rotate-90 sm:rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-              </svg>
-              <svg className="w-16 h-16 text-gray-400 dark:text-gray-500 transform -rotate-90 sm:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-              </svg>
-            </div>
+            
             {/* Second Line Demarcation */}
             <div className="w-full text-center mb-2 mt-4">
               <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">Second Line</span>
               <div className="border-t-2 border-dashed border-gray-400 dark:border-gray-500 w-full"></div>
             </div>
-            {/* Bottom row facing top row */}
-            <div className="flex justify-center gap-4 w-full">
+            {/* Bottom row facing top row - now with an arrow */}
+            <div className="flex items-center justify-center gap-4 w-full">
+              {/* Single arrow for the second line, outside the placeholders */}
+              <div className="flex-shrink-0 mr-4 animate-pulse-arrow">
+                <svg className="w-16 h-16 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                </svg>
+              </div>
               <Placeholder
                 id="P4"
                 character={placeholders.P4}
@@ -618,7 +653,7 @@ const characterImages = {
           </div>
 
           {results && (
-            <div className="mt-8 p-6 bg-blue-50 dark:bg-gray-700 rounded-xl shadow-inner border border-blue-200 dark:border-gray-600">
+            <div className="mt-8 p-6 bg-blue-50 dark:bg-gray-700 rounded-xl shadow-inner border border-blue-200 dark:border-gray-600 animate-fadeInScale">
               <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-blue-700 dark:text-blue-400 text-center">
                 {t("feedbackHeading")}
               </h2>

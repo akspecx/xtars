@@ -23,6 +23,7 @@ import LeftRightCombinationPractice from './LeftRightCombinationPractice'
 import ParallelSittingArrangementRight from './ParallelSittingArrangementRight'
 import ParallelSittingArrangementLeft from './ParallelSittingArrangementLeft'
 import ParallelSittingPractice from './ParallelLinePractice.tsx'
+import ParallelLineExamMode from './ParallelLineExamMode'
 
 export const sampleCourse = {
   title: "Linear arrangment",
@@ -210,6 +211,19 @@ export const sampleCourse = {
             practice: <ParallelSittingPractice />
           }
         },
+        {
+          id: "3-4",
+          title: "Lesson 1: Let's learn the way to attempt the parallel sitting",
+          difficulty: "Medium",
+          duration: "25 min",
+          completed: false,
+          content: {
+            tabs: [
+              { id: 'practice', label: 'Practice', icon: PenTool }
+            ],
+            practice: <ParallelLineExamMode />
+          }
+        }
       ],
     },
     {
