@@ -5,15 +5,17 @@ import Roadmap from "../Roadmap";
 import Game from "./Game";
 
 const LazyAccountancy = lazy(() => import('./accountancy'));
-const LazyMath = lazy(() => import('./maths'));
+// const LazyMath = lazy(() => import('./maths'));
 const LinearArrangementIndex = lazy(() => import('./LogicalReasoning/LinearArrangement/LinearArrangmentIndex.tsx'));
+const AlgebraicExpressionIndex = lazy(() => import('./maths/AlgebraicExpression/mathsIndex.tsx'))
 
 
 
 const lazyCourseMap: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
     accountancy: LazyAccountancy,
-    maths: LazyMath,
     lineararrangement: LinearArrangementIndex,
+    maths: AlgebraicExpressionIndex
+   
 };
 
 
