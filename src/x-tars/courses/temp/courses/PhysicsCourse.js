@@ -6,18 +6,39 @@ export const physicsCourse = {
     students: 542,
     level: "Intermediate",
     rating: 4.9,
+    navigationPath: "whyphysics",
     modules: [
       {
         id: 1,
-        title: "Mechanics",
+        title: "Why Physics?",
         description: "Understanding motion, forces, and energy in physical systems",
         image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=200&fit=crop&crop=faces",
         lessons: 8,
         duration: "120 min",
         status: "success",
-        navigationPath: "/courses/physics/mechanics"
+        navigationPath: "whyphysics"
       },
       {
+        id: 2,
+        title: "Light",
+        description: "Learn about light, its properties, and fun experiments",
+        image: "https://images.unsplash.com/photo-1518818419601-72c8673f5852?w=400&h=200&fit=crop&crop=faces",
+        lessons: 4,
+        duration: "45 min",
+        status: "success",
+        navigationPath: "light"
+      },
+      {
+        id: 2.1,
+        title: "Light (Gemini)",
+        description: "A kid-friendly Class 6 lesson with facts, real-world examples and quizzes",
+        image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=200&fit=crop&crop=faces",
+        lessons: 6,
+        duration: "60 min",
+        status: "success",
+        navigationPath: "lightgemini"
+      },
+      /* {
         id: 2,
         title: "Thermodynamics",
         description: "Learn about heat, temperature, and energy transfer",
@@ -46,7 +67,7 @@ export const physicsCourse = {
         duration: "180 min",
         status: "pending",
         navigationPath: "/courses/physics/quantum-physics"
-      },
+      }, */
       {
         id: 5,
         title: "Optics",

@@ -5,11 +5,36 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const CourseCard = ({ course }) => {
-  const scrollContainerRef = useRef(null);
+type Module = {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  lessons: number;
+  duration: string;
+  status: string;
+  navigationPath: string;
+};
+
+type Course = {
+  image: string;
+  title: string;
+  lessons: number;
+  students: number;
+  level: string;
+  rating: number;
+  modules: Module[];
+};
+
+interface CourseCardProps {
+  course: Course;
+}
+
+const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = (status: string) => {
     switch (status) {
       case 'success':
         return <CheckCircle className="w-5 h-5 text-green-500" />;
@@ -21,7 +46,7 @@ const CourseCard = ({ course }) => {
     }
   };
 
-  const getLevelColor = (level) => {
+  const getLevelColor = (level: string) => {
     switch (level) {
       case 'Beginner': return 'bg-green-100 text-green-700 dark:bg-green-200/10 dark:text-green-300';
       case 'Intermediate': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-200/10 dark:text-yellow-300';
@@ -30,7 +55,7 @@ const CourseCard = ({ course }) => {
     }
   };
 
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case 'success':
         return 'bg-green-100 text-green-700 dark:bg-green-200/10 dark:text-green-300';
@@ -42,7 +67,7 @@ const CourseCard = ({ course }) => {
     }
   };
 
-  const handleModuleClick = (module) => {
+  const handleModuleClick = (module: { navigationPath: string }) => {
     navigate(module.navigationPath);
   };
 
@@ -93,17 +118,20 @@ const CourseCard = ({ course }) => {
             </div>
           </div>
           
-          <button className="bg-black text-white px-6 py-3 rounded-xl font-medium flex items-center gap-2 hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors">
+            <button
+            className="bg-black text-white px-6 py-3 rounded-xl font-medium flex items-center gap-2 hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors"
+            onClick={() => navigate(`/courses/${course.title.replace(/\s+/g, '-').toLowerCase()}`)}
+            >
             Start Course
             <ArrowRight className="w-4 h-4" />
-          </button>
+            </button>
         </div>
       </div>
 
       {/* Course Modules */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white">Course Modules</h3>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">Course Modules</h1>
           <div className="flex gap-2">
             <button
               onClick={scrollLeft}
