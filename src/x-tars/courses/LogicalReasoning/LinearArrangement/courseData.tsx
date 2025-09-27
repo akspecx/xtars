@@ -1,5 +1,3 @@
-
-
 import { BookOpen, PenTool, FileText } from 'lucide-react'; // Import icons for the tabs
 import LeftRightAdditionalPractice from './LeftRightAdditionalPractice.tsx'
 import LeftLinearArrangement from './LeftLinearArrangement.tsx'
