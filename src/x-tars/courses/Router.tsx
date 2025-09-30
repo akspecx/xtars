@@ -4,37 +4,29 @@ import { lazy, Suspense } from "react";
 //import Roadmap from "../Roadmap";
 //import Game from "./Game";
 
-<<<<<<< HEAD
 const LazyAccountancy = lazy(() => import('./accountancy/AccountancyLanding.tsx'));
-const LazyMath = lazy(() => import('./maths/index.tsx'));
+// point to an existing maths entry (AlgebraicExpression index)
+const LazyMath = lazy(() => import('./maths/AlgebraicExpression/mathsIndex.tsx'));
 const LinearArrangementIndex = lazy(() => import('./LogicalReasoning/LinearArrangement/LinearArrangmentIndex.tsx'));
+// optional: a focused maths sub-module (kept if present)
+const AlgebraicExpressionIndex = lazy(() => import('./maths/AlgebraicExpression/mathsIndex.tsx'));
+
 const LazyPhysics = lazy(() => import('./physics/WhyPhysics.tsx'));
 const WhyPhysics = lazy(() => import('./physics/WhyPhysics.tsx'));
 const Light = lazy(() => import('./physics/Light.tsx'));
-// New lesson: LightGemini - kid-friendly Class 6 lesson about Light
 const LightGemini = lazy(() => import('./physics/LightGemini.tsx'));
-=======
-const LazyAccountancy = lazy(() => import('./accountancy'));
-// const LazyMath = lazy(() => import('./maths'));
-const LinearArrangementIndex = lazy(() => import('./LogicalReasoning/LinearArrangement/LinearArrangmentIndex.tsx'));
-const AlgebraicExpressionIndex = lazy(() => import('./maths/AlgebraicExpression/mathsIndex.tsx'))
-
-
->>>>>>> 193a8ea779667d9a44fee7ea78c3938b2b5c735b
 
 const lazyCourseMap: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
     accountancy: LazyAccountancy,
+    maths: LazyMath,
     lineararrangement: LinearArrangementIndex,
-<<<<<<< HEAD
+    // math sub section (if used by UI)
+    algebraicexpression: AlgebraicExpressionIndex,
+    // physics related entries
     physics: LazyPhysics,
     whyphysics: WhyPhysics,
     light: Light,
-    // route key for the new Gemini lesson
     lightgemini: LightGemini
-=======
-    maths: AlgebraicExpressionIndex
-   
->>>>>>> 193a8ea779667d9a44fee7ea78c3938b2b5c735b
 };
 
 
