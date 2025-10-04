@@ -18,8 +18,9 @@ import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
-import CoursesHome from "./x-tars/courses/Home";
+import CoursesHome from "./x-tars/courses/CourseHome";
 import CoursesRouter from "./x-tars/courses/Router";
+import GamesHome from "./x-tars/courses/Kids/MainModule/KidsMainPage"
 
 export default function App() {
   return (
@@ -34,6 +35,9 @@ export default function App() {
             {/* Courses */}
             <Route path="/courses" element={<CoursesHome/>} />
             <Route path="/courses/:courseid" element={<CoursesRouter/>} />
+
+             {/* Games */}
+             <Route path="/games" element={<GamesHome />} />
 
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />

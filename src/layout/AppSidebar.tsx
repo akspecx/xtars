@@ -18,6 +18,7 @@ import {
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
 import { BookOpenIcon } from "@heroicons/react/24/solid";
+import { Gamepad2Icon } from "lucide-react";
 
 type NavItem = {
   name: string;
@@ -31,6 +32,11 @@ const navItems: NavItem[] = [
     icon: <BookOpenIcon />,
     name: "Courses",
     path: "/courses",
+  },
+  {
+    icon: <Gamepad2Icon />,
+    name: "Games",
+    path: "/games",
   },
 
   {
