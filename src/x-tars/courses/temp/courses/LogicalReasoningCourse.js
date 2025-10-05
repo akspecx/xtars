@@ -25,7 +25,7 @@ export const logicalReasoningCourse = {
         lessons: 4,
         duration: "60 min",
         status: "in-progress",
-        navigationPath: "/courses/logical-reasoning/circular-arrangement"
+        navigationPath: "/courses/CircularArrangement"
       },
       {
         id: 3,
