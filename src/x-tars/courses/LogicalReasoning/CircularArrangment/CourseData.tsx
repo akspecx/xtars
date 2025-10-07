@@ -1,8 +1,8 @@
 import { BookOpen, PenTool, FileText } from 'lucide-react'; // Import icons for the tabs
 import CircularArrangementIntro from './CircularArrangementIntro.tsx'
 import ImmediateLeftCA from './ImmediateLeftCA.tsx'
-// import RightLinearArrangement from './RightLinearArrangement.tsx'
-// import LeftRightPractice from './LeftRightPractice'
+import ImmediateRightCA from './ImmediateRightCA.tsx'
+import LeftRightCA from './LeftRightCA'
 // import BetweenArrangement from './BetweenArrangement'
 // import SecondToTheLeft from './SecondToTheLeft'
 // import SecondToTheRight from './SecondToTheRight'
@@ -63,14 +63,14 @@ export const sampleCourse = {
             completed: true,
             content: {
               tabs: [
-                { id: 'concept', label: 'Left?', icon: BookOpen }
-              //   { id: 'concept3', label: 'Reference Matters?', icon: BookOpen },
-              //   { id: 'practice', label: 'Practice', icon: PenTool },
+                { id: 'concept', label: 'Left?', icon: BookOpen },
+                { id: 'concept1', label: 'Right?', icon: BookOpen },
+                { id: 'concept2', label: 'Left and Right', icon: PenTool }
               //   { id: 'test', label: 'More Practice', icon: PenTool },
               ],
-            //   concept: <CircularArrangementIntro />,
+              concept2: <LeftRightCA />,
               concept: <ImmediateLeftCA />,
-              // concept3: <ExplainLeftFromReference />,
+              concept1: <ImmediateRightCA />
               // practice: <LeftRightPractice />,
               // test:     <LeftRightAdditionalPractice />
             }
