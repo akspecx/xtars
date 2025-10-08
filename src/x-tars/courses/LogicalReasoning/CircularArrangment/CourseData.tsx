@@ -3,8 +3,8 @@ import CircularArrangementIntro from './CircularArrangementIntro.tsx'
 import ImmediateLeftCA from './ImmediateLeftCA.tsx'
 import ImmediateRightCA from './ImmediateRightCA.tsx'
 import LeftRightCA from './LeftRightCA'
-// import BetweenArrangement from './BetweenArrangement'
-// import SecondToTheLeft from './SecondToTheLeft'
+import BasicLeftQuizCA from './BasicLeftQuizCA'
+import BasicRightQuizCA from './BasicRightQuizCA'
 // import SecondToTheRight from './SecondToTheRight'
 // import NthToTheLeft from './NthToTheLeft'
 // import NthToTheRight from './NthToTheRight'
@@ -65,13 +65,15 @@ export const sampleCourse = {
               tabs: [
                 { id: 'concept', label: 'Left?', icon: BookOpen },
                 { id: 'concept1', label: 'Right?', icon: BookOpen },
-                { id: 'concept2', label: 'Left and Right', icon: PenTool }
-              //   { id: 'test', label: 'More Practice', icon: PenTool },
+                { id: 'concept2', label: 'Left and Right', icon: PenTool },
+                { id: 'practice', label: 'Practice left', icon: PenTool },
+                { id: 'practice1', label: 'Practice Right', icon: PenTool }
               ],
               concept2: <LeftRightCA />,
               concept: <ImmediateLeftCA />,
-              concept1: <ImmediateRightCA />
-              // practice: <LeftRightPractice />,
+              concept1: <ImmediateRightCA />,
+              practice: <BasicLeftQuizCA />,
+              practice1: <BasicRightQuizCA />
               // test:     <LeftRightAdditionalPractice />
             }
           }
