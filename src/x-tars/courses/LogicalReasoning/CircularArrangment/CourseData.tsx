@@ -5,9 +5,9 @@ import ImmediateRightCA from './ImmediateRightCA.tsx'
 import LeftRightCA from './LeftRightCA'
 import BasicLeftQuizCA from './BasicLeftQuizCA'
 import BasicRightQuizCA from './BasicRightQuizCA'
-// import SecondToTheRight from './SecondToTheRight'
-// import NthToTheLeft from './NthToTheLeft'
-// import NthToTheRight from './NthToTheRight'
+import InteractiveDragDropRightCA from './InteractiveDragDropRightCA'
+import AkashPrabhatPlacedBasicCA from './AkashPrabhatPlacedBasicCA'
+import AkashPrabhatDavidBasicCA from './AkashPrabhatDavidBasicCA'
 // import PeopleInBetween from './PeopleInBetween'
 // import ExplainLeftFromReference from './ExplainLeftFromReference'
 // import LineararrangementPracticeModule1 from './LineararrangementPracticeModule1'
@@ -65,16 +65,21 @@ export const sampleCourse = {
               tabs: [
                 { id: 'concept', label: 'Left?', icon: BookOpen },
                 { id: 'concept1', label: 'Right?', icon: BookOpen },
-                { id: 'concept2', label: 'Left and Right', icon: PenTool },
+                { id: 'concept2', label: 'Left and Right', icon: BookOpen },
                 { id: 'practice', label: 'Practice left', icon: PenTool },
-                { id: 'practice1', label: 'Practice Right', icon: PenTool }
+                { id: 'practice1', label: 'Practice Right', icon: PenTool },
+                { id: 'practice2', label: 'Place Prabhat Correctly', icon: PenTool },
+                { id: 'practice3', label: 'Place Prabhat and Akash Correctly', icon: PenTool },
+                { id: 'practice4', label: 'Place Prabhat, Akash and David Correctly', icon: PenTool }
               ],
               concept2: <LeftRightCA />,
               concept: <ImmediateLeftCA />,
               concept1: <ImmediateRightCA />,
               practice: <BasicLeftQuizCA />,
-              practice1: <BasicRightQuizCA />
-              // test:     <LeftRightAdditionalPractice />
+              practice1: <BasicRightQuizCA />,
+              practice2: <InteractiveDragDropRightCA />,
+              practice3: <AkashPrabhatPlacedBasicCA />,
+              practice4: <AkashPrabhatDavidBasicCA />
             }
           }
       ],

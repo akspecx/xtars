@@ -7,78 +7,103 @@ import DavidImage from './Images/David.png'
 // --- Language and Translation Definitions ---
 type Language = 'en' | 'hi';
 
+interface QuestionData {
+    id: number;
+    questionKey: 'question1' | 'question2' | 'question3';
+    correctAnswer: string; // The name of the person who is the correct answer
+    // For explanation visuals: determines which arrows to draw (e.g., Left vs Right)
+    explanationType: 'Left' | 'Right'; 
+    // For explanation visuals: person used as reference point
+    referencePerson: 'Akash' | 'Tom' | 'Prabhat' | 'David'; 
+}
+
 interface Translation {
   title: string;
-  question: string;
-  optionA: string;
-  optionB: string;
-  optionC: string;
+  question1: string;
+  question2: string;
+  question3: string;
+  optionA: string; // Tom
+  optionB: string; // David
+  optionC: string; // Prabhat
+  optionD: string; // Akash (NEW)
   submit: string;
   correct: string;
   incorrect: string;
   viewExplanation: string;
   tryAgain: string;
-  explanation: React.ReactNode;
   footer: string;
   facingCenter: string;
   leftLabel: string;
   rightLabel: string;
+  // Dynamic explanation content based on type/reference
+  explanationText: (ref: string, dir: string, target: string, color: string, refColor: string) => React.ReactNode;
 }
 
 const translations: Record<Language, Translation> = {
   en: {
     title: "Circular Arrangement Quiz",
-    question: "Who is sitting to the left of Akash?",
+    question1: "Who is sitting to the left of Akash?", 
+    question2: "Who is sitting to the left of Tom?", 
+    question3: "Who is sitting to the left of David?", 
     optionA: "Tom",
     optionB: "David",
     optionC: "Prabhat",
+    optionD: "Akash", // NEW
     submit: "Submit Answer",
     correct: "Correct! Well done! 🎉",
     incorrect: "Incorrect. Try again!",
     viewExplanation: "View Explanation",
     tryAgain: "Try Again",
-    explanation: (
-      <div className="space-y-3">
-        <p className="font-semibold text-lg text-gray-900 dark:text-gray-50 text-center p-2 bg-yellow-100 dark:bg-yellow-800 rounded-lg">
-          <span className="text-red-600 dark:text-red-400 font-extrabold">Tom</span> is to the <span className="underline text-green-600 dark:text-green-400">Left</span> of <span className="text-blue-600 dark:text-blue-400 font-extrabold">Akash</span>, and <span className="text-orange-600 dark:text-orange-400 font-extrabold">David</span> is to the <span className="underline text-purple-600 dark:text-purple-400">Right</span> of <span className="text-blue-600 dark:text-blue-400 font-extrabold">Akash</span>.
-        </p>
-        <p className="text-sm italic text-gray-600 dark:text-gray-300 text-center p-1 border-t dark:border-gray-600 pt-2">
-          *Important: We identified Left (Clockwise) and Right (Counter-Clockwise) based on Akash facing the center.*
-        </p>
-      </div>
-    ),
     footer: "The avatars are customized image placeholders for clarity.",
     facingCenter: "Facing centre",
     leftLabel: "Left",
-    rightLabel: "Right"
+    rightLabel: "Right",
+    explanationText: (ref, dir, target, color, refColor) => (
+        <p className="font-semibold text-lg text-gray-900 dark:text-gray-50 text-center p-2 rounded-lg">
+            To find the answer, start at <span className={`font-extrabold ${refColor}`}>{ref}</span>. 
+            The **{dir}** direction (Clockwise for Left) leads immediately to <span className={`font-extrabold ${color}`}>{target}</span>.
+        </p>
+    )
   },
   hi: {
     title: "गोलाकार व्यवस्था प्रश्नोत्तरी",
-    question: "आकाश के बाएँ कौन बैठा है?",
+    question1: "आकाश के बाएँ कौन बैठा है?",
+    question2: "टॉम के बाएँ कौन बैठा है?",
+    question3: "डेविड के बाएँ कौन बैठा है?",
     optionA: "टॉम",
     optionB: "डेविड",
     optionC: "प्रभात",
+    optionD: "आकाश", // NEW
     submit: "उत्तर जमा करें",
     correct: "सही! बहुत बढ़िया! 🎉",
     incorrect: "गलत। पुनः प्रयास करें!",
     viewExplanation: "व्याख्या देखें",
     tryAgain: "पुनः प्रयास करें",
-    explanation: (
-      <div className="space-y-3">
-        <p className="font-semibold text-lg text-gray-900 dark:text-gray-50 text-center p-2 bg-yellow-100 dark:bg-yellow-800 rounded-lg" style={{ lineHeight: '1.8' }}>
-          <span className="text-red-600 dark:text-red-400 font-extrabold">टॉम</span>, <span className="text-blue-600 dark:text-blue-400 font-extrabold">आकाश</span> के <span className="underline text-green-600 dark:text-green-400">बाएँ</span> बैठा है, और <span className="text-orange-600 dark:text-orange-400 font-extrabold">डेविड</span>, <span className="text-blue-600 dark:text-blue-400 font-extrabold">आकाश</span> के <span className="underline text-purple-600 dark:text-purple-400">दाएँ</span> बैठा है।
-        </p>
-        <p className="text-sm italic text-gray-600 dark:text-gray-300 text-center p-1 border-t dark:border-gray-600 pt-2" style={{ fontFamily: 'serif' }}>
-          *ज़रूरी: हमने ये दिशाएँ आकाश के केंद्र की ओर मुख करके बैठने के आधार पर पहचानी हैं।*
-        </p>
-      </div>
-    ),
     footer: "स्पष्टता के लिए अवतार अनुकूलित छवि प्लेसहोल्डर हैं।",
     facingCenter: "केंद्र की ओर मुख",
     leftLabel: "बाएँ",
-    rightLabel: "दाएँ"
+    rightLabel: "दाएँ",
+    explanationText: (ref, dir, target, color, refColor) => (
+        <p className="font-semibold text-lg text-gray-900 dark:text-gray-50 text-center p-2 rounded-lg" style={{ lineHeight: '1.8' }}>
+            उत्तर खोजने के लिए, <span className={`font-extrabold ${refColor}`}>{ref}</span> से शुरू करें। 
+            **{dir}** दिशा (बाएँ के लिए दक्षिणावर्त) तुरंत <span className={`font-extrabold ${color}`}>{target}</span> की ओर ले जाती है।
+        </p>
+    )
   }
 };
+
+const questions: QuestionData[] = [
+    // Correct Order: Tom (T) -> Prabhat (R) -> David (B) -> Akash (L) -> T (Clockwise)
+    
+    // 1. Left of Akash (L): Clockwise leads to Tom (T)
+    { id: 1, questionKey: 'question1', correctAnswer: 'Tom', explanationType: 'Left', referencePerson: 'Akash' },
+    
+    // 2. Left of Tom (T): Clockwise leads to Prabhat (R)
+    { id: 2, questionKey: 'question2', correctAnswer: 'Prabhat', explanationType: 'Left', referencePerson: 'Tom' },
+    
+    // 3. Left of David (B): Clockwise leads to Akash (L)
+    { id: 3, questionKey: 'question3', correctAnswer: 'Akash', explanationType: 'Left', referencePerson: 'David' },
+];
 
 interface Person {
   name: string;
@@ -91,15 +116,19 @@ interface CircularArrangementProps {
   circleSize: number;
   showArrows: boolean;
   language: Language;
+  referencePerson: string;
+  explanationType: 'Left' | 'Right';
 }
 
 const CircularArrangement: React.FC<CircularArrangementProps> = ({
   people,
   circleSize,
   showArrows,
-  language
+  language,
+  referencePerson,
+  explanationType,
 }) => {
-  const personSize = Math.max(circleSize * 0.40, 50);
+  const personSize = Math.max(circleSize * 0.35, 50);
   const radius = circleSize / 2;
   const offset = personSize / 2;
   const T = translations[language];
@@ -125,18 +154,33 @@ const CircularArrangement: React.FC<CircularArrangementProps> = ({
       let imageUrl = '';
       const size = Math.round(personSize);
       const text = person.name.substring(0, 4).toUpperCase();
+      let bgColor = '';
+      let textColor = '';
 
+      // Determine colors for image placeholder and external name
       if (person.name === 'Tom') {
+        bgColor = 'dc2626'; // Red
+        textColor = '#dc2626';
         imageUrl = TomImage;
       } else if (person.name === 'Prabhat') {
+        bgColor = '10b981'; // Green
+        textColor = '#10b981';
         imageUrl = PrabhatImage;
       } else if (person.name === 'Akash') {
+        bgColor = '3b82f6'; // Blue
+        textColor = '#3b82f6';
         imageUrl = AkashImage;
       } else if (person.name === 'David') {
+        bgColor = 'f97316'; // Orange
+        textColor = '#f97316';
         imageUrl = DavidImage;
       } else {
-        imageUrl = `https://placehold.co/${size}x${size}/6b7280/ffffff?text=U`;
+        bgColor = '6b7280'; // Gray fallback
+        textColor = '#6b7280';
+        imageUrl = `https://placehold.co/${size}x${size}/${bgColor}/ffffff?text=${text}`;
       }
+      
+      
 
       const nameDistance = personSize * 0.05;
       const externalOffset = offset * 1.5;
@@ -160,32 +204,36 @@ const CircularArrangement: React.FC<CircularArrangementProps> = ({
           </div>
 
           <span
-            className="absolute text-gray-800 dark:text-gray-200 font-bold"
+            className="absolute font-bold"
             style={{
               zIndex: 20,
               fontSize: '1.1rem',
-              color: person.name === 'Tom' ? '#dc2626' :
-                     person.name === 'Prabhat' ? '#10b981' :
-                     person.name === 'Akash' ? '#3b82f6' : '#f97316',
+              color: textColor,
+              
+              // Positioning logic adjusted for the new avatar size and external offset
+              // Tom (Top)
               ...(person.position === 'top' && {
                 top: -externalOffset,
                 left: radius,
-                transform: `translateX(-50%) translateY(-${personSize * 0.8 - 85}px)`
+                transform: `translateX(-50%) translateY(-${personSize * 0.8 - 80}px)` 
               }),
+              // Prabhat (Right)
               ...(person.position === 'right' && {
                 top: radius,
                 right: -externalOffset,
-                transform: `translateX(${nameDistance + 55}px) translateY(-50%)`
+                transform: `translateX(${nameDistance + 70}px) translateY(-50%)`
               }),
+              // Akash (Left)
               ...(person.position === 'left' && {
                 top: radius,
                 left: -externalOffset,
-                transform: `translateX(-${personSize + (nameDistance - 95)}px) translateY(-50%)`
+                transform: `translateX(-${personSize + (nameDistance - 80)}px) translateY(-50%)`
               }),
+              // David (Bottom)
               ...(person.position === 'bottom' && {
                 bottom: -externalOffset,
                 left: radius,
-                transform: `translateX(-50%) translateY(${nameDistance}px)`
+                transform: `translateX(-50%) translateY(${nameDistance + 30}px)`
               }),
             }}
           >
@@ -199,96 +247,89 @@ const CircularArrangement: React.FC<CircularArrangementProps> = ({
   const renderDirectionArrow = () => {
     if (!showArrows) return null;
 
-    const akash = people.find(p => p.name === 'Akash' && p.position === 'left');
-    const tom = people.find(p => p.name === 'Tom' && p.position === 'top');
-    const david = people.find(p => p.name === 'David' && p.position === 'bottom');
+    // --- Clockwise Map: T -> P -> D -> A -> T (Your required order) ---
+    const clockwiseMap: Record<Person['position'], Person['position']> = {
+        'top': 'right', // Tom -> Prabhat
+        'right': 'bottom', // Prabhat -> David
+        'bottom': 'left', // David -> Akash
+        'left': 'top' // Akash -> Tom
+    };
+    
+    // Find the reference person and the target person based on the solution
+    const refPerson = people.find(p => p.name === referencePerson);
+    const targetPerson = people.find(p => p.position === clockwiseMap[refPerson!.position]);
 
-    if (!akash) return null;
+    if (!refPerson || !targetPerson) return null;
 
     const R_Circle = circleSize / 2;
     const ARROW_OFFSET = 90;
     const DUAL_ARROW_GAP = 10;
-
     const offsetCalc = personSize / 2;
     const dashedCircleSize = 64;
     const mugSize = 48;
     const lineStrokeColor = '#3b82f6';
-
     const viewBoxSize = circleSize + ARROW_OFFSET * 3;
 
-    const renderSingleArrow = (startName: string, endName: string, label: string, isLeft: boolean, color: string) => {
-      const STROKE_WIDTH = 2;
-      const MARKER_SIZE = 8;
+    const STROKE_WIDTH = 3; // Thicker for clarity
+    const MARKER_SIZE = 10; // Larger marker
 
-      const arrowRadius = R_Circle + ARROW_OFFSET + (isLeft ? DUAL_ARROW_GAP : 0);
+    // --- Arrow Path Logic ---
+    const isLeft = explanationType === 'Left';
+    // Use the maximum radius for a clear path
+    const arrowRadius = R_Circle + ARROW_OFFSET + DUAL_ARROW_GAP; 
 
-      const startPos = people.find(p => p.name === startName)?.position;
-      const endPos = people.find(p => p.name === endName)?.position;
-
-      if (!startPos || !endPos) return null;
-
-      const angleMap: Record<Person['position'], number> = {
-        'top': 1.5 * Math.PI,
-        'right': 0 * Math.PI,
-        'bottom': 0.5 * Math.PI,
-        'left': 1.0 * Math.PI,
-      };
-
-      const startAngle = angleMap[startPos];
-      const endAngle = angleMap[endPos];
-
-      const startX = R_Circle + arrowRadius * Math.cos(startAngle);
-      const startY = R_Circle + arrowRadius * Math.sin(startAngle);
-
-      const endX = R_Circle + arrowRadius * Math.cos(endAngle);
-      const endY = R_Circle + arrowRadius * Math.sin(endAngle);
-
-      const sweepFlag = isLeft ? 1 : 0;
-
-      const arrowPath = `M ${startX} ${startY} A ${arrowRadius} ${arrowRadius} 0 0 ${sweepFlag} ${endX} ${endY}`;
-
-      const labelRadius = arrowRadius + 10;
-
-      let labelX: number, labelY: number;
-
-      if (!isLeft) {
-        const preciseLabelAngle = 0.75 * Math.PI;
-        labelX = R_Circle + labelRadius * Math.cos(preciseLabelAngle) * 1.1;
-        labelY = R_Circle + labelRadius * Math.sin(preciseLabelAngle) * 1.1;
-      } else {
-        const preciseLabelAngle = 1.25 * Math.PI;
-        labelX = R_Circle + labelRadius * Math.cos(preciseLabelAngle) * 1.1;
-        labelY = R_Circle + labelRadius * Math.sin(preciseLabelAngle) * 1.1;
-      }
-
-      return (
-        <React.Fragment key={label}>
-          <defs>
-            <marker id={`arrowhead-${label}`} markerWidth={MARKER_SIZE} markerHeight={MARKER_SIZE} refX={MARKER_SIZE * 0.8} refY={MARKER_SIZE * 0.5} orient="auto">
-              <path d={`M 0 0 L ${MARKER_SIZE} ${MARKER_SIZE * 0.5} L 0 ${MARKER_SIZE} z`} fill={color} />
-            </marker>
-          </defs>
-          <path
-            d={arrowPath}
-            fill="none"
-            stroke={color}
-            strokeWidth={STROKE_WIDTH}
-            markerEnd={`url(#arrowhead-${label})`}
-          />
-          <text
-            x={labelX}
-            y={labelY}
-            className="font-extrabold"
-            fill={color}
-            style={{ fontSize: '18px', textShadow: '0 0 4px rgba(234,179,8,0.5)' }}
-            textAnchor="middle"
-            dominantBaseline="middle"
-          >
-            {label}
-          </text>
-        </React.Fragment>
-      );
+    const angleMap: Record<Person['position'], number> = {
+        'top': 1.5 * Math.PI, // 12 PM
+        'right': 0 * Math.PI, // 3 PM
+        'bottom': 0.5 * Math.PI, // 6 PM
+        'left': 1.0 * Math.PI, // 9 PM
     };
+
+    const startAngle = angleMap[refPerson.position];
+    const endAngle = angleMap[targetPerson.position];
+
+    const startX = R_Circle + arrowRadius * Math.cos(startAngle);
+    const startY = R_Circle + arrowRadius * Math.sin(startAngle);
+
+    const endX = R_Circle + arrowRadius * Math.cos(endAngle);
+    const endY = R_Circle + arrowRadius * Math.sin(endAngle);
+
+    const sweepFlag = isLeft ? 1 : 0; // Left=Clockwise(1), Right=Counter-Clockwise(0)
+
+    const arrowPath = `M ${startX} ${startY} A ${arrowRadius} ${arrowRadius} 0 0 ${sweepFlag} ${endX} ${endY}`;
+
+    // --- Label Positioning Logic ---
+    // Increased labelRadius to create space between arrow line and text
+    const labelRadius = arrowRadius + 15; 
+    let preciseLabelAngle: number;
+    
+    // Calculate the angle exactly halfway along the arc for precise label placement
+    if (isLeft) {
+        // Clockwise arc: Angle decreases (1.5 -> 1.0) or wraps (0 -> 1.5)
+        preciseLabelAngle = (startAngle + endAngle) / 2;
+        
+        // Correcting wrap angles for label placement (crucial for Q2)
+        if (startAngle === 1.5 * Math.PI && endAngle === 0 * Math.PI) {
+             preciseLabelAngle = 1.75 * Math.PI; // 12 PM to 3 PM
+        }
+        else if (startAngle === 0 && endAngle === 1.5 * Math.PI) preciseLabelAngle = 1.75 * Math.PI; // 3 PM to 12 PM
+        else if (startAngle === 0.5 * Math.PI && endAngle === 0 * Math.PI) preciseLabelAngle = 0.25 * Math.PI; // 6 PM to 3 PM
+        else if (startAngle === 1.0 * Math.PI && endAngle === 0.5 * Math.PI) preciseLabelAngle = 0.75 * Math.PI; // 9 PM to 6 PM
+        else if (startAngle === 1.5 * Math.PI && endAngle === 1.0 * Math.PI) preciseLabelAngle = 1.25 * Math.PI; // 12 PM to 9 PM
+    } else {
+        // Counter-Clockwise arc: Angle increases (1.5 -> 0) or wraps
+        preciseLabelAngle = (startAngle + endAngle) / 2;
+        if (startAngle === 1.5 * Math.PI && endAngle === 0 * Math.PI) preciseLabelAngle = 1.75 * Math.PI; // Wrap 12 PM to 3 PM
+        if (startAngle === 1.0 * Math.PI && endAngle === 1.5 * Math.PI) preciseLabelAngle = 1.25 * Math.PI; // 9 PM to 12 PM
+    }
+
+    const labelX = R_Circle + labelRadius * Math.cos(preciseLabelAngle);
+    const labelY = R_Circle + labelRadius * Math.sin(preciseLabelAngle);
+
+    // Get color for the directional label
+    const arrowColor = refPerson.name === 'Akash' ? '#3b82f6' : 
+                       refPerson.name === 'Tom' ? '#dc2626' : 
+                       refPerson.name === 'David' ? '#f97316' : '#10b981'; // Fallback Prabhat
 
     return (
       <>
@@ -308,48 +349,48 @@ const CircularArrangement: React.FC<CircularArrangementProps> = ({
             <marker id="facingArrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
               <path d="M 0 0 L 6 3 L 0 6 z" fill={lineStrokeColor} />
             </marker>
+            <marker id="mainArrowhead" markerWidth={MARKER_SIZE} markerHeight={MARKER_SIZE} refX={MARKER_SIZE * 0.8} refY={MARKER_SIZE * 0.5} orient="auto">
+              <path d={`M 0 0 L ${MARKER_SIZE} ${MARKER_SIZE * 0.5} L 0 ${MARKER_SIZE} z`} fill={arrowColor} />
+            </marker>
           </defs>
 
-          {tom && renderSingleArrow('Akash', 'Tom', T.leftLabel, true, '#10b981')}
-          {david && renderSingleArrow('Akash', 'David', T.rightLabel, false, '#9333ea')}
-
+          {/* Directional Arrow */}
           <path
-            d={`M ${R_Circle} ${R_Circle - radius + offsetCalc - 5} L ${R_Circle} ${R_Circle - mugSize * 0.5}`}
+            d={arrowPath}
             fill="none"
-            stroke={lineStrokeColor}
-            strokeWidth="2"
-            markerEnd="url(#facingArrowhead)"
-            strokeDasharray="4,3"
+            stroke={arrowColor}
+            strokeWidth={STROKE_WIDTH}
+            markerEnd={`url(#mainArrowhead)`}
           />
+          <text
+            x={labelX}
+            y={labelY}
+            className="font-extrabold"
+            fill={arrowColor}
+            style={{ fontSize: '18px', textShadow: '0 0 4px rgba(234,179,8,0.5)' }}
+            textAnchor="middle"
+            dominantBaseline="middle"
+          >
+            {isLeft ? T.leftLabel : T.rightLabel}
+          </text>
 
-          <path
-            d={`M ${R_Circle + radius - offsetCalc + 5} ${R_Circle} L ${R_Circle + mugSize * 0.5} ${R_Circle}`}
-            fill="none"
-            stroke={lineStrokeColor}
-            strokeWidth="2"
-            markerEnd="url(#facingArrowhead)"
-            strokeDasharray="4,3"
-          />
 
-          <path
-            d={`M ${R_Circle - radius + offsetCalc - 5} ${R_Circle} L ${R_Circle - mugSize * 0.5} ${R_Circle}`}
-            fill="none"
-            stroke={lineStrokeColor}
-            strokeWidth="2"
-            markerEnd="url(#facingArrowhead)"
-            strokeDasharray="4,3"
-          />
-
-          <path
-            d={`M ${R_Circle} ${R_Circle + radius - offsetCalc + 5} L ${R_Circle} ${R_Circle + mugSize * 0.5}`}
-            fill="none"
-            stroke={lineStrokeColor}
-            strokeWidth="2"
-            markerEnd="url(#facingArrowhead)"
-            strokeDasharray="4,3"
-          />
+          {/* FACING ARROWS FOR ALL FOUR USERS (Blue/Dashed) */}
+          
+          {people.map((p, i) => (
+              <path
+                  key={i}
+                  d={`M ${R_Circle + radius * Math.cos(angleMap[p.position]) * (1 - offsetCalc/radius)} ${R_Circle + radius * Math.sin(angleMap[p.position]) * (1 - offsetCalc/radius)} L ${R_Circle + mugSize * 0.5 * Math.cos(angleMap[p.position] - Math.PI) * -1} ${R_Circle + mugSize * 0.5 * Math.sin(angleMap[p.position] - Math.PI) * -1}`}
+                  fill="none"
+                  stroke={lineStrokeColor}
+                  strokeWidth="2"
+                  markerEnd="url(#facingArrowhead)"
+                  strokeDasharray="4,3"
+              />
+          ))}
         </svg>
 
+        {/* Center Object */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" style={{ zIndex: 10 }}>
           <div
             className="absolute border-4 border-dashed border-blue-400 dark:border-blue-500 rounded-full opacity-50"
@@ -389,40 +430,62 @@ const CircularArrangement: React.FC<CircularArrangementProps> = ({
 };
 
 const App: React.FC = () => {
-  const [selectedAnswer, setSelectedAnswer] = React.useState<string | null>(null);
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [activeQuestionId, setActiveQuestionId] = React.useState(1);
+  const [answers, setAnswers] = React.useState<Record<number, string | null>>({ 1: null, 2: null, 3: null });
+  const [isSubmitted, setIsSubmitted] = React.useState<Record<number, boolean>>({ 1: false, 2: false, 3: false });
   const [showExplanation, setShowExplanation] = React.useState(false);
   const [isDarkMode, setIsDarkMode] = React.useState(false);
   const [circleSize, setCircleSize] = React.useState(400);
   const [language, setLanguage] = React.useState<Language>('en');
 
   const T = translations[language];
-  const correctAnswer = 'Tom';
 
   const people: Person[] = [
-    { name: 'Tom', position: 'top', color: 'bg-red-500' },
-    { name: 'Prabhat', position: 'right', color: 'bg-green-500' },
-    { name: 'David', position: 'bottom', color: 'bg-orange-500' },
-    { name: 'Akash', position: 'left', color: 'bg-blue-500' },
+    { name: 'Tom', position: 'top', color: 'bg-red-500' }, // 12 PM
+    { name: 'Prabhat', position: 'right', color: 'bg-green-500' }, // 3 PM
+    { name: 'David', position: 'bottom', color: 'bg-orange-500' }, // 6 PM
+    { name: 'Akash', position: 'left', color: 'bg-blue-500' }, // 9 PM
   ];
 
+  const currentQuestion = questions.find(q => q.id === activeQuestionId)!;
+  const currentAnswer = answers[activeQuestionId];
+  const isQuestionSubmitted = isSubmitted[activeQuestionId];
+  const isQuestionCorrect = currentAnswer === currentQuestion.correctAnswer;
+
   const handleSubmit = () => {
-    if (selectedAnswer) {
-      setIsSubmitted(true);
+    if (currentAnswer) {
+      setIsSubmitted(prev => ({ ...prev, [activeQuestionId]: true }));
+      setShowExplanation(false);
+      // Automatically navigate to the next question if correct
+      if (currentAnswer === currentQuestion.correctAnswer && activeQuestionId < questions.length) {
+          setTimeout(() => setActiveQuestionId(activeQuestionId + 1), 1000);
+      }
     }
   };
 
   const handleTryAgain = () => {
-    setSelectedAnswer(null);
-    setIsSubmitted(false);
+    setAnswers(prev => ({ ...prev, [activeQuestionId]: null }));
+    setIsSubmitted(prev => ({ ...prev, [activeQuestionId]: false }));
     setShowExplanation(false);
+  };
+
+  const handleSelectAnswer = (option: string) => {
+    if (!isQuestionSubmitted) {
+      setAnswers(prev => ({ ...prev, [activeQuestionId]: option }));
+    }
+  };
+  
+  const handleTabClick = (id: number) => {
+      // Allow moving between any question tab
+      setActiveQuestionId(id);
+      setShowExplanation(false);
   };
 
   const toggleDarkMode = () => setIsDarkMode(prev => !prev);
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value as Language);
-    setSelectedAnswer(null);
-    setIsSubmitted(false);
+    setAnswers({ 1: null, 2: null, 3: null });
+    setIsSubmitted({ 1: false, 2: false, 3: false });
     setShowExplanation(false);
   };
 
@@ -443,13 +506,24 @@ const App: React.FC = () => {
     return () => window.removeEventListener('resize', calculateSize);
   }, [isDarkMode]);
 
-  const isCorrect = selectedAnswer === correctAnswer;
+  // Determine colors for explanation text highlighting
+  const refPersonColor = people.find(p => p.name === currentQuestion.referencePerson)!.color.replace('bg-', 'text-');
+  const targetPersonColor = people.find(p => p.name === currentQuestion.correctAnswer)!.color.replace('bg-', 'text-');
+  
+  const explanationTextContent = T.explanationText(
+      currentQuestion.referencePerson,
+      currentQuestion.explanationType,
+      currentQuestion.correctAnswer,
+      targetPersonColor,
+      refPersonColor
+  );
 
   return (
     <div className={isDarkMode ? 'dark' : ''}>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-500 p-4 sm:p-6 flex flex-col items-center font-sans">
         <div className="w-full max-w-4xl space-y-8">
-          <header className="flex flex-col sm:flex-row justify-between items-center w-full mb-6 space-y-4 sm:space-y-0">
+          
+          <header className="flex flex-col sm:flex-row justify-between items-center w-full mb-4 space-y-4 sm:space-y-0">
             <h1 className="text-xl sm:text-3xl font-extrabold text-gray-800 dark:text-white text-center sm:text-left flex-grow">
               {T.title}
             </h1>
@@ -480,41 +554,74 @@ const App: React.FC = () => {
           </header>
 
           <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-2xl border-t-4 border-green-500 overflow-x-hidden">
+            
             <CircularArrangement
               people={people}
               circleSize={circleSize}
               showArrows={showExplanation}
               language={language}
+              referencePerson={currentQuestion.referencePerson}
+              explanationType={currentQuestion.explanationType}
             />
 
             <div className="mt-6 space-y-4">
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white text-center">{T.question}</h2>
+              
+              {/* Question Tabs moved here */}
+              <div className="flex justify-center mb-4 border-b border-gray-200 dark:border-gray-700">
+                  {questions.map((q) => {
+                      const isActive = q.id === activeQuestionId;
+                      const isCompleted = isSubmitted[q.id] && q.correctAnswer === answers[q.id];
+
+                      return (
+                          <button
+                              key={q.id}
+                              onClick={() => handleTabClick(q.id)}
+                              className={`px-4 py-2 text-sm font-semibold transition-all duration-200 
+                                  ${isActive 
+                                      ? 'border-b-4 border-blue-600 text-blue-600 dark:text-blue-400' 
+                                      : 'text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-300'}
+                              `}
+                          >
+                              Q {q.id}
+                              {isCompleted && <span className="ml-2 text-green-500">✓</span>}
+                          </button>
+                      );
+                  })}
+              </div>
+              
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white text-center">
+                  {T[currentQuestion.questionKey]}
+              </h2>
 
               <div className="space-y-3">
-                {['Tom', 'David', 'Prabhat'].map((option) => (
+                {['Tom', 'Akash', 'Prabhat', 'David'].filter(name => name !== currentQuestion.referencePerson).map((option) => (
                   <button
                     key={option}
-                    onClick={() => !isSubmitted && setSelectedAnswer(option)}
-                    disabled={isSubmitted}
-                    className={`w-full p-4 rounded-lg border-2 text-left font-medium transition duration-200 ${
-                      selectedAnswer === option
+                    onClick={() => handleSelectAnswer(option)}
+                    disabled={isQuestionSubmitted}
+                    className={`w-full p-4 rounded-lg border-2 text-left font-medium transition duration-200 
+                    ${currentAnswer === option
                         ? 'border-blue-500 bg-blue-50 dark:bg-blue-900 dark:border-blue-400'
                         : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-500'
-                    } ${isSubmitted ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
+                    }
+                    ${isQuestionSubmitted && option === currentQuestion.correctAnswer && isQuestionCorrect ? 'bg-green-100 dark:bg-green-800 border-green-500' : ''}
+                    ${isSubmitted[currentQuestion.id] && currentAnswer === option && !isQuestionCorrect ? 'bg-red-100 dark:bg-red-800 border-red-500' : ''}
+                    ${isQuestionSubmitted ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}
+                    `}
                   >
                     <span className="text-gray-800 dark:text-white">
-                      {option === 'Tom' ? T.optionA : option === 'David' ? T.optionB : T.optionC}
+                      {option === 'Tom' ? T.optionA : option === 'David' ? T.optionB : option === 'Prabhat' ? T.optionC : T.optionD}
                     </span>
                   </button>
                 ))}
               </div>
 
-              {!isSubmitted && (
+              {!isQuestionSubmitted && (
                 <button
                   onClick={handleSubmit}
-                  disabled={!selectedAnswer}
+                  disabled={!currentAnswer}
                   className={`w-full py-3 rounded-lg font-bold text-white transition duration-200 ${
-                    selectedAnswer
+                    currentAnswer
                       ? 'bg-green-600 hover:bg-green-700 active:bg-green-800'
                       : 'bg-gray-400 cursor-not-allowed'
                   }`}
@@ -523,20 +630,20 @@ const App: React.FC = () => {
                 </button>
               )}
 
-              {isSubmitted && (
+              {isQuestionSubmitted && (
                 <div className="space-y-4">
                   <div
                     className={`p-4 rounded-lg text-center font-bold text-lg ${
-                      isCorrect
+                      isQuestionCorrect
                         ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
                         : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
                     }`}
                   >
-                    {isCorrect ? T.correct : T.incorrect}
+                    {isQuestionCorrect ? T.correct : T.incorrect}
                   </div>
 
                   <div className="flex gap-4">
-                    {!isCorrect && (
+                    {!isQuestionCorrect && (
                       <button
                         onClick={handleTryAgain}
                         className="flex-1 py-3 rounded-lg font-bold text-white bg-orange-600 hover:bg-orange-700 active:bg-orange-800 transition duration-200"
@@ -548,7 +655,7 @@ const App: React.FC = () => {
                       onClick={() => setShowExplanation(!showExplanation)}
                       className="flex-1 py-3 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition duration-200"
                     >
-                      {T.viewExplanation}
+                      {showExplanation ? T.tryAgain : T.viewExplanation}
                     </button>
                   </div>
                 </div>
@@ -557,7 +664,7 @@ const App: React.FC = () => {
               {showExplanation && (
                 <div className="w-full bg-blue-50 dark:bg-blue-900 border-l-4 border-blue-400 dark:border-blue-600 p-4 rounded-lg shadow-md">
                   <div className="text-gray-700 dark:text-gray-200 leading-relaxed">
-                    {T.explanation}
+                    {explanationTextContent}
                   </div>
                 </div>
               )}
