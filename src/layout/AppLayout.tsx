@@ -13,7 +13,7 @@ import { Params } from "react-router-dom";
 import CoursesRouter from "../x-tars/courses/Router";
 import CoursesHome from "../x-tars/courses/CourseHome";
 import Home from "../x-tars/courses/CourseHome";
-// import Gameshome from "../x-tars/courses/Games";
+import Gameshome from "../x-tars/courses/GamesHome";
 
 interface MatchParams extends Params {
   [key: string]: string | undefined;
@@ -28,7 +28,7 @@ interface Match {
 export const routesConfig = [
   { path: "/", element: <Home />, breadcrumb: "Home" },
   { path: "/courses", element: <CoursesHome />, breadcrumb: "Courses" },
-  // { path: "/games", element: <Gameshome />, breadcrumb: "Games" },
+  { path: "/games", element: <Gameshome />, breadcrumb: "Games" },
   {
     path: "/courses/:courseid",
     element: <CoursesRouter />,

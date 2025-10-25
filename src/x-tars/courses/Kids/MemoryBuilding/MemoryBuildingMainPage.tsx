@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import TrainMovingArrangingNumbers from "./TrainMovingArrangingNumbers"
-import FillInTheBlanksTrainModule from "./FillInTheBlanksTrainModule"
-import DescendingOrder from "./DescendingOrder"
+import AnimalMatching from "./AnimalMatching"
+import FruitsMatching from "./FruitsMatching"
+import NumberMatching from "./NumberMatching"
 
 // --- Shared Types ---
 export interface Theme {
@@ -76,14 +76,14 @@ interface AlphabetGameCard {
 }
 
 const alphabetGameData: AlphabetGameCard[] = [
-  { id: "sequence", title: "Find the correct sequence", subtitle: "Correctly sequence the numbers", icon: "1️⃣2️⃣3️⃣", gradient: "from-orange-500 to-amber-500", module: TrainMovingArrangingNumbers },
-  { id: "filltheblank", title: "Fill in the blanks", subtitle: "Drag and drop the numbers correctly", icon: "1️⃣_3️⃣", gradient: "from-lime-500 to-green-500", module: FillInTheBlanksTrainModule },
-  { id: "descending", title: "Descending order", subtitle: "Place the train coaches in descending order", icon: "3️⃣2️⃣1️⃣", gradient: "from-cyan-500 to-blue-500", module: DescendingOrder }
+  { id: "animals", title: "Match the animals", subtitle: "open and match the correct animals", icon: "🐘🦒🐒", gradient: "from-orange-500 to-amber-500", module: AnimalMatching },
+  { id: "fruits", title: "Match the fruits", subtitle: "Match the correct pair of fruits", icon: "🍉🍌🍎", gradient: "from-lime-500 to-green-500", module: FruitsMatching },
+  { id: "numbers", title: "Match the numbers correctly", subtitle: "Match the correct numbers", icon: "1️⃣2️⃣3️⃣", gradient: "from-cyan-500 to-blue-500", module: NumberMatching }
 //   // { id: "quiz", title: "Alphabet Quiz", subtitle: "Test your knowledge.", icon: "❓", gradient: "from-purple-500 to-fuchsia-500", module: AlphabetGameComingSoon }
 ];
 
 // --- Page ---
-const AlphabetGamesPage: React.FC<ModuleProps> = ({ onBack, theme, title, icon }) => {
+const MemoryBuildingMainPage: React.FC<ModuleProps> = ({ onBack, theme, title, icon }) => {
   const [activeGameId, setActiveGameId] = useState<string | null>(null);
 
   const handleGameSelect = (gameId: string) => setActiveGameId(gameId);
@@ -138,4 +138,4 @@ const AlphabetGamesPage: React.FC<ModuleProps> = ({ onBack, theme, title, icon }
   );
 };
 
-export default AlphabetGamesPage;
+export default MemoryBuildingMainPage;

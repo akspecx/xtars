@@ -8,8 +8,8 @@ import BasicRightQuizCA from './BasicRightQuizCA'
 import InteractiveDragDropRightCA from './InteractiveDragDropRightCA'
 import AkashPrabhatPlacedBasicCA from './AkashPrabhatPlacedBasicCA'
 import AkashPrabhatDavidBasicCA from './AkashPrabhatDavidBasicCA'
-// import PeopleInBetween from './PeopleInBetween'
-// import ExplainLeftFromReference from './ExplainLeftFromReference'
+import FirstsSecondLeftCA from './FirstsSecondLeftCA'
+import FirstSecondRightCA from './FirstSecondRightCA'
 // import LineararrangementPracticeModule1 from './LineararrangementPracticeModule1'
 // import LeftLinearArrangement2Dimension from './LeftLinearArrangement2Dimension'
 // import WorkingWithInstruction from './WorkingWithInstruction'
@@ -80,6 +80,32 @@ export const sampleCourse = {
               practice2: <InteractiveDragDropRightCA />,
               practice3: <AkashPrabhatPlacedBasicCA />,
               practice4: <AkashPrabhatDavidBasicCA />
+            }
+          },
+          {
+            id: "1-3",
+            title: "Lesson 2: Let's learn in bit depth?",
+            difficulty: "Medium",
+            duration: "15 min",
+            completed: true,
+            content: {
+              tabs: [
+                { id: 'concept', label: 'Left and second to the left?', icon: BookOpen },
+                { id: 'concept1', label: 'First and second to the Right?', icon: BookOpen },
+                // { id: 'concept2', label: 'Left and Right', icon: BookOpen },
+                // { id: 'practice', label: 'Practice left', icon: PenTool },
+                // { id: 'practice1', label: 'Practice Right', icon: PenTool },
+                // { id: 'practice2', label: 'Place Prabhat Correctly', icon: PenTool },
+                // { id: 'practice3', label: 'Place Prabhat and Akash Correctly', icon: PenTool },
+                // { id: 'practice4', label: 'Place Prabhat, Akash and David Correctly', icon: PenTool }
+              ],
+              concept: <FirstsSecondLeftCA />,
+              concept1: <FirstSecondRightCA />,
+            //   practice: <BasicLeftQuizCA />,
+            //   practice1: <BasicRightQuizCA />,
+            //   practice2: <InteractiveDragDropRightCA />,
+            //   practice3: <AkashPrabhatPlacedBasicCA />,
+            //   practice4: <AkashPrabhatDavidBasicCA />
             }
           }
       ],
