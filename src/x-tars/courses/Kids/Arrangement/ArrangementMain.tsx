@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import AlphabetGamesDragDrop from "./AlphabetsDragDropMatching"
-import AlphabetSequenceMapping from "./AlphabetSequneceMapping"
-import AlphabetFruitFlipGame from "./FlipAlphabetFruitLearning"
-import RandomBalloonAlphabetMapping from "./RandomBalloonAlphabetMapping"
+import appleArrangementQuiz from "./appleArrangementQuiz"
+import orangeArrangementQuiz from "./orangeArrangementQuiz"
+import orangeComplexArrangement from "./orangeComplexArrangement"
+import giraffeComplexArrangement from "./giraffeComplexArrangement"
 
 // --- Shared Types ---
 export interface Theme {
@@ -77,14 +77,14 @@ interface AlphabetGameCard {
 }
 
 const alphabetGameData: AlphabetGameCard[] = [
-  { id: "match", title: "Letter match", subtitle: "Correctly Match the Alphabets", icon: "🔠", gradient: "from-orange-500 to-amber-500", module: AlphabetGamesDragDrop },
-  { id: "arrange", title: "Arranging alphabets", subtitle: "Arrange the alphabets", icon: "🇦🇧🇨", gradient: "from-lime-500 to-green-500", module: AlphabetSequenceMapping },
-  { id: "fruitNaming", title: "Fruit naming", subtitle: "Practice fruit naming.", icon: "🇦 🇨 🇪", gradient: "from-cyan-500 to-blue-500", module: AlphabetFruitFlipGame },
-  { id: "randomAlphabets", title: "Random alphabet mapping", subtitle: "Select the correct alphabets", icon: "❓", gradient: "from-purple-500 to-fuchsia-500", module: RandomBalloonAlphabetMapping }
+  { id: "apple", title: "Apple arrangment", subtitle: "Can you drag and drop to create the apple?", icon: "🍎", gradient: "from-orange-500 to-amber-500", module: appleArrangementQuiz },
+  { id: "orange", title: "Orange arrangment", subtitle: "Can you drag and drop to create the Orange?", icon: "🍊", gradient: "from-lime-500 to-green-500", module: orangeArrangementQuiz },
+  { id: "orangeComplex", title: "Complex orange arrangement", subtitle: "Let's make our level a bit higher", icon: "🍊🍊", gradient: "from-cyan-500 to-blue-500", module: orangeComplexArrangement },
+  { id: "giraffeComplex", title: "Complex giraffe arrangement", subtitle: "Let's create a Giraffe", icon: "🦒", gradient: "from-purple-500 to-fuchsia-500", module: giraffeComplexArrangement }
 ];
 
 // --- Page ---
-const AlphabetGamesPage: React.FC<ModuleProps> = ({ onBack, theme, title, icon }) => {
+const ArrangementMainPage: React.FC<ModuleProps> = ({ onBack, theme, title, icon }) => {
   const [activeGameId, setActiveGameId] = useState<string | null>(null);
 
   const handleGameSelect = (gameId: string) => setActiveGameId(gameId);
@@ -139,4 +139,4 @@ const AlphabetGamesPage: React.FC<ModuleProps> = ({ onBack, theme, title, icon }
   );
 };
 
-export default AlphabetGamesPage;
+export default ArrangementMainPage;

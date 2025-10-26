@@ -3,6 +3,7 @@ import { Sun, Moon, ArrowLeft, Lock, Star, Zap } from 'lucide-react';
 import AlphabetGamesPage from '../Alphabets/AlphabetGamesPage'
 import NumbersMainPage from '../Numbers/NumbersMainPage'
 import MemoryBuildingMainPage from '../MemoryBuilding/MemoryBuildingMainPage'
+import ArrangementMain from '../Arrangement/ArrangementMain'
 
 // NOTE: External imports like 'import AlphabetsMain from "../Alphabets/AlphabetsMain"' are removed 
 // because all components for a single React file must be defined locally to run in this environment.
@@ -317,7 +318,7 @@ const cardData: Card[] = [
     icon: '🧩',
     category: 'games',
     gradient: 'from-emerald-500 to-teal-500',
-    moduleComponent: ComingSoonModule, 
+    moduleComponent: ArrangementMain, 
   },
   // Challenges
   {
