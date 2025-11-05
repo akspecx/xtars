@@ -17,7 +17,7 @@ import {
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
-import { BookOpenIcon } from "@heroicons/react/24/solid";
+import { BookOpenIcon, ChatBubbleBottomCenterIcon } from "@heroicons/react/24/solid";
 import { Gamepad2Icon } from "lucide-react";
 
 type NavItem = {
@@ -71,6 +71,11 @@ const navItems: NavItem[] = [
       { name: "Blank Page", path: "/blank", pro: false },
       { name: "404 Error", path: "/error-404", pro: false },
     ],
+  },
+  {
+    icon: <ChatBubbleBottomCenterIcon />,
+    name: "Feedback",
+    path: "/feedback",
   },
 ];
 

@@ -23,6 +23,7 @@ import CoursesRouter from "./x-tars/courses/Router";
 import GamesHome from "./x-tars/courses/Kids/MainModule/KidsMainPage"
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import FeedBackComponent from "./pages/Feedback";
 
 export default function App() {
   return (
@@ -64,6 +65,10 @@ export default function App() {
               {/* Charts */}
               <Route path="/line-chart" element={<LineChart />} />
               <Route path="/bar-chart" element={<BarChart />} />
+
+              {/* Feedback Component */}
+              <Route path="/feedback" element={<FeedBackComponent />} />
+              
             </Route>
 
             {/* Auth Layout */}
