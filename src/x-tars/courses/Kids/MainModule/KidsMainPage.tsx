@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Sun, Moon, ArrowLeft, Lock, Star, Zap } from 'lucide-react';
-import AlphabetGamesPage from '../Alphabets/AlphabetGamesPage'
-import NumbersMainPage from '../Numbers/NumbersMainPage'
-import MemoryBuildingMainPage from '../MemoryBuilding/MemoryBuildingMainPage'
-import ArrangementMain from '../Arrangement/ArrangementMain'
+import { useNavigate } from 'react-router';
+import AlphabetGamesLandingPage from '../basics/Alphabets/AlphabetGamesLandingPage'
+import NumbersGamesLandingPage from '../basics/Numbers/NumbersGamesLandingPage'
+import MemoryBuildingMainPage from '../games/MemoryGame/MemoryBuildingMainPage'
+import ArrangementMain from '../games/puzzles/Arrangement/ArrangementMain'
 
-// NOTE: External imports like 'import AlphabetsMain from "../Alphabets/AlphabetsMain"' are removed 
+// NOTE: External imports like 'import AlphabetsMain from "../basics/Alphabets/AlphabetsMain"' are removed 
 // because all components for a single React file must be defined locally to run in this environment.
 
 // --- Types and Theme Configurations ---
@@ -260,27 +261,27 @@ const cardData: Card[] = [
   // Basics
   {
     id: 'alphabets',
-    title: 'ALPHABETS',
+    title: 'Alphabets',
     subtitle: 'Learn letters A-Z with interactive exercises',
     icon: '🔤',
     badge: 'Popular',
     category: 'basics',
     gradient: 'from-red-500 to-pink-500',
-    moduleComponent: AlphabetGamesPage, // <-- Updated name for the dedicated page
+    moduleComponent: AlphabetGamesLandingPage, // <-- Updated name for the dedicated page
   },
   {
     id: 'numbers',
-    title: 'NUMBERS',
+    title: 'Numbers',
     subtitle: 'Master counting and basic math',
     icon: '🔢',
     badge: 'New',
     category: 'basics',
     gradient: 'from-teal-500 to-cyan-500',
-    moduleComponent: NumbersMainPage, // <-- Updated name for the dedicated page
+    moduleComponent: NumbersGamesLandingPage, // <-- Updated name for the dedicated page
   },
   {
     id: 'shapes',
-    title: 'SHAPES',
+    title: 'Shapes',
     subtitle: 'Identify and learn geometric shapes',
     icon: '🔺',
     locked: true,              // Locked locally
@@ -291,7 +292,7 @@ const cardData: Card[] = [
   },
   {
     id: 'colors',
-    title: 'COLORS',
+    title: 'Colors',
     subtitle: 'Explore the rainbow of colors',
     icon: '🎨',
     locked: true,              // Locked locally
@@ -303,7 +304,7 @@ const cardData: Card[] = [
   // Games
   {
     id: 'memory',
-    title: 'MEMORY GAME',
+    title: 'Memory Game',
     subtitle: 'Test your memory with matching cards',
     icon: '🧠',
     badge: 'Fun',
@@ -313,7 +314,7 @@ const cardData: Card[] = [
   },
   {
     id: 'puzzle',
-    title: 'PUZZLES',
+    title: 'Puzzles',
     subtitle: 'Solve fun puzzles and brain teasers',
     icon: '🧩',
     category: 'games',
@@ -323,7 +324,7 @@ const cardData: Card[] = [
   // Challenges
   {
     id: 'math',
-    title: 'MATH CHALLENGE',
+    title: 'Math Challenge',
     subtitle: 'Quick math problems and calculations',
     icon: '➕',
     badge: 'Hard',
@@ -333,7 +334,7 @@ const cardData: Card[] = [
   },
   {
     id: 'reading',
-    title: 'READING TIME',
+    title: 'Reading Time',
     subtitle: 'Practice reading with fun stories',
     icon: '📖',
     locked: true,
@@ -370,7 +371,7 @@ const NavTabs: React.FC<{
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
-          className={`px-6 py-3 rounded-full font-semibold text-sm sm:text-base uppercase tracking-wider transition-all duration-300 ${
+          className={`px-6 py-3 rounded-full font-semibold text-sm sm:text-base tracking-wider transition-all duration-300 ${
             activeTab === tab.id
               ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg shadow-red-500/30 transform hover:scale-105'
               : `${theme.surface} ${theme.text} ${theme.surfaceHover} border ${theme.border} hover:scale-105 hover:shadow-md`
@@ -430,6 +431,7 @@ const LearningPlatform: React.FC = () => {
   const [isDark, setIsDark] = useState(true);
   const [activeTab, setActiveTab] = useState('basics');
   const [activeModule, setActiveModule] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const theme = themes[isDark ? 'dark' : 'light'];
 
@@ -486,6 +488,33 @@ const LearningPlatform: React.FC = () => {
       console.log('This module is locked! Check card.locked OR card.apiLockedStatus.');
       return;
     }
+    
+    // Navigate to specific pages instead of showing modal
+    if (cardId === 'alphabets') {
+      navigate('/games/alphabets');
+      return;
+    }
+    
+    if (cardId === 'numbers') {
+      navigate('/games/numbers');
+      return;
+    }
+    
+    if (cardId === 'shapes') {
+      navigate('/games/shapes');
+      return;
+    }
+    
+    if (cardId === 'memory') {
+      navigate('/games/memory');
+      return;
+    }
+    
+    if (cardId === 'puzzle') {
+      navigate('/games/puzzles');
+      return;
+    }
+    
     setActiveModule(cardId);
   };
 
