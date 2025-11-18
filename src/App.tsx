@@ -27,14 +27,31 @@ import {
   LetterMatchGameWrapper, 
   AlphabetSequenceGameWrapper, 
   FruitNamingGameWrapper, 
-  RandomAlphabetGameWrapper 
+  RandomAlphabetGameWrapper,
+  AlphabetTracingGameWrapper,
+  AlphabetCountingGameWrapper,
+  AlphabetFillBlanksGameWrapper,
+  AlphabetObjectMatchingGameWrapper,
+  AlphabetCaseMatchingGameWrapper,
+  AlphabetSortingGameWrapper,
+  AlphabetDescendingGameWrapper,
+  AlphabetStoryCardsGameWrapper,
+  AlphabetBeginningSoundGameWrapper,
+  AlphabetLetterPuzzleGameWrapper,
+  AlphabetLetterPathMazeGameWrapper,
+  AlphabetRhymingGameWrapper,
+  AlphabetNameBuilderGameWrapper,
+  AlphabetFindTapGameWrapper,
+  AlphabetUppercaseUsageGameWrapper
 } from "./x-tars/courses/Kids/basics/Alphabets/AlphabetGameWrappers";
 import { 
   NumbersGamesPageWrapper,
   NumberIdentificationGameWrapper,
   NumberSequenceGameWrapper,
   FillInTheBlanksGameWrapper,
-  DescendingOrderGameWrapper
+  DescendingOrderGameWrapper,
+  NumberTracingGameWrapper,
+  NumberCountingGameWrapper
 } from "./x-tars/courses/Kids/basics/Numbers/NumbersGameWrappers";
 import { ShapesGamesPageWrapper } from "./x-tars/courses/Kids/basics/Shapes/ShapesGameWrappers";
 import { 
@@ -83,12 +100,29 @@ export default function App() {
               <Route path="/games/alphabets/sequence" element={<AlphabetSequenceGameWrapper />} />
               <Route path="/games/alphabets/fruit-naming" element={<FruitNamingGameWrapper />} />
               <Route path="/games/alphabets/random-balloon" element={<RandomAlphabetGameWrapper />} />
+              <Route path="/games/alphabets/tracing" element={<AlphabetTracingGameWrapper />} />
+              <Route path="/games/alphabets/counting" element={<AlphabetCountingGameWrapper />} />
+              <Route path="/games/alphabets/fill-blanks" element={<AlphabetFillBlanksGameWrapper />} />
+              <Route path="/games/alphabets/object-matching" element={<AlphabetObjectMatchingGameWrapper />} />
+              <Route path="/games/alphabets/case-matching" element={<AlphabetCaseMatchingGameWrapper />} />
+              <Route path="/games/alphabets/sorting" element={<AlphabetSortingGameWrapper />} />
+              <Route path="/games/alphabets/descending" element={<AlphabetDescendingGameWrapper />} />
+              <Route path="/games/alphabets/story-cards" element={<AlphabetStoryCardsGameWrapper />} />
+              <Route path="/games/alphabets/begin-sound" element={<AlphabetBeginningSoundGameWrapper />} />
+              <Route path="/games/alphabets/letter-puzzle" element={<AlphabetLetterPuzzleGameWrapper />} />
+              <Route path="/games/alphabets/path-maze" element={<AlphabetLetterPathMazeGameWrapper />} />
+              <Route path="/games/alphabets/rhyming" element={<AlphabetRhymingGameWrapper />} />
+              <Route path="/games/alphabets/name-builder" element={<AlphabetNameBuilderGameWrapper />} />
+              <Route path="/games/alphabets/find-tap" element={<AlphabetFindTapGameWrapper />} />
+              <Route path="/games/alphabets/uppercase-usage" element={<AlphabetUppercaseUsageGameWrapper />} />
 
               {/* Numbers Games Menu */}
               <Route path="/games/numbers" element={<NumbersGamesPageWrapper />} />
               
               {/* Numbers Games */}
               <Route path="/games/numbers/identification" element={<NumberIdentificationGameWrapper />} />
+              <Route path="/games/numbers/counting" element={<NumberCountingGameWrapper />} />
+              <Route path="/games/numbers/tracing" element={<NumberTracingGameWrapper />} />
               <Route path="/games/numbers/sequence" element={<NumberSequenceGameWrapper />} />
               <Route path="/games/numbers/fill-the-blanks" element={<FillInTheBlanksGameWrapper />} />
               <Route path="/games/numbers/descending" element={<DescendingOrderGameWrapper />} />

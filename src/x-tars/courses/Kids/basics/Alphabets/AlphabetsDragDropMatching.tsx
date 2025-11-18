@@ -171,15 +171,6 @@ const AlphabetDragDrop = () => {
     setIsDarkMode(!isDarkMode);
   };
 
-  // Announce current letter on component mount
-  useEffect(() => {
-    if (speechSupported) {
-      setTimeout(() => {
-        speakText(`Welcome! Find the letter ${currentLetter} and drag it to the box above!`);
-      }, 1000);
-    }
-  }, [speechSupported]);
-
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
       isDarkMode 

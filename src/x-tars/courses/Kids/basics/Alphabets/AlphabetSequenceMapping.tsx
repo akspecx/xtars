@@ -15,6 +15,7 @@ const AlphabetSequenceLearning = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successLetter, setSuccessLetter] = useState('');
   const [gameComplete, setGameComplete] = useState(false);
+  const [modalCandies, setModalCandies] = useState([]);
 
   const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   
@@ -257,14 +258,12 @@ const AlphabetSequenceLearning = () => {
     }
   };
 
-  // Initial instruction
-  useEffect(() => {
+  // Remove auto-play - audio only on button click
+  const handlePlayWelcome = () => {
     if (speechSupported) {
-      setTimeout(() => {
-        speakText(`Welcome! Let's learn the alphabet sequence! Look for the big letter A and drag it to the top box!`);
-      }, 1000);
+      speakText(`Welcome! Let's learn the alphabet sequence! Look for the big letter A and drag it to the top box!`);
     }
-  }, [speechSupported]);
+  };
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
@@ -399,6 +398,14 @@ const AlphabetSequenceLearning = () => {
               
               {speechSupported && (
                 <>
+                  <button
+                    onClick={handlePlayWelcome}
+                    className="bg-blue-500 hover:bg-blue-600 text-white p-2 sm:p-3 rounded-full shadow-lg transition-all transform hover:scale-105"
+                    title="Play Welcome Instructions"
+                  >
+                    <span className="text-sm sm:text-base">🎧</span>
+                  </button>
+                  
                   <button
                     onClick={speakInstructions}
                     className="bg-blue-500 hover:bg-blue-600 text-white p-2 sm:p-3 rounded-full shadow-lg transition-all transform hover:scale-105"
@@ -618,3 +625,5 @@ const AlphabetSequenceLearning = () => {
 };
 
 export default AlphabetSequenceLearning;
+
+

@@ -794,18 +794,12 @@ const ScratchSpellGame = () => {
     }
   };
 
-  // Initial welcome message effect
+  // Cleanup any running speech on unmount
   useEffect(() => {
-    if (isVoiceEnabled) {
-      // Ensure the welcome message is spoken once after component mounts
-      setTimeout(() => speak('Welcome to Flip and Spell! Click any card to flip and reveal a fruit.'), 1000);
-    }
-    
-    // Cleanup function to stop speech when component unmounts
     return () => {
       if ('speechSynthesis' in window) speechSynthesis.cancel();
     };
-  }, []); // Empty dependency array ensures it runs once on mount
+  }, []);
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${

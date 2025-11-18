@@ -31,7 +31,9 @@ interface NumberGameCard {
 }
 
 const numberGameData: NumberGameCard[] = [
-  { id: "identification", title: "Match the Correct Numbers", subtitle: "Match numbers with the correct apple groups", icon: "🍎", gradient: "from-indigo-500 to-purple-500", path: "/games/numbers/identification" },
+  { id: "identification", title: "Match the Correct Numbers", subtitle: "Identify and Match numbers with the correct apple groups", icon: "🍎", gradient: "from-indigo-500 to-purple-500", path: "/games/numbers/identification" },
+  { id: "counting", title: "Count On Your Body", subtitle: "Learn numbers with body-part examples", icon: "🤗", gradient: "from-rose-500 to-amber-500", path: "/games/numbers/counting" },
+  { id: "tracing", title: "Trace the Numbers", subtitle: "Practice drawing numbers with dotted guides", icon: "✍️", gradient: "from-sky-500 to-blue-500", path: "/games/numbers/tracing" },
   { id: "sequence", title: "Find the correct sequence", subtitle: "Correctly sequence the numbers", icon: "1️⃣2️⃣3️⃣", gradient: "from-orange-500 to-amber-500", path: "/games/numbers/sequence" },
   { id: "filltheblank", title: "Fill in the blanks", subtitle: "Drag and drop the numbers correctly", icon: "1️⃣_3️⃣", gradient: "from-lime-500 to-green-500", path: "/games/numbers/fill-the-blanks" },
   { id: "descending", title: "Descending order", subtitle: "Place the train coaches in descending order", icon: "3️⃣2️⃣1️⃣", gradient: "from-cyan-500 to-blue-500", path: "/games/numbers/descending" }
