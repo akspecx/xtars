@@ -20,56 +20,191 @@ import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import CoursesHome from "./x-tars/courses/CourseHome";
 import CoursesRouter from "./x-tars/courses/Router";
-import GamesHome from "./x-tars/courses/Kids/MainModule/KidsMainPage"
+import GamesHome from "./x-tars/courses/Kids/MainModule/KidsMainPage";
+import Roadmap from "./x-tars/Roadmap";
+import { 
+  AlphabetGamesPageWrapper,
+  LetterMatchGameWrapper, 
+  AlphabetSequenceGameWrapper, 
+  FruitNamingGameWrapper, 
+  RandomAlphabetGameWrapper,
+  AlphabetTracingGameWrapper,
+  AlphabetCountingGameWrapper,
+  AlphabetFillBlanksGameWrapper,
+  AlphabetObjectMatchingGameWrapper,
+  AlphabetCaseMatchingGameWrapper,
+  AlphabetSortingGameWrapper,
+  AlphabetDescendingGameWrapper,
+  AlphabetStoryCardsGameWrapper,
+  AlphabetBeginningSoundGameWrapper,
+  AlphabetLetterPuzzleGameWrapper,
+  AlphabetLetterPathMazeGameWrapper,
+  AlphabetRhymingGameWrapper,
+  AlphabetNameBuilderGameWrapper,
+  AlphabetFindTapGameWrapper,
+  AlphabetUppercaseUsageGameWrapper
+} from "./x-tars/courses/Kids/basics/Alphabets/AlphabetGameWrappers";
+import { 
+  NumbersGamesPageWrapper,
+  NumberIdentificationGameWrapper,
+  NumberSequenceGameWrapper,
+  FillInTheBlanksGameWrapper,
+  DescendingOrderGameWrapper,
+  NumberTracingGameWrapper,
+  NumberCountingGameWrapper
+} from "./x-tars/courses/Kids/basics/Numbers/NumbersGameWrappers";
+import { ShapesGamesPageWrapper } from "./x-tars/courses/Kids/basics/Shapes/ShapesGameWrappers";
+import { 
+  MemoryGamesPageWrapper,
+  AnimalMatchingGameWrapper,
+  FruitsMatchingGameWrapper,
+  NumberMatchingGameWrapper
+} from "./x-tars/courses/Kids/games/MemoryGame/MemoryGameWrappers";
+import { 
+  PuzzlesPageWrapper,
+  AppleArrangementGameWrapper,
+  OrangeArrangementGameWrapper,
+  OrangeComplexArrangementGameWrapper,
+  GiraffeComplexArrangementGameWrapper
+} from "./x-tars/courses/Kids/games/puzzles/Arrangement/PuzzleGameWrappers";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import FeedBackComponent from "./pages/Feedback";
 
 export default function App() {
   return (
     <>
       <Router basename="xtars">
-        <ScrollToTop />
-        <Routes>
-          {/* Dashboard Layout */}
-          <Route element={<AppLayout />}>
-            <Route index path="/" element={<Home />} />
+        <AuthProvider>
+          <ScrollToTop />
+          <Routes>
+            {/* Dashboard Layout - Protected Routes */}
+            <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+              {/* Dashboard */}
+              <Route index element={<Home />} />
+              <Route path="/dashboard" element={<Home />} />
+              <Route path="/home" element={<Home />} />
 
-            {/* Courses */}
-            <Route path="/courses" element={<CoursesHome/>} />
-            <Route path="/courses/:courseid" element={<CoursesRouter/>} />
+              {/* Courses */}
+              <Route path="/courses" element={<CoursesHome />} />
+              <Route path="/courses/:courseid" element={<CoursesRouter />} />
 
-             {/* Games */}
-             <Route path="/games" element={<GamesHome />} />
+              {/* Games */}
+              <Route path="/games" element={<GamesHome />} />
+              
+              {/* Alphabet Games Menu */}
+              <Route path="/games/alphabets" element={<AlphabetGamesPageWrapper />} />
+              
+              {/* Alphabet Games */}
+              <Route path="/games/alphabets/letter-match" element={<LetterMatchGameWrapper />} />
+              <Route path="/games/alphabets/sequence" element={<AlphabetSequenceGameWrapper />} />
+              <Route path="/games/alphabets/fruit-naming" element={<FruitNamingGameWrapper />} />
+              <Route path="/games/alphabets/random-balloon" element={<RandomAlphabetGameWrapper />} />
+              <Route path="/games/alphabets/tracing" element={<AlphabetTracingGameWrapper />} />
+              <Route path="/games/alphabets/counting" element={<AlphabetCountingGameWrapper />} />
+              <Route path="/games/alphabets/fill-blanks" element={<AlphabetFillBlanksGameWrapper />} />
+              <Route path="/games/alphabets/object-matching" element={<AlphabetObjectMatchingGameWrapper />} />
+              <Route path="/games/alphabets/case-matching" element={<AlphabetCaseMatchingGameWrapper />} />
+              <Route path="/games/alphabets/sorting" element={<AlphabetSortingGameWrapper />} />
+              <Route path="/games/alphabets/descending" element={<AlphabetDescendingGameWrapper />} />
+              <Route path="/games/alphabets/story-cards" element={<AlphabetStoryCardsGameWrapper />} />
+              <Route path="/games/alphabets/begin-sound" element={<AlphabetBeginningSoundGameWrapper />} />
+              <Route path="/games/alphabets/letter-puzzle" element={<AlphabetLetterPuzzleGameWrapper />} />
+              <Route path="/games/alphabets/path-maze" element={<AlphabetLetterPathMazeGameWrapper />} />
+              <Route path="/games/alphabets/rhyming" element={<AlphabetRhymingGameWrapper />} />
+              <Route path="/games/alphabets/name-builder" element={<AlphabetNameBuilderGameWrapper />} />
+              <Route path="/games/alphabets/find-tap" element={<AlphabetFindTapGameWrapper />} />
+              <Route path="/games/alphabets/uppercase-usage" element={<AlphabetUppercaseUsageGameWrapper />} />
 
-            {/* Others Page */}
-            <Route path="/profile" element={<UserProfiles />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/blank" element={<Blank />} />
+              {/* Numbers Games Menu */}
+              <Route path="/games/numbers" element={<NumbersGamesPageWrapper />} />
+              
+              {/* Numbers Games */}
+              <Route path="/games/numbers/identification" element={<NumberIdentificationGameWrapper />} />
+              <Route path="/games/numbers/counting" element={<NumberCountingGameWrapper />} />
+              <Route path="/games/numbers/tracing" element={<NumberTracingGameWrapper />} />
+              <Route path="/games/numbers/sequence" element={<NumberSequenceGameWrapper />} />
+              <Route path="/games/numbers/fill-the-blanks" element={<FillInTheBlanksGameWrapper />} />
+              <Route path="/games/numbers/descending" element={<DescendingOrderGameWrapper />} />
 
-            {/* Forms */}
-            <Route path="/form-elements" element={<FormElements />} />
+              {/* Shapes (Coming Soon) */}
+              <Route path="/games/shapes" element={<ShapesGamesPageWrapper />} />
 
-            {/* Tables */}
-            <Route path="/basic-tables" element={<BasicTables />} />
+              {/* Memory Games Menu */}
+              <Route path="/games/memory" element={<MemoryGamesPageWrapper />} />
+              
+              {/* Memory Games */}
+              <Route path="/games/memory/animals" element={<AnimalMatchingGameWrapper />} />
+              <Route path="/games/memory/fruits" element={<FruitsMatchingGameWrapper />} />
+              <Route path="/games/memory/numbers" element={<NumberMatchingGameWrapper />} />
 
-            {/* Ui Elements */}
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/avatars" element={<Avatars />} />
-            <Route path="/badge" element={<Badges />} />
-            <Route path="/buttons" element={<Buttons />} />
-            <Route path="/images" element={<Images />} />
-            <Route path="/videos" element={<Videos />} />
+              {/* Puzzles Menu */}
+              <Route path="/games/puzzles" element={<PuzzlesPageWrapper />} />
+              
+              {/* Puzzles */}
+              <Route path="/games/puzzles/apple" element={<AppleArrangementGameWrapper />} />
+              <Route path="/games/puzzles/orange" element={<OrangeArrangementGameWrapper />} />
+              <Route path="/games/puzzles/orange-complex" element={<OrangeComplexArrangementGameWrapper />} />
+              <Route path="/games/puzzles/giraffe-complex" element={<GiraffeComplexArrangementGameWrapper />} />
 
-            {/* Charts */}
-            <Route path="/line-chart" element={<LineChart />} />
-            <Route path="/bar-chart" element={<BarChart />} />
-          </Route>
+              {/* Roadmap */}
+              <Route path="/roadmap" element={<Roadmap />} />
 
-          {/* Auth Layout */}
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+              {/* User Profile */}
+              <Route path="/profile" element={<UserProfiles />} />
+              <Route path="/user-profile" element={<UserProfiles />} />
 
-          {/* Fallback Route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+              {/* Calendar */}
+              <Route path="/calendar" element={<Calendar />} />
+
+              {/* Blank Page */}
+              <Route path="/blank" element={<Blank />} />
+
+              {/* Forms */}
+              <Route path="/forms" element={<FormElements />} />
+              <Route path="/form-elements" element={<FormElements />} />
+
+              {/* Tables */}
+              <Route path="/tables" element={<BasicTables />} />
+              <Route path="/basic-tables" element={<BasicTables />} />
+
+              {/* UI Elements */}
+              <Route path="/ui/alerts" element={<Alerts />} />
+              <Route path="/alerts" element={<Alerts />} />
+              <Route path="/ui/avatars" element={<Avatars />} />
+              <Route path="/avatars" element={<Avatars />} />
+              <Route path="/ui/badges" element={<Badges />} />
+              <Route path="/badges" element={<Badges />} />
+              <Route path="/badge" element={<Badges />} />
+              <Route path="/ui/buttons" element={<Buttons />} />
+              <Route path="/buttons" element={<Buttons />} />
+              <Route path="/ui/images" element={<Images />} />
+              <Route path="/images" element={<Images />} />
+              <Route path="/ui/videos" element={<Videos />} />
+              <Route path="/videos" element={<Videos />} />
+
+              {/* Charts */}
+              <Route path="/charts/line" element={<LineChart />} />
+              <Route path="/line-chart" element={<LineChart />} />
+              <Route path="/charts/bar" element={<BarChart />} />
+              <Route path="/bar-chart" element={<BarChart />} />
+
+              {/* Feedback */}
+              <Route path="/feedback" element={<FeedBackComponent />} />
+            </Route>
+
+            {/* Auth Routes - Public */}
+            <Route path="/auth/signin" element={<SignIn />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/login" element={<SignIn />} />
+            <Route path="/auth/signup" element={<SignUp />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/register" element={<SignUp />} />
+
+            {/* Fallback Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </Router>
     </>
   );
