@@ -4,6 +4,7 @@ import AlphabetGamesPage from '../Alphabets/AlphabetGamesPage'
 import NumbersMainPage from '../Numbers/NumbersMainPage'
 import MemoryBuildingMainPage from '../MemoryBuilding/MemoryBuildingMainPage'
 import ArrangementMain from '../Arrangement/ArrangementMain'
+import ShapesMainPage from '../Shapes/ShapesMainPage'
 
 // NOTE: External imports like 'import AlphabetsMain from "../Alphabets/AlphabetsMain"' are removed 
 // because all components for a single React file must be defined locally to run in this environment.
@@ -283,11 +284,11 @@ const cardData: Card[] = [
     title: 'SHAPES',
     subtitle: 'Identify and learn geometric shapes',
     icon: '🔺',
-    locked: true,              // Locked locally
+    locked: false,              // Locked locally
     apiLockedStatus: false,    // But unlocked by API (should be accessible)
     category: 'basics',
     gradient: 'from-blue-500 to-indigo-500',
-    moduleComponent: ComingSoonModule, 
+    moduleComponent: ShapesMainPage, 
   },
   {
     id: 'colors',

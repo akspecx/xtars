@@ -81,6 +81,8 @@ const alphabetGameData: AlphabetGameCard[] = [
   { id: "orange", title: "Orange arrangment", subtitle: "Can you drag and drop to create the Orange?", icon: "🍊", gradient: "from-lime-500 to-green-500", module: orangeArrangementQuiz },
   { id: "orangeComplex", title: "Complex orange arrangement", subtitle: "Let's make our level a bit higher", icon: "🍊🍊", gradient: "from-cyan-500 to-blue-500", module: orangeComplexArrangement },
   { id: "giraffeComplex", title: "Complex giraffe arrangement", subtitle: "Let's create a Giraffe", icon: "🦒", gradient: "from-purple-500 to-fuchsia-500", module: giraffeComplexArrangement }
+//  { id: "mapPuzzle", title: "Complex map arrangement", subtitle: "Let's create a map", icon: "🦒", gradient: "from-purple-500 to-fuchsia-500", module: mapPuzzle }
+
 ];
 
 // --- Page ---
