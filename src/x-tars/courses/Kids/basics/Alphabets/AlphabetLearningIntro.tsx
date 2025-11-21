@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, Volume2, Loader } from 'lucide-react';
 // Required Firebase imports for the execution environment
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+// import { getFirestore } from 'firebase/firestore';
 
 // Define a global Audio object reference to manage playback outside of the component state
 declare global {
