@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Moon, Sun } from 'lucide-react';
+import { useGameModule } from '@/hooks/useGameModule';
 
 // --- CONFIGURATION ---
 const initialPuzzlePieces = [
@@ -86,7 +86,7 @@ const DroppableSlot = ({ slotId, pieceId, isCorrect, onDrop, onDragOver, onDragS
 
 // --- MAIN APP COMPONENT ---
 const OrangePuzzleGame = () => { // Changed component name
-  const [theme, setTheme] = useState('light');
+  const { isDarkMode } = useGameModule();
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [isGameWon, setIsGameWon] = useState(false);
   const [isSolved, setIsSolved] = useState(false); 
@@ -94,9 +94,6 @@ const OrangePuzzleGame = () => { // Changed component name
   const [slots, setSlots] = useState({ 1: null, 2: null, 3: null, 4: null });
   const [showHint, setShowHint] = useState(false);
 
-  const toggleTheme = useCallback(() => {
-    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
-  }, []);
 
   const initializeGame = useCallback(() => {
     const pieceIds = initialPuzzlePieces.map(p => p.id);
@@ -202,7 +199,7 @@ const OrangePuzzleGame = () => { // Changed component name
     }
   }, [slots, isGameStarted, isGameWon, steps]); 
 
-  const currentBackground = theme === 'dark' 
+  const currentBackground = isDarkMode 
     ? 'bg-slate-900 text-gray-100' 
     : 'bg-gradient-to-br from-orange-100 via-white to-lime-100 text-gray-800'; // Orange-Lime theme
 
@@ -211,31 +208,22 @@ const OrangePuzzleGame = () => { // Changed component name
       <style>
         {`
           .puzzle-card {
-            background-color: ${theme === 'dark' ? '#1f2937' : '#ffffff'};
+            background-color: ${isDarkMode ? '#1f2937' : '#ffffff'};
           }
         `}
       </style>
       
       <div className="max-w-4xl mx-auto relative">
         <div className="flex justify-between items-center mb-6 pt-4">
-          <h1 className={`text-2xl sm:text-4xl font-extrabold ${theme === 'dark' ? 'text-orange-400' : 'text-orange-700'}`}>
+          <h1 className={`text-2xl sm:text-4xl font-extrabold ${isDarkMode ? 'text-orange-400' : 'text-orange-700'}`}>
             🍊 Orange Puzzle Challenge 🧩
           </h1>
-          <button
-            onClick={toggleTheme}
-            className={`p-3 rounded-full shadow-lg transition-colors ${
-              theme === 'dark' ? 'bg-yellow-500 text-gray-900 hover:bg-yellow-400' : 'bg-gray-800 text-white hover:bg-gray-700'
-            }`}
-            title="Toggle Theme"
-          >
-            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
         </div>
 
         {/* Start Screen */}
         {!isGameStarted && (
           <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-            <div className={`rounded-xl p-8 shadow-2xl text-center max-w-md w-full ${theme === 'dark' ? 'bg-slate-800 text-gray-100' : 'bg-white text-gray-800'}`}>
+            <div className={`rounded-xl p-8 shadow-2xl text-center max-w-md w-full ${isDarkMode ? 'bg-slate-800 text-gray-100' : 'bg-white text-gray-800'}`}>
               <h2 className="text-3xl font-bold text-orange-500 mb-4">Reassemble the Orange!</h2>
               <p className="text-lg mb-6">Move the puzzle pieces between the four slots until the orange is complete.</p>
               <button
@@ -320,10 +308,10 @@ const OrangePuzzleGame = () => { // Changed component name
 
             {isGameWon && (
               <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-                <div className={`rounded-3xl p-6 sm:p-8 text-center shadow-2xl transform max-w-sm mx-auto ${theme === 'dark' ? 'bg-slate-800 text-gray-100' : 'bg-white text-gray-800'}`}>
+                <div className={`rounded-3xl p-6 sm:p-8 text-center shadow-2xl transform max-w-sm mx-auto ${isDarkMode ? 'bg-slate-800 text-gray-100' : 'bg-white text-gray-800'}`}>
                   <div className="text-4xl sm:text-6xl mb-4">✅🎉</div>
                   <h2 className="text-2xl sm:text-3xl font-bold text-green-500 mb-4">Puzzle Solved!</h2>
-                  <p className={`text-lg sm:text-xl mb-4 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>
+                  <p className={`text-lg sm:text-xl mb-4 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                     You rebuilt the orange in <strong>{steps} moves</strong>!
                   </p>
                   <button

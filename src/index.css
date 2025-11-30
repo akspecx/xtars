@@ -190,6 +190,29 @@ layer(base);
   }
 }
 
+/* Global font-size helpers driven by SettingsContext */
+html.font-size-small {
+  font-size: 14px;
+}
+
+html.font-size-medium {
+  font-size: 16px;
+}
+
+html.font-size-large {
+  font-size: 18px;
+}
+
+/* High contrast mode helper */
+html.high-contrast body {
+  background-color: #020617; /* slate-950-like */
+  color: #f9fafb; /* near-white text */
+}
+
+html.high-contrast * {
+  outline-color: #f97316; /* orange focus outline */
+}
+
 @utility menu-item {
   @apply relative flex items-center w-full gap-3 px-3 py-2 font-medium rounded-lg text-theme-sm;
 }

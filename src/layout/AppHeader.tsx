@@ -4,6 +4,7 @@ import { useSidebar } from "../context/SidebarContext";
 import { ThemeToggleButton } from "../components/common/ThemeToggleButton";
 import NotificationDropdown from "../components/header/NotificationDropdown";
 import UserDropdown from "../components/header/UserDropdown";
+import HeaderSettingsControls from "../components/header/HeaderSettingsControls";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
@@ -160,6 +161,9 @@ const AppHeader: React.FC = () => {
         {/* Right Side Actions */}
         <div className="flex items-center gap-3 2xsm:gap-7">
           <ul className="flex items-center gap-2 2xsm:gap-4">
+            {/* Global settings controls (sound, voice, font size, contrast) */}
+            <HeaderSettingsControls />
+            {/* Existing theme toggle and user controls */}
             <ThemeToggleButton />
             <NotificationDropdown />
             <UserDropdown />

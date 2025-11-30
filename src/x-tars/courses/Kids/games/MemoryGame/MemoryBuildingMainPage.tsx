@@ -39,7 +39,7 @@ const memoryGameData: MemoryGameCard[] = [
 // --- Page ---
 const MemoryBuildingMainPage: React.FC<ModuleProps> = ({ onBack, theme, title, icon }) => {
   return (
-    <div className={`fixed inset-0 z-50 bg-gradient-to-br ${theme.background} p-4 sm:p-8 overflow-y-auto animate-module-entry`}>
+    <div className={`min-h-screen bg-gradient-to-br ${theme.background} p-4 sm:p-8 overflow-y-auto animate-module-entry`}>
       <button
         onClick={onBack}
         className={`mb-6 flex items-center gap-2 px-4 py-2 rounded-full ${theme.surface} ${theme.text} ${theme.surfaceHover} border ${theme.border} transition-all duration-300 hover:scale-105`}

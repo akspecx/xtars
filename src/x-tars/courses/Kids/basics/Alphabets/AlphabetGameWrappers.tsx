@@ -1,24 +1,41 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import AlphabetGamesDragDrop from "./AlphabetsDragDropMatching";
-import AlphabetSequenceMapping from "./AlphabetSequenceMapping";
-import AlphabetFruitFlipGame from "./FlipAlphabetFruitLearning";
-import RandomBalloonAlphabetMapping from "./RandomBalloonAlphabetMapping";
-import AlphabetTracing from "./AlphabetTracing";
-import AlphabetCounting from "./AlphabetCounting";
-import AlphabetFillInTheBlanks from "./AlphabetFillInTheBlanks";
-import AlphabetObjectMatching from "./AlphabetObjectMatching";
-import AlphabetCaseMatching from "./AlphabetCaseMatching";
-import AlphabetSorting from "./AlphabetSorting";
-import AlphabetDescending from "./AlphabetDescending";
-import AlphabetStoryCards from "./AlphabetStoryCards";
-import AlphabetBeginningSoundPicker from "./AlphabetBeginningSoundPicker";
-import AlphabetLetterPuzzle from "./AlphabetLetterPuzzle";
-import AlphabetLetterPathMaze from "./AlphabetLetterPathMaze";
-import AlphabetRhyming from "./AlphabetRhyming";
-import AlphabetNameBuilder from "./AlphabetNameBuilder";
-import AlphabetFindTapScene from "./AlphabetFindTapScene";
-import AlphabetUppercaseUsage from "./AlphabetUppercaseUsage";
+// Age 3-4 modules
+import AlphabetGamesDragDrop from "./age3-4/AlphabetsDragDropMatching";
+import RandomBalloonAlphabetMapping from "./age3-4/RandomBalloonAlphabetMapping";
+import AlphabetCounting from "./age3-4/AlphabetCounting";
+import AlphabetStoryCards from "./age3-4/AlphabetStoryCards";
+import AlphabetFindTapScene from "./age3-4/AlphabetFindTapScene";
+import LetterHuntSafari from "./age3-4/LetterHuntSafari";
+import AlphabetDanceParty from "./age3-4/AlphabetDanceParty";
+import LetterSizeSorting from "./age3-4/LetterSizeSorting";
+import EnvironmentalPrintMatch from "./age3-4/EnvironmentalPrintMatch";
+
+// Age 4-5 modules
+import AlphabetSequenceMapping from "./age4-5/AlphabetSequenceMapping";
+import AlphabetFruitFlipGame from "./age4-5/FlipAlphabetFruitLearning";
+import AlphabetTracing from "./age4-5/AlphabetTracing";
+import AlphabetFillInTheBlanks from "./age4-5/AlphabetFillInTheBlanks";
+import AlphabetObjectMatching from "./age4-5/AlphabetObjectMatching";
+import AlphabetCaseMatching from "./age4-5/AlphabetCaseMatching";
+import AlphabetSorting from "./age4-5/AlphabetSorting";
+import AlphabetLetterPuzzle from "./age4-5/AlphabetLetterPuzzle";
+import AlphabetLetterPathMaze from "./age4-5/AlphabetLetterPathMaze";
+import AlphabetBeginningSoundPicker from "./age4-5/AlphabetBeginningSoundPicker";
+import CVCWordBuilder from "./age4-5/CVCWordBuilder";
+import WordFamilyHouses from "./age4-5/WordFamilyHouses";
+import AlphabetChef from "./age4-5/AlphabetChef";
+import SightWordStars from "./age4-5/SightWordStars";
+import PreWritingStrokes from "./age4-5/PreWritingStrokes";
+
+// Age 5-6 modules
+import AlphabetDescending from "./age5-6/AlphabetDescending";
+import AlphabetRhyming from "./age5-6/AlphabetRhyming";
+import AlphabetNameBuilder from "./age5-6/AlphabetNameBuilder";
+import AlphabetUppercaseUsage from "./age5-6/AlphabetUppercaseUsage";
+import BlendingBridge from "./age5-6/BlendingBridge";
+import SentenceBuilder from "./age5-6/SentenceBuilder";
+import CompoundWordFactory from "./age5-6/CompoundWordFactory";
 import AlphabetGamesLandingPage from "./AlphabetGamesLandingPage";
 
 // Wrapper for Alphabet Games Page (standalone route)
@@ -445,6 +462,139 @@ export const AlphabetUppercaseUsageGameWrapper: React.FC = () => {
         ← Back to Alphabet Menu
       </button>
       <AlphabetUppercaseUsage />
+    </div>
+  );
+};
+
+// NEW MODULE WRAPPERS
+export const LetterHuntSafariGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <LetterHuntSafari />
+    </div>
+  );
+};
+
+export const AlphabetDancePartyGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <AlphabetDanceParty />
+    </div>
+  );
+};
+
+export const LetterSizeSortingGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <LetterSizeSorting />
+    </div>
+  );
+};
+
+export const EnvironmentalPrintMatchGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <EnvironmentalPrintMatch />
+    </div>
+  );
+};
+
+export const CVCWordBuilderGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <CVCWordBuilder />
+    </div>
+  );
+};
+
+export const WordFamilyHousesGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <WordFamilyHouses />
+    </div>
+  );
+};
+
+export const AlphabetChefGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <AlphabetChef />
+    </div>
+  );
+};
+
+export const SightWordStarsGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <SightWordStars />
+    </div>
+  );
+};
+
+export const PreWritingStrokesGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <PreWritingStrokes />
+    </div>
+  );
+};
+
+export const BlendingBridgeGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <BlendingBridge />
+    </div>
+  );
+};
+
+export const SentenceBuilderGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <SentenceBuilder />
+    </div>
+  );
+};
+
+export const CompoundWordFactoryGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/alphabets");
+  return (
+    <div className="min-h-screen">
+      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Alphabet Menu</button>
+      <CompoundWordFactory />
     </div>
   );
 };

@@ -49,13 +49,27 @@ const alphabetGameData: AlphabetGameCard[] = [
   { id: "rhyming", title: "Rhyming Friends", subtitle: "Find words that rhyme", icon: "🎵", gradient: "from-fuchsia-500 to-rose-500", path: "/games/alphabets/rhyming" },
   { id: "nameBuilder", title: "Build Your Name", subtitle: "Use letters to build your name", icon: "✍️", gradient: "from-teal-500 to-emerald-500", path: "/games/alphabets/name-builder" },
   { id: "findTap", title: "Find & Tap Letters", subtitle: "Search scenes for hidden letters", icon: "🔍", gradient: "from-emerald-400 to-sky-400", path: "/games/alphabets/find-tap" },
-  { id: "uppercaseUsage", title: "Uppercase or Lowercase?", subtitle: "Choose letters that should be uppercase", icon: "🔡", gradient: "from-slate-500 to-indigo-500", path: "/games/alphabets/uppercase-usage" }
+  { id: "uppercaseUsage", title: "Uppercase or Lowercase?", subtitle: "Choose letters that should be uppercase", icon: "🔡", gradient: "from-slate-500 to-indigo-500", path: "/games/alphabets/uppercase-usage" },
+  
+  // NEW MODULES
+  { id: "letter-safari", title: "Letter Hunt Safari", subtitle: "Find animals by starting letter (Age 3–4)", icon: "🦁", gradient: "from-amber-500 to-orange-500", path: "/games/alphabets/letter-safari" },
+  { id: "dance-party", title: "Alphabet Dance Party", subtitle: "Learn letters through actions (Age 3–4)", icon: "💃", gradient: "from-pink-500 to-purple-500", path: "/games/alphabets/dance-party" },
+  { id: "size-sorting", title: "Letter Size Sorting", subtitle: "Sort big and small letters (Age 3–4)", icon: "📐", gradient: "from-yellow-500 to-orange-500", path: "/games/alphabets/size-sorting" },
+  { id: "print-match", title: "Environmental Print Match", subtitle: "Match brands with letters (Age 3–4)", icon: "🏪", gradient: "from-cyan-500 to-blue-500", path: "/games/alphabets/print-match" },
+  { id: "cvc-builder", title: "CVC Word Builder", subtitle: "Build 3-letter words (Age 4–5)", icon: "🏗️", gradient: "from-green-500 to-emerald-500", path: "/games/alphabets/cvc-builder" },
+  { id: "word-families", title: "Word Family Houses", subtitle: "Sort rhyming word families (Age 4–5)", icon: "🏠", gradient: "from-orange-500 to-red-500", path: "/games/alphabets/word-families" },
+  { id: "alphabet-chef", title: "Alphabet Chef", subtitle: "Spell food words (Age 4–5)", icon: "👨‍🍳", gradient: "from-rose-500 to-pink-500", path: "/games/alphabets/alphabet-chef" },
+  { id: "sight-words", title: "Sight Word Stars", subtitle: "Catch falling sight words (Age 4–5)", icon: "⭐", gradient: "from-indigo-500 to-purple-500", path: "/games/alphabets/sight-words" },
+  { id: "pre-writing", title: "Pre-Writing Strokes", subtitle: "Practice writing strokes (Age 4–5)", icon: "✏️", gradient: "from-blue-500 to-purple-500", path: "/games/alphabets/pre-writing" },
+  { id: "blending", title: "Blending Bridge", subtitle: "Blend sounds to make words (Age 5–6)", icon: "🌉", gradient: "from-sky-500 to-blue-500", path: "/games/alphabets/blending" },
+  { id: "sentence-builder", title: "Sentence Builder", subtitle: "Build complete sentences (Age 5–6)", icon: "📝", gradient: "from-teal-500 to-cyan-500", path: "/games/alphabets/sentence-builder" },
+  { id: "compound-words", title: "Compound Word Factory", subtitle: "Combine words to make new ones (Age 5–6)", icon: "🏭", gradient: "from-purple-500 to-pink-500", path: "/games/alphabets/compound-words" }
 ];
 
 // --- Page ---
 const AlphabetGamesLandingPage: React.FC<ModuleProps> = ({ onBack, theme, title, icon }) => {
   return (
-    <div className={`fixed inset-0 z-50 bg-gradient-to-br ${theme.background} p-4 sm:p-8 overflow-y-auto animate-module-entry`}>
+    <div className={`min-h-screen bg-gradient-to-br ${theme.background} p-4 sm:p-8 overflow-y-auto animate-module-entry`}>
       <button
         onClick={onBack}
         className={`mb-6 flex items-center gap-2 px-4 py-2 rounded-full ${theme.surface} ${theme.text} ${theme.surfaceHover} border ${theme.border} transition-all duration-300 hover:scale-105`}
