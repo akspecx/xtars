@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "./BuShapesComponent/button";
 import { toast } from "sonner";
 
 type ShapeType = "circle" | "triangle" | "rectangle" | "star" | "pentagon";
