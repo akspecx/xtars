@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Sun, Moon, ArrowLeft, Lock, Star, Zap } from 'lucide-react';
+import AlphabetGamesPage from '../Alphabets/AlphabetGamesPage'
+import NumbersMainPage from '../Numbers/NumbersMainPage'
+import ShapesLandingPage from '../basics/Shapes/ShapesLandingPage'
 import { useNavigate } from 'react-router';
 import { useGameModule } from '@/hooks/useGameModule';
 import AlphabetGamesLandingPage from '../basics/Alphabets/AlphabetGamesLandingPage'
@@ -285,11 +288,9 @@ const cardData: Card[] = [
     title: 'Shapes',
     subtitle: 'Identify and learn geometric shapes',
     icon: '🔺',
-    locked: true,              // Locked locally
-    apiLockedStatus: false,    // But unlocked by API (should be accessible)
     category: 'basics',
     gradient: 'from-blue-500 to-indigo-500',
-    moduleComponent: ComingSoonModule, 
+    moduleComponent: ShapesLandingPage, 
   },
   {
     id: 'colors',

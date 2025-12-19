@@ -10,7 +10,7 @@ import AkashPrabhatPlacedBasicCA from './AkashPrabhatPlacedBasicCA'
 import AkashPrabhatDavidBasicCA from './AkashPrabhatDavidBasicCA'
 import FirstsSecondLeftCA from './FirstsSecondLeftCA'
 import FirstSecondRightCA from './FirstSecondRightCA'
-// import LineararrangementPracticeModule1 from './LineararrangementPracticeModule1'
+import BetweenExplanationCA from './BetweenExplanationCA'
 // import LeftLinearArrangement2Dimension from './LeftLinearArrangement2Dimension'
 // import WorkingWithInstruction from './WorkingWithInstruction'
 // import ImmediateLeftModule from './ImmediateLeftModule'
@@ -92,7 +92,7 @@ export const sampleCourse = {
               tabs: [
                 { id: 'concept', label: 'Left and second to the left?', icon: BookOpen },
                 { id: 'concept1', label: 'First and second to the Right?', icon: BookOpen },
-                // { id: 'concept2', label: 'Left and Right', icon: BookOpen },
+                { id: 'concept2', label: 'Between Explanation', icon: BookOpen }
                 // { id: 'practice', label: 'Practice left', icon: PenTool },
                 // { id: 'practice1', label: 'Practice Right', icon: PenTool },
                 // { id: 'practice2', label: 'Place Prabhat Correctly', icon: PenTool },
@@ -101,7 +101,7 @@ export const sampleCourse = {
               ],
               concept: <FirstsSecondLeftCA />,
               concept1: <FirstSecondRightCA />,
-            //   practice: <BasicLeftQuizCA />,
+              concept2: <BetweenExplanationCA />
             //   practice1: <BasicRightQuizCA />,
             //   practice2: <InteractiveDragDropRightCA />,
             //   practice3: <AkashPrabhatPlacedBasicCA />,

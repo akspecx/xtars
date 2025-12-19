@@ -23,6 +23,7 @@ import CoursesHome from "./x-tars/courses/CourseHome";
 import CoursesRouter from "./x-tars/courses/Router";
 import GamesHome from "./x-tars/courses/Kids/MainModule/KidsMainPage";
 import Roadmap from "./x-tars/Roadmap";
+// import ShapesIntroduction  from "./x-tars/courses/Kids/basics/Shapes/ShapesIntroduction";
 import { 
   AlphabetGamesPageWrapper,
   LetterMatchGameWrapper, 
@@ -88,7 +89,16 @@ import {
   MeasureTheMonstersGameWrapper,
   NumberLineJumperGameWrapper
 } from "./x-tars/courses/Kids/basics/Numbers/NumbersGameWrappers";
-import { ShapesGamesPageWrapper } from "./x-tars/courses/Kids/basics/Shapes/ShapesGameWrappers";
+
+
+import { 
+  ShapesGamesPageWrapper,
+  ShapesBearWrapper,
+  ShapesBusWrapper,
+  ShapesTreeWrapper,
+  ShapesIntroductionWrapper
+} from "./x-tars/courses/Kids/basics/Shapes/ShapesWrapper";
+// import { ShapesGamesPageWrapper } from "./x-tars/courses/Kids/basics/Shapes/ShapesLandingPage";
 import { 
   MemoryGamesPageWrapper,
   AnimalMatchingGameWrapper,
@@ -196,8 +206,16 @@ export default function App() {
               <Route path="/games/numbers/measure-monsters" element={<MeasureTheMonstersGameWrapper />} />
               <Route path="/games/numbers/number-jumper" element={<NumberLineJumperGameWrapper />} />
 
-              {/* Shapes (Coming Soon) */}
               <Route path="/games/shapes" element={<ShapesGamesPageWrapper />} />
+              <Route path="/games/shapes/introduction" element={<ShapesIntroductionWrapper />} />
+              <Route path="/games/shapes/bear" element={<ShapesBearWrapper />} />
+              <Route path="/games/shapes/bus" element={<ShapesBusWrapper />} />
+              <Route path="/games/shapes/tree" element={<ShapesTreeWrapper />} />
+              
+              
+
+              {/* Shapes (Coming Soon) */}
+              {/* <Route path="/games/shapes" element={<ShapesGamesPageWrapper />} /> */}
 
               {/* Memory Games Menu */}
               <Route path="/games/memory" element={<MemoryGamesPageWrapper />} />
