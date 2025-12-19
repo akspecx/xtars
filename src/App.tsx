@@ -18,6 +18,7 @@ import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
+import { SettingsProvider } from "./contexts/SettingsContext";
 import CoursesHome from "./x-tars/courses/CourseHome";
 import CoursesRouter from "./x-tars/courses/Router";
 import GamesHome from "./x-tars/courses/Kids/MainModule/KidsMainPage";
@@ -43,7 +44,19 @@ import {
   AlphabetRhymingGameWrapper,
   AlphabetNameBuilderGameWrapper,
   AlphabetFindTapGameWrapper,
-  AlphabetUppercaseUsageGameWrapper
+  AlphabetUppercaseUsageGameWrapper,
+  LetterHuntSafariGameWrapper,
+  AlphabetDancePartyGameWrapper,
+  LetterSizeSortingGameWrapper,
+  EnvironmentalPrintMatchGameWrapper,
+  CVCWordBuilderGameWrapper,
+  WordFamilyHousesGameWrapper,
+  AlphabetChefGameWrapper,
+  SightWordStarsGameWrapper,
+  PreWritingStrokesGameWrapper,
+  BlendingBridgeGameWrapper,
+  SentenceBuilderGameWrapper,
+  CompoundWordFactoryGameWrapper
 } from "./x-tars/courses/Kids/basics/Alphabets/AlphabetGameWrappers";
 import { 
   NumbersGamesPageWrapper,
@@ -52,7 +65,29 @@ import {
   FillInTheBlanksGameWrapper,
   DescendingOrderGameWrapper,
   NumberTracingGameWrapper,
-  NumberCountingGameWrapper
+  NumberCountingGameWrapper,
+  DotDashRocketsGameWrapper,
+  LadybugSpotsMatchGameWrapper,
+  MoreOrLessMarketGameWrapper,
+  CleanUpCountGameWrapper,
+  NumberBridgeGameWrapper,
+  PatternTrainCarsGameWrapper,
+  SnackSharingPartyGameWrapper,
+  TenFrameGardenGameWrapper,
+  AddTheAnimalsGameWrapper,
+  NumberBondsBubblesGameWrapper,
+  JumpingFrogsGameWrapper,
+  FillTheBucketGameWrapper,
+  ZeroTheHeroGameWrapper,
+  PizzaPartySharingGameWrapper,
+  CoinCollectorGameWrapper,
+  OrdinalRaceTrackGameWrapper,
+  ShapeNumberPuzzlesGameWrapper,
+  ClockTowerTimeGameWrapper,
+  NumberDetectiveGameWrapper,
+  SubtractTheSnacksGameWrapper,
+  MeasureTheMonstersGameWrapper,
+  NumberLineJumperGameWrapper
 } from "./x-tars/courses/Kids/basics/Numbers/NumbersGameWrappers";
 
 
@@ -83,7 +118,7 @@ import FeedBackComponent from "./pages/Feedback";
 
 export default function App() {
   return (
-    <>
+    <SettingsProvider>
       <Router basename="xtars">
         <AuthProvider>
           <ScrollToTop />
@@ -125,6 +160,18 @@ export default function App() {
               <Route path="/games/alphabets/name-builder" element={<AlphabetNameBuilderGameWrapper />} />
               <Route path="/games/alphabets/find-tap" element={<AlphabetFindTapGameWrapper />} />
               <Route path="/games/alphabets/uppercase-usage" element={<AlphabetUppercaseUsageGameWrapper />} />
+              <Route path="/games/alphabets/letter-safari" element={<LetterHuntSafariGameWrapper />} />
+              <Route path="/games/alphabets/dance-party" element={<AlphabetDancePartyGameWrapper />} />
+              <Route path="/games/alphabets/size-sorting" element={<LetterSizeSortingGameWrapper />} />
+              <Route path="/games/alphabets/print-match" element={<EnvironmentalPrintMatchGameWrapper />} />
+              <Route path="/games/alphabets/cvc-builder" element={<CVCWordBuilderGameWrapper />} />
+              <Route path="/games/alphabets/word-families" element={<WordFamilyHousesGameWrapper />} />
+              <Route path="/games/alphabets/alphabet-chef" element={<AlphabetChefGameWrapper />} />
+              <Route path="/games/alphabets/sight-words" element={<SightWordStarsGameWrapper />} />
+              <Route path="/games/alphabets/pre-writing" element={<PreWritingStrokesGameWrapper />} />
+              <Route path="/games/alphabets/blending" element={<BlendingBridgeGameWrapper />} />
+              <Route path="/games/alphabets/sentence-builder" element={<SentenceBuilderGameWrapper />} />
+              <Route path="/games/alphabets/compound-words" element={<CompoundWordFactoryGameWrapper />} />
 
               {/* Numbers Games Menu */}
               <Route path="/games/numbers" element={<NumbersGamesPageWrapper />} />
@@ -136,6 +183,28 @@ export default function App() {
               <Route path="/games/numbers/sequence" element={<NumberSequenceGameWrapper />} />
               <Route path="/games/numbers/fill-the-blanks" element={<FillInTheBlanksGameWrapper />} />
               <Route path="/games/numbers/descending" element={<DescendingOrderGameWrapper />} />
+              <Route path="/games/numbers/dot-dash-rockets" element={<DotDashRocketsGameWrapper />} />
+              <Route path="/games/numbers/ladybug-spots" element={<LadybugSpotsMatchGameWrapper />} />
+              <Route path="/games/numbers/more-or-less-market" element={<MoreOrLessMarketGameWrapper />} />
+              <Route path="/games/numbers/cleanup-count" element={<CleanUpCountGameWrapper />} />
+              <Route path="/games/numbers/number-bridge" element={<NumberBridgeGameWrapper />} />
+              <Route path="/games/numbers/pattern-train-cars" element={<PatternTrainCarsGameWrapper />} />
+              <Route path="/games/numbers/snack-sharing-party" element={<SnackSharingPartyGameWrapper />} />
+              <Route path="/games/numbers/ten-frame-garden" element={<TenFrameGardenGameWrapper />} />
+              <Route path="/games/numbers/add-the-animals" element={<AddTheAnimalsGameWrapper />} />
+              <Route path="/games/numbers/number-bonds-bubbles" element={<NumberBondsBubblesGameWrapper />} />
+              <Route path="/games/numbers/jumping-frogs" element={<JumpingFrogsGameWrapper />} />
+              <Route path="/games/numbers/fill-the-bucket" element={<FillTheBucketGameWrapper />} />
+              <Route path="/games/numbers/zero-hero" element={<ZeroTheHeroGameWrapper />} />
+              <Route path="/games/numbers/pizza-party" element={<PizzaPartySharingGameWrapper />} />
+              <Route path="/games/numbers/coin-collector" element={<CoinCollectorGameWrapper />} />
+              <Route path="/games/numbers/ordinal-race" element={<OrdinalRaceTrackGameWrapper />} />
+              <Route path="/games/numbers/shape-puzzles" element={<ShapeNumberPuzzlesGameWrapper />} />
+              <Route path="/games/numbers/clock-time" element={<ClockTowerTimeGameWrapper />} />
+              <Route path="/games/numbers/number-detective" element={<NumberDetectiveGameWrapper />} />
+              <Route path="/games/numbers/subtract-snacks" element={<SubtractTheSnacksGameWrapper />} />
+              <Route path="/games/numbers/measure-monsters" element={<MeasureTheMonstersGameWrapper />} />
+              <Route path="/games/numbers/number-jumper" element={<NumberLineJumperGameWrapper />} />
 
               <Route path="/games/shapes" element={<ShapesGamesPageWrapper />} />
               <Route path="/games/shapes/introduction" element={<ShapesIntroductionWrapper />} />
@@ -224,6 +293,6 @@ export default function App() {
           </Routes>
         </AuthProvider>
       </Router>
-    </>
+    </SettingsProvider>
   );
 }

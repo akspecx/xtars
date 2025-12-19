@@ -4,6 +4,7 @@ import AlphabetGamesPage from '../Alphabets/AlphabetGamesPage'
 import NumbersMainPage from '../Numbers/NumbersMainPage'
 import ShapesLandingPage from '../basics/Shapes/ShapesLandingPage'
 import { useNavigate } from 'react-router';
+import { useGameModule } from '@/hooks/useGameModule';
 import AlphabetGamesLandingPage from '../basics/Alphabets/AlphabetGamesLandingPage'
 import NumbersGamesLandingPage from '../basics/Numbers/NumbersGamesLandingPage'
 import MemoryBuildingMainPage from '../games/MemoryGame/MemoryBuildingMainPage'
@@ -429,12 +430,12 @@ const Card: React.FC<{
 // --- Main Component ---
 
 const LearningPlatform: React.FC = () => {
-  const [isDark, setIsDark] = useState(true);
+  const { isDarkMode } = useGameModule();
   const [activeTab, setActiveTab] = useState('basics');
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const theme = themes[isDark ? 'dark' : 'light'];
+  const theme = themes[isDarkMode ? 'dark' : 'light'];
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -550,7 +551,7 @@ const LearningPlatform: React.FC = () => {
         }
       `}</style>
 
-      <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
+      {/* Theme now controlled by global header settings */}
 
       <div className="container mx-auto px-4 py-8 sm:py-12">
         {/* Header */}

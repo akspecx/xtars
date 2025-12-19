@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Moon, Sun } from 'lucide-react';
+import { useSettings } from '@/contexts/SettingsContext';
 
 // --- Configuration ---
 const MAX_TURNS = 10;
@@ -191,6 +192,10 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ card, index, isFlipped, isMatch
 // --- Main App Component ---
 
 const App: React.FC = () => {
+  // --- Global settings ---
+  const { isDarkMode } = useSettings();
+  const isDark = isDarkMode;
+
   // --- Game State ---
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
@@ -201,7 +206,6 @@ const App: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const [gameOver, setGameOver] = useState<boolean>(false); 
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-  const [isDark, setIsDark] = useState<boolean>(false);
   const [gameId, setGameId] = useState<number>(0);
   const [cardBackTheme, setCardBackTheme] = useState(cardBackThemes[0].name); // New state for card back theme
 
@@ -209,10 +213,6 @@ const App: React.FC = () => {
   const MAX_TURNS = 10;
   
   // --- Utility Hooks ---
-
-  const toggleTheme = useCallback(() => {
-    setIsDark(prev => !prev);
-  }, []);
 
   // Voice synthesis function
   const speak = useCallback((text: string) => {
@@ -344,16 +344,6 @@ const App: React.FC = () => {
       }`}>
         <div className="flex flex-col items-center justify-center min-h-screen p-4 z-10 relative">
           
-          <button
-            onClick={toggleTheme}
-            className={`absolute top-4 right-4 p-3 rounded-full shadow-lg transition-colors ${
-              isDark ? 'bg-yellow-500 text-gray-900 hover:bg-yellow-400' : 'bg-gray-800 text-white hover:bg-gray-700'
-            }`}
-            title="Toggle Theme"
-          >
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-          
           <div className={`text-center max-w-md mx-auto p-8 rounded-xl shadow-2xl ${
             isDark ? 'bg-slate-800' : 'bg-white'
           }`}>
@@ -442,16 +432,6 @@ const App: React.FC = () => {
           <h1 className={`text-xl sm:text-3xl md:text-4xl font-bold ${isDark ? 'text-teal-400' : 'text-indigo-800'} text-center w-full`}>
             🍉 Fruit Memory Match 🍇
           </h1>
-          
-          <button
-            onClick={toggleTheme}
-            className={`p-2 sm:p-3 rounded-full shadow-lg transition-colors absolute top-4 right-4 ${
-              isDark ? 'bg-yellow-500 text-gray-900 hover:bg-yellow-400' : 'bg-gray-800 text-white hover:bg-gray-700'
-            }`}
-            title="Toggle Theme"
-          >
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
         </div>
         
         {/* Scoreboard and Info */}

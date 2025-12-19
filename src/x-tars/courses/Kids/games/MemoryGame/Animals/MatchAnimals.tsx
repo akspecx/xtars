@@ -70,11 +70,11 @@
 // interface SuccessModalProps {
 //   onNext: () => void;
 //   targetAnimal: Animal;
-//   isDark: boolean;
+//   isDarkMode: boolean;
 // }
 
-// const SuccessModal: React.FC<SuccessModalProps> = ({ onNext, targetAnimal, isDark }) => {
-//   const bgColor = isDark 
+// const SuccessModal: React.FC<SuccessModalProps> = ({ onNext, targetAnimal, isDarkMode }) => {
+//   const bgColor = isDarkMode 
 //     ? targetAnimal.darkColor.replace('text-', 'text-').replace('bg-', 'bg-') 
 //     : targetAnimal.color.replace('text-', 'text-').replace('bg-', 'bg-');
 
@@ -111,7 +111,7 @@
 //   const [draggedAnimal, setDraggedAnimal] = useState<Animal | null>(null);
 //   const [gameStatus, setGameStatus] = useState<'playing' | 'success' | 'incorrect'>('playing');
 //   const [isDraggingOver, setIsDraggingOver] = useState(false);
-//   const [isDark, setIsDark] = useState(false);
+//   const [isDarkMode, setIsDark] = useState(false);
 //   const [isVoiceEnabled, setIsVoiceEnabled] = useState(true);
 
 //   // --- Theme Toggle ---
@@ -119,7 +119,7 @@
 //   const toggleVoice = () => setIsVoiceEnabled(prev => !prev);
 
 //   // Determine current color classes based on theme
-//   const getCurrentColorClass = (animal: Animal) => isDark ? animal.darkColor : animal.color;
+//   const getCurrentColorClass = (animal: Animal) => isDarkMode ? animal.darkColor : animal.color;
 //   const targetColorClass = getCurrentColorClass(targetAnimal);
 
 //   // --- Game Logic ---
@@ -213,7 +213,7 @@
 
 //   const TargetBox = (
 //     <div className={`relative p-6 sm:p-8 rounded-2xl shadow-lg border-4 transition-all duration-300 w-full h-full min-h-[10rem] sm:min-h-[12rem] flex flex-col items-center justify-center 
-//       ${targetColorClass.replace('text-', 'text-').replace('bg-200', isDark ? 'bg-900' : 'bg-300')} 
+//       ${targetColorClass.replace('text-', 'text-').replace('bg-200', isDarkMode ? 'bg-900' : 'bg-300')} 
 //       ${gameStatus === 'playing' ? 'border-dashed border-gray-400 dark:border-gray-500 animate-pulse-slow' : 'border-solid border-white'}`}
 //     >
 //       <div className="absolute top-2 right-4 text-xs font-semibold text-gray-700 dark:text-gray-300">Box 2</div>
@@ -233,7 +233,7 @@
 //       onDrop={handleDrop}
 //       className={`relative p-4 rounded-2xl shadow-xl border-4 transition-all duration-300 w-full h-full min-h-[10rem] sm:min-h-[12rem] flex flex-col items-center justify-center 
 //         ${isDraggingOver 
-//             ? targetColorClass.replace('text-', 'text-').replace('bg-200', isDark ? 'bg-700' : 'bg-300')
+//             ? targetColorClass.replace('text-', 'text-').replace('bg-200', isDarkMode ? 'bg-700' : 'bg-300')
 //             : (gameStatus === 'incorrect' 
 //                 ? 'bg-red-200 border-red-500 dark:bg-red-900 dark:border-red-600' 
 //                 : 'bg-gray-100 border-dashed border-gray-300 dark:bg-gray-700 dark:border-gray-600'
@@ -262,7 +262,7 @@
 //   );
 
 //   return (
-//     <div className={`${isDark ? 'dark' : ''} min-h-screen font-sans`}>
+//     <div className={`${isDarkMode ? 'dark' : ''} min-h-screen font-sans`}>
 //       <div className="min-h-screen transition-colors duration-300 bg-gradient-to-br from-purple-100 to-indigo-200 dark:from-gray-900 dark:to-indigo-900 p-4 sm:p-8">
 //         <style>{`
 //           @keyframes pulse-slow {
@@ -302,13 +302,13 @@
 //               <button
 //                 onClick={toggleTheme}
 //                 className={`p-3 rounded-full transition-colors shadow-lg ${
-//                   isDark 
+//                   isDarkMode 
 //                     ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900' 
 //                     : 'bg-gray-800 hover:bg-gray-900 text-white'
 //                 }`}
 //                 title="Toggle Theme"
 //               >
-//                 {isDark ? <Sun size={20} /> : <Moon size={20} />}
+//                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
 //               </button>
 //             </div>
 //           </div>
@@ -365,7 +365,7 @@
 //           <SuccessModal 
 //             onNext={handleNextAnimal}
 //             targetAnimal={targetAnimal}
-//             isDark={isDark}
+//             isDarkMode={isDarkMode}
 //           />
 //         )}
 //       </div>
@@ -377,6 +377,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { RefreshCw, CheckCircle, XCircle, Heart, Sparkles, Sun, Moon, Volume2 } from 'lucide-react';
+import { useGameModule } from '@/hooks/useGameModule';
 
 // --- Data Definitions ---
 interface Animal {
@@ -447,11 +448,11 @@ const speak = (text: string, enabled: boolean) => {
 interface SuccessModalProps {
   onNext: () => void;
   targetAnimal: Animal;
-  isDark: boolean;
+  isDarkMode: boolean;
 }
 
-const SuccessModal: React.FC<SuccessModalProps> = ({ onNext, targetAnimal, isDark }) => {
-  const bgColor = isDark 
+const SuccessModal: React.FC<SuccessModalProps> = ({ onNext, targetAnimal, isDarkMode }) => {
+  const bgColor = isDarkMode 
     ? targetAnimal.darkColor.replace('text-', 'text-').replace('bg-', 'bg-') 
     : targetAnimal.color.replace('text-', 'text-').replace('bg-', 'bg-');
 
@@ -483,20 +484,19 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ onNext, targetAnimal, isDar
 // --- Main Game Component ---
 
 const AnimalMatchGame: React.FC = () => {
+  const { isDarkModeMode } = useGameModule();
   const [targetAnimal, setTargetAnimal] = useState<Animal>(ALL_ANIMALS[0]);
   const [animalOptions, setAnimalOptions] = useState<Animal[]>([]);
   const [draggedAnimal, setDraggedAnimal] = useState<Animal | null>(null);
   const [gameStatus, setGameStatus] = useState<'playing' | 'success' | 'incorrect'>('playing');
   const [isDraggingOver, setIsDraggingOver] = useState(false);
-  const [isDark, setIsDark] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(true);
 
-  // --- Theme Toggle ---
-  const toggleTheme = () => setIsDark(prev => !prev);
+  // --- Voice Toggle (theme now controlled globally in header) ---
   const toggleVoice = () => setIsVoiceEnabled(prev => !prev);
 
   // Determine current color classes based on theme
-  const getCurrentColorClass = (animal: Animal) => isDark ? animal.darkColor : animal.color;
+  const getCurrentColorClass = (animal: Animal) => isDarkMode ? animal.darkColor : animal.color;
   const targetColorClass = getCurrentColorClass(targetAnimal);
 
   // --- Game Logic ---
@@ -591,7 +591,7 @@ const AnimalMatchGame: React.FC = () => {
 
   const TargetBox = (
     <div className={`relative p-6 sm:p-8 rounded-2xl shadow-lg border-4 transition-all duration-300 w-full h-full min-h-[10rem] sm:min-h-[12rem] flex flex-col items-center justify-center 
-      ${targetColorClass.replace('text-', 'text-').replace('bg-200', isDark ? 'bg-900' : 'bg-300')} 
+      ${targetColorClass.replace('text-', 'text-').replace('bg-200', isDarkMode ? 'bg-900' : 'bg-300')} 
       ${gameStatus === 'playing' ? 'border-dashed border-gray-400 dark:border-gray-500 animate-pulse-slow border-white' : 'border-solid border-white'}`}
     >
       <div className="absolute top-2 right-4 text-xs font-semibold text-gray-700 dark:text-gray-300">Box 2</div>
@@ -611,7 +611,7 @@ const AnimalMatchGame: React.FC = () => {
       onDrop={handleDrop}
       className={`relative p-4 rounded-2xl shadow-xl border-4 transition-all duration-300 w-full h-full min-h-[10rem] sm:min-h-[12rem] flex flex-col items-center justify-center 
         ${isDraggingOver 
-            ? targetColorClass.replace('text-', 'text-').replace('bg-200', isDark ? 'bg-700' : 'bg-300')
+            ? targetColorClass.replace('text-', 'text-').replace('bg-200', isDarkMode ? 'bg-700' : 'bg-300')
             : (gameStatus === 'incorrect' 
                 ? 'bg-red-200 border-red-500 dark:bg-red-900 dark:border-red-600' 
                 : 'bg-gray-100 border-dashed border-gray-300 dark:bg-gray-700 dark:border-gray-600'
@@ -640,7 +640,7 @@ const AnimalMatchGame: React.FC = () => {
   );
 
   return (
-    <div className={`${isDark ? 'dark' : ''} min-h-screen font-sans`}>
+    <div className={`${isDarkMode ? 'dark' : ''} min-h-screen font-sans`}>
       <div className="min-h-screen transition-colors duration-300 bg-gradient-to-br from-purple-100 to-indigo-200 dark:from-gray-900 dark:to-indigo-900 p-2 md:p-8">
         <style>{`
           @keyframes pulse-slow {
@@ -676,17 +676,6 @@ const AnimalMatchGame: React.FC = () => {
                 title="Toggle Voice"
               >
                 <Volume2 size={20} />
-              </button>
-              <button
-                onClick={toggleTheme}
-                className={`p-2 sm:p-3 rounded-full transition-colors shadow-lg ${
-                  isDark 
-                    ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900' 
-                    : 'bg-gray-800 hover:bg-gray-900 text-white'
-                }`}
-                title="Toggle Theme"
-              >
-                {isDark ? <Sun size={20} /> : <Moon size={20} />}
               </button>
             </div>
           </div>
@@ -765,7 +754,7 @@ const AnimalMatchGame: React.FC = () => {
           <SuccessModal 
             onNext={handleNextAnimal}
             targetAnimal={targetAnimal}
-            isDark={isDark}
+            isDarkMode={isDarkMode}
           />
         )}
       </div>
