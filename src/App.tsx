@@ -69,6 +69,7 @@ import {
   DotDashRocketsGameWrapper,
   LadybugSpotsMatchGameWrapper,
   MoreOrLessMarketGameWrapper,
+  LessGameWrapper,
   CleanUpCountGameWrapper,
   NumberBridgeGameWrapper,
   PatternTrainCarsGameWrapper,
@@ -185,7 +186,8 @@ export default function App() {
               <Route path="/games/numbers/descending" element={<DescendingOrderGameWrapper />} />
               <Route path="/games/numbers/dot-dash-rockets" element={<DotDashRocketsGameWrapper />} />
               <Route path="/games/numbers/ladybug-spots" element={<LadybugSpotsMatchGameWrapper />} />
-              <Route path="/games/numbers/more-or-less-market" element={<MoreOrLessMarketGameWrapper />} />
+              <Route path="/games/numbers/more" element={<MoreOrLessMarketGameWrapper />} />
+              <Route path="/games/numbers/less" element={<LessGameWrapper />} />
               <Route path="/games/numbers/cleanup-count" element={<CleanUpCountGameWrapper />} />
               <Route path="/games/numbers/number-bridge" element={<NumberBridgeGameWrapper />} />
               <Route path="/games/numbers/pattern-train-cars" element={<PatternTrainCarsGameWrapper />} />

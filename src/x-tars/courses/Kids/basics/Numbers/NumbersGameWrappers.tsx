@@ -10,7 +10,8 @@ import NumberCounting from "./age3-4/NumberCounting";
 // Age-grouped Numbers games
 import DotDashRockets from "./age3-4/DotDashRockets";
 import LadybugSpotsMatch from "./age3-4/LadybugSpotsMatch";
-import MoreOrLessMarket from "./age3-4/MoreOrLessMarket";
+import MoreUnderstanding from "./age3-4/MoreUnderstanding";
+import LessUnderstanding from "./age3-4/LessUnderstanding"
 import CleanUpCount from "./age3-4/CleanUpCount";
 import ZeroTheHero from "./age3-4/ZeroTheHero";
 import PizzaPartySharing from "./age3-4/PizzaPartySharing";
@@ -234,7 +235,23 @@ export const MoreOrLessMarketGameWrapper: React.FC = () => {
       >
         ← Back to Numbers Menu
       </button>
-      <MoreOrLessMarket />
+      <MoreUnderstanding />
+    </div>
+  );
+};
+
+export const LessGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/numbers");
+  return (
+    <div className="min-h-screen">
+      <button
+        onClick={handleBack}
+        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
+      >
+        ← Back to Numbers Menu
+      </button>
+      <LessUnderstanding />
     </div>
   );
 };
