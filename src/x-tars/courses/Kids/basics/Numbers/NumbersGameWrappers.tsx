@@ -16,6 +16,7 @@ import CleanUpCount from "./age3-4/CleanUpCount";
 import ZeroTheHero from "./age3-4/ZeroTheHero";
 import PizzaPartySharing from "./age3-4/PizzaPartySharing";
 import CoinCollector from "./age3-4/CoinCollector";
+import UnderstandingEqual from "./age3-4/UnderstandingEqual";
 
 import NumberBridgeBuilder from "./age4-5/NumberBridgeBuilder";
 import PatternTrainCars from "./age4-5/PatternTrainCars";
@@ -268,6 +269,22 @@ export const CleanUpCountGameWrapper: React.FC = () => {
         ← Back to Numbers Menu
       </button>
       <CleanUpCount />
+    </div>
+  );
+};
+
+export const UnderstandingEqualGameWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/games/numbers");
+  return (
+    <div className="min-h-screen">
+      <button
+        onClick={handleBack}
+        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
+      >
+        ← Back to Numbers Menu
+      </button>
+      <UnderstandingEqual />
     </div>
   );
 };

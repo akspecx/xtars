@@ -32,10 +32,10 @@ interface NumberGameCard {
 
 const numberGameData: NumberGameCard[] = [
   // Core numbers games
-  { id: "identification", title: "Match the Correct Numbers", subtitle: "Identify and match numbers with the correct apple groups", icon: "🍎", gradient: "from-indigo-500 to-purple-500", path: "/games/numbers/identification" },
+  { id: "identification", title: "Match the Correct Numbers ✅", subtitle: "Identify and match numbers with the correct apple groups", icon: "🍎", gradient: "from-indigo-500 to-purple-500", path: "/games/numbers/identification" },
   { id: "counting", title: "Count On Your Body", subtitle: "Learn numbers with body-part examples", icon: "🤗", gradient: "from-rose-500 to-amber-500", path: "/games/numbers/counting" },
-  { id: "tracing", title: "Trace the Numbers", subtitle: "Practice drawing numbers with dotted guides", icon: "✍️", gradient: "from-sky-500 to-blue-500", path: "/games/numbers/tracing" },
-  { id: "sequence", title: "Number Train Sequence", subtitle: "Arrange train coaches in the correct order", icon: "🚂", gradient: "from-orange-500 to-amber-500", path: "/games/numbers/sequence" },
+  { id: "tracing", title: "Trace the Numbers ✅", subtitle: "Practice drawing numbers with dotted guides", icon: "✍️", gradient: "from-sky-500 to-blue-500", path: "/games/numbers/tracing" },
+  { id: "sequence", title: "Number Train Sequence ✅", subtitle: "Arrange train coaches in the correct order", icon: "🚂", gradient: "from-orange-500 to-amber-500", path: "/games/numbers/sequence" },
   { id: "filltheblank", title: "Fill in the Blanks", subtitle: "Drag and drop the missing numbers", icon: "1️⃣_3️⃣", gradient: "from-lime-500 to-green-500", path: "/games/numbers/fill-the-blanks" },
   { id: "descending", title: "Descending Order Train", subtitle: "Place the train coaches in descending order", icon: "3️⃣2️⃣1️⃣", gradient: "from-cyan-500 to-blue-500", path: "/games/numbers/descending" },
 
@@ -43,11 +43,12 @@ const numberGameData: NumberGameCard[] = [
   { id: "dot-dash", title: "Dot Dash Rockets", subtitle: "Subitize 1–5 dots (Age 3–4)", icon: "🚀", gradient: "from-sky-500 to-indigo-500", path: "/games/numbers/dot-dash-rockets" },
   { id: "ladybug", title: "Ladybug Spots Match", subtitle: "Match spots to numbers (Age 3–4)", icon: "🐞", gradient: "from-emerald-500 to-lime-500", path: "/games/numbers/ladybug-spots" },
   { id: "cleanup", title: "Clean-Up Count", subtitle: "Sort toys and count them (Age 3–4)", icon: "🧸", gradient: "from-teal-500 to-cyan-500", path: "/games/numbers/cleanup-count" },
-  { id: "more", title: "More Market", subtitle: "Which one is more? (Age 3–4)", icon: "🧺", gradient: "from-amber-500 to-rose-500", path: "/games/numbers/more" },
-  { id: "less", title: "Less Market", subtitle: "Find the less? (Age 3–4)", icon: "🧺", gradient: "from-amber-500 to-rose-500", path: "/games/numbers/less" },
+  { id: "more", title: "Learn what is More ✅", subtitle: "Which one is more? (Age 3–4)", icon: "🧺", gradient: "from-amber-500 to-rose-500", path: "/games/numbers/more" },
+  { id: "less", title: "Learn what is Less ✅", subtitle: "Find the less? (Age 3–4)", icon: "🧺", gradient: "from-amber-500 to-rose-500", path: "/games/numbers/less" },
   { id: "zero-hero", title: "Zero the Hero", subtitle: "Learn about zero (Age 3–4)", icon: "🦸", gradient: "from-purple-500 to-pink-500", path: "/games/numbers/zero-hero" },
   { id: "pizza-party", title: "Pizza Party Sharing", subtitle: "Share pizza fairly (Age 3–4)", icon: "🍕", gradient: "from-orange-500 to-red-500", path: "/games/numbers/pizza-party" },
   { id: "coin-collector", title: "Coin Collector", subtitle: "Sort and recognize coins (Age 3–4)", icon: "🪙", gradient: "from-yellow-500 to-amber-500", path: "/games/numbers/coin-collector" },
+  { id: "understanding-equal", title: "Understanding Equal ✅", subtitle: "Learn about equal numbers (Age 3–4)", icon: "=", gradient: "from-blue-500 to-indigo-500", path: "/games/numbers/understanding-equal" },
 
   // Age 4–5: ordering, patterns, sharing
   { id: "bridge", title: "Number Bridge Builder", subtitle: "Fill missing stones on the number line (Age 4–5)", icon: "🌉", gradient: "from-blue-500 to-cyan-500", path: "/games/numbers/number-bridge" },

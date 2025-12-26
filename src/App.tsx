@@ -82,6 +82,7 @@ import {
   ZeroTheHeroGameWrapper,
   PizzaPartySharingGameWrapper,
   CoinCollectorGameWrapper,
+  UnderstandingEqualGameWrapper,
   OrdinalRaceTrackGameWrapper,
   ShapeNumberPuzzlesGameWrapper,
   ClockTowerTimeGameWrapper,
@@ -100,6 +101,32 @@ import {
   ShapesIntroductionWrapper
 } from "./x-tars/courses/Kids/basics/Shapes/ShapesWrapper";
 // import { ShapesGamesPageWrapper } from "./x-tars/courses/Kids/basics/Shapes/ShapesLandingPage";
+import { 
+  VisualLogicGamesPageWrapper,
+  VisualLogicSameWrapper,
+  VisualLogicAboveWrapper,
+  VisualLogicBelowWrapper,
+  VisualLogicAboveAndBelowWrapper,
+  VisualLogicAboveAndBelowMixWrapper,
+  VisualLogicTallAndShortWrapper,
+  VisualLogicWideAndNarrowWrapper,
+  VisualLogicHeavyAndLightWrapper,
+  VisualLogicFullAndEmptyWrapper,
+  VisualLogicInsideAndOutsideWrapper,
+  VisualLogicDifferentWrapper,
+  VisualLogicBigWrapper,
+  VisualLogicSmallWrapper,
+  VisualLogicBigAndSmallMixWrapper,
+  VisualLogicHeavyWrapper,
+  VisualLogicLightWrapper,
+  VisualLogicHeavyAndLightMixWrapper,
+  VisualLogicWideWrapper,
+  VisualLogicNarrowWrapper,
+  VisualLogicWideAndNarrowMixWrapper,
+  VisualLogicInsideWrapper,
+  VisualLogicOutsideWrapper,
+  VisualLogicInsideAndOutsideMixWrapper
+} from "./x-tars/courses/Kids/basics/VisualLogic/VisualLogicWrapper";
 import { 
   MemoryGamesPageWrapper,
   AnimalMatchingGameWrapper,
@@ -207,6 +234,7 @@ export default function App() {
               <Route path="/games/numbers/subtract-snacks" element={<SubtractTheSnacksGameWrapper />} />
               <Route path="/games/numbers/measure-monsters" element={<MeasureTheMonstersGameWrapper />} />
               <Route path="/games/numbers/number-jumper" element={<NumberLineJumperGameWrapper />} />
+              <Route path="/games/numbers/understanding-equal" element={<UnderstandingEqualGameWrapper />} />
 
               <Route path="/games/shapes" element={<ShapesGamesPageWrapper />} />
               <Route path="/games/shapes/introduction" element={<ShapesIntroductionWrapper />} />
@@ -214,7 +242,33 @@ export default function App() {
               <Route path="/games/shapes/bus" element={<ShapesBusWrapper />} />
               <Route path="/games/shapes/tree" element={<ShapesTreeWrapper />} />
               
+              {/* Visual Logic Games Menu */}
+              <Route path="/games/visuallogic" element={<VisualLogicGamesPageWrapper />} />
               
+              {/* Visual Logic Games */}
+              <Route path="/games/visuallogic/same" element={<VisualLogicSameWrapper />} />
+              <Route path="/games/visuallogic/above" element={<VisualLogicAboveWrapper />} />
+              <Route path="/games/visuallogic/below" element={<VisualLogicBelowWrapper />} />
+              <Route path="/games/visuallogic/above-below" element={<VisualLogicAboveAndBelowWrapper />} />
+              <Route path="/games/visuallogic/above-below-mix" element={<VisualLogicAboveAndBelowMixWrapper />} />
+              <Route path="/games/visuallogic/tall-short" element={<VisualLogicTallAndShortWrapper />} />
+              <Route path="/games/visuallogic/wide-narrow" element={<VisualLogicWideAndNarrowWrapper />} />
+              <Route path="/games/visuallogic/heavy-light" element={<VisualLogicHeavyAndLightWrapper />} />
+              <Route path="/games/visuallogic/full-empty" element={<VisualLogicFullAndEmptyWrapper />} />
+              <Route path="/games/visuallogic/inside-outside" element={<VisualLogicInsideAndOutsideWrapper />} />
+              <Route path="/games/visuallogic/different" element={<VisualLogicDifferentWrapper />} />
+              <Route path="/games/visuallogic/big" element={<VisualLogicBigWrapper />} />
+              <Route path="/games/visuallogic/small" element={<VisualLogicSmallWrapper />} />
+              <Route path="/games/visuallogic/big-small-mix" element={<VisualLogicBigAndSmallMixWrapper />} />
+              <Route path="/games/visuallogic/heavy" element={<VisualLogicHeavyWrapper />} />
+              <Route path="/games/visuallogic/light" element={<VisualLogicLightWrapper />} />
+              <Route path="/games/visuallogic/heavy-light-mix" element={<VisualLogicHeavyAndLightMixWrapper />} />
+              <Route path="/games/visuallogic/wide" element={<VisualLogicWideWrapper />} />
+              <Route path="/games/visuallogic/narrow" element={<VisualLogicNarrowWrapper />} />
+              <Route path="/games/visuallogic/wide-narrow-mix" element={<VisualLogicWideAndNarrowMixWrapper />} />
+              <Route path="/games/visuallogic/inside" element={<VisualLogicInsideWrapper />} />
+              <Route path="/games/visuallogic/outside" element={<VisualLogicOutsideWrapper />} />
+              <Route path="/games/visuallogic/inside-outside-mix" element={<VisualLogicInsideAndOutsideMixWrapper />} />
 
               {/* Shapes (Coming Soon) */}
               {/* <Route path="/games/shapes" element={<ShapesGamesPageWrapper />} /> */}

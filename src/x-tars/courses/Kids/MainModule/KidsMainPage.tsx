@@ -3,6 +3,7 @@ import { Sun, Moon, ArrowLeft, Lock, Star, Zap } from 'lucide-react';
 import AlphabetGamesPage from '../Alphabets/AlphabetGamesPage'
 import NumbersMainPage from '../Numbers/NumbersMainPage'
 import ShapesLandingPage from '../basics/Shapes/ShapesLandingPage'
+import VisualLogicLandingPage from '../basics/VisualLogic/VisualLogicLandingPage'
 import { useNavigate } from 'react-router';
 import { useGameModule } from '@/hooks/useGameModule';
 import AlphabetGamesLandingPage from '../basics/Alphabets/AlphabetGamesLandingPage'
@@ -269,7 +270,7 @@ const cardData: Card[] = [
     subtitle: 'Learn letters A-Z with interactive exercises',
     icon: '🔤',
     badge: 'Popular',
-    category: 'basics',
+    category: 'getting-started',
     gradient: 'from-red-500 to-pink-500',
     moduleComponent: AlphabetGamesLandingPage, // <-- Updated name for the dedicated page
   },
@@ -279,7 +280,7 @@ const cardData: Card[] = [
     subtitle: 'Master counting and basic math',
     icon: '🔢',
     badge: 'New',
-    category: 'basics',
+    category: 'getting-started',
     gradient: 'from-teal-500 to-cyan-500',
     moduleComponent: NumbersGamesLandingPage, // <-- Updated name for the dedicated page
   },
@@ -288,9 +289,19 @@ const cardData: Card[] = [
     title: 'Shapes',
     subtitle: 'Identify and learn geometric shapes',
     icon: '🔺',
-    category: 'basics',
+    category: 'getting-started',
     gradient: 'from-blue-500 to-indigo-500',
     moduleComponent: ShapesLandingPage, 
+  },
+  {
+    id: 'visuallogic',
+    title: 'Visual Logic',
+    subtitle: 'Learn comparison concepts and visual reasoning',
+    icon: '🧠',
+    badge: 'New',
+    category: 'getting-started',
+    gradient: 'from-purple-500 to-indigo-500',
+    moduleComponent: VisualLogicLandingPage, 
   },
   {
     id: 'colors',
@@ -299,7 +310,7 @@ const cardData: Card[] = [
     icon: '🎨',
     locked: true,              // Locked locally
     apiLockedStatus: true,     // And locked by API (should be locked)
-    category: 'basics',
+    category: 'getting-started',
     gradient: 'from-purple-500 to-pink-500',
     moduleComponent: ComingSoonModule, 
   },
@@ -310,7 +321,7 @@ const cardData: Card[] = [
     subtitle: 'Test your memory with matching cards',
     icon: '🧠',
     badge: 'Fun',
-    category: 'games',
+    category: 'games-puzzles',
     gradient: 'from-cyan-500 to-blue-500',
     moduleComponent: MemoryBuildingMainPage, 
   },
@@ -319,7 +330,7 @@ const cardData: Card[] = [
     title: 'Puzzles',
     subtitle: 'Solve fun puzzles and brain teasers',
     icon: '🧩',
-    category: 'games',
+    category: 'games-puzzles',
     gradient: 'from-emerald-500 to-teal-500',
     moduleComponent: ArrangementMain, 
   },
@@ -330,7 +341,7 @@ const cardData: Card[] = [
     subtitle: 'Quick math problems and calculations',
     icon: '➕',
     badge: 'Hard',
-    category: 'challenges',
+    category: 'challenges-upcoming',
     gradient: 'from-orange-500 to-red-500',
     moduleComponent: ComingSoonModule, 
   },
@@ -340,7 +351,7 @@ const cardData: Card[] = [
     subtitle: 'Practice reading with fun stories',
     icon: '📖',
     locked: true,
-    category: 'challenges',
+    category: 'challenges-upcoming',
     gradient: 'from-violet-500 to-purple-500',
     moduleComponent: ComingSoonModule, 
   }
@@ -363,9 +374,9 @@ const NavTabs: React.FC<{
   theme: Theme;
 }> = ({ activeTab, onTabChange, theme }) => {
   const tabs = [
-    { id: 'basics', label: 'Basics' },
-    { id: 'games', label: 'Games' },
-    { id: 'challenges', label: 'Challenges' }
+    { id: 'getting-started', label: 'Getting Started' },
+    { id: 'games-puzzles', label: 'Games & Puzzles' },
+    { id: 'challenges-upcoming', label: 'Challenges (Upcoming)' }
   ];
   return (
     <div className="flex flex-wrap justify-center gap-3 sm:gap-5 mb-8">
@@ -431,7 +442,7 @@ const Card: React.FC<{
 
 const LearningPlatform: React.FC = () => {
   const { isDarkMode } = useGameModule();
-  const [activeTab, setActiveTab] = useState('basics');
+  const [activeTab, setActiveTab] = useState('getting-started');
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -504,6 +515,11 @@ const LearningPlatform: React.FC = () => {
     
     if (cardId === 'shapes') {
       navigate('/games/shapes');
+      return;
+    }
+    
+    if (cardId === 'visuallogic') {
+      navigate('/games/visuallogic');
       return;
     }
     
