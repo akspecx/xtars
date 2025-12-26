@@ -60,6 +60,8 @@ import {
 } from "./x-tars/courses/Kids/basics/Alphabets/AlphabetGameWrappers";
 import { 
   NumbersGamesPageWrapper,
+  NumberIntroductionWrapper,
+  NumberFocusWrapper,
   NumberIdentificationGameWrapper,
   NumberSequenceGameWrapper,
   FillInTheBlanksGameWrapper,
@@ -203,8 +205,12 @@ export default function App() {
 
               {/* Numbers Games Menu */}
               <Route path="/games/numbers" element={<NumbersGamesPageWrapper />} />
+
+              
               
               {/* Numbers Games */}
+              <Route path="/games/numbers/introduction" element={<NumberIntroductionWrapper />} />
+              <Route path="/games/numbers/association" element={<NumberFocusWrapper />} />
               <Route path="/games/numbers/identification" element={<NumberIdentificationGameWrapper />} />
               <Route path="/games/numbers/counting" element={<NumberCountingGameWrapper />} />
               <Route path="/games/numbers/tracing" element={<NumberTracingGameWrapper />} />
