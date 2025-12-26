@@ -32,9 +32,9 @@ interface NumberGameCard {
 
 const numberGameData: NumberGameCard[] = [
   // Core numbers games
-  { id: "Introduction", title: "Starting with the numbers", subtitle: "Introduction to the numbers", icon: "1️⃣2️⃣3️⃣", gradient: "from-indigo-500 to-purple-500", path: "/games/numbers/introduction" },
-  { id: "Association", title: "Associate objects to a number", subtitle: "How many objects are there?", icon: "🤗", gradient: "from-indigo-500 to-purple-500", path: "/games/numbers/association" },
-  { id: "identification", title: "Match the Correct Numbers", subtitle: "Identify and match numbers with the correct apple groups", icon: "🍎", gradient: "from-indigo-500 to-purple-500", path: "/games/numbers/identification" },
+  { id: "Introduction", title: "Starting with the numbers ✅", subtitle: "Introduction to the numbers", icon: "1️⃣2️⃣3️⃣", gradient: "from-indigo-500 to-purple-500", path: "/games/numbers/introduction" },
+  { id: "Association", title: "Associate objects to a number ✅", subtitle: "How many objects are there?", icon: "🤗", gradient: "from-indigo-500 to-purple-500", path: "/games/numbers/association" },
+  { id: "identification", title: "Match the Correct Numbers ✅", subtitle: "Identify and match numbers with the correct apple groups", icon: "🍎", gradient: "from-indigo-500 to-purple-500", path: "/games/numbers/identification" },
   { id: "counting", title: "Count On Your Body", subtitle: "Learn numbers with body-part examples", icon: "🤗", gradient: "from-rose-500 to-amber-500", path: "/games/numbers/counting" },
   { id: "tracing", title: "Trace the Numbers ✅", subtitle: "Practice drawing numbers with dotted guides", icon: "✍️", gradient: "from-sky-500 to-blue-500", path: "/games/numbers/tracing" },
   { id: "sequence", title: "Number Train Sequence ✅", subtitle: "Arrange train coaches in the correct order", icon: "🚂", gradient: "from-orange-500 to-amber-500", path: "/games/numbers/sequence" },
