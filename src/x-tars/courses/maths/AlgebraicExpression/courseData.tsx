@@ -46,14 +46,12 @@ export const sampleCourse = {
           completed: true,
           content: {
             tabs: [
-              { id: 'concept', label: 'Algebraic Expression', icon: BookOpen },
-              { id: 'concept1', label: 'understand the Algebraic Expression?', icon: BookOpen },
-              { id: 'concept2', label: 'Interactive Algebraic Expression?', icon: BookOpen },
-              { id: 'concept3', label: 'Let us find the weight of one apple?', icon: BookOpen }
+              { id: 'concept2', label: 'Can you balance the scale?', icon: BookOpen },
+              { id: 'concept3', label: 'Let us find the weight of unknown?', icon: BookOpen },
+              { id: 'concept', label: 'Establishing the fundamentals?', icon: BookOpen }
 
             ],
             concept: <AlgebraicIntroduction />,
-            concept1: <UnderstandingAlgebraicExpression />,
             concept2: <InteractiveAlgebraicIntroduction />,
             concept3: <FindingtheUnknownIntroduction />
           }

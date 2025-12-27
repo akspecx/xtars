@@ -1,749 +1,412 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  RefreshCcw, CheckCircle2, 
+  ChevronRight, Shuffle, 
+  FastForward, Scale,
+  Trophy, Sparkles, Volume2, VolumeX,
+  XCircle, Timer, Info, X, Equal, Plus, Minus, Divide, AlertCircle, BookOpen
+} from 'lucide-react';
 
-// Helper to convert base64 to ArrayBuffer
-const base64ToArrayBuffer = (base64: string) => {
-  const binaryString = window.atob(base64);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-  return bytes.buffer;
-};
+export default function App() {
+  // --- Physical State ---
+  const [unitWeight, setUnitWeight] = useState(4); 
+  const [appleCount, setAppleCount] = useState(3);
+  const [lhsExtra, setLhsExtra] = useState(0);    
+  const [rhsWeight, setRhsWeight] = useState(12); 
+  
+  const [operationValue, setOperationValue] = useState(1);
+  const [attemptCount, setAttemptCount] = useState(0);
+  const [showKeyLearning, setShowKeyLearning] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [autoNextTimer, setAutoNextTimer] = useState(null);
+  
+  // Explanation States
+  const [isExplaining, setIsExplaining] = useState(false);
+  const [activeHighlight, setActiveHighlight] = useState(null); 
+  const [explanationText, setExplanationText] = useState("");
+  const [formulas, setFormulas] = useState([]); 
 
-// Helper to convert PCM data to WAV Blob
-const pcmToWav = (pcm16: Int16Array, sampleRate: number) => {
-  const dataView = new DataView(new ArrayBuffer(44 + pcm16.byteLength));
-  let offset = 0;
+  const timerIntervalRef = useRef(null);
+  const learningTimeoutRef = useRef(null);
 
-  function writeString(str: string) {
-    for (let i = 0; i < str.length; i++) {
-      dataView.setUint8(offset + i, str.charCodeAt(i));
-    }
-    offset += str.length;
-  }
+  // --- Math Helpers ---
+  const totalLhsWeight = (appleCount * unitWeight) + lhsExtra;
+  const totalRhsWeight = rhsWeight;
+  const isBalanced = totalLhsWeight === totalRhsWeight;
+  
+  const weightDiff = totalRhsWeight - totalLhsWeight;
+  const tiltRotation = Math.max(-15, Math.min(15, weightDiff * 1.5));
 
-  function writeUint32(val: number) {
-    dataView.setUint32(offset, val, true);
-    offset += 4;
-  }
-
-  function writeUint16(val: number) {
-    dataView.setUint16(offset, val, true);
-    offset += 2;
-  }
-
-  // RIFF chunk
-  writeString('RIFF');
-  writeUint32(36 + pcm16.byteLength);
-  writeString('WAVE');
-
-  // fmt chunk
-  writeString('fmt ');
-  writeUint32(16);
-  writeUint16(1); // Audio format 1 = PCM
-  writeUint16(1); // Number of channels (mono)
-  writeUint32(sampleRate);
-  writeUint32(sampleRate * 2); // Byte rate (SampleRate * NumChannels * BitsPerSample/8)
-  writeUint16(2); // Block align (NumChannels * BitsPerSample/8)
-  writeUint16(16); // Bits per sample
-
-  // data chunk
-  writeString('data');
-  writeUint32(pcm16.byteLength);
-
-  for (let i = 0; i < pcm16.length; i++) {
-    dataView.setInt16(offset, pcm16[i], true); // Write PCM data
-    offset += 2;
-  }
-
-  return new Blob([dataView], { type: 'audio/wav' });
-};
-
-// Function to play audio from base64 PCM data, returns a Promise that resolves when audio ends.
-const playAudio = (audioData: string, mimeType: string, audioContext: AudioContext | null): Promise<void> => {
-  return new Promise<void>(async (resolve, reject) => {
-    let audio: HTMLAudioElement | null = null;
-    let audioUrl: string | null = null;
-
-    try {
-      console.log('Attempting to play audio with mimeType:', mimeType);
-
-      const currentAudioContext = audioContext || new (window.AudioContext || (window as any).webkitAudioContext)();
-
-      // Ensure AudioContext is resumed before playing
-      if (currentAudioContext.state === 'suspended') {
-        await currentAudioContext.resume();
-      }
-
-      const sampleRateMatch = mimeType.match(/rate=(\d+)/);
-      const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 16000;
-
-      const pcmData = base64ToArrayBuffer(audioData);
-      const pcm16 = new Int16Array(pcmData);
-      const wavBlob = pcmToWav(pcm16, sampleRate);
-      audioUrl = URL.createObjectURL(wavBlob);
-
-      audio = new Audio(audioUrl);
-
-      // Helper to clean up resources
-      const cleanup = () => {
-        if (audioUrl) {
-          URL.revokeObjectURL(audioUrl);
-          audioUrl = null;
-        }
-        if (audio) {
-          audio.onended = null;
-          audio.onerror = null;
-          audio = null;
-        }
-      };
-
-      audio.onerror = (e) => {
-        console.error("Audio error during playback:", e);
-        cleanup();
-        reject(new Error("Audio playback failed due to error event"));
-      };
-
-      audio.onended = () => {
-        console.log('Audio playback ended');
-        cleanup();
-        resolve(); // Resolve the promise when audio ends
-      };
-
-      // Attempt to play
-      await audio.play();
-      console.log('Audio playing successfully');
-
-    } catch (playError) {
-      console.error("Audio play failed, likely autoplay blocked or other issue:", playError);
-      // Display custom message box instead of alert()
-      const modalId = `audio-play-modal-${Date.now()}`;
-      const modal = document.createElement('div');
-      modal.id = modalId;
-      modal.className = `fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50`;
-      modal.innerHTML = `
-        <div class="bg-white p-6 rounded-lg shadow-xl text-center rounded-2xl">
-          <p class="text-lg font-semibold mb-4 text-gray-800">Please interact with the page to enable audio playback</p>
-          <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" onclick="document.getElementById('${modalId}').remove();">OK</button>
-        </div>
-      `;
-      document.body.appendChild(modal);
-      if (audioUrl) URL.revokeObjectURL(audioUrl); // Clean up any created URL
-      reject(new Error("Audio play failed, user interaction needed or browser blocked autoplay")); // Reject the promise
-    }
-  });
-};
-
-// Mock TTS function (using Web Speech API as fallback)
-const fetchTTS = async (text: string, langCode: string): Promise<{ audioData: string; mimeType: string } | null> => {
-  console.log(`Mock TTS called for: "${text}" in language: ${langCode}`);
-
-  if ('speechSynthesis' in window) {
+  const speak = useCallback((text) => {
+    if (isMuted) return Promise.resolve();
     return new Promise((resolve) => {
+      window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = langCode === 'hi' ? 'hi-IN' : 'en-US';
-      utterance.rate = 0.8;
-
-      utterance.onstart = () => {
-        console.log('Web Speech API synthesis started');
-      };
-
-      utterance.onend = () => {
-        console.log('Web Speech API synthesis ended');
-        resolve(null); // Signal completion, but no audio data to return for this mock
-      };
-
-      utterance.onerror = (event) => {
-        console.error('Web Speech API synthesis error:', event);
-        resolve(null);
-      };
-
-      speechSynthesis.speak(utterance);
-      // IMPORTANT: The promise resolves when onend or onerror is called, ensuring we await speech completion.
+      utterance.rate = 0.95;
+      const timeout = setTimeout(resolve, 5000);
+      utterance.onend = () => { clearTimeout(timeout); resolve(); };
+      utterance.onerror = () => { clearTimeout(timeout); resolve(); };
+      window.speechSynthesis.speak(utterance);
     });
-  }
-  // If no Web Speech API, return null immediately.
-  return null;
-};
+  }, [isMuted]);
 
-// BalanceScale.tsx Component
-type BalanceScaleProps = {
-  initialLeft: number;
-  initialRight: number;
-  currentLanguage: 'en' | 'hi';
-  theme: 'light' | 'dark';
-  speakMessage: (key: string) => Promise<void>;
-  hasUserInteracted: boolean;
-  audioContext: AudioContext | null;
-};
-
-type SubmissionResult = 'correct' | 'incorrect' | null;
-
-const translations = {
-  en: {
-    scaleTitle: "⚖️ Algebraic Balance Scale ⚖️",
-    perfectlyBalanced: "🎉 The scale is perfectly balanced! 🎉",
-    notBalanced: "🚧 The scale is not balanced. 🚧",
-    keepBalanced: "Keep both sides equal to maintain balance!",
-    addLeft: "+ Add {N} to Left",
-    subtractLeft: "- Subtract {N} from Left",
-    addRight: "+ Add {N} to Right",
-    subtractRight: "- Subtract {N} from Right",
-    multiplyLeft: "x Multiply Left by {N}",
-    divideLeft: "/ Divide Left by {N}",
-    multiplyRight: "x Multiply Right by {N}",
-    divideRight: "/ Divide Right by {N}",
-    reset: "🔄 Reset",
-    tryAnother: "🎲 Try Another Expression",
-    submit: "✅ Submit",
-    valueN: "Value for N:",
-    intro: "Welcome user, today we are going to learn algebraic expressions. Before we get into depth, assume this as a balance scale you would have seen in your daily life.",
-    balancedExplanation: "When both sides have the same value, the scale is balanced. This shows both sides are equal. For example, if both sides have a value of 5, the scale is balanced.",
-    unbalancedExplanation: "If one side has a larger weight and the other has less, the scale is not balanced. You can see the tilt.",
-    objective: "Our objective here is to keep the scale balanced by making both sides equal.",
-    selectLanguage: "Select Language",
-    changeTheme: "Change Theme",
-    leftScale: "This is the left side of the balance scale, also known as the Left Hand Side, or LHS, representing the left side of your equation.",
-    rightScale: "And this is the right side of the balance scale, also known as the Right Hand Side, or RHS, representing the right side of your equation.",
-    startLesson: "Start Lesson",
-    tryToBalance: "Now try to keep the scale balanced by using the operations below. Good luck!",
-    submissionCorrect: "Correctly balanced! Excellent work!",
-    submissionIncorrect: "Not balanced yet. Keep trying!"
-  },
-  hi: {
-    scaleTitle: "⚖️ बीजीय संतुलन पैमाना ⚖️",
-    perfectlyBalanced: "🎉 पैमाना पूरी तरह से संतुलित है! 🎉",
-    notBalanced: "🚧 पैमाना संतुलित नहीं है। 🚧",
-    keepBalanced: "संतुलन बनाए रखने के लिए दोनों पक्षों को बराबर रखें!",
-    addLeft: "+ बाएं में {N} जोड़ें",
-    subtractLeft: "- बाएं से {N} घटाएं",
-    addRight: "+ दाएं में {N} जोड़ें",
-    subtractRight: "- दाएं से {N} घटाएं",
-    multiplyLeft: "x बाएं को {N} से गुणा करें",
-    divideLeft: "/ बाएं को {N} से विभाजित करें",
-    multiplyRight: "x दाएं को {N} से गुणा करें",
-    divideRight: "/ दाएं को {N} से विभाजित करें",
-    reset: "🔄 रीसेट करें",
-    tryAnother: "🎲 दूसरा व्यंजक आज़माएँ",
-    submit: "✅ जमा करें",
-    valueN: "N का मान:",
-    intro: "उपयोगकर्ता का स्वागत है, आज हम बीजीय व्यंजकों के बारे में जानेंगे। गहराई में जाने से पहले, इसे एक संतुलन पैमाने के रूप में मानें जो आपने अपने दैनिक जीवन में देखा होगा।",
-    balancedExplanation: "जब दोनों पक्षों का मान समान होता है, तो पैमाना संतुलित होता है। यह दर्शाता है कि दोनों पक्ष बराबर हैं। उदाहरण के लिए, यदि दोनों पक्षों का मान 5 है, तो तो पैमाना संतुलित है।",
-    unbalancedExplanation: "यदि एक तरफ अधिक वजन है और दूसरी तरफ कम, तो पैमाना असंतुलित है। आप झुकाव देख सकते हैं।",
-    objective: "हमारा उद्देश्य यहां पैमाने को संतुलित रखना है, दोनों पक्षों को बराबर करके।",
-    selectLanguage: "भाषा चुनें",
-    changeTheme: "थीम बदलें",
-    leftScale: "यह संतुलन पैमाने का बायां हिस्सा है, जिसे बायां पक्ष, या LHS भी कहा जाता है, जो आपके समीकरण के बाएं हिस्से को दर्शाता है।",
-    rightScale: "और यह संतुलन पैमाने का दाहिना हिस्सा है, जिसे दायां पक्ष, या RHS भी कहा जाता है, जो आपके समीकरण के दाहिने हिस्से को दर्शाता है।",
-    startLesson: "पाठ शुरू करें",
-    tryToBalance: "अब नीचे दिए गए ऑपरेशनों का उपयोग करके पैमाने को संतुलित रखने का प्रयास करें। शुभकामनाएँ!",
-    submissionCorrect: "सही ढंग से संतुलित! उत्कृष्ट कार्य!",
-    submissionIncorrect: "अभी संतुलित नहीं है। कोशिश करते रहें!"
-  }
-};
-
-const BalanceScale: React.FC<BalanceScaleProps> = ({
-  initialLeft,
-  initialRight,
-  currentLanguage,
-  theme,
-  speakMessage,
-  hasUserInteracted,
-  audioContext
-}) => {
-  const [leftSide, setLeftSide] = useState<number>(initialLeft);
-  const [rightSide, setRightSide] = useState<number>(initialRight);
-  const [operationValueN, setOperationValueN] = useState<number>(2);
-  const [submissionResult, setSubmissionResult] = useState<SubmissionResult>(null);
-  const isBalanced = leftSide === rightSide;
-
-  const [highlightLeft, setHighlightLeft] = useState(false);
-  const [highlightRight, setHighlightRight] = useState(false);
-
-  // Ref to prevent the initial sequence from playing multiple times
-  const isPlayingSequenceRef = useRef(false);
-
-  const t = (key: keyof typeof translations['en'], params?: { N?: number }) => {
-    let text = translations[currentLanguage][key];
-    if (params?.N !== undefined) {
-      text = text.replace('{N}', params.N.toString());
-    }
-    return text;
-  };
-
-  const generateRandomExpression = useCallback(() => {
-    let newLeft, newRight;
-    do {
-      newLeft = Math.floor(Math.random() * 10) + 1;
-      newRight = Math.floor(Math.random() * 10) + 1;
-    } while (newLeft === newRight); // Ensure initial state is unbalanced for the exercise
-
-    setLeftSide(newLeft);
-    setRightSide(newRight);
-    setSubmissionResult(null);
+  const generateMission = useCallback(() => {
+    const unit = Math.floor(Math.random() * 5) + 2; 
+    const count = Math.floor(Math.random() * 3) + 2; 
+    setUnitWeight(unit);
+    setAppleCount(count);
+    setLhsExtra(0);
+    setRhsWeight(count * unit);
+    setIsCorrect(false);
+    setAttemptCount(0);
+    setShowKeyLearning(false);
+    setAutoNextTimer(null);
+    setIsExplaining(false);
+    setFormulas([]);
   }, []);
 
   useEffect(() => {
-    const speakInitialSequence = async () => {
-      // Only run if user has interacted and the sequence is not already playing
-      if (hasUserInteracted && !isPlayingSequenceRef.current) {
-        isPlayingSequenceRef.current = true;
-        console.log('Starting initial lesson sequence...');
+    generateMission();
+  }, [generateMission]);
 
-        await speakMessage('intro');
-        await new Promise(resolve => setTimeout(resolve, 500)); // Short pause after intro
+  // Apply Operation and track attempts
+  const applyOp = (side, type) => {
+    if (isCorrect) return;
+    const n = operationValue;
+    setAttemptCount(prev => prev + 1);
 
-        // First, show balanced state and explain
-        setLeftSide(5);
-        setRightSide(5);
-        await new Promise(resolve => setTimeout(resolve, 500)); // Wait for scale animation to complete
-        await speakMessage('balancedExplanation');
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for explanation to finish
-
-        // Highlight both sides
-        setHighlightLeft(true);
-        setHighlightRight(true);
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setHighlightLeft(false);
-        setHighlightRight(false);
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Explain Left Scale
-        await speakMessage('leftScale');
-        setHighlightLeft(true);
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setHighlightLeft(false);
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Explain Right Scale
-        await speakMessage('rightScale');
-        setHighlightRight(true);
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setHighlightRight(false);
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Add a short pause here before transitioning to the unbalanced state explanation
-        // This provides a clearer separation between concepts.
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // Now show unbalanced state and explain - added strategic delay here as per user request
-        await new Promise(resolve => setTimeout(resolve, 3000)); // Strategic delay before showing unbalanced state
-        setLeftSide(7); // Set to an unbalanced state
-        setRightSide(5);
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Wait for tilt animation to complete
-        await speakMessage('unbalancedExplanation');
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        await speakMessage('objective');
-        await new Promise(resolve => setTimeout(resolve, 1200));
-
-        await speakMessage('tryToBalance');
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        generateRandomExpression(); // Generate a random expression for the user to solve
-        isPlayingSequenceRef.current = false; // Reset ref after sequence completion
+    if (side === 'lhs') {
+      if (type === 'add') setLhsExtra(prev => prev + n);
+      if (type === 'sub') setLhsExtra(prev => Math.max(0, prev - n));
+      if (type === 'mul') {
+        setLhsExtra(prev => prev * n);
+        setAppleCount(prev => prev * n);
       }
-    };
-
-    // Reset the playing flag if user interaction state is reset (e.g., language change)
-    if (!hasUserInteracted) {
-      isPlayingSequenceRef.current = false;
-    }
-
-    speakInitialSequence();
-  }, [hasUserInteracted, speakMessage, generateRandomExpression]); // Simplified dependencies
-
-  const handleSubmit = () => {
-    if (leftSide === rightSide) {
-      setSubmissionResult('correct');
-      speakMessage('submissionCorrect');
-    } else {
-      setSubmissionResult('incorrect');
-      speakMessage('submissionIncorrect');
-    }
-  };
-
-  // Responsive Tailwind classes
-  const containerClasses = `flex flex-col items-center p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl max-w-4xl mx-auto my-4 sm:my-8 border-4 transition-colors duration-300
-    ${theme === 'light'
-      ? 'bg-gradient-to-br from-indigo-50 to-purple-100 border-indigo-200'
-      : 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700'
-    }`;
-
-  const titleClasses = `text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4 sm:mb-6 md:mb-8 tracking-tight transition-colors duration-300 text-center
-    ${theme === 'light' ? 'text-gray-900' : 'text-white'}`;
-
-  const panBgClasses = (isLeft: boolean) => `relative flex flex-col items-center justify-center w-24 h-8 sm:w-32 sm:h-10 md:w-40 md:h-10 rounded-lg border-2 sm:border-3 md:border-4 transition-all duration-700 ease-in-out shadow-lg
-    ${theme === 'light'
-      ? (isBalanced
-          ? (isLeft ? 'border-blue-400 bg-blue-200' : 'border-green-400 bg-green-200')
-          : (isLeft && leftSide < rightSide || !isLeft && rightSide < leftSide ? 'border-red-500 bg-red-300' : (isLeft ? 'border-blue-400 bg-blue-200' : 'border-green-400 bg-green-200')))
-      : (isBalanced
-          ? (isLeft ? 'border-blue-500 bg-blue-700' : 'border-green-500 bg-green-700')
-          : (isLeft && leftSide < rightSide || !isLeft && rightSide < leftSide ? 'border-red-600 bg-red-700' : (isLeft ? 'border-blue-500 bg-blue-700' : 'border-green-500 bg-green-700')))
-    }
-    ${isLeft && highlightLeft ? 'ring-2 sm:ring-3 md:ring-4 ring-yellow-400 ring-opacity-75 animate-pulse' : ''}
-    ${!isLeft && highlightRight ? 'ring-2 sm:ring-3 md:ring-4 ring-yellow-400 ring-opacity-75 animate-pulse' : ''}
-    `;
-
-  const panTextClasses = (isLeft: boolean) => `text-lg sm:text-2xl md:text-3xl font-bold transition-colors duration-300 z-10
-    ${theme === 'light'
-      ? (isLeft ? 'text-blue-800' : 'text-green-800')
-      : (isLeft ? 'text-blue-100' : 'text-green-100')
-    }`;
-
-  const buttonClasses = `px-3 py-2 sm:px-4 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm md:text-base font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-opacity-75
-    ${theme === 'light'
-      ? 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500'
-      : 'bg-indigo-700 text-white hover:bg-indigo-600 focus:ring-indigo-400'
-    }
-    relative
-    `;
-
-  const operatorSpanClasses = `absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 text-lg sm:text-xl md:text-2xl font-bold
-    ${theme === 'light' ? 'text-white' : 'text-white'}
-  `;
-
-  const textContentSpanClasses = `ml-4 sm:ml-5 md:ml-6`;
-
-  const resetButtonClasses = `px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 font-bold rounded-full shadow-lg transition-transform transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-opacity-75 text-sm sm:text-lg md:text-xl
-    ${theme === 'light'
-      ? 'bg-gray-700 text-white hover:bg-gray-800 focus:ring-gray-400'
-      : 'bg-gray-200 text-gray-800 hover:bg-gray-100 focus:ring-gray-500'
-    }`;
-
-  const tryAnotherButtonClasses = `px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 font-bold rounded-full shadow-lg transition-transform transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-opacity-75 text-sm sm:text-lg md:text-xl
-    ${theme === 'light'
-      ? 'bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-400'
-      : 'bg-yellow-700 text-white hover:bg-yellow-600 focus:ring-yellow-500'
-    }`;
-
-  const submitButtonClasses = `px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 font-bold rounded-full shadow-lg transition-transform transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-opacity-75 text-sm sm:text-lg md:text-xl
-    ${theme === 'light'
-      ? 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-400'
-      : 'bg-green-700 text-white hover:bg-green-600 focus:ring-green-500'
-    }`;
-
-  const messageClasses = `text-xl sm:text-2xl md:text-3xl font-extrabold animate-pulse transition-colors duration-300 text-center
-    ${theme === 'light' ? 'text-gray-800' : 'text-white'}`;
-
-  const subMessageClasses = `text-sm sm:text-base md:text-lg mt-2 transition-colors duration-300 text-center
-    ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`;
-
-  const lhsRhsLabelClasses = `text-sm sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 md:mb-5 transition-colors duration-300
-    ${theme === 'light' ? 'text-gray-700' : 'text-gray-300'}
-  `;
-
-  const submissionFeedbackClasses = `mt-4 text-lg sm:text-xl md:text-2xl font-bold transition-colors duration-300 text-center
-    ${submissionResult === 'correct' ? 'text-green-500' : (submissionResult === 'incorrect' ? 'text-red-500' : 'hidden')}
-  `;
-
-  const renderButtonContent = (labelKey: keyof typeof translations['en'], N: number) => {
-    const fullText = t(labelKey, { N });
-    const operatorMatch = fullText.match(/^(\+|-|x|\/)\s*(.*)/);
-    if (operatorMatch) {
-      const operator = operatorMatch[1];
-      const textContent = operatorMatch[2];
-      return (
-        <>
-          <span className={operatorSpanClasses}>{operator}</span>
-          <span className={textContentSpanClasses}>{textContent}</span>
-        </>
-      );
-    }
-    return fullText;
-  };
-
-  return (
-    <div className={containerClasses}>
-      <h2 className={titleClasses}>
-        {t('scaleTitle')}
-      </h2>
-
-      <div className="relative w-full max-w-sm sm:max-w-md md:max-w-lg h-32 sm:h-40 md:h-48 flex items-end justify-center mb-4 sm:mb-6 md:mb-8">
-        {/* The fulcrum */}
-        <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-t-full rounded-b-lg transform skew-x-[-15deg] origin-bottom-left`}
-             style={{ clipPath: 'polygon(0 0, 100% 0, 80% 100%, 20% 100%)', backgroundColor: theme === 'light' ? '#8B80C3' : '#4A4080' }}>
-          <div className="absolute top-2 sm:top-3 md:top-4 left-1/2 -translate-x-1/2 w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 rounded-full bg-blue-300 dark:bg-blue-400 border-2 border-blue-500 dark:border-blue-700"></div>
-        </div>
-
-        {/* The beam */}
-        <div
-          className={`absolute top-1/2 -translate-y-1/2 w-full h-2 sm:h-3 md:h-4 rounded-full transition-transform duration-700 ease-in-out
-                      ${theme === 'light' ? 'bg-blue-300' : 'bg-blue-600'}
-                      ${isBalanced ? 'transform rotate-0' : ''}
-                      ${!isBalanced && leftSide < rightSide ? 'transform rotate-6' : ''}
-                      ${!isBalanced && leftSide > rightSide ? 'transform -rotate-6' : ''}
-          `}
-          style={{ transformOrigin: 'center center', backgroundColor: theme === 'light' ? '#6B8E9A' : '#3A5E6A' }}
-        >
-          <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 rounded-full ${theme === 'light' ? 'bg-blue-300' : 'bg-blue-600'} border-2 ${theme === 'light' ? 'border-gray-500' : 'border-gray-400'}`}></div>
-          <div className={`absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 rounded-full ${theme === 'light' ? 'bg-blue-300' : 'bg-blue-600'} border-2 ${theme === 'light' ? 'border-gray-500' : 'border-gray-400'}`}></div>
-        </div>
-
-        {/* The pans */}
-        <div className="absolute top-1/2 -translate-y-1/2 w-full flex justify-between px-2 sm:px-3 md:px-4">
-          <div className="flex flex-col items-center">
-            <div
-              className={`${panBgClasses(true)}
-                          ${isBalanced ? 'translate-y-0' : (leftSide < rightSide ? '-translate-y-4 sm:-translate-y-6 md:-translate-y-8' : 'translate-y-4 sm:translate-y-6 md:translate-y-8')}
-              `}
-              style={{ marginLeft: '-1.5rem', marginBottom: '0.5rem', backgroundColor: theme === 'light' ? '#A2D9CE' : '#5C8D89' }}
-            >
-              <span className={panTextClasses(true)}>{leftSide}</span>
-              <div className={`absolute bottom-0 left-0 right-0 h-1 sm:h-1.5 md:h-2 rounded-b-lg ${theme === 'light' ? 'bg-gray-400' : 'bg-gray-700'}`}></div>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center">
-            <div
-              className={`${panBgClasses(false)}
-                          ${isBalanced ? 'translate-y-0' : (rightSide < leftSide ? '-translate-y-4 sm:-translate-y-6 md:-translate-y-8' : 'translate-y-4 sm:translate-y-6 md:translate-y-8')}
-              `}
-              style={{ marginRight: '-1.5rem', marginBottom: '0.5rem', backgroundColor: theme === 'light' ? '#A2D9CE' : '#5C8D89' }}
-            >
-              <span className={panTextClasses(false)}>{rightSide}</span>
-              <div className={`absolute bottom-0 left-0 right-0 h-1 sm:h-1.5 md:h-2 rounded-b-lg ${theme === 'light' ? 'bg-gray-400' : 'bg-gray-700'}`}></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* LHS and RHS labels positioned below the scale with margin */}
-      <div className="flex justify-between w-full max-w-sm sm:max-w-md md:max-w-lg px-4 sm:px-6 md:px-8 mt-4 sm:mt-6 md:mt-8">
-        <div className="text-center">
-          <span className={lhsRhsLabelClasses}>LHS</span>
-        </div>
-        <div className="text-center">
-          <span className={lhsRhsLabelClasses}>RHS</span>
-        </div>
-      </div>
-
-      <div className="mt-6 sm:mt-8 md:mt-12 text-center">
-        {/* Only show status messages when user submits, not automatically */}
-        {submissionResult && (
-          <>
-            <p className={messageClasses}>
-              {submissionResult === 'correct' ? t('perfectlyBalanced') : t('notBalanced')}
-            </p>
-            <p className={subMessageClasses}>
-              {t('keepBalanced')}
-            </p>
-          </>
-        )}
-      </div>
-
-      <p className={submissionFeedbackClasses}>
-        {submissionResult === 'correct' ? t('submissionCorrect') : (submissionResult === 'incorrect' ? t('submissionIncorrect') : '')}
-      </p>
-
-      <div className={`mt-4 sm:mt-6 md:mt-8 flex items-center gap-2 p-2 sm:p-3 rounded-lg shadow-inner
-        ${theme === 'light' ? 'bg-gray-100' : 'bg-gray-700'}`}>
-        <label htmlFor="operation-n-value" className={`${theme === 'light' ? 'text-gray-700' : 'text-gray-300'} font-medium text-sm sm:text-base`}>
-          {t('valueN')}
-        </label>
-        <input
-          id="operation-n-value"
-          type="number"
-          value={operationValueN}
-          onChange={(e) => setOperationValueN(Number(e.target.value))}
-          className={`w-16 sm:w-20 p-1 sm:p-2 border rounded-md text-center text-sm sm:text-base
-            ${theme === 'light' ? 'bg-white border-gray-300 text-gray-900' : 'bg-gray-800 border-gray-600 text-white'}
-          `}
-          min="1"
-        />
-      </div>
-
-      <div className="mt-6 sm:mt-8 md:mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 w-full max-w-4xl">
-        <button
-          onClick={() => setLeftSide(leftSide + operationValueN)}
-          className={buttonClasses}
-        >
-          {renderButtonContent('addLeft', operationValueN)}
-        </button>
-        <button
-          onClick={() => setLeftSide(leftSide - operationValueN)}
-          className={buttonClasses}
-        >
-          {renderButtonContent('subtractLeft', operationValueN)}
-        </button>
-
-        <button
-          onClick={() => setRightSide(rightSide + operationValueN)}
-          className={buttonClasses}
-        >
-          {renderButtonContent('addRight', operationValueN)}
-        </button>
-        <button
-          onClick={() => setRightSide(rightSide - operationValueN)}
-          className={buttonClasses}
-        >
-          {renderButtonContent('subtractRight', operationValueN)}
-        </button>
-
-        <button
-          onClick={() => setLeftSide(leftSide * operationValueN)}
-          className={buttonClasses}
-        >
-          {renderButtonContent('multiplyLeft', operationValueN)}
-        </button>
-        <button
-          onClick={() => { if (operationValueN !== 0) setLeftSide(leftSide / operationValueN); }}
-          className={buttonClasses}
-        >
-          {renderButtonContent('divideLeft', operationValueN)}
-        </button>
-
-        <button
-          onClick={() => setRightSide(rightSide * operationValueN)}
-          className={buttonClasses}
-        >
-          {renderButtonContent('multiplyRight', operationValueN)}
-        </button>
-        <button
-          onClick={() => { if (operationValueN !== 0) setRightSide(rightSide / operationValueN); }}
-          className={buttonClasses}
-        >
-          {renderButtonContent('divideRight', operationValueN)}
-        </button>
-      </div>
-
-      <div className="mt-4 sm:mt-6 md:mt-8 flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4">
-        <button
-          onClick={handleSubmit}
-          className={submitButtonClasses}
-        >
-          {t('submit')}
-        </button>
-        <button
-          onClick={() => {
-            setLeftSide(initialLeft);
-            setRightSide(initialRight);
-            setSubmissionResult(null);
-            // Reset sequence flag on manual reset
-            isPlayingSequenceRef.current = false;
-          }}
-          className={resetButtonClasses}
-        >
-          {t('reset')}
-        </button>
-
-        <button
-          onClick={() => {
-            generateRandomExpression();
-            setSubmissionResult(null); // Clear any previous submission results
-          }}
-          className={tryAnotherButtonClasses}
-        >
-          {t('tryAnother')}
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const App: React.FC = () => {
-  const [currentLanguage, setCurrentLanguage] = useState<'en' | 'hi'>('en');
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
-  const [hasUserInteracted, setHasUserInteracted] = useState(false);
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-
-  const speakMessage = useCallback(async (key: keyof typeof translations['en']) => {
-    console.log(`Speaking message: ${key}`);
-    const textToSpeak = translations[currentLanguage][key];
-
-    // fetchTTS will now return null if using Web Speech API, and its promise will resolve when speech is done.
-    const audioContent = await fetchTTS(textToSpeak, currentLanguage);
-
-    if (audioContent) {
-      try {
-        await playAudio(audioContent.audioData, audioContent.mimeType, audioContext);
-      } catch (error) {
-        console.warn(`[Speech] Failed to play audio for "${key}":`, error);
-        // The sequence will continue even if audio failed to play, but with a warning.
+      if (type === 'div' && n !== 0) {
+        setLhsExtra(prev => Math.floor(prev / n));
+        setAppleCount(prev => Math.max(1, Math.floor(prev / n)));
       }
     } else {
-      // If fetchTTS returned null (e.g., using Web Speech API as mock), it means the speech has already occurred.
-      console.log(`[Speech] No audio content from fetchTTS for "${key}". Assuming Web Speech API handled it.`);
+      if (type === 'add') setRhsWeight(prev => prev + n);
+      if (type === 'sub') setRhsWeight(prev => Math.max(0, prev - n));
+      if (type === 'mul') setRhsWeight(prev => prev * n);
+      if (type === 'div' && n !== 0) setRhsWeight(prev => Math.floor(prev / n));
     }
-  }, [currentLanguage, audioContext]); // Recreate speakMessage if language or audioContext changes
-
-  const themeClasses = theme === 'light' ? 'bg-gray-200' : 'bg-gray-900';
-
-  const handleStartLesson = () => {
-    console.log('Starting lesson - creating AudioContext');
-    const newAudioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    newAudioContext.resume().then(() => {
-      console.log('AudioContext resumed successfully');
-      setAudioContext(newAudioContext);
-      setHasUserInteracted(true);
-    }).catch(error => {
-      console.error("Failed to resume AudioContext:", error);
-      // Even if AudioContext fails, allow the lesson to start
-      setHasUserInteracted(true);
-    });
   };
 
+  // Manage key learning tag visibility
+  useEffect(() => {
+    if (attemptCount >= 3 && !isBalanced && !isCorrect) {
+      setShowKeyLearning(true);
+      if (learningTimeoutRef.current) clearTimeout(learningTimeoutRef.current);
+      learningTimeoutRef.current = setTimeout(() => {
+        setShowKeyLearning(false);
+      }, 5000); 
+    } else if (isBalanced) {
+      setShowKeyLearning(false);
+    }
+  }, [attemptCount, isBalanced, isCorrect]);
+
+  // Check solve condition
+  useEffect(() => {
+    if (appleCount === 1 && lhsExtra === 0 && isBalanced && !isCorrect && attemptCount > 0) {
+      setIsCorrect(true);
+      setAutoNextTimer(10);
+    }
+  }, [appleCount, lhsExtra, isBalanced, isCorrect, attemptCount]);
+
+  const runExplanation = async () => {
+    setFormulas([
+      "Fundamental Principle:",
+      "Weight on Left = Weight on Right",
+      "Aim: Keep scale balanced after each action."
+    ]);
+
+    setIsExplaining(true);
+    setExplanationText("Look at the scale. It is perfectly balanced.");
+    await speak("Look at the scale. It is perfectly balanced.");
+    
+    setActiveHighlight('both');
+    setExplanationText("As we know the scale is balanced, our aim is to keep the scale balanced after each action.");
+    await speak("As we know the scale is balanced, our aim is to keep the scale balanced after each action.");
+
+    setActiveHighlight('both');
+    setExplanationText("This is the fundamental principle of a balanced scale.");
+    await speak("This is the fundamental principle of a balanced scale.");
+
+    setActiveHighlight('both');
+    setExplanationText("To keep it balanced, we recommend you take the same action on both scales.");
+    await speak("To keep it balanced, we recommend you take the same action on both scales.");
+
+    setActiveHighlight(null);
+  };
+
+  useEffect(() => {
+    if (autoNextTimer !== null && autoNextTimer > 0) {
+      timerIntervalRef.current = setInterval(() => {
+        setAutoNextTimer(p => (p > 0 ? p - 1 : 0));
+      }, 1000);
+    } else if (autoNextTimer === 0) {
+      generateMission();
+    }
+    return () => { if (timerIntervalRef.current) clearInterval(timerIntervalRef.current); };
+  }, [autoNextTimer, generateMission]);
+
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center p-2 sm:p-4 font-sans antialiased transition-colors duration-300 ${themeClasses}`}>
-      <div className={`flex flex-col sm:flex-row gap-2 sm:gap-4 mb-4 sm:mb-8 p-3 sm:p-4 rounded-lg shadow-md w-full max-w-md sm:max-w-none sm:w-auto
-        ${theme === 'light' ? 'bg-white' : 'bg-gray-800'}`}>
-        <div className="flex items-center gap-2 justify-center sm:justify-start">
-          <label htmlFor="language-select" className={`${theme === 'light' ? 'text-gray-700' : 'text-gray-300'} font-medium text-sm sm:text-base`}>
-            {translations[currentLanguage].selectLanguage}:
-          </label>
-          <select
-            id="language-select"
-            value={currentLanguage}
-            onChange={(e) => {
-              setCurrentLanguage(e.target.value as 'en' | 'hi');
-              setHasUserInteracted(false); // Reset interaction to restart lesson with new language
-              setAudioContext(null); // Clear audio context
-            }}
-            className={`p-1 sm:p-2 border rounded-md text-sm sm:text-base
-              ${theme === 'light' ? 'bg-white border-gray-300 text-gray-900' : 'bg-gray-700 border-gray-600 text-white'}
-            `}
+    <div className="h-screen flex flex-col items-center bg-[#f1f0ee] font-sans select-none overflow-hidden text-[#5d4037] pt-4 sm:pt-6 pb-2 px-2 sm:px-4">
+      
+      {/* HEADER */}
+      <div className="w-full max-w-4xl flex justify-between items-center px-2 py-1 z-50 mb-1">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#8d6e63] rounded-xl shadow-lg flex items-center justify-center text-white border-b-2 border-black/20">
+            <Scale size={24} />
+          </div>
+          <div>
+            <h1 className="text-lg sm:text-2xl font-black uppercase tracking-tighter leading-none">Algebra Lab</h1>
+            <p className="text-[7px] sm:text-[9px] font-black text-[#a88a6d] uppercase tracking-widest leading-none mt-0.5">Physical Balance Lesson</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5 sm:gap-3 scale-90 sm:scale-100">
+            <button onClick={() => setIsMuted(!isMuted)} className="p-2.5 bg-white text-[#8d6e63] rounded-xl shadow-sm border border-[#c4a484]/10 active:scale-95 transition-transform">
+                {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+            </button>
+            <button onClick={generateMission} className="p-2.5 bg-[#8d6e63] text-white rounded-xl shadow-md border-b-2 border-[#5d4037] active:scale-95 transition-transform">
+                <RefreshCcw size={16} />
+            </button>
+        </div>
+      </div>
+
+      {/* SECTION 1: THE SCALE STAGE */}
+      <div className="flex-1 w-full max-w-4xl bg-[#e6dccb] rounded-[2rem] sm:rounded-[3.5rem] shadow-xl border-b-[10px] border-[#c4a484] relative overflow-visible flex flex-col items-center justify-start pb-0">
+        <div className="absolute inset-0 bg-[#e6dccb] pointer-events-none rounded-[2rem] sm:rounded-[3.5rem]" style={{ backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(93,64,55,0.02) 50px, rgba(93,64,55,0.02) 100px)` }} />
+        
+        <div className="relative w-full max-w-3xl flex justify-center items-center scale-[0.45] sm:scale-[0.8] origin-top transition-transform overflow-visible mt-16 sm:mt-24">
+            <div className="absolute top-[8%] left-1/2 -translate-x-1/2 flex flex-col items-center z-10 pointer-events-none">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#8d6e63] to-[#5d4037] rounded-full border-4 border-[#c4a484] shadow-xl mb-[-20px] relative z-20" />
+                <div className="w-8 h-[220px] bg-gradient-to-r from-[#5d4037] via-[#8d6e63] to-[#5d4037] rounded-b-xl shadow-2xl relative" />
+                
+                <div className="absolute bottom-[20px] bg-white/90 px-4 py-2 rounded-xl shadow-lg border-2 border-[#8d6e63] z-30 min-w-[140px] text-center transform -rotate-1">
+                   <div className="text-[8px] font-black uppercase text-[#8d6e63] leading-none mb-1 text-center">Physical Note</div>
+                   <div className="text-sm sm:text-lg font-black text-[#5d4037] whitespace-nowrap">Weight of one 🍎 = {unitWeight}g</div>
+                </div>
+
+                <div className="absolute bottom-[-30px] w-56 h-16 bg-[#3e2723] rounded-t-[4rem] shadow-xl z-0 border-b-4 border-black/20" />
+            </div>
+
+            <motion.div 
+              animate={{ rotate: tiltRotation }}
+              transition={{ type: "spring", stiffness: 40, damping: 10 }}
+              className="relative w-full flex justify-center z-20 mt-[12%]"
+            >
+                <div className="relative w-full h-7 bg-gradient-to-b from-[#8d6e63] to-[#3e2723] rounded-full flex justify-between items-center shadow-lg border-b-2 border-black/20 px-2">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 bg-gradient-to-br from-yellow-300 to-amber-600 rounded-full border-2 border-[#3e2723] shadow-md z-30" />
+                    
+                    {/* LHS PAN */}
+                    <motion.div animate={{ rotate: -tiltRotation }} className="absolute left-[-15px] top-0 w-32 sm:w-64 flex flex-col items-center origin-top">
+                        <div className="flex justify-between w-[80%] px-4">
+                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[15deg] rounded-full" />
+                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[-15deg] rounded-full" />
+                        </div>
+                        <div className="w-full h-20 sm:h-32 bg-gradient-to-b from-[#a88a6d] to-[#8d6e63] rounded-b-[6rem] border-t-[10px] border-[#5d4037]/20 shadow-inner relative flex items-end justify-center pb-8">
+                            <div className="flex flex-wrap-reverse justify-center gap-1 w-[90%] mb-10">
+                                {[...Array(appleCount)].map((_, i) => (
+                                    <motion.div key={i} layout initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-3xl sm:text-6xl drop-shadow-lg">🍎</motion.div>
+                                ))}
+                                {lhsExtra > 0 && <div className="bg-yellow-400 text-[#5d4037] px-2 py-1 rounded-lg font-black text-xs sm:text-xl shadow-md">+{lhsExtra}g</div>}
+                            </div>
+                            <div className="absolute bottom-[-45px] bg-[#5d4037] text-white px-8 py-2 rounded-full font-black text-lg sm:text-3xl shadow-lg border-2 border-[#c4a484] whitespace-nowrap min-w-[80px] text-center">
+                              {totalLhsWeight}g
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* RHS PAN */}
+                    <motion.div animate={{ rotate: -tiltRotation }} className="absolute right-[-15px] top-0 w-32 sm:w-64 flex flex-col items-center origin-top">
+                        <div className="flex justify-between w-[80%] px-4">
+                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[15deg] rounded-full" />
+                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[-15deg] rounded-full" />
+                        </div>
+                        <div className="w-full h-20 sm:h-32 bg-gradient-to-b from-[#a88a6d] to-[#8d6e63] rounded-b-[6rem] border-t-[10px] border-[#5d4037]/20 shadow-inner relative flex items-end justify-center pb-8">
+                             <motion.div layout className="bg-gradient-to-br from-yellow-400 to-amber-900 text-white w-20 h-20 sm:w-32 sm:h-32 flex items-center justify-center rounded-[2rem] font-black text-3xl sm:text-7xl shadow-xl mb-12 border-b-8 border-black/30">
+                               {totalRhsWeight}g
+                             </motion.div>
+                             <div className="absolute bottom-[-45px] bg-[#5d4037] text-white px-8 py-2 rounded-full font-black text-lg sm:text-3xl shadow-lg border-2 border-[#c4a484] whitespace-nowrap min-w-[80px] text-center">
+                               {totalRhsWeight}g
+                             </div>
+                        </div>
+                    </motion.div>
+                </div>
+            </motion.div>
+        </div>
+
+        {/* FEEDBACK & KEY LEARNING */}
+        <div className="absolute bottom-4 left-0 w-full flex flex-col items-center gap-3 pointer-events-none px-4">
+            <AnimatePresence mode="wait">
+                {isCorrect ? (
+                    <motion.div key="win" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-emerald-600 text-white py-3 px-8 rounded-full shadow-2xl flex items-center gap-4 border-b-4 border-emerald-800 backdrop-blur-sm pointer-events-auto">
+                        <Trophy size={24} className="animate-bounce" />
+                        <span className="text-xs sm:text-lg font-bold uppercase">Great! The scale is perfectly balanced.</span>
+                    </motion.div>
+                ) : !isBalanced ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <motion.div key="unbalanced" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} className="bg-amber-600 text-white px-6 py-2 rounded-full shadow-xl font-bold uppercase tracking-widest text-[10px] sm:text-sm flex items-center gap-2 border-b-4 border-amber-800">
+                          <AlertCircle size={16} /> Aim is to keep scale balanced.
+                      </motion.div>
+                      <AnimatePresence>
+                        {showKeyLearning && (
+                          <motion.div 
+                            initial={{ y: 10, opacity: 0 }} 
+                            animate={{ y: 0, opacity: 1 }} 
+                            exit={{ y: 10, opacity: 0 }}
+                            className="bg-white/90 border-2 border-[#8d6e63] px-4 py-1.5 rounded-xl shadow-lg flex items-center gap-2"
+                          >
+                             <BookOpen size={14} className="text-blue-600" />
+                             <span className="text-[9px] sm:text-xs font-black text-[#5d4037] uppercase">Key Learning: Take same action on both scales to keep it balanced!</span>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                ) : attemptCount > 0 ? (
+                    <motion.div key="balanced-success" initial={{ scale: 1.1, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-emerald-100 border-2 border-emerald-500/30 px-8 py-2 rounded-full shadow-md font-black uppercase tracking-tight text-[10px] sm:text-lg text-emerald-700 flex items-center gap-2">
+                        <Sparkles size={18} className="text-emerald-500" /> Wow, the scale is balanced!
+                    </motion.div>
+                ) : (
+                    <motion.div key="balanced-initial" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white/80 backdrop-blur-md px-6 py-2 rounded-full shadow-md font-bold uppercase tracking-widest text-[10px] sm:text-sm text-[#8d6e63] border border-[#8d6e63]/20">
+                        Aim is to keep scale balanced!
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+      </div>
+
+      {/* SECTION 2: PHYSICAL CONTROLS */}
+      <div className="w-full max-w-4xl flex flex-col items-center mt-2 z-50 mb-1">
+        <div className="bg-[#dfd7cc] p-3 sm:p-5 rounded-[2rem] border-4 border-[#c4a484] w-[95%] sm:w-full shadow-xl relative">
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#5d4037] text-[#e6dccb] px-6 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border-2 border-[#e6dccb]">Action Panel</div>
+            
+            <div className="flex flex-col gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4">
+                    
+                    {/* LEFT SIDE OPS */}
+                    <div className="bg-[#8d6e63]/10 p-3 rounded-2xl border border-[#8d6e63]/10">
+                        <div className="text-[9px] font-black uppercase text-[#8d6e63] mb-2 text-center">Left Scale</div>
+                        <div className="grid grid-cols-4 gap-2">
+                            <button onClick={() => applyOp('lhs', 'add')} title="Add" className="p-3 bg-white rounded-xl shadow-sm border-b-4 border-gray-200 active:translate-y-1 active:border-0 hover:bg-emerald-50"><Plus size={18} className="mx-auto text-emerald-600" /></button>
+                            <button onClick={() => applyOp('lhs', 'sub')} title="Subtract" className="p-3 bg-white rounded-xl shadow-sm border-b-4 border-gray-200 active:translate-y-1 active:border-0 hover:bg-red-50"><Minus size={18} className="mx-auto text-red-600" /></button>
+                            <button onClick={() => applyOp('lhs', 'mul')} title="Multiply" className="p-3 bg-white rounded-xl shadow-sm border-b-4 border-gray-200 active:translate-y-1 active:border-0 hover:bg-blue-50"><X size={18} className="mx-auto text-blue-600" /></button>
+                            <button onClick={() => applyOp('lhs', 'div')} title="Divide" className="p-3 bg-white rounded-xl shadow-sm border-b-4 border-gray-200 active:translate-y-1 active:border-0 hover:bg-purple-50"><Divide size={18} className="mx-auto text-purple-600" /></button>
+                        </div>
+                    </div>
+
+                    {/* CENTRAL N-VALUE */}
+                    <div className="flex flex-col items-center justify-center p-3 px-6 bg-white/40 rounded-3xl border-2 border-white shadow-inner min-w-[120px]">
+                        <span className="text-[10px] font-black uppercase text-[#8d6e63] mb-1">Value n</span>
+                        <input 
+                          type="number" 
+                          value={operationValue} 
+                          onChange={(e) => setOperationValue(Number(e.target.value))} 
+                          className="w-16 bg-white border-2 border-[#8d6e63] rounded-xl p-2 font-black text-center text-2xl text-[#5d4037] shadow-sm" 
+                          min="1" max="99" 
+                        />
+                    </div>
+
+                    {/* RIGHT SIDE OPS */}
+                    <div className="bg-[#8d6e63]/10 p-3 rounded-2xl border border-[#8d6e63]/10">
+                        <div className="text-[9px] font-black uppercase text-[#8d6e63] mb-2 text-center">Right Scale</div>
+                        <div className="grid grid-cols-4 gap-2">
+                            <button onClick={() => applyOp('rhs', 'add')} title="Add" className="p-3 bg-white rounded-xl shadow-sm border-b-4 border-gray-200 active:translate-y-1 active:border-0 hover:bg-emerald-50"><Plus size={18} className="mx-auto text-emerald-600" /></button>
+                            <button onClick={() => applyOp('rhs', 'sub')} title="Subtract" className="p-3 bg-white rounded-xl shadow-sm border-b-4 border-gray-200 active:translate-y-1 active:border-0 hover:bg-red-50"><Minus size={18} className="mx-auto text-red-600" /></button>
+                            <button onClick={() => applyOp('rhs', 'mul')} title="Multiply" className="p-3 bg-white rounded-xl shadow-sm border-b-4 border-gray-200 active:translate-y-1 active:border-0 hover:bg-blue-50"><X size={18} className="mx-auto text-blue-600" /></button>
+                            <button onClick={() => applyOp('rhs', 'div')} title="Divide" className="p-3 bg-white rounded-xl shadow-sm border-b-4 border-gray-200 active:translate-y-1 active:border-0 hover:bg-purple-50"><Divide size={18} className="mx-auto text-purple-600" /></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      {/* NAVIGATION BAR */}
+      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4 items-center px-2 pb-1">
+          <button onClick={() => generateMission()} className={`relative flex items-center justify-between w-full p-2 sm:p-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-sm sm:text-xl active:scale-95 shadow-lg border-b-4 ${autoNextTimer !== null ? 'bg-indigo-600 text-white border-indigo-900' : 'bg-[#3e2723] text-[#dfc4a1] border-black'}`}>
+            <div className="flex items-center gap-3 z-10">
+              <div className="bg-white/10 p-1.5 sm:p-3 rounded-xl"><ChevronRight size={20} /></div>
+              <div className="leading-tight uppercase tracking-tighter text-xs sm:text-lg">{autoNextTimer !== null ? 'NEXT NOW' : 'NEW LESSON'}</div>
+            </div>
+            <div className="flex items-center relative z-10">
+              {autoNextTimer !== null ? (
+                <div className="flex items-center gap-2 sm:gap-4 bg-black/50 px-3 sm:px-6 py-1 sm:py-2 rounded-full border border-white/10 shadow-inner relative overflow-hidden min-w-[100px] sm:min-w-[200px]">
+                  <div className="flex items-center gap-1 shrink-0"><Timer size={14} className="animate-spin text-indigo-300" /><span className="text-lg sm:text-3xl font-mono leading-none">{autoNextTimer}</span></div>
+                  <div className="flex justify-between w-full px-2 relative">
+                      {[...Array(10)].map((_, i) => (<div key={i} className={`text-[8px] sm:text-base ${ (10 - autoNextTimer) > i ? 'opacity-100' : 'opacity-20'}`}>🍎</div>))}
+                      <motion.div animate={{ left: `${((10 - autoNextTimer) / 10) * 100}%`, scaleX: -1 }} className="absolute top-1/2 -translate-y-1/2 text-xs sm:text-2xl pointer-events-none">🏃</motion.div>
+                  </div>
+                </div>
+              ) : <FastForward className="opacity-30 w-6 h-6 sm:w-8 sm:h-8" />}
+            </div>
+          </button>
+          
+          <button onClick={runExplanation} className="flex items-center justify-center gap-2 sm:gap-4 w-full bg-[#8d6e63] hover:bg-[#5d4037] text-white p-2 sm:p-4 rounded-[1.5rem] sm:rounded-[2.5rem] font-black text-sm sm:text-xl active:scale-95 shadow-lg border-b-4 border-[#3e2723]">
+            <Info size={18} />
+            <span className="uppercase tracking-tighter text-xs sm:text-lg">View Explanation</span>
+          </button>
+      </div>
+
+      {/* EXPLANATION MODAL */}
+      <AnimatePresence>
+        {isExplaining && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-[#3e2723]/90 backdrop-blur-md p-4"
           >
-            <option value="en">English</option>
-            <option value="hi">हिन्दी</option>
-          </select>
-        </div>
+            <div className="w-full max-w-4xl bg-[#f1f0ee] rounded-[3rem] shadow-2xl overflow-hidden relative flex flex-col items-center p-6 sm:p-10 border-[6px] border-[#8d6e63]">
+              <button 
+                onClick={() => { setIsExplaining(false); window.speechSynthesis.cancel(); }}
+                className="absolute top-6 right-6 p-3 bg-[#8d6e63] text-white rounded-full hover:scale-110 transition-transform shadow-lg"
+              >
+                <X size={24} />
+              </button>
 
-        <button
-          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-          className={`p-2 rounded-md font-medium transition-colors duration-300 text-sm sm:text-base
-            ${theme === 'light' ? 'bg-gray-200 text-gray-800 hover:bg-gray-300' : 'bg-gray-700 text-white hover:bg-gray-600'}
-          `}
-        >
-          {translations[currentLanguage].changeTheme} ({theme === 'light' ? 'Dark' : 'Light'})
-        </button>
-      </div>
+              <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-tighter mb-4 text-[#5d4037]">Fundamental Principle</h2>
 
-      {!hasUserInteracted && (
-        <button
-          onClick={handleStartLesson}
-          className={`px-6 py-3 sm:px-8 sm:py-4 mb-4 sm:mb-8 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105 active:scale-95 text-lg sm:text-xl
-            ${theme === 'light' ? 'bg-blue-600' : 'bg-blue-800'}
-          `}
-        >
-          {translations[currentLanguage].startLesson}
-        </button>
-      )}
+              <div className="w-full space-y-4">
+                <div className="w-full bg-gradient-to-br from-[#5d4037] to-[#3e2723] p-6 rounded-3xl border-4 border-[#8d6e63] shadow-2xl text-center">
+                  <div className="space-y-4 min-h-[140px] flex flex-col justify-center">
+                    {formulas.map((line, idx) => (
+                      <motion.p key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                        className={`text-lg sm:text-2xl font-black tracking-tight font-mono drop-shadow-md leading-tight text-yellow-100/70`}
+                      >
+                        {line}
+                      </motion.p>
+                    ))}
+                  </div>
+                </div>
 
-      {hasUserInteracted && (
-        <BalanceScale
-          initialLeft={5}
-          initialRight={5}
-          currentLanguage={currentLanguage}
-          theme={theme}
-          speakMessage={speakMessage}
-          hasUserInteracted={hasUserInteracted}
-          audioContext={audioContext}
-        />
-      )}
+                <div className="w-full bg-white/60 p-4 sm:p-6 rounded-3xl border-2 border-[#8d6e63]/20 shadow-inner text-center min-h-[100px] flex items-center justify-center">
+                   <AnimatePresence mode="wait">
+                     <motion.p key={explanationText} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                       className="text-base sm:text-xl font-bold text-[#5d4037] leading-tight"
+                     >
+                       {explanationText}
+                     </motion.p>
+                   </AnimatePresence>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                 <button onClick={() => { setIsExplaining(false); window.speechSynthesis.cancel(); }} className="px-10 py-3 bg-[#8d6e63] text-white font-black rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all uppercase tracking-widest border-b-4 border-black/20">I Understand!</button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   );
-};
-
-export default App;
+}
