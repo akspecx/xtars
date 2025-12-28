@@ -1,8 +1,8 @@
 
 
 import { BookOpen, PenTool, FileText } from 'lucide-react'; // Import icons for the tabs
-import AlgebraicIntroduction from './AlgebraicIntroduction.tsx'
-import UnderstandingAlgebraicExpression from './UnderstandingAlgebraicExpression.tsx'
+import AlgebraicFundamentals from './AlgebraicFundamentals.tsx'
+import RightScaleWeight from './RightScaleWeight.tsx'
 import InteractiveAlgebraicIntroduction from './InteractiveAlgebraicIntroduction.tsx'
 import FindingtheUnknownIntroduction from './FindingtheUnknownIntroduction.tsx'
 import CreatingAlgebraicExpreesionIntro from './CreatingAlgebraicExpreesionIntro.tsx'
@@ -46,14 +46,16 @@ export const sampleCourse = {
           completed: true,
           content: {
             tabs: [
-              { id: 'concept2', label: 'Can you balance the scale?', icon: BookOpen },
-              { id: 'concept3', label: 'Let us find the weight of unknown?', icon: BookOpen },
-              { id: 'concept', label: 'Establishing the fundamentals?', icon: BookOpen }
+              { id: 'concept', label: 'Can you balance the scale?', icon: BookOpen },
+              { id: 'concept1', label: 'Let us find the weight of unknown?', icon: BookOpen },
+              { id: 'concept2', label: 'What is the weight on right scale?', icon: BookOpen },
+              { id: 'concept3', label: 'Establishing Fundamentals', icon: BookOpen }
 
             ],
-            concept: <AlgebraicIntroduction />,
-            concept2: <InteractiveAlgebraicIntroduction />,
-            concept3: <FindingtheUnknownIntroduction />
+            concept: <InteractiveAlgebraicIntroduction />,
+            concept1: <FindingtheUnknownIntroduction />,
+            concept2: <RightScaleWeight />,
+            concept3: <AlgebraicFundamentals />
           }
         },
         {
