@@ -6,20 +6,15 @@ import UnderstandingOfAbove from "./UnderstandingOfAbove";
 import UnderstandingOfBelow from "./UnderstandingOfBelow";
 import UnderstandingOfAboveAndBelow from "./UnderstandingOfAboveAndBelow";
 import UnderstandingOfTallAndShort from "./UnderstandingOfTallAndShort";
-import UnderstandingOfWideAndNarrow from "./UnderstandingOfWideAndNarrow";
-import UnderstandingOfHeavyAndLight from "./UnderstandingOfHeavyAndLight";
+import UnderstandingOfTall from "./UnderstandingOfTall";
+import UnderstandingOfShort from "./UnderstandingOfShort";
 import UnderstandingOfFullAndEmpty from "./UnderstandingOfFullAndEmpty";
-import UnderstandingOfInsideAndOutside from "./UnderstandingOfInsideAndOutside";
+import UnderstandingOfFull from "./UnderstandingOfFull";
+import UnderstandingOfEmpty from "./UnderstandingOfEmpty";
 import UnderstandingOfDifferent from "./UnderstandingOfDifferent";
 import UnderstandingOfBig from "./UnderstandingOfBig";
 import UnderstandingofSmall from "./UnderstandingofSmall";
 import UnderstandingOfBigAndSmallMix from "./UnderstandingOfBigAndSmallMix";
-import UnderstandingOfHeavy from "./UnderstandingOfHeavy";
-import UnderstandingOfLight from "./UnderstandingOfLight";
-import UnderstandingOfHeavyAndLightMix from "./UnderstandingOfHeavyAndLightMix";
-import UnderstandingOfWide from "./UnderstandingOfWide";
-import UnderstandingOfNarrow from "./UnderstandingOfNarrow";
-import UnderstandingOfWideAndNarrowMix from "./UnderstandingOfWideAndNarrowMix";
 import UnderstandingOfInside from "./UnderstandingOfInside";
 import UnderstandingOfOutside from "./UnderstandingOfOutside";
 import UnderstandingOfInsideAndOutsideMix from "./UnderstandingOfInsideAndOutsideMix";
@@ -68,14 +63,14 @@ export const VisualLogicGamesPageWrapper: React.FC = () => {
     return <UnderstandingOfTallAndShort />;
   };
   
-  // Wrapper for Understanding of Wide and Narrow
-  export const VisualLogicWideAndNarrowWrapper: React.FC = () => {
-    return <UnderstandingOfWideAndNarrow />;
+  // Wrapper for Understanding of Tall
+  export const VisualLogicTallWrapper: React.FC = () => {
+    return <UnderstandingOfTall />;
   };
   
-  // Wrapper for Understanding of Heavy and Light
-  export const VisualLogicHeavyAndLightWrapper: React.FC = () => {
-    return <UnderstandingOfHeavyAndLight />;
+  // Wrapper for Understanding of Short
+  export const VisualLogicShortWrapper: React.FC = () => {
+    return <UnderstandingOfShort />;
   };
   
   // Wrapper for Understanding of Full and Empty
@@ -83,9 +78,14 @@ export const VisualLogicGamesPageWrapper: React.FC = () => {
     return <UnderstandingOfFullAndEmpty />;
   };
   
-  // Wrapper for Understanding of Inside and Outside
-  export const VisualLogicInsideAndOutsideWrapper: React.FC = () => {
-    return <UnderstandingOfInsideAndOutside />;
+  // Wrapper for Understanding of Full
+  export const VisualLogicFullWrapper: React.FC = () => {
+    return <UnderstandingOfFull />;
+  };
+  
+  // Wrapper for Understanding of Empty
+  export const VisualLogicEmptyWrapper: React.FC = () => {
+    return <UnderstandingOfEmpty />;
   };
   
   // Wrapper for Understanding of Different
@@ -121,36 +121,6 @@ export const VisualLogicGamesPageWrapper: React.FC = () => {
   // Wrapper for Understanding of Big and Small Mix
   export const VisualLogicBigAndSmallMixWrapper: React.FC = () => {
     return <UnderstandingOfBigAndSmallMix />;
-  };
-  
-  // Wrapper for Understanding of Heavy
-  export const VisualLogicHeavyWrapper: React.FC = () => {
-    return <UnderstandingOfHeavy />;
-  };
-  
-  // Wrapper for Understanding of Light
-  export const VisualLogicLightWrapper: React.FC = () => {
-    return <UnderstandingOfLight />;
-  };
-  
-  // Wrapper for Understanding of Heavy and Light Mix
-  export const VisualLogicHeavyAndLightMixWrapper: React.FC = () => {
-    return <UnderstandingOfHeavyAndLightMix />;
-  };
-  
-  // Wrapper for Understanding of Wide
-  export const VisualLogicWideWrapper: React.FC = () => {
-    return <UnderstandingOfWide />;
-  };
-  
-  // Wrapper for Understanding of Narrow
-  export const VisualLogicNarrowWrapper: React.FC = () => {
-    return <UnderstandingOfNarrow />;
-  };
-  
-  // Wrapper for Understanding of Wide and Narrow Mix
-  export const VisualLogicWideAndNarrowMixWrapper: React.FC = () => {
-    return <UnderstandingOfWideAndNarrowMix />;
   };
   
   // Wrapper for Understanding of Inside

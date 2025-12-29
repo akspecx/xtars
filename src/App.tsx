@@ -111,20 +111,15 @@ import {
   VisualLogicAboveAndBelowWrapper,
   VisualLogicAboveAndBelowMixWrapper,
   VisualLogicTallAndShortWrapper,
-  VisualLogicWideAndNarrowWrapper,
-  VisualLogicHeavyAndLightWrapper,
+  VisualLogicTallWrapper,
+  VisualLogicShortWrapper,
   VisualLogicFullAndEmptyWrapper,
-  VisualLogicInsideAndOutsideWrapper,
+  VisualLogicFullWrapper,
+  VisualLogicEmptyWrapper,
   VisualLogicDifferentWrapper,
   VisualLogicBigWrapper,
   VisualLogicSmallWrapper,
   VisualLogicBigAndSmallMixWrapper,
-  VisualLogicHeavyWrapper,
-  VisualLogicLightWrapper,
-  VisualLogicHeavyAndLightMixWrapper,
-  VisualLogicWideWrapper,
-  VisualLogicNarrowWrapper,
-  VisualLogicWideAndNarrowMixWrapper,
   VisualLogicInsideWrapper,
   VisualLogicOutsideWrapper,
   VisualLogicInsideAndOutsideMixWrapper
@@ -258,20 +253,15 @@ export default function App() {
               <Route path="/games/visuallogic/above-below" element={<VisualLogicAboveAndBelowWrapper />} />
               <Route path="/games/visuallogic/above-below-mix" element={<VisualLogicAboveAndBelowMixWrapper />} />
               <Route path="/games/visuallogic/tall-short" element={<VisualLogicTallAndShortWrapper />} />
-              <Route path="/games/visuallogic/wide-narrow" element={<VisualLogicWideAndNarrowWrapper />} />
-              <Route path="/games/visuallogic/heavy-light" element={<VisualLogicHeavyAndLightWrapper />} />
+              <Route path="/games/visuallogic/tall" element={<VisualLogicTallWrapper />} />
+              <Route path="/games/visuallogic/short" element={<VisualLogicShortWrapper />} />
               <Route path="/games/visuallogic/full-empty" element={<VisualLogicFullAndEmptyWrapper />} />
-              <Route path="/games/visuallogic/inside-outside" element={<VisualLogicInsideAndOutsideWrapper />} />
+              <Route path="/games/visuallogic/full" element={<VisualLogicFullWrapper />} />
+              <Route path="/games/visuallogic/empty" element={<VisualLogicEmptyWrapper />} />
               <Route path="/games/visuallogic/different" element={<VisualLogicDifferentWrapper />} />
               <Route path="/games/visuallogic/big" element={<VisualLogicBigWrapper />} />
               <Route path="/games/visuallogic/small" element={<VisualLogicSmallWrapper />} />
               <Route path="/games/visuallogic/big-small-mix" element={<VisualLogicBigAndSmallMixWrapper />} />
-              <Route path="/games/visuallogic/heavy" element={<VisualLogicHeavyWrapper />} />
-              <Route path="/games/visuallogic/light" element={<VisualLogicLightWrapper />} />
-              <Route path="/games/visuallogic/heavy-light-mix" element={<VisualLogicHeavyAndLightMixWrapper />} />
-              <Route path="/games/visuallogic/wide" element={<VisualLogicWideWrapper />} />
-              <Route path="/games/visuallogic/narrow" element={<VisualLogicNarrowWrapper />} />
-              <Route path="/games/visuallogic/wide-narrow-mix" element={<VisualLogicWideAndNarrowMixWrapper />} />
               <Route path="/games/visuallogic/inside" element={<VisualLogicInsideWrapper />} />
               <Route path="/games/visuallogic/outside" element={<VisualLogicOutsideWrapper />} />
               <Route path="/games/visuallogic/inside-outside-mix" element={<VisualLogicInsideAndOutsideMixWrapper />} />

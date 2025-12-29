@@ -2,28 +2,28 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   RefreshCcw, CheckCircle2, 
-  Hand, Sparkles, Play, MousePointer2, 
+  Hand, Play, MousePointer2, 
   Timer, ChevronRight, Shuffle, 
   XCircle, Volume2, VolumeX,
-  Trophy, Award, Minimize, Star
+  Trophy, Award, ArrowUp, Star
 } from 'lucide-react';
 
-// --- Scenarios updated with Vehicles for Size Comparison ---
+// --- Scenarios for Height Comparison ---
 const SCENARIOS = [
-  { id: 1, name: 'Car', emoji: '🚗' },
-  { id: 2, name: 'Bus', emoji: '🚌' },
-  { id: 3, name: 'Plane', emoji: '✈️' },
-  { id: 4, name: 'Bike', emoji: '🚲' },
-  { id: 5, name: 'Boat', emoji: '⛵' },
-  { id: 6, name: 'Truck', emoji: '🚛' },
-  { id: 7, name: 'Tractor', emoji: '🚜' },
-  { id: 8, name: 'Scooter', emoji: '🛵' },
+  { id: 1, name: 'Giraffe', emoji: '🦒' },
+  { id: 2, name: 'Tree', emoji: '🌲' },
+  { id: 3, name: 'Building', emoji: '🏢' },
+  { id: 4, name: 'Pencil', emoji: '✏️' },
+  { id: 5, name: 'Ladder', emoji: '🪜' },
+  { id: 6, name: 'Tower', emoji: '🗼' },
+  { id: 7, name: 'Cactus', emoji: '🌵' },
+  { id: 8, name: 'Candle', emoji: '🕯️' },
 ];
 
 export default function App() {
   const [mode, setMode] = useState('practice'); 
   const [scenarioIdx, setScenarioIdx] = useState(0);
-  const [smallSide, setSmallSide] = useState('left'); 
+  const [tallSide, setTallSide] = useState('left'); 
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedSide, setSelectedSide] = useState(null);
@@ -70,8 +70,8 @@ export default function App() {
 
   const resetLevel = useCallback((idx, isSequential = false) => {
     setScenarioIdx(idx);
-    const newSmallSide = Math.random() > 0.5 ? 'left' : 'right';
-    setSmallSide(newSmallSide);
+    const newTallSide = Math.random() > 0.5 ? 'left' : 'right';
+    setTallSide(newTallSide);
     setIsAnswered(false);
     setIsCorrect(false);
     setSelectedSide(null);
@@ -82,7 +82,7 @@ export default function App() {
     tutorialActiveRef.current = false;
 
     if (mode === 'practice' || (mode === 'kid' && !isSequential)) {
-      speak(`Look closely! Which ${SCENARIOS[idx].name} is small?`);
+      speak(`Look closely! Which ${SCENARIOS[idx].name} is tall?`);
     }
   }, [mode, speak]);
 
@@ -101,13 +101,13 @@ export default function App() {
     setSelectedSide(side);
     setIsAnswered(true);
 
-    const isWinnerSide = (side === smallSide);
+    const isWinnerSide = (side === tallSide);
 
     if (isWinnerSide) {
       setIsCorrect(true);
       setScore(s => s + 1);
       playThud(440); 
-      speak(`Perfect! That is the small ${currentScenario.name}!`);
+      speak(`Wonderful! The ${currentScenario.name} is tall!`);
       
       if (mode === 'kid') {
         if (scenarioIdx === SCENARIOS.length - 1) {
@@ -121,7 +121,7 @@ export default function App() {
     } else {
       setIsCorrect(false);
       playThud(100); 
-      speak(`Oh! That one is big. Find the small ${currentScenario.name}!`);
+      speak(`That one is short. Can you find the tall one?`);
       if (!isTutorial) {
         setTimeout(() => {
           setIsAnswered(false);
@@ -129,7 +129,7 @@ export default function App() {
         }, 2500);
       }
     }
-  }, [smallSide, isAnswered, isCorrect, isAutoPlaying, mode, playThud, currentScenario.name, speak]);
+  }, [tallSide, isAnswered, isCorrect, isAutoPlaying, mode, playThud, currentScenario.name, speak]);
 
   const moveHandToSide = useCallback((side) => {
     return new Promise(resolve => {
@@ -146,11 +146,11 @@ export default function App() {
     tutorialActiveRef.current = true;
     setIsAutoPlaying(true);
     
-    speak(`Let's find the ${currentScenario.name} that is small.`);
+    speak(`Let's find the ${currentScenario.name} that is tall.`);
     await new Promise(r => setTimeout(r, 1800));
     
-    const correctSide = smallSide;
-    const wrongSide = smallSide === 'left' ? 'right' : 'left';
+    const correctSide = tallSide;
+    const wrongSide = tallSide === 'left' ? 'right' : 'left';
     
     await moveHandToSide(wrongSide);
     handleSelect(wrongSide, true); 
@@ -165,7 +165,7 @@ export default function App() {
     
     setIsAutoPlaying(false);
     setVirtualHandPos(null);
-  }, [currentScenario, smallSide, moveHandToSide, handleSelect, speak, journeyFinished]);
+  }, [currentScenario, tallSide, moveHandToSide, handleSelect, speak, journeyFinished]);
 
   useEffect(() => {
     if (mode === 'kid' && !isCorrect && !tutorialActiveRef.current && !journeyFinished) {
@@ -194,16 +194,16 @@ export default function App() {
       <div className="w-full max-w-6xl flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 sm:w-20 sm:h-20 bg-[#D9B99B] rounded-3xl shadow-[0_8px_0_#B8977E] flex items-center justify-center text-white border-2 border-[#EADAC4]">
-              <motion.div animate={{ scale: [1, 0.8, 1] }} transition={{ repeat: Infinity, duration: 3 }}>
-                <Minimize size={40} strokeWidth={3} className="text-white drop-shadow-md" />
+              <motion.div animate={{ scaleY: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 4 }}>
+                <ArrowUp size={40} strokeWidth={3} className="text-white drop-shadow-md" />
               </motion.div>
           </div>
           <div className="text-left">
             <h1 className="text-3xl sm:text-5xl font-black text-[#5D4037] tracking-tighter leading-none uppercase">
-              Finding Small Fun
+              Finding Tall
             </h1>
             <div className="flex items-center gap-2 mt-1">
-               <p className="text-[12px] font-bold text-[#A68B7C] uppercase tracking-[0.2em]">Vehicle Adventure</p>
+               <p className="text-[12px] font-bold text-[#A68B7C] uppercase tracking-[0.2em]">Visual Logic Discovery</p>
             </div>
           </div>
         </div>
@@ -245,16 +245,16 @@ export default function App() {
             >
                 <Star className="text-yellow-400 fill-yellow-400" size={32} />
                 <h2 className="text-3xl sm:text-6xl font-black text-[#7A5C3E] uppercase tracking-tighter">
-                  FIND SMALL
+                  FIND TALL
                 </h2>
                 <Star className="text-yellow-400 fill-yellow-400" size={32} />
             </motion.div>
         </div>
 
-        {/* Comparison Grid - TWO LARGE BOXES */}
+        {/* Comparison Grid */}
         <div className="w-full grid grid-cols-2 gap-10 sm:gap-24 max-w-5xl relative px-4 mt-12">
             {['left', 'right'].map((side) => {
-                const isSmallSlot = side === smallSide;
+                const isTallSlot = side === tallSide;
                 const isSelected = selectedSide === side;
                 
                 return (
@@ -263,54 +263,42 @@ export default function App() {
                         ref={el => sideRefs.current[side] = el}
                         onClick={() => handleSelect(side)}
                         whileHover={!isAnswered ? { scale: 1.02 } : {}}
-                        className={`relative aspect-[4/5] sm:aspect-square bg-[#FFFBF2] rounded-[4rem] sm:rounded-[5.5rem] shadow-[inset_0_10px_20px_rgba(0,0,0,0.02),0_20px_40px_rgba(0,0,0,0.1)] border-b-[12px] sm:border-b-[24px] flex items-center justify-center transition-all duration-500 overflow-hidden ${
+                        className={`relative aspect-[4/5] sm:aspect-square bg-[#FFFBF2] rounded-[4rem] sm:rounded-[5.5rem] shadow-[inset_0_10px_20px_rgba(0,0,0,0.02),0_20px_40px_rgba(0,0,0,0.1)] border-b-[16px] sm:border-b-[24px] flex items-center justify-center transition-all duration-500 overflow-hidden ${
                             isSelected 
-                                ? (isCorrect && isSmallSlot ? 'border-[#4CAF50] bg-[#F1FCEF]' : 'border-[#FF5252] animate-shake')
+                                ? (isCorrect && isTallSlot ? 'border-[#4CAF50] bg-[#F1FCEF]' : 'border-[#FF5252] animate-shake')
                                 : isAnswered ? 'opacity-40 border-[#EEE0CB]' : 'border-[#D9B99B] hover:border-[#B8977E]'
                         }`}
                     >
-                        {/* THE OBJECT - One is scale-0.65 (Target), one is scale-1.25 (Decoy) */}
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ 
-                              scale: isSmallSlot ? 0.65 : 1.25,
-                              filter: isSelected && !isSmallSlot ? 'grayscale(1)' : 'grayscale(0)'
-                            }}
-                            transition={{ type: 'spring', damping: 15, stiffness: 100 }}
-                            className="text-[8rem] sm:text-[11rem] lg:text-[14rem] drop-shadow-[0_15px_15px_rgba(0,0,0,0.15)] flex items-center justify-center"
-                        >
-                            {currentScenario.emoji}
-                        </motion.div>
+                        <div className="relative w-full h-full flex items-center justify-center">
+                            
+                            {/* Ground Line to anchor the height difference */}
+                            <div className="absolute bottom-10 w-[60%] h-2 bg-[#D9B99B]/30 rounded-full" />
 
-                        {/* Particle Feedback on Correct Click */}
-                        <AnimatePresence>
-                            {isSelected && isCorrect && isSmallSlot && (
-                              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute inset-0 z-20 pointer-events-none">
-                                {[...Array(12)].map((_, i) => (
-                                  <motion.div
-                                    key={i}
-                                    initial={{ x: 0, y: 0, opacity: 1 }}
+                            <div className="relative w-full h-full flex items-end justify-center pb-12">
+                                {/* The Object - Reduced text size to prevent clipping */}
+                                <motion.div
+                                    initial={{ scaleX: 0, scaleY: 0 }}
                                     animate={{ 
-                                      x: (Math.random() - 0.5) * 400, 
-                                      y: (Math.random() - 0.5) * 400,
-                                      opacity: 0,
-                                      scale: 0.5
+                                      scaleX: 1, 
+                                      scaleY: isTallSlot ? 1.3 : 0.8, // Reduced from 1.5 to 1.3
+                                      opacity: 1
                                     }}
-                                    className="absolute left-1/2 top-1/2 w-4 h-4 bg-yellow-400 rounded-full"
-                                  />
-                                ))}
-                              </motion.div>
-                            )}
-                        </AnimatePresence>
+                                    transition={{ type: 'spring', damping: 12, stiffness: 80, delay: 0.1 }}
+                                    className={`text-[6rem] sm:text-[10rem] lg:text-[12rem] drop-shadow-xl z-10 origin-bottom select-none ${isSelected && !isTallSlot ? 'grayscale opacity-60' : ''}`}
+                                >
+                                    {currentScenario.emoji}
+                                </motion.div>
+                            </div>
+                        </div>
 
-                        {/* Status Feedback Icons */}
+                        {/* Status Feedback */}
                         <AnimatePresence>
                             {isSelected && (
                                 <motion.div 
                                     initial={{ scale: 0, y: 30 }} animate={{ scale: 1.5, y: -80 }} exit={{ scale: 0 }}
                                     className="absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none"
                                 >
-                                    {isCorrect && isSmallSlot ? (
+                                    {isCorrect && isTallSlot ? (
                                         <div className="bg-[#4CAF50] p-5 sm:p-8 rounded-full shadow-2xl border-[8px] border-white">
                                             <CheckCircle2 className="text-white w-12 h-12 sm:w-24 sm:h-24" />
                                         </div>
@@ -341,10 +329,10 @@ export default function App() {
                     >
                         <Trophy size={180} className="text-[#FFC107] mb-10 animate-bounce drop-shadow-[0_10px_20px_rgba(255,193,7,0.3)] mx-auto" />
                         <h2 className="text-6xl sm:text-9xl font-black text-[#7A5C3E] tracking-tighter uppercase leading-none">
-                          SMALL SUCCESS!
+                          YOU DID IT!
                         </h2>
                         <p className="text-[#A68B7C] font-black uppercase tracking-[0.4em] mt-8 mb-16 text-xl sm:text-4xl">
-                          YOU KNOW ALL THE SMALL VEHICLES!
+                          YOU FOUND ALL THE TALL ONES!
                         </p>
                         <button 
                             onClick={() => { setMode('kid'); setScore(0); resetLevel(0); }}
@@ -391,7 +379,7 @@ export default function App() {
           </button>
       </div>
 
-      {/* INTERACTIVE TUTORIAL HAND */}
+      {/* TUTORIAL HAND */}
       <AnimatePresence>
         {mode === 'kid' && virtualHandPos && !journeyFinished && (
             <motion.div 
