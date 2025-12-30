@@ -104,8 +104,10 @@ const VisualLogicLandingPageContent: React.FC<ModuleProps> = ({ onBack }) => {
   );
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] p-4 sm:p-8 font-sans text-[#7A5C3E]">
-      
+    // <div className="min-h-screen bg-[#FDFBF7] p-4 sm:p-8 font-sans text-[#7A5C3E]">
+    <div className="w-full flex flex-col items-center bg-[#e6dccb] font-sans select-none relative shadow-inner min-h-screen">
+    <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} /> 
+  
       {/* Top Bar */}
       <div className="max-w-7xl mx-auto flex items-center mb-8">
         <button

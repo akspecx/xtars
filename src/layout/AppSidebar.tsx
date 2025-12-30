@@ -18,7 +18,7 @@ import {
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
 import { BookOpenIcon, ChatBubbleBottomCenterIcon } from "@heroicons/react/24/solid";
-import { Gamepad2Icon } from "lucide-react";
+import { Gamepad2Icon,Puzzle,Brain } from "lucide-react";
 
 type NavItem = {
   name: string;
@@ -46,6 +46,12 @@ const navItems: NavItem[] = [
     name: "Games",
     path: "/games",
   },
+  {
+    icon: <Brain />,
+    name: "Puzzles",
+    path: "/puzzles",
+  },
+
   {
     icon: <ChatBubbleBottomCenterIcon />,
     name: "Feedback",
@@ -306,8 +312,11 @@ const AppSidebar: React.FC = () => {
   );
 
   return (
+    // <div className="w-full flex flex-col items-center  font-sans select-none relative shadow-inner min-h-screen">
+    // <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} /> 
+  
     <aside
-      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
+      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-[#e6dccb] dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
         ${isExpanded || isMobileOpen
           ? "w-[290px]"
           : isHovered

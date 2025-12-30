@@ -75,7 +75,9 @@ const numberGameData: NumberGameCard[] = [
 // --- Page ---
 const NumbersGamesLandingPage: React.FC<ModuleProps> = ({ onBack, theme, title, icon }) => {
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${theme.background} p-4 sm:p-8 overflow-y-auto animate-module-entry`}>
+    // <div className={`min-h-screen bg-gradient-to-br ${theme.background} p-4 sm:p-8 overflow-y-auto animate-module-entry`}>
+    <div className="w-full flex flex-col items-center bg-[#e6dccb] font-sans select-none relative shadow-inner min-h-screen">
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} /> 
       <button
         onClick={onBack}
         className={`mb-6 flex items-center gap-2 px-4 py-2 rounded-full ${theme.surface} ${theme.text} ${theme.surfaceHover} border ${theme.border} transition-all duration-300 hover:scale-105`}
@@ -107,6 +109,7 @@ const NumbersGamesLandingPage: React.FC<ModuleProps> = ({ onBack, theme, title, 
         </div>
       </div>
     </div>
+
   );
 };
 

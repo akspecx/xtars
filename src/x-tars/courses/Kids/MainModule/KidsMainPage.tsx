@@ -555,7 +555,10 @@ const LearningPlatform: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${theme.background} transition-all duration-500`}>
+    // <div className={`min-h-screen bg-gradient-to-br ${theme.background} transition-all duration-500`}>
+    <div className="w-full flex flex-col items-center bg-[#e6dccb] font-sans select-none relative shadow-inner min-h-screen">
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} /> 
+    
       {/* CSS Keyframe for Module Entry Animation */}
       <style>{`
         @keyframes slideUp {

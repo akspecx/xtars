@@ -22,6 +22,7 @@ import { SettingsProvider } from "./contexts/SettingsContext";
 import CoursesHome from "./x-tars/courses/CourseHome";
 import CoursesRouter from "./x-tars/courses/Router";
 import GamesHome from "./x-tars/courses/Kids/MainModule/KidsMainPage";
+import PuzzlesHome from "./x-tars/courses/Puzzles/PuzzlesMain"
 import Roadmap from "./x-tars/Roadmap";
 // import ShapesIntroduction  from "./x-tars/courses/Kids/basics/Shapes/ShapesIntroduction";
 import { 
@@ -161,6 +162,8 @@ export default function App() {
 
               {/* Games */}
               <Route path="/games" element={<GamesHome />} />
+
+              <Route path="/puzzles" element={<PuzzlesHome />} />
               
               {/* Alphabet Games Menu */}
               <Route path="/games/alphabets" element={<AlphabetGamesPageWrapper />} />
