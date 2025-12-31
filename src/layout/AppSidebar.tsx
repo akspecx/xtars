@@ -15,6 +15,7 @@ import {
   TableIcon,
   UserCircleIcon,
 } from "../icons";
+import { AcademicCapIcon } from "@heroicons/react/24/outline";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
 import { BookOpenIcon, ChatBubbleBottomCenterIcon } from "@heroicons/react/24/solid";
@@ -38,17 +39,17 @@ const navItems: NavItem[] = [
 
   {
     icon: <BookOpenIcon />,
-    name: "Courses",
+    name: "Learn",
     path: "/courses",
   },
   {
-    icon: <Gamepad2Icon />,
-    name: "Games",
+    icon: <AcademicCapIcon />,
+    name: "Kids Zone",
     path: "/games",
   },
   {
     icon: <Brain />,
-    name: "Puzzles",
+    name: "Brain Games",
     path: "/puzzles",
   },
 
@@ -316,7 +317,7 @@ const AppSidebar: React.FC = () => {
     // <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} /> 
   
     <aside
-      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-[#e6dccb] dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
+      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-[#e6dccb] dark:bg-[#3e2723] dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
         ${isExpanded || isMobileOpen
           ? "w-[290px]"
           : isHovered

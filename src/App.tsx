@@ -21,7 +21,7 @@ import Home from "./pages/Dashboard/Home";
 import { SettingsProvider } from "./contexts/SettingsContext";
 import CoursesHome from "./x-tars/courses/CourseHome";
 import CoursesRouter from "./x-tars/courses/Router";
-import GamesHome from "./x-tars/courses/Kids/MainModule/KidsMainPage";
+import GamesHome from "./x-tars/courses/Kids/basics/KidsMainPage";
 import PuzzlesHome from "./x-tars/courses/Puzzles/PuzzlesMain"
 import Roadmap from "./x-tars/Roadmap";
 // import ShapesIntroduction  from "./x-tars/courses/Kids/basics/Shapes/ShapesIntroduction";
@@ -130,14 +130,19 @@ import {
   AnimalMatchingGameWrapper,
   FruitsMatchingGameWrapper,
   NumberMatchingGameWrapper
-} from "./x-tars/courses/Kids/games/MemoryGame/MemoryGameWrappers";
+} from "./x-tars/courses/Kids/basics/MemoryGame/MemoryGameWrappers";
 import { 
   PuzzlesPageWrapper,
   AppleArrangementGameWrapper,
   OrangeArrangementGameWrapper,
   OrangeComplexArrangementGameWrapper,
   GiraffeComplexArrangementGameWrapper
-} from "./x-tars/courses/Kids/games/puzzles/Arrangement/PuzzleGameWrappers";
+} from "./x-tars/courses/Kids/basics/Arrangement/PuzzleGameWrappers";
+
+import {
+  PuzzleIntroductionRouter
+}
+from "./x-tars/courses/Puzzles/PuzzlesWrapper"
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import FeedBackComponent from "./pages/Feedback";
@@ -163,7 +168,10 @@ export default function App() {
               {/* Games */}
               <Route path="/games" element={<GamesHome />} />
 
+              {/* Puzzle module router */}
+
               <Route path="/puzzles" element={<PuzzlesHome />} />
+              <Route path="/puzzles/Introduction" element={<PuzzleIntroductionRouter />} />
               
               {/* Alphabet Games Menu */}
               <Route path="/games/alphabets" element={<AlphabetGamesPageWrapper />} />
