@@ -13,11 +13,11 @@ import {
 } from 'lucide-react';
 import NumberGameCard from "../CommonUtility/CardsUtility"
 
-const USER_NAME = "Alexander"; 
+const USER_NAME = "Prabhat"; 
 
-const PUZZLES_DATA = [
-   { id: "Introduction", title: "Starting with the numbers ✅", subtitle: "Introduction to the numbers", icon: "1️⃣2️⃣3️⃣", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/Introduction"}
-//   // { id: "Association", title: "Associate objects to a number ✅", subtitle: "How many objects are there?", icon: "🤗", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/Association", type: 'numeric' },
+const PUZZLES_SUB_MODULES = [
+   { id: "TheMission", title: "The Mission✅", subtitle: "Let's achieve the mission within contraints defined", icon: "🎯", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/mission"},
+   { id: "MetricSum", title: "Magic Square", subtitle: "Can you arrange the numbers so that sum is equal?", icon: "∑🔢", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/metricSum" }
 //   // { id: "identification", title: "Match the Correct Numbers ✅", subtitle: "Identify and match numbers with the correct apple groups", icon: "🍎", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/identification", type: 'numeric' },
 //   // { id: "counting", title: "Count On Your Body", subtitle: "Learn numbers with body-part examples", icon: "🤗", gradient: "from-rose-500 to-amber-500", path: "/puzzles/counting", type: 'numeric' },
 //   // { id: "tracing", title: "Trace the Numbers ✅", subtitle: "Practice drawing numbers with dotted guides", icon: "✍️", gradient: "from-sky-500 to-blue-500", path: "/puzzles/tracing", type: 'numeric' },
@@ -150,7 +150,7 @@ const BalanceScaleMission = () => {
 
 // --- PRIMARY HUB COMPONENT ---
 
-export default function PuzzlesHome() {
+export default function PuzzlesSubModules() {
   const navigate = useNavigate();
   const { puzzleId } = useParams();
   const [quoteIndex, setQuoteIndex] = useState(0);
@@ -196,7 +196,7 @@ export default function PuzzlesHome() {
                    <div className="flex items-center gap-6 shrink-0 bg-[#3e2723] p-8 rounded-[3rem] text-white shadow-2xl border-b-8 border-black">
                       <div className="text-center">
                         <span className="text-[11px] font-black uppercase block mb-2 tracking-widest opacity-40">Active Links</span>
-                        <span className="text-5xl font-black tabular-nums">{String(PUZZLES_DATA.length)}</span>
+                        <span className="text-5xl font-black tabular-nums">{String(PUZZLES_SUB_MODULES.length)}</span>
                       </div>
                    </div>
                 </div>
@@ -204,7 +204,7 @@ export default function PuzzlesHome() {
 
               {/* Game Tiles Grid using provided Full-Paths */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
-                 {PUZZLES_DATA.map((game) => (
+                 {PUZZLES_SUB_MODULES.map((game) => (
                    <NumberGameCard 
                     key={String(game.id)} 
                     {...game} 

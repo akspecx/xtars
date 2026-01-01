@@ -140,9 +140,11 @@ import {
 } from "./x-tars/courses/Kids/basics/Arrangement/PuzzleGameWrappers";
 
 import {
-  PuzzleIntroductionRouter
+  PuzzleRouter,
+  PuzzleMissionRouter,
+  PuzzleMetricSumRouter
 }
-from "./x-tars/courses/Puzzles/PuzzlesWrapper"
+from "./x-tars/courses/Puzzles/PuzzlesWrapper";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import FeedBackComponent from "./pages/Feedback";
@@ -170,8 +172,9 @@ export default function App() {
 
               {/* Puzzle module router */}
 
-              <Route path="/puzzles" element={<PuzzlesHome />} />
-              <Route path="/puzzles/Introduction" element={<PuzzleIntroductionRouter />} />
+              <Route path="/puzzles" element={<PuzzleRouter />} />
+              <Route path="/puzzles/mission" element={<PuzzleMissionRouter />} />
+              <Route path="/puzzles/metricSum" element={<PuzzleMetricSumRouter />} />
               
               {/* Alphabet Games Menu */}
               <Route path="/games/alphabets" element={<AlphabetGamesPageWrapper />} />
