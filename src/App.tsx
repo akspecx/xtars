@@ -142,7 +142,9 @@ import {
 import {
   PuzzleRouter,
   PuzzleMissionRouter,
-  PuzzleMetricSumRouter
+  PuzzleMetricSumRouter,
+  SacredGameRouter
+  
 }
 from "./x-tars/courses/Puzzles/PuzzlesWrapper";
 import { AuthProvider } from "./context/AuthContext";
@@ -175,7 +177,7 @@ export default function App() {
               <Route path="/puzzles" element={<PuzzleRouter />} />
               <Route path="/puzzles/mission" element={<PuzzleMissionRouter />} />
               <Route path="/puzzles/metricSum" element={<PuzzleMetricSumRouter />} />
-              
+              <Route path="/puzzles/sacredGame" element={<SacredGameRouter />} />
               {/* Alphabet Games Menu */}
               <Route path="/games/alphabets" element={<AlphabetGamesPageWrapper />} />
               

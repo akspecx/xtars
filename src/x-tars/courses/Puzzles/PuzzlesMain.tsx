@@ -17,8 +17,8 @@ const USER_NAME = "Prabhat";
 
 const PUZZLES_SUB_MODULES = [
    { id: "TheMission", title: "The Mission✅", subtitle: "Let's achieve the mission within contraints defined", icon: "🎯", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/mission"},
-   { id: "MetricSum", title: "Magic Square", subtitle: "Can you arrange the numbers so that sum is equal?", icon: "∑🔢", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/metricSum" }
-//   // { id: "identification", title: "Match the Correct Numbers ✅", subtitle: "Identify and match numbers with the correct apple groups", icon: "🍎", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/identification", type: 'numeric' },
+   { id: "MetricSum", title: "Magic Square", subtitle: "Can you arrange the numbers so that sum is equal?", icon: "∑🔢", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/metricSum" },
+   { id: "identification", title: "The Sacred Game ✅", subtitle: "Can you offer flowers correctly?", icon: "🛕", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/sacredGame" }
 //   // { id: "counting", title: "Count On Your Body", subtitle: "Learn numbers with body-part examples", icon: "🤗", gradient: "from-rose-500 to-amber-500", path: "/puzzles/counting", type: 'numeric' },
 //   // { id: "tracing", title: "Trace the Numbers ✅", subtitle: "Practice drawing numbers with dotted guides", icon: "✍️", gradient: "from-sky-500 to-blue-500", path: "/puzzles/tracing", type: 'numeric' },
 //   // { id: "sequence", title: "Number Train Sequence ✅", subtitle: "Arrange train coaches in the correct order", icon: "🚂", gradient: "from-orange-500 to-amber-500", path: "/puzzles/sequence", type: 'numeric' },
