@@ -16,7 +16,7 @@ import NumberGameCard from "../../CommonUtility/CardsUtility"
 const USER_NAME = "Prabhat"; 
 
 const LEARN_SUB_MODULES = [
-   { id: "maths", title: "Algebra", subtitle: "Let's learn the Algebra", icon: "x²=3️⃣2️⃣1️⃣", gradient: "from-indigo-500 to-purple-500", path: "/learn/mathematics/algebra"}
+   { id: "maths", title: "Algebra", subtitle: "Let's learn the Algebra", icon: "x²=3️⃣", gradient: "from-indigo-500 to-purple-500", path: "/learn/mathematics/algebra"}
 //    { id: "logicalReasoning", title: "Logical Reasoning✅", subtitle: "Can we solve the arrangements?", icon: "👥🔄↔️", gradient: "from-indigo-500 to-purple-500", path: "/learn/logicalreasoning" }
 //    { id: "identification", title: "The Sacred Game ✅", subtitle: "Can you offer flowers correctly?", icon: "🛕", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/sacredGame" }
 //   // { id: "counting", title: "Count On Your Body", subtitle: "Learn numbers with body-part examples", icon: "🤗", gradient: "from-rose-500 to-amber-500", path: "/puzzles/counting", type: 'numeric' },

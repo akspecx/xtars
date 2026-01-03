@@ -434,7 +434,7 @@ export default function WeightLab() {
             <span className="font-black text-xl sm:text-2xl text-emerald-600">Mastery Confirmed</span>
          </div>
       </div>
-      <button onClick={() => window.location.reload()} className="px-16 py-6 bg-[#3e2723] text-white font-black rounded-[2.5rem] uppercase tracking-widest text-lg shadow-2xl border-b-8 border-black active:translate-y-2 transition-all">Move to next module</button>
+      <button onClick={() => navigate('/learn/mathematics/algebra/rightScale')} className="px-16 py-6 bg-[#3e2723] text-white font-black rounded-[2.5rem] uppercase tracking-widest text-lg shadow-2xl border-b-8 border-black active:translate-y-2 transition-all">Move to next module</button>
     </motion.div>
   );
 

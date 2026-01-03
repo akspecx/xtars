@@ -158,7 +158,10 @@ from "./x-tars/courses/Learn/maths/MathsRouterWrapper"
 
 import {
   AlgebraicIntroductionRouter,
-  FindingWeightUnknowRouter
+  FindingWeightUnknowRouter,
+  RightScaleRouter,
+  LhsrhsIntroductionRouter,
+  AELikeUnlikeTermsRouter
 }
 from "./x-tars/courses/Learn/maths/AlgebraicExpression/AlgebraRouterWrapper"
 
@@ -196,8 +199,11 @@ export default function App() {
               {/* Algebra sub modules */}
               <Route path="/learn/mathematics/algebra/introduction" element={<AlgebraicIntroductionRouter />} />
               <Route path="/learn/mathematics/algebra/unknown" element={<FindingWeightUnknowRouter />} />
-             
-
+              <Route path="/learn/mathematics/algebra/rightScale" element={<RightScaleRouter />} />
+              <Route path="/learn/mathematics/algebra/lhsrhsIntroduction" element={<LhsrhsIntroductionRouter />} />
+              <Route path="/learn/mathematics/algebra/likeunlike" element={<AELikeUnlikeTermsRouter />} />
+              
+              
               {/* Games */}
               <Route path="/games" element={<GamesHome />} />
 

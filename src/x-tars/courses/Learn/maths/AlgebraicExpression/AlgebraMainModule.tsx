@@ -12,14 +12,44 @@ import {
 const HIERARCHY_DATA = [
   {
     id: "maths",
-    title: "Algebra",
-    subtitle: "Logic Foundations",
-    icon: "x²=3️⃣",
+    title: "Scale",
+    subtitle: "Understanding the balanced scale",
+    icon: "⚖️",
     gradient: "from-indigo-500 to-purple-500",
     path: "/learn/mathematics/algebra",
     subModules: [
       { id: 'alg_1', title: 'Balance the Scale', desc: 'Decoding patterns through physical mass.', icon: '🔢', path: '/learn/mathematics/algebra/introduction' },
       { id: 'alg_2', title: 'Finding the Unknown', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/mathematics/algebra/unknown' },
+      { id: 'alg_3', title: 'Weight on right scale', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/mathematics/algebra/rightScale' }
+      
+    ]
+  },
+  {
+    id: "maths1",
+    title: "Fundamentals",
+    subtitle: "Understanding the balanced scale",
+    icon: "⚖️",
+    gradient: "from-indigo-500 to-purple-500",
+    path: "/learn/mathematics/algebra",
+    subModules: [
+      { id: 'alg_1', title: 'LHS and RHS', desc: 'Introduction to LHS and RHS', icon: '🔢', path: '/learn/mathematics/algebra/lhsrhsIntroduction' },
+      { id: 'alg_2', title: 'Like Unlike terms', desc: 'Undrstanding the like and unlike terms.', icon: '🔗', path: '/learn/mathematics/algebra/likeunlike' },
+      { id: 'alg_3', title: 'Weight on right scale', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/mathematics/algebra/rightScale' }
+    
+    ]
+  },
+  {
+    id: "maths2",
+    title: "Fundamentals",
+    subtitle: "Understanding the balanced scale",
+    icon: "⚖️",
+    gradient: "from-indigo-500 to-purple-500",
+    path: "/learn/mathematics/algebra",
+    subModules: [
+      { id: 'alg_1', title: 'LHS = RHS', desc: 'Introduction to LHS and RHS', icon: '🔢', path: '/learn/mathematics/algebra/introduction' },
+      { id: 'alg_2', title: 'Finding the Unknown', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/mathematics/algebra/unknown' },
+      { id: 'alg_3', title: 'Weight on right scale', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/mathematics/algebra/rightScale' }
+    
     ]
   }
 ];
@@ -125,7 +155,7 @@ const ModuleCard = ({ mod, completions, onSubModuleClick }) => {
       <div className="flex-1 flex flex-col bg-[#faf9f6]">
         <div onClick={() => setIsCollapsed(!isCollapsed)} className="flex items-center justify-between px-8 py-5 border-b border-[#c4a484]/20 bg-[#e6dccb]/20 cursor-pointer hover:bg-[#e6dccb]/30 transition-all group/header">
            <div className="flex items-center gap-3">
-              <span className="text-[10px] font-black uppercase text-[#3e2723] tracking-[0.2em]">Logic Nodes</span>
+              <span className="text-[10px] font-black uppercase text-[#3e2723] tracking-[0.2em]">Modules</span>
               <span className="text-[9px] font-bold text-[#8d6e63] px-2.5 py-1 bg-white border border-[#c4a484]/30 rounded-full shadow-sm">{modCompletions} / {mod.subModules.length}</span>
            </div>
            <div className="p-1.5 rounded-lg bg-[#3e2723] text-[#e6dccb] group-hover/header:bg-black transition-all">
