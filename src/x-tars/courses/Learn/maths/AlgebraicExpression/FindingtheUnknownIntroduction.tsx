@@ -1,194 +1,149 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  RefreshCcw, CheckCircle2, 
-  Hand, Play, MousePointer2, 
-  Timer, ChevronRight, Shuffle, 
-  FastForward, XCircle, Scale,
-  Trophy, Sparkles, Volume2, VolumeX,
-  Clock,ChevronLeft,Info
+  RefreshCcw, CheckCircle2, ChevronRight, Scale,
+  Trophy, Sparkles, XCircle, Timer, Info, X, 
+  Equal, ChevronLeft, Shuffle, FastForward, Check, 
+  ChevronUp, ChevronDown, LayoutGrid, Target, Star, 
+  Gem, Activity, Hand, PlayCircle, MousePointer2
 } from 'lucide-react';
 import { 
   HashRouter as Router, 
-  Routes, 
-  Route, 
-  useNavigate, 
-  useParams 
+  useNavigate
 } from 'react-router-dom';
 
-export default function App() {
+// ==========================================
+// 1. ASSETS & CONFIGURATION
+// ==========================================
+const ITEM_LIBRARY = [
+  { icon: '🍎', name: 'Apple', weightRange: [2, 5] },
+  { icon: '🍐', name: 'Pear', weightRange: [3, 6] },
+  { icon: '🧸', name: 'Teddy', weightRange: [4, 8] },
+  { icon: '🍊', name: 'Orange', weightRange: [2, 4] },
+  { icon: '💎', name: 'Gem', weightRange: [5, 10] },
+];
+
+const SESSION_LENGTH = 6; 
+
+// ==========================================
+// 2. MAIN WEIGHT LAB COMPONENT
+// ==========================================
+export default function WeightLab() {
   const navigate = useNavigate();
 
-  const onBack = () => {
-    navigate("/learn/mathematics/algebra");
-  };
+  // --- Session State ---
+  const [sessionStep, setSessionStep] = useState(0); 
+  const [sessionCompleted, setSessionCompleted] = useState(false);
 
-  const [mode, setMode] = useState<'concept' | 'practice'>('concept');
-
-  const shuffleMission = () => {
-    generateMission();
-  };
-
-  const renderHeader = () => (
-    <header className="w-full max-w-5xl mb-2 bg-[#3e2723] p-4 sm:p-6 lg:p-10 rounded-[2rem] sm:rounded-[2.5rem] lg:rounded-[3.5rem] border-b-4 border-black/30 relative overflow-hidden shrink-0 shadow-2xl">
-      
-      <div
-        className="absolute inset-0 opacity-[0.15] pointer-events-none"
-        style={{
-          backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')`,
-        }}
-      />
-  
-      <div className="relative z-10 flex justify-between items-end">
-        {/* LEFT */}
-        <div className="flex flex-col gap-2 text-left">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-1 text-[#a88a6d] font-black uppercase text-[10px] hover:text-white transition-all active:scale-95"
-          >
-            <ChevronLeft size={14} />
-            Back to Dashboard
-          </button>
-  
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-sm bg-[#e6dccb] rotate-45 shadow-glow" />
-            <h2 className="text-xl sm:text-2xl lg:text-5xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">
-              Weight Lab
-            </h2>
-          </div>
-        </div>
-  
-        {/* RIGHT */}
-        <div className="hidden md:flex flex-col items-end">
-              <div className="bg-[#dfd7cc] p-1 rounded-2xl flex items-center gap-1 shadow-inner border border-[#c4a484]/20">
-                  <button onClick={() => { setMode('concept'); resetLevel(); }}
-                      className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[8px] sm:text-[10px] font-black transition-all ${mode === 'concept' ? 'bg-white text-blue-600 shadow-sm' : 'text-[#8d6e63]'}`}>
-                      CONCEPT BUILDING
-                  </button>
-                  <button onClick={() => { setMode('practice'); resetLevel(); }}
-                      className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[8px] sm:text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-white text-emerald-600 shadow-sm' : 'text-[#8d6e63]'}`}>
-                      PRACTICE
-                  </button>
-                  <div>
-                    <button onClick={() => setIsMuted(!isMuted)} className="p-2.5 bg-white text-[#8d6e63] rounded-xl shadow-sm border border-[#c4a484]/10 active:scale-95 transition-transform">
-                    {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                    </button>
-                    <button onClick={shuffleMission} className="p-2.5 bg-[#8d6e63] text-white rounded-xl shadow-md border-b-2 border-[#5d4037] active:scale-95 transition-transform">
-                        <RefreshCcw size={16} />
-                    </button>
-                  </div>
-                </div>
-        </div>
-      </div>
-    </header>
-  );
-  const [currentAppleWeight, setCurrentAppleWeight] = useState(3);
-  const [appleCount, setAppleCount] = useState(4);
+  // --- Question State ---
+  const [mode, setMode] = useState('practice');
+  const [currentItem, setCurrentItem] = useState(ITEM_LIBRARY[0]);
+  const [currentWeight, setCurrentWeight] = useState(3); 
+  const [itemCount, setItemCount] = useState(3);
   const [options, setOptions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [feedback, setFeedback] = useState(null);
   const [autoNextTimer, setAutoNextTimer] = useState(null);
-  const [feedback, setFeedback] = useState(null); 
   
+  // --- Concept Building / Automation State ---
+  const [virtualHandPos, setVirtualHandPos] = useState(null);
+  const [isGrabbing, setIsGrabbing] = useState(false);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
+  const [showLogicOverlay, setShowLogicOverlay] = useState(false);
+
   // Explanation States
   const [isExplaining, setIsExplaining] = useState(false);
-  const [activeHighlight, setActiveHighlight] = useState(null); // 'left' | 'right' | 'both' | null
+  const [activeHighlight, setActiveHighlight] = useState(null); 
   const [explanationText, setExplanationText] = useState("");
-  const [formulas, setFormulas] = useState([]); 
+  const [formulas, setFormulas] = useState([]);
 
   const timerIntervalRef = useRef(null);
+  const leftPanRef = useRef(null);
+  const rightPanRef = useRef(null);
+  const inputMatrixRef = useRef(null);
+  const targetTotalWeight = itemCount * currentWeight;
 
-  // Improved speak function with fail-safe resolve
-  const speak = useCallback((text) => {
-    if (isMuted) return Promise.resolve();
-    return new Promise((resolve) => {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.9;
-      
-      // Fail-safe: if speech fails or hangs, resolve after 5 seconds
-      const timeout = setTimeout(resolve, 5000);
+  const modeRef = useRef(mode);
+  useEffect(() => { modeRef.current = mode; }, [mode]);
 
-      utterance.onend = () => {
-        clearTimeout(timeout);
-        resolve();
-      };
-      utterance.onerror = () => {
-        clearTimeout(timeout);
-        resolve();
-      };
-      
-      window.speechSynthesis.speak(utterance);
-    });
-  }, [isMuted]);
-
+  // --- Logic Functions ---
   const generateMission = useCallback(() => {
-    const weight = Math.floor(Math.random() * 5) + 2; 
-    const count = Math.floor(Math.random() * 4) + 2;  
-    const correct = weight;
+    if (sessionStep >= SESSION_LENGTH) {
+      setSessionCompleted(true);
+      return;
+    }
+    const item = ITEM_LIBRARY[sessionStep % ITEM_LIBRARY.length];
+    const weight = Math.floor(Math.random() * (item.weightRange[1] - item.weightRange[0] + 1)) + item.weightRange[0]; 
+    const count = Math.floor(Math.random() * 3) + 2; 
     
-    const opts = new Set([correct]);
+    const opts = new Set([weight]);
     while(opts.size < 4) {
-      opts.add(Math.floor(Math.random() * 8) + 1);
+      opts.add(Math.floor(Math.random() * 10) + 1);
     }
     
-    setCurrentAppleWeight(weight);
-    setAppleCount(count);
+    setCurrentItem(item);
+    setCurrentWeight(weight);
+    setItemCount(count);
     setOptions(Array.from(opts).sort((a, b) => a - b));
     setSelectedAnswer(null);
     setIsCorrect(false);
     setFeedback(null);
-    setAutoNextTimer(null);
     setIsExplaining(false);
     setFormulas([]);
-    window.speechSynthesis.cancel();
-  }, []);
+    setAutoNextTimer(null);
+    setActiveHighlight(null);
+    setVirtualHandPos(null);
+    setIsGrabbing(false);
+    setIsAutoPlaying(false);
+    setShowLogicOverlay(false);
+  }, [sessionStep]);
 
-  useEffect(() => {
-    generateMission();
-  }, [generateMission]);
+  const moveToNextStep = useCallback(() => {
+    if (sessionStep < SESSION_LENGTH - 1) {
+      setSessionStep(prev => prev + 1);
+    } else {
+      setSessionCompleted(true);
+    }
+  }, [sessionStep]);
 
   const runExplanation = async () => {
-    const total = appleCount * currentAppleWeight;
-    
-    // Set all formulas immediately from the beginning as requested
-    setFormulas([
-      "Weight on Left = Weight on Right",
-      `${appleCount} × weight of one apple = ${total}g`,
-      `Weight of one apple = ${total}g ÷ ${appleCount}`,
-      `Weight of one apple = ${currentAppleWeight}g`
-    ]);
-
+    if (isExplaining) return;
     setIsExplaining(true);
+    const total = itemCount * currentWeight;
+    const name = currentItem.name;
     
-    // Narration sequence with visual highlights
-    setExplanationText("Look at the scale. It is perfectly balanced.");
-    await speak("Look at the scale. It is perfectly balanced.");
-    
+    // Step 1: Balance Equality
+    setFormulas(["Total weight on right scale = Total weight of left scale as it is balanced scale"]);
     setActiveHighlight('both');
     setExplanationText("Since the scale is balanced, the weight on the left scale should be equal to the weight on the right scale.");
-    await speak("Since the scale is balanced, then the weight on the left scale should be equal to the weight on the right scale.");
+    await new Promise(r => setTimeout(r, 2000));
 
+    // Step 2: Multiplication Formula
+    setFormulas(prev => [...prev, `Total left balance = ${total}, So, right scale weight = ${total}`]);
     setActiveHighlight('left');
-    setExplanationText(`So, ${appleCount} fruits multiplied by the weight of one apple must equal ${total} grams.`);
-    await speak(`Number of fruits multiplied by weight of one apple equals ${total} grams.`);
+    setExplanationText(`So, Number of fruits multiplied by weight of one ${name} equals ${total} grams.`);
+    await new Promise(r => setTimeout(r, 2000));
 
+    // Step 3: Division Formula
+    setFormulas(prev => [...prev, `Weight of one ${name} = ${total}g ÷ ${itemCount}`]);
     setActiveHighlight('right');
-    setExplanationText(`To find the weight of one apple, we divide the total weight by the number of apples.`);
-    await speak(`Weight on one apple equals weight divided by Number of apples.`);
+    setExplanationText(`Therefore, the weight of one ${name} equals the total weight divided by the number of units.`);
+    await new Promise(r => setTimeout(r, 2000));
 
+    // Step 4: Final Result
+    setFormulas(prev => [...prev, `Weight of one ${name} = ${currentWeight}g`]);
     setActiveHighlight('both');
-    setExplanationText(`That means one apple weighs ${currentAppleWeight} grams!`);
-    await speak(`That means one apple weighs ${currentAppleWeight} grams!`);
+    setExplanationText(`That means one unit weighs exactly ${currentWeight} grams!`);
+    await new Promise(r => setTimeout(r, 2000));
 
     setActiveHighlight(null);
   };
 
   const handleAnswer = (val) => {
-    if (isCorrect) return;
+    if (isCorrect || isExplaining || (isAutoPlaying && val !== currentWeight)) return;
     setSelectedAnswer(val);
-    if (val === currentAppleWeight) {
+    if (val === currentWeight) {
       setIsCorrect(true);
       setFeedback('correct');
       setAutoNextTimer(10);
@@ -198,288 +153,336 @@ export default function App() {
     }
   };
 
+  // --- Concept Building Automation ---
+  const runConceptAutomation = useCallback(async () => {
+    if (isAutoPlaying || isCorrect) return;
+    setIsAutoPlaying(true);
+
+    // Initial delay for focus
+    await new Promise(r => setTimeout(r, 1200));
+
+    if (!leftPanRef.current || !rightPanRef.current || !inputMatrixRef.current) {
+        setIsAutoPlaying(false);
+        return;
+    }
+
+    const leftRect = leftPanRef.current.getBoundingClientRect();
+    const rightRect = rightPanRef.current.getBoundingClientRect();
+    const matrixRect = inputMatrixRef.current.getBoundingClientRect();
+
+    // 1. Move hand to show equality (Left to Right)
+    setVirtualHandPos({ x: leftRect.left + leftRect.width/2, y: leftRect.top + leftRect.height/2 });
+    await new Promise(r => setTimeout(r, 1500));
+
+    setVirtualHandPos({ x: rightRect.left + rightRect.width/2, y: rightRect.top + rightRect.height/2 });
+    await new Promise(r => setTimeout(r, 1500));
+
+    // 2. Move hand to input matrix
+    setVirtualHandPos({ x: matrixRect.left + matrixRect.width/2, y: matrixRect.top + matrixRect.height/2 });
+    setShowLogicOverlay(true);
+    await new Promise(r => setTimeout(r, 1500));
+
+    // 3. Select the correct answer automatically
+    setIsGrabbing(true);
+    handleAnswer(currentWeight);
+    await new Promise(r => setTimeout(r, 1000));
+    
+    setIsGrabbing(false);
+    setIsAutoPlaying(false);
+    setVirtualHandPos(null);
+  }, [isAutoPlaying, isCorrect, itemCount, currentWeight]);
+
+  useEffect(() => {
+    if (mode === 'concept' && !isCorrect && !isAutoPlaying) {
+      runConceptAutomation();
+    }
+  }, [mode, isCorrect, runConceptAutomation]);
+
+  useEffect(() => { generateMission(); }, [generateMission, sessionStep]);
+
   useEffect(() => {
     if (autoNextTimer !== null && autoNextTimer > 0) {
-      timerIntervalRef.current = setInterval(() => {
-        setAutoNextTimer(p => (p > 0 ? p - 1 : 0));
-      }, 1000);
+      timerIntervalRef.current = setInterval(() => setAutoNextTimer(p => p - 1), 1000);
     } else if (autoNextTimer === 0) {
-      generateMission();
+      moveToNextStep();
     }
-    return () => { if (timerIntervalRef.current) clearInterval(timerIntervalRef.current); };
-  }, [autoNextTimer, generateMission]);
+    return () => clearInterval(timerIntervalRef.current);
+  }, [autoNextTimer, moveToNextStep]);
 
-  const targetTotalWeight = appleCount * currentAppleWeight;
-  
+  // --- Sub-Render Div Functions ---
 
-
-  return (
-    <div className="h-screen flex flex-col items-center bg-[#f1f0ee] font-sans select-none overflow-hidden text-[#5d4037] pt-4 sm:pt-6 pb-2 px-2 sm:px-4">
-      
-      {/* HEADER */}
-      <div className="w-full max-w-5xl flex justify-between items-center px-2 py-1 z-50 mb-1">
-      {renderHeader()}
-
-        {/* <div className="flex items-center gap-2">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#8d6e63] rounded-xl shadow-lg flex items-center justify-center text-white border-b-2 border-black/20">
-            <Scale size={24} />
+  const renderHeaderDiv = () => (
+    <div className="w-full max-w-[1500px] shrink-0">
+      <header className="w-full bg-[#3e2723] p-4 sm:p-5 lg:p-6 rounded-[2.5rem] border-b-4 border-black/30 relative overflow-hidden shadow-2xl">
+        <div className="absolute inset-0 opacity-[0.15] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col text-left w-full md:w-auto">
+            <button onClick={() => navigate('/learn/mathematics/algebra')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-2 hover:text-white transition-all active:scale-95 w-fit">
+              <ChevronLeft size={16} /> Back to Dashboard
+            </button>
+            <div className="flex items-center gap-3">
+              <div className="w-2.5 h-2.5 rounded-sm bg-amber-400 rotate-45 shadow-glow" />
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Weight Lab</h2>
+            </div>
           </div>
-          <div>
-            <h1 className="text-lg sm:text-2xl font-black uppercase tracking-tighter leading-none">Algebra Lab</h1>
-            <p className="text-[7px] sm:text-[9px] font-black text-[#a88a6d] uppercase tracking-widest leading-none mt-0.5">Problem Solving Station</p>
+          <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 w-full md:w-auto ml-auto">
+            <div className="bg-[#dfd7cc] p-1 rounded-2xl flex items-center gap-1 shadow-inner border border-[#c4a484]/20 scale-90 sm:scale-100">
+              <button onClick={() => { setMode('concept'); generateMission(); }} className={`px-4 py-2 rounded-xl text-[9px] sm:text-[10px] font-black transition-all ${mode === 'concept' ? 'bg-white text-blue-600 shadow-sm' : 'text-[#8d6e63]'}`}>CONCEPT BUILDING</button>
+              <button onClick={() => { setMode('practice'); generateMission(); }} className={`px-4 py-2 rounded-xl text-[9px] sm:text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-white text-emerald-600 shadow-sm' : 'text-[#8d6e63]'}`}>PRACTICE</button>
+            </div>
+            <button onClick={generateMission} className="p-2.5 bg-amber-500 text-[#3e2723] rounded-xl shadow-lg border-b-2 border-amber-800 active:scale-95 transition-transform">
+              <RefreshCcw size={18} />
+            </button>
           </div>
         </div>
+      </header>
+    </div>
+  );
 
-        <div className="flex items-center gap-1.5 sm:gap-3 scale-90 sm:scale-100">
-            <button onClick={() => setIsMuted(!isMuted)} className="p-2.5 bg-white text-[#8d6e63] rounded-xl shadow-sm border border-[#c4a484]/10 active:scale-95 transition-transform">
-                {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-            </button>
-            <button onClick={generateMission} className="p-2.5 bg-[#8d6e63] text-white rounded-xl shadow-md border-b-2 border-[#5d4037] active:scale-95 transition-transform">
-                <RefreshCcw size={16} />
-            </button>
-        </div> */}
+  const renderDotsDiv = () => (
+    <div className="w-full shrink-0 flex items-center justify-center py-2">
+      <div className="flex items-center gap-4 bg-[#3e2723]/5 p-4 rounded-full border border-[#3e2723]/10 shadow-inner">
+        {[...Array(SESSION_LENGTH)].map((_, i) => {
+          const isPast = i < sessionStep;
+          const isCurrent = i === sessionStep;
+          return (
+            <div key={i} className="relative">
+              <motion.div 
+                animate={isCurrent ? { scale: [1, 1.4, 1] } : {}}
+                transition={{ repeat: Infinity, duration: 2 }}
+                className={`w-4 h-4 rounded-full border-2 transition-all duration-500 shadow-md
+                  ${isPast ? 'bg-emerald-500 border-emerald-600 shadow-emerald-500/20' : 
+                    isCurrent ? 'bg-amber-400 border-amber-600 ring-4 ring-amber-400/20' : 
+                    'bg-white/40 border-[#3e2723]/20'}`} 
+              />
+              {isCurrent && <div className="absolute inset-0 bg-amber-400 blur-lg -z-10 opacity-60" />}
+            </div>
+          );
+        })}
       </div>
+    </div>
+  );
 
-      {/* SECTION 1: THE SCALE STAGE */}
-      <div className="flex-1 w-full max-w-5xl bg-[#e6dccb] rounded-[2rem] sm:rounded-[3.5rem] shadow-xl border-b-[10px] border-[#c4a484] relative overflow-visible flex flex-col items-center justify-start pb-0">
-        <div className="absolute inset-0 bg-[#e6dccb] pointer-events-none rounded-[2rem] sm:rounded-[3.5rem]" style={{ backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(93,64,55,0.02) 50px, rgba(93,64,55,0.02) 100px)` }} />
+  const renderScaleDiv = () => (
+    <div className="w-full max-w-[1400px] shrink-0 px-2 sm:px-6">
+      <div className={`relative w-full min-h-[380px] sm:min-h-[480px] bg-[#3e2723] rounded-[3rem] border-4 border-black/30 shadow-2xl flex flex-col items-center justify-start overflow-hidden transition-all ${isExplaining ? 'brightness-50 grayscale-[0.3]' : ''}`}>
+        <div className="absolute inset-0 opacity-[0.15] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
+        <div className="absolute inset-0 bg-white/5 opacity-20 pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.05) 40px, rgba(255,255,255,0.05) 80px)" }} />
         
-        <div className="relative w-full max-w-4xl flex justify-center items-center scale-[0.45] sm:scale-[0.75] origin-top transition-transform overflow-visible mt-16 sm:mt-24">
+        {/* Scale Assembly - Balanced Size */}
+        <div className="relative w-full max-w-5xl flex justify-center items-center scale-[0.25] sm:scale-[0.38] lg:scale-[0.5] origin-top transition-transform overflow-visible mt-12 sm:mt-16">
             <div className="absolute top-[8%] left-1/2 -translate-x-1/2 flex flex-col items-center z-10 pointer-events-none">
                 <div className="w-12 h-12 bg-gradient-to-br from-[#8d6e63] to-[#5d4037] rounded-full border-4 border-[#c4a484] shadow-xl mb-[-20px] relative z-20" />
                 <div className="w-8 h-[220px] bg-gradient-to-r from-[#5d4037] via-[#8d6e63] to-[#5d4037] rounded-b-xl shadow-2xl relative" />
-                <div className="absolute bottom-[-30px] w-56 h-16 bg-[#3e2723] rounded-t-[4rem] shadow-xl z-0 border-b-4 border-black/20" />
+                <div className="absolute bottom-[-30px] w-56 h-16 bg-[#2a1a16] rounded-t-[4rem] shadow-xl z-0 border-b-4 border-black/20" />
             </div>
 
             <div className="relative w-full flex justify-center z-20 mt-[12%]">
-                <div className="relative w-full h-7 bg-gradient-to-b from-[#8d6e63] to-[#3e2723] rounded-full flex justify-between items-center shadow-lg border-b-2 border-black/20 px-2">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 bg-gradient-to-br from-yellow-300 to-amber-600 rounded-full border-2 border-[#3e2723] shadow-md z-30" />
+                <div className="relative w-full h-8 bg-[#2a1a16] rounded-full flex justify-between items-center shadow-lg px-2 border border-white/10">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 bg-yellow-500 rounded-full border-2 border-[#3e2723] z-30 shadow-glow" />
                     
                     {/* LEFT PAN */}
-                    <div className="absolute left-[-15px] top-0 w-32 sm:w-64 flex flex-col items-center">
-                        <div className="flex justify-between w-[80%] px-4">
-                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[15deg] rounded-full" />
-                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[-15deg] rounded-full" />
+                    <div className="absolute left-[-20px] top-0 w-32 sm:w-64 flex flex-col items-center">
+                        <div className="w-full h-40 relative flex justify-center pointer-events-none mb-[-4px]">
+                            <svg className="w-24 sm:w-32 h-full overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                              <path d="M50 0 L40 100 M50 0 L60 100" stroke="#e6dccb" strokeWidth="2.5" fill="none" strokeOpacity="0.4" strokeLinecap="round" />
+                            </svg>
                         </div>
-                        <div className="w-full h-20 sm:h-32 bg-gradient-to-b from-[#a88a6d] to-[#8d6e63] rounded-b-[6rem] border-t-[10px] border-[#5d4037]/20 shadow-inner relative flex items-end justify-center pb-8">
+                        <motion.div 
+                          ref={leftPanRef}
+                          animate={{ 
+                            scale: activeHighlight === 'left' || activeHighlight === 'both' ? 1.08 : 1, 
+                            boxShadow: activeHighlight === 'left' || activeHighlight === 'both' ? "0 0 60px rgba(59, 130, 246, 0.8)" : "none" 
+                          }}
+                          className="w-full h-24 sm:h-32 bg-gradient-to-b from-[#a88a6d] to-[#8d6e63] rounded-b-[6rem] border-t-[10px] border-black/10 shadow-inner relative flex items-end justify-center pb-8"
+                        >
                             <div className="flex flex-wrap-reverse justify-center gap-1 w-[90%] mb-10">
-                                {[...Array(appleCount)].map((_, i) => (
-                                    <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-3xl sm:text-6xl drop-shadow-lg">🍎</motion.div>
-                                ))}
+                                {[...Array(itemCount)].map((_, i) => <motion.div key={i} animate={{ scale: 1 }} initial={{ scale: 0 }} className="text-3xl sm:text-6xl drop-shadow-lg">{currentItem.icon}</motion.div>)}
                             </div>
-                            <div className="absolute bottom-[-45px] bg-[#5d4037] text-white px-8 py-2 rounded-full font-black text-lg sm:text-3xl shadow-lg">? g</div>
-                        </div>
+                            <div className="absolute bottom-[-45px] bg-[#5d4037] text-white px-8 py-2 rounded-full font-black text-lg sm:text-3xl shadow-lg border border-white/10">? g</div>
+                        </motion.div>
                     </div>
 
                     {/* RIGHT PAN */}
-                    <div className="absolute right-[-15px] top-0 w-32 sm:w-64 flex flex-col items-center">
-                        <div className="flex justify-between w-[80%] px-4">
-                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[15deg] rounded-full" />
-                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[-15deg] rounded-full" />
+                    <div className="absolute right-[-20px] top-0 w-32 sm:w-64 flex flex-col items-center">
+                        <div className="w-full h-40 relative flex justify-center pointer-events-none mb-[-4px]">
+                            <svg className="w-24 sm:w-32 h-full overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                              <path d="M50 0 L40 100 M50 0 L60 100" stroke="#e6dccb" strokeWidth="2.5" fill="none" strokeOpacity="0.4" strokeLinecap="round" />
+                            </svg>
                         </div>
-                        <div className="w-full h-20 sm:h-32 bg-gradient-to-b from-[#a88a6d] to-[#8d6e63] rounded-b-[6rem] border-t-[10px] border-[#5d4037]/20 shadow-inner relative flex items-end justify-center pb-8">
-                             <div className="bg-gradient-to-br from-yellow-400 to-amber-900 text-white w-20 h-20 sm:w-32 sm:h-32 flex items-center justify-center rounded-[2rem] font-black text-3xl sm:text-7xl shadow-xl mb-12 border-b-8 border-black/30">{targetTotalWeight}g</div>
-                             <div className="absolute bottom-[-45px] bg-[#5d4037] text-white px-8 py-2 rounded-full font-black text-lg sm:text-3xl shadow-lg">{targetTotalWeight}g</div>
-                        </div>
+                        <motion.div 
+                          ref={rightPanRef}
+                          animate={{ 
+                            scale: activeHighlight === 'right' || activeHighlight === 'both' ? 1.08 : 1, 
+                            boxShadow: activeHighlight === 'right' || activeHighlight === 'both' ? "0 0 60px rgba(59, 130, 246, 0.8)" : "none" 
+                          }}
+                          className="w-full h-24 sm:h-32 bg-gradient-to-b from-[#a88a6d] to-[#8d6e63] rounded-b-[6rem] border-t-[10px] border-black/10 shadow-inner relative flex items-end justify-center pb-8"
+                        >
+                             <div className="bg-yellow-400 text-[#3e2723] w-20 h-20 sm:w-32 sm:h-32 flex items-center justify-center rounded-[2rem] font-black text-3xl sm:text-7xl shadow-xl mb-12 border-b-8 border-yellow-600">{targetTotalWeight}g</div>
+                             <div className="absolute bottom-[-45px] bg-[#5d4037] text-white px-8 py-2 rounded-full font-black text-lg sm:text-3xl shadow-lg border border-white/10">{targetTotalWeight}g</div>
+                        </motion.div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {/* FEEDBACK OVERLAY */}
-        <div className="absolute bottom-4 left-0 w-full flex justify-center pointer-events-none px-4">
-            <AnimatePresence mode="wait">
-                {feedback === 'correct' && (
-                    <motion.div key="correct-toast" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="z-[100] w-full max-w-lg">
-                        <div className="bg-emerald-600 text-white py-3 px-8 rounded-full shadow-2xl flex items-center justify-center gap-4 border-b-4 border-emerald-800 backdrop-blur-sm">
-                            <Trophy size={24} className="animate-bounce" />
-                            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                                <span className="text-[10px] sm:text-sm font-black uppercase tracking-widest opacity-80 leading-none">Solved!</span>
-                                <span className="text-xs sm:text-lg font-bold leading-none">One 🍎 weighs {currentAppleWeight} grams!</span>
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-                {feedback === 'incorrect' && (
-                    <motion.div key="wrong-toast" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-red-500 text-white px-8 py-3 rounded-full shadow-2xl font-black uppercase tracking-widest flex items-center gap-3">
-                        <XCircle size={20} /> Try again!
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </div>
-      </div>
-
-      {/* SECTION 2: QUESTION & OPTIONS */}
-      <div className="w-full max-w-5xl flex flex-col items-center mt-2 z-50 mb-1">
-        <div className="bg-[#dfd7cc] p-4 sm:p-6 rounded-[2rem] border-4 border-[#c4a484] w-[95%] sm:w-full flex flex-col items-center shadow-xl relative">
-            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#5d4037] text-[#e6dccb] px-6 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border-2 border-[#e6dccb]">Problem Control</div>
-            
-            <div className="mb-4 sm:mb-6 text-center max-w-xl">
-               <p className="text-sm sm:text-xl font-bold text-[#5d4037] leading-tight">
-                  If the scale is balanced, what is the weight of <span className="inline-block scale-110 mx-1">🍎</span> ONE apple?
-               </p>
-            </div>
-
-            <div className="grid grid-cols-4 gap-3 sm:gap-6 w-full max-w-2xl">
-                {options.map((opt) => (
-                  <button
-                    key={opt}
-                    onClick={() => handleAnswer(opt)}
-                    disabled={isCorrect}
-                    className={`relative group h-14 sm:h-20 rounded-2xl sm:rounded-3xl font-black text-xl sm:text-3xl transition-all shadow-lg border-b-4 
-                      ${isCorrect && opt === currentAppleWeight ? 'bg-emerald-500 text-white border-emerald-700 scale-105' : 
-                        selectedAnswer === opt && opt !== currentAppleWeight ? 'bg-red-400 text-white border-red-600 grayscale' :
-                        'bg-white text-[#5d4037] border-gray-300 hover:translate-y-[-2px] active:translate-y-[2px] active:border-b-0'}`}
-                  >
-                    {opt}g
-                    {isCorrect && opt === currentAppleWeight && (
-                      <div className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-md text-emerald-600">
-                        <CheckCircle2 size={16} />
-                      </div>
-                    )}
-                  </button>
-                ))}
-            </div>
-        </div>
-      </div>
-
-      {/* NAVIGATION BAR */}
-      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4 items-center px-2 pb-1">
-          <button onClick={() => generateMission()} className={`relative flex items-center justify-between w-full p-2 sm:p-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-sm sm:text-xl active:scale-95 shadow-lg border-b-4 ${autoNextTimer !== null ? 'bg-indigo-600 text-white border-indigo-900' : 'bg-[#3e2723] text-[#dfc4a1] border-black'}`}>
-            <div className="flex items-center gap-3 z-10">
-              <div className="bg-white/10 p-1.5 sm:p-3 rounded-xl"><ChevronRight size={20} /></div>
-              <div className="leading-tight uppercase tracking-tighter text-xs sm:text-lg">{autoNextTimer !== null ? 'NEXT NOW' : 'NEW CHALLENGE'}</div>
-            </div>
-            <div className="flex items-center relative z-10">
-              {autoNextTimer !== null ? (
-                <div className="flex items-center gap-2 sm:gap-4 bg-black/50 px-3 sm:px-6 py-1 sm:py-2 rounded-full border border-white/10 shadow-inner relative overflow-hidden min-w-[100px] sm:min-w-[200px]">
-                  <div className="flex items-center gap-1 shrink-0"><Timer size={14} className="animate-spin text-indigo-300" /><span className="text-lg sm:text-3xl font-mono leading-none">{autoNextTimer}</span></div>
-                  <div className="flex justify-between w-full px-2 relative">
-                      {[...Array(10)].map((_, i) => (<div key={i} className={`text-[8px] sm:text-base ${ (10 - autoNextTimer) > i ? 'opacity-100' : 'opacity-20'}`}>🍎</div>))}
-                      <motion.div animate={{ left: `${((10 - autoNextTimer) / 10) * 100}%`, scaleX: -1 }} className="absolute top-1/2 -translate-y-1/2 text-xs sm:text-2xl pointer-events-none">🏃</motion.div>
-                  </div>
+        {/* FEEDBACK & STATUS OVERLAY */}
+        <div className="absolute bottom-6 left-0 w-full flex flex-col items-center gap-2 px-4 z-[100] pointer-events-none">
+          {isAutoPlaying && (
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-blue-600 text-white py-2 px-6 rounded-full shadow-lg border-2 border-white/20 flex items-center gap-3">
+              <PlayCircle size={20} className="animate-pulse shrink-0" />
+              <span className="text-xs sm:text-sm font-bold uppercase tracking-widest">Logic Walkthrough...</span>
+            </motion.div>
+          )}
+          <AnimatePresence>
+            {feedback === 'correct' && (
+              <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="bg-emerald-600 text-white py-3 px-8 rounded-full shadow-2xl flex items-center justify-center gap-4 border-b-4 border-emerald-800 z-[100] backdrop-blur-md">
+                <Trophy size={24} className="animate-bounce" />
+                <div className="flex flex-col sm:flex-row items-center gap-1">
+                  <span className="text-[10px] font-black uppercase opacity-80 tracking-widest">Logic Synced</span>
+                  <span className="text-xs sm:text-lg font-bold">One {currentItem.icon} = {currentWeight} grams!</span>
                 </div>
-              ) : <FastForward className="opacity-30 w-6 h-6 sm:w-8 sm:h-8" />}
-            </div>
-          </button>
-          
-          <button onClick={runExplanation} className="flex items-center justify-center gap-2 sm:gap-4 w-full bg-[#8d6e63] hover:bg-[#5d4037] text-white p-2 sm:p-4 rounded-[1.5rem] sm:rounded-[2.5rem] font-black text-sm sm:text-xl active:scale-95 shadow-lg border-b-4 border-[#3e2723]">
-            <Info size={18} />
-            <span className="uppercase tracking-tighter text-xs sm:text-lg">View Explanation</span>
-          </button>
+                <Sparkles size={20} className="text-yellow-300 animate-pulse" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
+    </div>
+  );
 
-      {/* EXPLANATION MODAL */}
+  const renderMatrixDiv = () => (
+    <div ref={inputMatrixRef} className={`w-full max-w-[1200px] shrink-0 transition-opacity ${isExplaining ? 'opacity-20 pointer-events-none' : 'opacity-100'} px-2 z-50`}>
+      <div className="bg-[#dfd7cc] p-6 sm:p-8 rounded-[3rem] border-4 border-[#c4a484] w-full flex flex-col items-center shadow-xl relative">
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#5d4037] text-[#e6dccb] px-6 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border-2 border-white/20 shadow-md">Matrix Logic Input</div>
+          <p className="text-sm sm:text-xl font-bold text-[#5d4037] text-center mb-6 leading-tight">
+            If the scale is balanced, what is the mass of ONE <span className="inline-block scale-110 mx-1">{currentItem.icon}</span>?
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-2xl">
+              {options.map((opt) => (
+                <button
+                  key={opt} onClick={() => handleAnswer(opt)} disabled={isCorrect || isAutoPlaying}
+                  className={`h-14 sm:h-18 rounded-2xl font-black text-xl sm:text-3xl transition-all shadow-lg border-b-4 
+                    ${isCorrect && opt === currentWeight ? 'bg-emerald-500 text-white border-emerald-700 scale-105 shadow-emerald-500/20' : 
+                      selectedAnswer === opt ? 'bg-red-400 text-white border-red-600' : 'bg-white text-[#5d4037] border-gray-300 hover:border-black active:translate-y-1'}`}
+                >
+                  {opt}g
+                </button>
+              ))}
+          </div>
+      </div>
+    </div>
+  );
+
+  const renderButtonsDiv = () => (
+    <div className={`w-full max-w-[1200px] grid grid-cols-1 md:grid-cols-2 gap-4 items-center transition-opacity ${isExplaining ? 'opacity-0' : 'opacity-100'} px-2 pb-12 shrink-0`}>
+        <button onClick={moveToNextStep} className={`relative flex items-center justify-between p-4 rounded-[1.5rem] font-black text-sm active:scale-95 shadow-lg border-b-4 ${autoNextTimer !== null ? 'bg-indigo-600 text-white border-indigo-900' : 'bg-[#3e2723] text-[#dfc4a1] border-black'}`}>
+          <div className="flex items-center gap-2">
+            <Shuffle size={16} />
+            <span className="uppercase tracking-tighter">{autoNextTimer !== null ? 'NEXT NOW' : 'NEXT CHALLENGE'}</span>
+          </div>
+          {autoNextTimer !== null && <span className="font-mono bg-black/40 px-2 rounded-lg">{autoNextTimer}s</span>}
+        </button>
+        <button onClick={runExplanation} className="flex items-center justify-center gap-3 bg-[#8d6e63] text-white p-4 rounded-[1.5rem] font-black text-sm active:scale-95 shadow-lg border-b-4 border-[#3e2723]">
+          <div className="flex items-center gap-2">
+            <Info size={18} /> <span className="uppercase tracking-tighter">View Explanation</span>
+          </div>
+        </button>
+    </div>
+  );
+
+  const renderExplanationOverlay = () => (
+    <AnimatePresence>
+      {isExplaining && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[500] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm pointer-events-none">
+          <div className="w-full max-w-2xl bg-[#f1f0ee] rounded-[3rem] shadow-[0_40px_100px_rgba(0,0,0,0.4)] flex flex-col items-center p-6 sm:p-10 border-[6px] border-[#3e2723] pointer-events-auto max-h-[90vh] overflow-y-auto no-scrollbar">
+            <button onClick={() => { setIsExplaining(false); }} className="absolute top-6 right-6 p-2 bg-[#8d6e63] text-white rounded-full hover:rotate-90 transition-all active:scale-95 shadow-lg"><X size={24} /></button>
+            <h2 className="text-2xl font-black uppercase text-[#5d4037] mb-8 tracking-tighter text-center">Logical Matrix Analysis</h2>
+            <div className="w-full bg-[#3e2723] p-6 rounded-[2.5rem] border-4 border-black/20 mb-8 text-left shadow-inner">
+              {formulas.map((line, idx) => (
+                <motion.p key={idx} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.1 }} className={`font-mono text-xs sm:text-sm font-black mb-3 last:mb-0 ${idx === formulas.length - 1 ? 'text-yellow-400 text-base sm:text-lg border-t border-white/10 pt-3 mt-3' : 'text-yellow-100/80'}`}>
+                  {line}
+                </motion.p>
+              ))}
+            </div>
+            <div className="w-full bg-white p-6 rounded-[2rem] border-2 border-[#8d6e63]/20 text-center italic font-bold text-[#5d4037] shadow-sm mb-8">
+              <AnimatePresence mode="wait">
+                <motion.p key={explanationText} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="text-sm sm:text-base leading-relaxed leading-tight">"{explanationText}"</motion.p>
+              </AnimatePresence>
+            </div>
+            <button onClick={() => { setIsExplaining(false); }} className="px-12 py-4 bg-[#3e2723] text-white font-black rounded-2xl uppercase tracking-widest text-xs border-b-6 border-black active:translate-y-1 active:border-b-0 transition-all shadow-xl">Understood</button>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
+  const renderCompletionSummary = () => (
+    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center min-h-[70vh] p-6 text-center bg-[#f1f0ee] rounded-[3rem] shadow-xl border-4 border-[#3e2723]">
+      <div className="w-32 h-32 bg-[#3e2723] rounded-full flex items-center justify-center text-amber-400 mb-8 shadow-2xl border-4 border-white ring-8 ring-[#3e2723]/10 shrink-0">
+        <Trophy size={64} className="animate-bounce" />
+      </div>
+      <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black uppercase text-[#3e2723] tracking-tighter mb-4">Mastery Verified!</h1>
+      <p className="text-lg sm:text-xl font-bold text-[#8d6e63] uppercase tracking-widest max-w-xl mb-10 leading-tight">You have successfully mastered the logic of balanced equality across all nodes.</p>
+      <div className="bg-white p-6 sm:p-8 rounded-[3rem] shadow-lg border-4 border-[#3e2723] w-full max-w-lg mb-10">
+         <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-dashed">
+            <span className="font-black uppercase text-[#8d6e63] text-xs">Calibration Points</span>
+            <span className="font-black text-xl sm:text-2xl text-[#3e2723]">{SESSION_LENGTH} / {SESSION_LENGTH}</span>
+         </div>
+         <div className="flex justify-between items-center">
+            <span className="font-black uppercase text-[#8d6e63] text-xs">Final Result</span>
+            <span className="font-black text-xl sm:text-2xl text-emerald-600">Mastery Confirmed</span>
+         </div>
+      </div>
+      <button onClick={() => window.location.reload()} className="px-16 py-6 bg-[#3e2723] text-white font-black rounded-[2.5rem] uppercase tracking-widest text-lg shadow-2xl border-b-8 border-black active:translate-y-2 transition-all">Move to next module</button>
+    </motion.div>
+  );
+
+  return (
+    <div className="relative min-h-screen w-full flex flex-col items-center py-6 px-2 lg:px-4 overflow-y-auto bg-[#f1f0ee] no-scrollbar">
+      <div className="absolute inset-0 bg-[#e6dccb] pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(93,64,55,0.02) 50px, rgba(93,64,55,0.02) 100px)" }} />
+      
+      {/* VIRTUAL HAND GUIDE */}
       <AnimatePresence>
-        {isExplaining && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-[#3e2723]/90 backdrop-blur-md p-4"
-          >
-            <div className="w-full max-w-4xl bg-[#f1f0ee] rounded-[3rem] shadow-2xl overflow-hidden relative flex flex-col items-center p-6 sm:p-10 border-[6px] border-[#8d6e63]">
-              <button 
-                onClick={() => { setIsExplaining(false); window.speechSynthesis.cancel(); }}
-                className="absolute top-6 right-6 p-3 bg-[#8d6e63] text-white rounded-full hover:scale-110 transition-transform shadow-lg"
-              >
-                <X size={24} />
-              </button>
-
-              <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-tighter mb-4 text-[#5d4037]">Step-by-Step Logic</h2>
-
-              {/* MINI SCALE ASSEMBLY */}
-              <div className="relative w-full h-40 sm:h-52 flex justify-center items-center scale-90 sm:scale-100 mb-8">
-                 <div className="absolute inset-0 flex justify-center items-center">
-                    <div className="w-2 h-24 bg-[#8d6e63] rounded-full opacity-20" />
-                 </div>
-                 
-                 <div className="relative w-full max-w-md h-2 bg-[#5d4037] rounded-full flex justify-between items-center px-2">
-                    <div className="relative flex flex-col items-center">
-                       <motion.div 
-                         animate={{ scale: activeHighlight === 'left' || activeHighlight === 'both' ? 1.1 : 1 }}
-                         className={`w-20 h-20 sm:w-28 sm:h-28 bg-[#e6dccb] rounded-full border-4 flex items-center justify-center shadow-xl transition-all
-                           ${activeHighlight === 'left' || activeHighlight === 'both' ? 'border-blue-500 ring-8 ring-blue-500/20 shadow-blue-500/40' : 'border-[#8d6e63]'}`}
-                       >
-                          <div className="flex flex-wrap justify-center gap-1 p-2">
-                            {[...Array(appleCount)].map((_, i) => <span key={i} className="text-lg">🍎</span>)}
-                          </div>
-                       </motion.div>
-                       <div className="mt-2 font-black text-sm text-[#5d4037]">{appleCount} Apples</div>
-                    </div>
-
-                    <Equal className={`w-8 h-8 transition-opacity ${activeHighlight === 'both' ? 'opacity-100 text-emerald-600 scale-125' : 'opacity-20'}`} />
-
-                    <div className="relative flex flex-col items-center">
-                       <motion.div 
-                         animate={{ scale: activeHighlight === 'right' || activeHighlight === 'both' ? 1.1 : 1 }}
-                         className={`w-20 h-20 sm:w-28 sm:h-28 bg-[#e6dccb] rounded-full border-4 flex items-center justify-center shadow-xl transition-all
-                           ${activeHighlight === 'right' || activeHighlight === 'both' ? 'border-blue-500 ring-8 ring-blue-500/20 shadow-blue-500/40' : 'border-[#8d6e63]'}`}
-                       >
-                          <span className="font-black text-xl sm:text-3xl">{targetTotalWeight}g</span>
-                       </motion.div>
-                       <div className="mt-2 font-black text-sm text-[#5d4037]">Total Weight</div>
-                    </div>
-                 </div>
-              </div>
-
-              {/* FORMULA & NARRATION SECTION */}
-              <div className="w-full space-y-4">
-                {/* Visual Formula Display - Content is now populated from the start */}
-                <div className="w-full bg-gradient-to-br from-[#5d4037] to-[#3e2723] p-6 rounded-3xl border-4 border-[#8d6e63] shadow-2xl text-center">
-                  <div className="space-y-3 min-h-[140px] flex flex-col justify-center">
-                    {formulas.map((line, idx) => (
-                      <motion.p
-                        key={idx}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.1 }}
-                        className={`text-lg sm:text-2xl font-black tracking-tight font-mono drop-shadow-md leading-tight 
-                          ${(activeHighlight === 'both' && idx === 0) || 
-                            (activeHighlight === 'left' && idx === 1) || 
-                            (activeHighlight === 'right' && idx === 2) ||
-                            (activeHighlight === 'both' && idx === 3)
-                            ? 'text-yellow-400 scale-110' : 'text-yellow-100/60'}`}
-                      >
-                        {line}
-                      </motion.p>
-                    ))}
-                  </div>
+        {isAutoPlaying && virtualHandPos && (
+            <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1, left: virtualHandPos.x, top: virtualHandPos.y }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }} 
+                className="fixed pointer-events-none z-[2000] -translate-x-1/2 -translate-y-1/2"
+            >
+                <div className="relative flex items-center justify-center">
+                    <Hand className="text-stone-800 w-10 h-10 sm:w-16 sm:h-16 drop-shadow-xl" fill="white" />
+                    <AnimatePresence>
+                      {isGrabbing && (
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="absolute text-[30px] sm:text-[50px] drop-shadow-2xl z-[2001]">
+                          <MousePointer2 size={40} className="text-blue-500 fill-white" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    <motion.div animate={{ scale: [1, 1.4, 1] }} transition={{ repeat: Infinity, duration: 1 }} className="absolute inset-0 bg-blue-400/20 rounded-full blur-[40px]" />
                 </div>
-
-                {/* Descriptive Text Block */}
-                <div className="w-full bg-white/60 p-4 sm:p-6 rounded-3xl border-2 border-[#8d6e63]/20 shadow-inner text-center min-h-[100px] flex items-center justify-center">
-                   <AnimatePresence mode="wait">
-                     <motion.p 
-                       key={explanationText}
-                       initial={{ opacity: 0 }}
-                       animate={{ opacity: 1 }}
-                       exit={{ opacity: 0 }}
-                       className="text-base sm:text-xl font-bold text-[#5d4037] leading-tight"
-                     >
-                       {explanationText}
-                     </motion.p>
-                   </AnimatePresence>
-                </div>
-              </div>
-
-              <div className="mt-6">
-                 <button 
-                   onClick={() => { setIsExplaining(false); window.speechSynthesis.cancel(); }}
-                   className="px-10 py-3 bg-[#8d6e63] text-white font-black rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all uppercase tracking-widest border-b-4 border-black/20"
-                 >
-                   I Got It!
-                 </button>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
         )}
       </AnimatePresence>
 
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
+      <div className="relative z-10 w-full flex flex-col items-center gap-y-10 sm:gap-y-12">
+        {!sessionCompleted ? (
+          <>
+            {renderHeaderDiv()}
+            {renderDotsDiv()}
+            {renderScaleDiv()}
+            {renderMatrixDiv()}
+            {renderButtonsDiv()}
+            {renderExplanationOverlay()}
+          </>
+        ) : (
+          <div className="w-full flex items-center justify-center p-4">
+            {renderCompletionSummary()}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

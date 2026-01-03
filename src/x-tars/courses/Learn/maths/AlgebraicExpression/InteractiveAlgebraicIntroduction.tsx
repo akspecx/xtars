@@ -1,22 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence, animate } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  RefreshCcw, CheckCircle2, 
-  Hand, Play, MousePointer2, 
-  Timer, ChevronRight, Shuffle, 
-  FastForward, XCircle, Scale,
-  Trophy, Sparkles, Volume2, VolumeX,
-  Clock,ChevronLeft
+  RefreshCcw, Trophy, Sparkles, 
+  ChevronLeft, Shuffle, FastForward, Timer, 
+  ChevronRight, Hand, PlayCircle, Info
 } from 'lucide-react';
-import { 
-  HashRouter as Router, 
-  Routes, 
-  Route, 
-  useNavigate, 
-  useParams 
-} from 'react-router-dom';
+import { HashRouter as Router, useNavigate } from 'react-router-dom';
 
-// --- Assets & Configuration ---
+// ==========================================
+// 1. CONSTANTS & DATA
+// ==========================================
 const FRUIT_LIBRARY = [
   { icon: '🍎', name: 'Apple', weight: 2 },
   { icon: '🍊', name: 'Orange', weight: 3 },
@@ -25,149 +18,101 @@ const FRUIT_LIBRARY = [
   { icon: '🍋', name: 'Lemon', weight: 5 },
 ];
 
-export default function App() {
+const SESSION_LENGTH = 6;
+
+// ==========================================
+// 2. MAIN LABORATORY COMPONENT
+// ==========================================
+export default function WeightLabInteraction() {
   const navigate = useNavigate();
 
-  const onBack = () => {
-    navigate("/learn/mathematics/algebra");
-  };
-  const [mode, setMode] = useState('practice'); 
+  // --- Session & Logic State ---
+  const [sessionStep, setSessionStep] = useState(0); 
+  const [sessionCompleted, setSessionCompleted] = useState(false);
+  const [mode, setMode] = useState('practice'); // 'concept' or 'practice'
+  
   const [currentFruit, setCurrentFruit] = useState(FRUIT_LIBRARY[0]);
   const [targetWeight, setTargetWeight] = useState(6);
-  const [placedCount, setPlacedCount] = useState(0); 
+  const [placedCount, setPlacedCount] = useState(0);
   const [isBalanced, setIsBalanced] = useState(false);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
+  
+  const [isOverTarget, setIsOverTarget] = useState(false);
   const [autoNextTimer, setAutoNextTimer] = useState(null);
+  const [dragId, setDragId] = useState(0);
+
+  // --- Concept Building States ---
   const [virtualHandPos, setVirtualHandPos] = useState(null);
   const [isGrabbing, setIsGrabbing] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [isOverTarget, setIsOverTarget] = useState(false); 
-  const [dragId, setDragId] = useState(0); 
-  
-  const timerIntervalRef = useRef(null);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
+
   const leftPanRef = useRef(null);
-  const appleDragRef = useRef(null);
   const appleGhostRef = useRef(null);
+  const timerIntervalRef = useRef(null);
   const tutorialActiveRef = useRef(false);
   const modeRef = useRef(mode);
 
   useEffect(() => { modeRef.current = mode; }, [mode]);
 
-  const leftWeight = placedCount * currentFruit.weight;
-  const weightDiff = targetWeight - leftWeight;
-  const rotation = Math.max(-22, Math.min(22, weightDiff * 7.5));
-
-  const speakMessage = useCallback(async (text) => {
-    if (isMuted) return;
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95;
-      utterance.pitch = 1.1;
-      speechSynthesis.speak(utterance);
-    }
-  }, [isMuted]);
-
-  const isPointInsideRect = (point, rect) => {
-    const buffer = 45; 
-    return (
-      point.x >= rect.left - buffer &&
-      point.x <= rect.right + buffer &&
-      point.y >= rect.top - buffer &&
-      point.y <= rect.bottom + buffer
-    );
-  };
-
-  const getPointFromEvent = (event) => {
-    if (event?.clientX != null && event.clientX !== 0) {
-      return { x: event.clientX, y: event.clientY };
-    }
-    if (event?.touches?.[0]) {
-      return { x: event.touches[0].clientX, y: event.touches[0].clientY };
-    }
-    if (event?.changedTouches?.[0]) {
-      return { x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY };
-    }
-    return null;
-  };
-
+  // --- Logic Helpers ---
   const shuffleMission = useCallback(() => {
-    const randomFruit = FRUIT_LIBRARY[Math.floor(Math.random() * FRUIT_LIBRARY.length)];
-    const randomQuantity = Math.floor(Math.random() * 3) + 2; 
-    const newTarget = randomFruit.weight * randomQuantity;
+    if (sessionStep >= SESSION_LENGTH) {
+      setSessionCompleted(true);
+      return;
+    }
+    const fruit = FRUIT_LIBRARY[sessionStep % FRUIT_LIBRARY.length];
+    const quantity = Math.floor(Math.random() * 3) + 2; 
+    const newTarget = fruit.weight * quantity;
 
-    setCurrentFruit(randomFruit);
+    setCurrentFruit(fruit);
     setTargetWeight(newTarget);
     setPlacedCount(0);
     setIsBalanced(false);
     setAutoNextTimer(null);
-    setIsAutoPlaying(false);
-    setIsGrabbing(false);
-    tutorialActiveRef.current = false;
-    setVirtualHandPos(null);
+    setDragId(p => p + 1);
     
-    speakMessage(`New mission! Use ${randomFruit.name}s to reach ${newTarget} grams.`);
-  }, [speakMessage]);
-
-  const resetLevel = useCallback(() => {
-    setPlacedCount(0);
-    setIsBalanced(false);
-    setAutoNextTimer(null);
-    setIsAutoPlaying(false);
-    setIsGrabbing(false);
+    // Stop any ongoing tutorial when mission shuffles
     tutorialActiveRef.current = false;
+    setIsAutoPlaying(false);
     setVirtualHandPos(null);
-    speakMessage(`Balance the scale using ${currentFruit.name}s.`);
-  }, [currentFruit.name, speakMessage]);
+  }, [sessionStep]);
 
   useEffect(() => {
-    if (leftWeight === targetWeight && !isBalanced) {
+    shuffleMission();
+  }, [sessionStep]);
+
+  const leftWeight = placedCount * currentFruit.weight;
+  const rotation = Math.max(-20, Math.min(20, (targetWeight - leftWeight) * 8));
+
+  // Balance Check logic
+  useEffect(() => {
+    if (leftWeight === targetWeight && targetWeight > 0) {
       setIsBalanced(true);
-      speakMessage(`Perfect! It took ${placedCount} ${currentFruit.name}s!`);
       setAutoNextTimer(10);
-    } else if (leftWeight !== targetWeight) {
+    } else {
       setIsBalanced(false);
       setAutoNextTimer(null);
     }
-  }, [leftWeight, targetWeight, isBalanced, speakMessage, placedCount, currentFruit]);
+  }, [leftWeight, targetWeight]);
 
-  const addItem = useCallback((isTutorial = false) => {
-    if (!isTutorial && isAutoPlaying && modeRef.current === 'concept') return;
-    if (isTutorial && modeRef.current !== 'concept') return;
+  // Progression Timer
+  useEffect(() => {
+    if (autoNextTimer !== null && autoNextTimer > 0) {
+      timerIntervalRef.current = setInterval(() => setAutoNextTimer(p => p - 1), 1000);
+    } else if (autoNextTimer === 0) {
+      if (sessionStep < SESSION_LENGTH - 1) setSessionStep(prev => prev + 1);
+      else setSessionCompleted(true);
+    }
+    return () => clearInterval(timerIntervalRef.current);
+  }, [autoNextTimer, sessionStep]);
 
-    setPlacedCount(prev => {
-        if (prev >= 15) return prev;
-        const newVal = prev + 1;
-        const newWeight = newVal * currentFruit.weight;
-        if (newWeight < targetWeight) speakMessage(`${newWeight} grams.`);
-        else if (newWeight > targetWeight) speakMessage("Too heavy!");
-        return newVal;
-    });
-  }, [currentFruit, targetWeight, isAutoPlaying, speakMessage]);
-
-  const moveHand = async (fromRect, toRect) => {
-    if (modeRef.current !== 'concept') return;
-    setVirtualHandPos({ x: fromRect.left + fromRect.width/2, y: fromRect.top + fromRect.height/2 });
-    await new Promise(r => setTimeout(r, 800));
-    if (modeRef.current !== 'concept') return;
-    setVirtualHandPos({ x: toRect.left + toRect.width/2, y: toRect.top + toRect.height/2 });
-    await new Promise(r => setTimeout(r, 1200));
-  };
-
+  // --- Concept Building Automation ---
   const startConceptBuilding = useCallback(async () => {
     if (tutorialActiveRef.current || isBalanced) return;
     tutorialActiveRef.current = true;
     setIsAutoPlaying(true);
 
-    await new Promise(r => setTimeout(r, 1500));
-    if (modeRef.current !== 'concept' || isBalanced) {
-        tutorialActiveRef.current = false;
-        setIsAutoPlaying(false);
-        return;
-    }
-
-    speakMessage(`Concept Building: Target is ${targetWeight} grams.`);
-    await new Promise(r => setTimeout(r, 2000));
+    // Initial wait
+    await new Promise(r => setTimeout(r, 1000));
 
     const needed = targetWeight / currentFruit.weight;
 
@@ -178,16 +123,23 @@ export default function App() {
         const sourceRect = appleGhostRef.current.getBoundingClientRect();
         const targetRect = leftPanRef.current.getBoundingClientRect();
         
+        // Move to Bin
         setVirtualHandPos({ x: sourceRect.left + sourceRect.width/2, y: sourceRect.top + sourceRect.height/2 });
         await new Promise(r => setTimeout(r, 1000));
         if (modeRef.current !== 'concept') break;
+        
+        // Grab
         setIsGrabbing(true);
         await new Promise(r => setTimeout(r, 500));
+        
+        // Drag to Pan
         setVirtualHandPos({ x: targetRect.left + targetRect.width/2, y: targetRect.top + targetRect.height/2 });
         await new Promise(r => setTimeout(r, 1200));
         if (modeRef.current !== 'concept') break;
+        
+        // Release and Add
         setIsGrabbing(false);
-        addItem(true);
+        setPlacedCount(prev => prev + 1);
         await new Promise(r => setTimeout(r, 800));
     }
 
@@ -195,11 +147,11 @@ export default function App() {
     setVirtualHandPos(null);
     setIsGrabbing(false);
     tutorialActiveRef.current = false;
-  }, [addItem, isBalanced, speakMessage, targetWeight, currentFruit]);
+  }, [isBalanced, targetWeight, currentFruit]);
 
   useEffect(() => {
     if (mode === 'concept' && !isBalanced && !tutorialActiveRef.current) {
-      const t = setTimeout(startConceptBuilding, 1500);
+      const t = setTimeout(startConceptBuilding, 1000);
       return () => clearTimeout(t);
     } else if (mode === 'practice') {
       setIsAutoPlaying(false);
@@ -209,268 +161,249 @@ export default function App() {
     }
   }, [mode, isBalanced, startConceptBuilding]);
 
-  useEffect(() => {
-    if (autoNextTimer !== null && autoNextTimer > 0) {
-      timerIntervalRef.current = setInterval(() => {
-        setAutoNextTimer(p => (p > 0 ? p - 1 : 0));
-      }, 1000);
-    } else if (autoNextTimer === 0) {
-      shuffleMission();
-    }
-    return () => { if (timerIntervalRef.current) clearInterval(timerIntervalRef.current); };
-  }, [autoNextTimer, shuffleMission]);
+  // --- Drag Interaction Handlers ---
+  const isPointInsideRect = (point, rect) => {
+    const buffer = 40;
+    return (point.x >= rect.left - buffer && point.x <= rect.right + buffer &&
+            point.y >= rect.top - buffer && point.y <= rect.bottom + buffer);
+  };
 
-  // --- INTERACTION HANDLERS ---
-  const handleDragUpdate = (event) => {
+  const getPointFromEvent = (e) => {
+    if (e.clientX != null && e.clientX !== 0) return { x: e.clientX, y: e.clientY };
+    if (e.touches?.[0]) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    return null;
+  };
+
+  const handleDragUpdate = (e) => {
     if (!leftPanRef.current) return;
-    const point = getPointFromEvent(event);
+    const point = getPointFromEvent(e);
     if (!point) return;
-
     const rect = leftPanRef.current.getBoundingClientRect();
     setIsOverTarget(isPointInsideRect(point, rect));
   };
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (e) => {
     setIsOverTarget(false);
-    if (!leftPanRef.current) return;
-
-    const point = getPointFromEvent(event);
-    if (!point) {
-      setDragId(p => p + 1);
-      return;
+    const point = getPointFromEvent(e) || getPointFromEvent(e.changedTouches?.[0]);
+    if (point && leftPanRef.current) {
+      const rect = leftPanRef.current.getBoundingClientRect();
+      if (isPointInsideRect(point, rect) && !isBalanced) {
+        setPlacedCount(prev => Math.min(prev + 1, 15));
+      }
     }
-
-    const rect = leftPanRef.current.getBoundingClientRect();
-    const success = isPointInsideRect(point, rect);
-
-    if (success && !isBalanced && mode === 'practice') {
-      addItem();
-    }
-    
     setDragId(p => p + 1);
   };
-  
-  const renderHeader = () => (
-    <header className="w-full max-w-5xl mb-2 bg-[#3e2723] p-4 sm:p-6 lg:p-10 rounded-[2rem] sm:rounded-[2.5rem] lg:rounded-[3.5rem] border-b-4 border-black/30 relative overflow-hidden shrink-0 shadow-2xl">
-      
-      <div
-        className="absolute inset-0 opacity-[0.15] pointer-events-none"
-        style={{
-          backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')`,
-        }}
-      />
-  
-      <div className="relative z-10 flex justify-between items-end">
-        {/* LEFT */}
-        <div className="flex flex-col gap-2 text-left">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-1 text-[#a88a6d] font-black uppercase text-[10px] hover:text-white transition-all active:scale-95"
-          >
-            <ChevronLeft size={14} />
-            Back to Dashboard
-          </button>
-  
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-sm bg-[#e6dccb] rotate-45 shadow-glow" />
-            <h2 className="text-xl sm:text-2xl lg:text-5xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">
-              Weight Lab
-            </h2>
+
+  // --- Modular Div Render Functions ---
+
+  const renderHeaderDiv = () => (
+    <div className="w-full max-w-[1500px] shrink-0">
+      <header className="w-full bg-[#3e2723] p-4 sm:p-5 lg:p-6 rounded-[2.5rem] border-b-4 border-black/30 relative overflow-hidden shadow-2xl">
+        <div className="absolute inset-0 opacity-[0.15] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col text-left w-full md:w-auto">
+            <button onClick={() => navigate('/learn/mathematics/algebra')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-2 hover:text-white transition-all">
+              <ChevronLeft size={16} /> Back to Dashboard
+            </button>
+            <div className="flex items-center gap-3">
+              <div className="w-2.5 h-2.5 rounded-sm bg-amber-400 rotate-45 shadow-glow" />
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Weight Lab</h2>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 w-full md:w-auto ml-auto">
+            <div className="bg-[#dfd7cc] p-1 rounded-2xl flex items-center gap-1 shadow-inner border border-[#c4a484]/20 scale-90 sm:scale-100">
+              <button 
+                onClick={() => { setMode('concept'); setPlacedCount(0); }} 
+                className={`px-4 py-2 rounded-xl text-[9px] sm:text-[10px] font-black transition-all ${mode === 'concept' ? 'bg-white text-blue-600 shadow-sm' : 'text-[#8d6e63]'}`}
+              >
+                CONCEPT BUILDING
+              </button>
+              <button 
+                onClick={() => { setMode('practice'); setPlacedCount(0); }} 
+                className={`px-4 py-2 rounded-xl text-[9px] sm:text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-white text-emerald-600 shadow-sm' : 'text-[#8d6e63]'}`}
+              >
+                PRACTICE
+              </button>
+            </div>
+            <button onClick={() => { setPlacedCount(0); setAutoNextTimer(null); }} className="p-2.5 bg-amber-500 text-[#3e2723] rounded-xl shadow-lg border-b-2 border-amber-800 active:scale-95 transition-transform">
+              <RefreshCcw size={18} />
+            </button>
           </div>
         </div>
-  
-        {/* RIGHT */}
-        <div className="hidden md:flex flex-col items-end">
-              <div className="bg-[#dfd7cc] p-1 rounded-2xl flex items-center gap-1 shadow-inner border border-[#c4a484]/20">
-                  <button onClick={() => { setMode('concept'); resetLevel(); }}
-                      className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[8px] sm:text-[10px] font-black transition-all ${mode === 'concept' ? 'bg-white text-blue-600 shadow-sm' : 'text-[#8d6e63]'}`}>
-                      CONCEPT BUILDING
-                  </button>
-                  <button onClick={() => { setMode('practice'); resetLevel(); }}
-                      className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[8px] sm:text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-white text-emerald-600 shadow-sm' : 'text-[#8d6e63]'}`}>
-                      PRACTICE
-                  </button>
-                  <div>
-                    <button onClick={() => setIsMuted(!isMuted)} className="p-2.5 bg-white text-[#8d6e63] rounded-xl shadow-sm border border-[#c4a484]/10 active:scale-95 transition-transform">
-                    {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                    </button>
-                    <button onClick={shuffleMission} className="p-2.5 bg-[#8d6e63] text-white rounded-xl shadow-md border-b-2 border-[#5d4037] active:scale-95 transition-transform">
-                        <RefreshCcw size={16} />
-                    </button>
-                  </div>
-                </div>
-        </div>
-      </div>
-    </header>
+      </header>
+    </div>
   );
 
-  return (
-    <div className="h-screen flex flex-col items-center bg-[#f1f0ee] font-sans select-none overflow-hidden text-[#5d4037] pt-4 sm:pt-6 pb-2 px-2 sm:px-4">
-      
-      {/* HEADER */}
-      <div className="w-full max-w-5xl flex justify-between items-center px-2 py-1 z-50 mb-1">
-        {renderHeader()}
+  const renderDotsDiv = () => (
+    <div className="w-full shrink-0 flex items-center justify-center py-1">
+      <div className="flex items-center gap-4 bg-[#3e2723]/5 p-4 rounded-full border border-[#3e2723]/10 shadow-inner">
+        {[...Array(SESSION_LENGTH)].map((_, i) => {
+          const isPast = i < sessionStep;
+          const isCurrent = i === sessionStep;
+          return (
+            <div key={i} className="relative">
+              <motion.div animate={isCurrent ? { scale: [1, 1.4, 1] } : {}} className={`w-4 h-4 rounded-full border-2 transition-all duration-500 shadow-md ${isPast ? 'bg-emerald-500 border-emerald-600' : isCurrent ? 'bg-amber-400 border-amber-600 ring-4 ring-amber-400/20' : 'bg-white/40 border-[#3e2723]/20'}`} />
+            </div>
+          );
+        })}
       </div>
+    </div>
+  );
 
-      {/* THE STAGE */}
-      <div className="flex-[0.8] w-full max-w-5xl bg-[#e6dccb] rounded-[2rem] sm:rounded-[3.5rem] shadow-xl border-b-[10px] border-[#c4a484] relative overflow-visible flex flex-col items-center justify-start pb-0">
-        <div className="absolute inset-0 bg-[#e6dccb] pointer-events-none rounded-[2rem] sm:rounded-[3.5rem]" style={{ backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(93,64,55,0.02) 50px, rgba(93,64,55,0.02) 100px)` }} />
+  const renderScaleDiv = () => (
+    <div className="w-full max-w-[1400px] shrink-0 px-2 sm:px-6">
+      <div className={`relative w-full min-h-[350px] sm:min-h-[480px] bg-[#3e2723] rounded-[3rem] border-4 border-black/30 shadow-2xl flex flex-col items-center justify-start overflow-hidden`}>
+        <div className="absolute inset-0 opacity-[0.2] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
+        <div className="absolute inset-0 bg-white/5 opacity-10 pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.05) 40px, rgba(255,255,255,0.05) 80px)" }} />
         
-        {/* SCALE ASSEMBLY - Added mt-14/mt-20 for more top space */}
-        <div className="relative w-full max-w-4xl flex justify-center items-center scale-[0.45] sm:scale-[0.7] origin-top transition-transform overflow-visible mt-14 sm:mt-20">
+        {/* Scale Assembly */}
+        <div className="relative w-full max-w-5xl flex justify-center items-center scale-[0.35] sm:scale-[0.5] lg:scale-[0.65] origin-top transition-transform overflow-visible mt-12 sm:mt-16">
             <div className="absolute top-[8%] left-1/2 -translate-x-1/2 flex flex-col items-center z-10 pointer-events-none">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#8d6e63] to-[#5d4037] rounded-full border-4 border-[#c4a484] shadow-xl mb-[-20px] relative z-20" />
-                <div className="w-8 h-[200px] bg-gradient-to-r from-[#5d4037] via-[#8d6e63] to-[#5d4037] rounded-b-xl shadow-2xl relative" />
-                <div className="absolute bottom-[-30px] w-56 h-16 bg-[#3e2723] rounded-t-[4rem] shadow-xl z-0 border-b-4 border-black/20" />
+                <div className="w-12 h-12 bg-gradient-to-br from-[#8d6e63] to-[#5d4037] rounded-full border-4 border-[#c4a484] shadow-xl mb-[-20px] z-20" />
+                <div className="w-8 h-[220px] bg-gradient-to-r from-[#5d4037] via-[#8d6e63] to-[#5d4037] rounded-b-xl shadow-2xl relative" />
+                <div className="absolute bottom-[-30px] w-56 h-16 bg-[#2a1a16] rounded-t-[4rem] shadow-xl z-0 border-b-4 border-black/20" />
             </div>
 
             <div className="relative w-full flex justify-center z-20 mt-[12%]">
-                <motion.div animate={{ rotate: rotation }} transition={{ type: "spring", stiffness: 35, damping: 14 }}
-                    className="relative w-full h-7 bg-gradient-to-b from-[#8d6e63] to-[#3e2723] rounded-full flex justify-between items-center shadow-lg border-b-2 border-black/20 px-2"
-                    style={{ originX: 0.5, originY: 0.5 }}>
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 bg-gradient-to-br from-yellow-300 to-amber-600 rounded-full border-2 border-[#3e2723] shadow-md z-30" />
+                <motion.div animate={{ rotate: rotation }} transition={{ type: "spring", stiffness: 40, damping: 15 }} className="relative w-full h-8 bg-[#2a1a16] rounded-full flex justify-between items-center shadow-lg px-2 border border-white/10" style={{ originX: 0.5, originY: 0.5 }}>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 bg-yellow-500 rounded-full border-2 border-[#3e2723] z-30 shadow-glow" />
                     
-                    {/* LEFT PAN (LOAD) */}
-                    <motion.div animate={{ rotate: -rotation }} className="absolute left-[-15px] top-0 w-32 sm:w-64 flex flex-col items-center" style={{ originX: "50%", originY: "0%" }}>
-                        <div className="flex justify-between w-[80%] px-4">
-                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[15deg] rounded-full" />
-                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[-15deg] rounded-full" />
-                        </div>
-                        <motion.div 
-                          ref={leftPanRef} 
-                          animate={{ 
-                            scale: isOverTarget ? 1.08 : 1,
-                            backgroundColor: isOverTarget ? "#8d6e63" : "#a88a6d"
-                          }}
-                          className={`w-full h-20 sm:h-32 bg-gradient-to-b from-[#a88a6d] to-[#8d6e63] rounded-b-[6rem] border-t-[10px] border-[#5d4037]/20 shadow-inner relative flex items-end justify-center pb-8 transition-all duration-200 ${isOverTarget ? 'ring-8 ring-white/40' : ''}`}
-                        >
-                            <div className="flex flex-wrap-reverse justify-center gap-1 w-[90%] mb-10 pointer-events-none">
-                                {[...Array(placedCount)].map((_, i) => (
-                                    <motion.div key={i} initial={{ scale: 0, y: -60 }} animate={{ scale: 1, y: 0 }} className="text-3xl sm:text-6xl drop-shadow-lg pointer-events-none">{currentFruit.icon}</motion.div>
-                                ))}
+                    {/* LEFT PAN */}
+                    <motion.div animate={{ rotate: -rotation }} className="absolute left-[-20px] top-0 w-32 sm:w-64 flex flex-col items-center" style={{ originX: "50%", originY: "0%" }}>
+                        <svg className="w-24 sm:w-32 h-40 overflow-visible mb-[-4px]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                          <path d="M50 0 L40 100 M50 0 L60 100" stroke="#e6dccb" strokeWidth="2.5" fill="none" strokeOpacity="0.4" strokeLinecap="round" />
+                        </svg>
+                        <motion.div ref={leftPanRef} animate={{ scale: isOverTarget ? 1.08 : 1, boxShadow: isOverTarget ? "0 0 60px rgba(59, 130, 246, 0.8)" : "none" }} className="w-full h-24 sm:h-32 bg-gradient-to-b from-[#a88a6d] to-[#8d6e63] rounded-b-[6rem] border-t-[10px] border-black/10 shadow-inner relative flex items-end justify-center pb-8">
+                            <div className="flex flex-wrap-reverse justify-center gap-1 w-[90%] mb-10">
+                                {[...Array(placedCount)].map((_, i) => <motion.div key={i} initial={{ scale: 0, y: -40 }} animate={{ scale: 1, y: 0 }} className="text-3xl sm:text-6xl drop-shadow-lg">{currentFruit.icon}</motion.div>)}
                             </div>
-                            <div className="absolute bottom-[-45px] bg-[#5d4037] text-white px-8 py-2 rounded-full font-black text-lg sm:text-3xl shadow-lg pointer-events-none">{leftWeight}g</div>
+                            <div className="absolute bottom-[-45px] bg-[#5d4037] text-white px-8 py-2 rounded-full font-black text-lg sm:text-3xl shadow-lg border border-white/10">{leftWeight}g</div>
                         </motion.div>
                     </motion.div>
 
-                    {/* RIGHT PAN (MASTER) */}
-                    <motion.div animate={{ rotate: -rotation }} className="absolute right-[-15px] top-0 w-32 sm:w-64 flex flex-col items-center" style={{ originX: "50%", originY: "0%" }}>
-                        <div className="flex justify-between w-[80%] px-4">
-                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[15deg] rounded-full" />
-                            <div className="w-1 h-40 bg-gradient-to-b from-[#3e2723]/60 to-[#a88a6d]/20 origin-top rotate-[-15deg] rounded-full" />
-                        </div>
-                        <div className="w-full h-20 sm:h-32 bg-gradient-to-b from-[#a88a6d] to-[#8d6e63] rounded-b-[6rem] border-t-[10px] border-[#5d4037]/20 shadow-inner relative flex items-end justify-center pb-8">
-                             <div className="bg-gradient-to-br from-yellow-400 to-amber-900 text-white w-20 h-20 sm:w-32 sm:h-32 flex items-center justify-center rounded-[2rem] font-black text-3xl sm:text-7xl shadow-xl mb-12 border-b-8 border-black/30">{targetWeight}g</div>
-                             <div className="absolute bottom-[-45px] bg-[#5d4037] text-white px-8 py-2 rounded-full font-black text-lg sm:text-3xl shadow-lg">{targetWeight}g</div>
-                        </div>
+                    {/* RIGHT PAN */}
+                    <motion.div animate={{ rotate: -rotation }} className="absolute right-[-20px] top-0 w-32 sm:w-64 flex flex-col items-center" style={{ originX: "50%", originY: "0%" }}>
+                        <svg className="w-24 sm:w-32 h-40 overflow-visible mb-[-4px]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                          <path d="M50 0 L40 100 M50 0 L60 100" stroke="#e6dccb" strokeWidth="2.5" fill="none" strokeOpacity="0.4" strokeLinecap="round" />
+                        </svg>
+                        <motion.div className="w-full h-24 sm:h-32 bg-gradient-to-b from-[#a88a6d] to-[#8d6e63] rounded-b-[6rem] border-t-[10px] border-black/10 shadow-inner relative flex items-end justify-center pb-8">
+                             <div className="bg-yellow-400 text-[#3e2723] w-20 h-20 sm:w-32 sm:h-32 flex items-center justify-center rounded-[2rem] font-black text-3xl sm:text-7xl shadow-xl mb-12 border-b-8 border-yellow-600">{targetWeight}g</div>
+                             <div className="absolute bottom-[-45px] bg-[#5d4037] text-white px-8 py-2 rounded-full font-black text-lg sm:text-3xl shadow-lg border border-white/10">{targetWeight}g</div>
+                        </motion.div>
                     </motion.div>
                 </motion.div>
             </div>
         </div>
 
-        {/* MESSAGING ZONE - bottom-24/bottom-36 lifts it closer to the scale */}
-        <div className="absolute bottom-8 sm:bottom-16 left-0 w-full flex justify-center pointer-events-none px-4 text-center">
-            <AnimatePresence mode="wait">
-                {isBalanced ? (
-                    <motion.div key="balanced-msg" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="z-[100] w-full max-w-lg px-4">
-                        <div className="bg-emerald-600 text-white py-3 px-8 rounded-full shadow-2xl flex items-center justify-center gap-4 border-b-4 border-emerald-800 backdrop-blur-sm">
-                            <Trophy size={24} className="animate-bounce shrink-0" />
-                            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                                <span className="text-[10px] sm:text-sm font-black uppercase tracking-widest opacity-80 leading-none">Balanced!</span>
-                                <span className="text-xs sm:text-lg font-bold leading-none">It took {placedCount} <span className="inline-block scale-110">{currentFruit.icon}</span> {currentFruit.name}s!</span>
-                            </div>
-                            <Sparkles size={20} className="text-yellow-300 shrink-0" />
-                        </div>
-                    </motion.div>
-                ) : (
-                    <motion.div key="question-msg" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="bg-white/90 backdrop-blur-md px-5 py-2 sm:px-8 sm:py-3 rounded-[2rem] shadow-2xl border-2 border-[#8d6e63]/20 flex items-center gap-2 sm:gap-4 text-center z-[90]">
-                        <p className="text-xs sm:text-xl font-bold text-[#5d4037] leading-tight text-center">How many <span className="inline-block scale-110 mx-1">{currentFruit.icon}</span> {currentFruit.name}s will make the scale balanced?</p>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+        {/* MESSAGING OVERLAY */}
+        <div className="absolute bottom-6 left-0 w-full flex flex-col items-center gap-2 px-4 z-[100] pointer-events-none">
+          {mode === 'concept' && isAutoPlaying && (
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-blue-600 text-white py-2 px-6 rounded-full shadow-lg border-2 border-white/20 flex items-center gap-3">
+              <PlayCircle size={20} className="animate-pulse" />
+              <span className="text-xs sm:text-sm font-bold uppercase tracking-widest">Demonstrating Logic Flow...</span>
+            </motion.div>
+          )}
+
+          <AnimatePresence>
+            {isBalanced && (
+              <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="bg-emerald-600 text-white py-3 px-8 rounded-full shadow-2xl flex items-center justify-center gap-4 border-b-4 border-emerald-800 backdrop-blur-md">
+                <Trophy size={24} className="animate-bounce" />
+                <div className="flex flex-col sm:flex-row items-center gap-1">
+                  <span className="text-[10px] font-black uppercase opacity-80 leading-none tracking-widest leading-none">Perfectly Balanced!</span>
+                  <span className="text-xs sm:text-lg font-bold leading-none">{placedCount} {currentFruit.name}s reached the target.</span>
+                </div>
+                <Sparkles size={20} className="text-yellow-300 animate-pulse" />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
+    </div>
+  );
 
-      {/* DEPOT AREA */}
-      <div className="w-full max-w-5xl flex flex-col items-center mt-2 z-50 mb-1">
-        <div className="bg-[#dfd7cc] p-2 sm:p-4 rounded-[2rem] border-4 border-[#c4a484] w-[95%] sm:w-full flex flex-col items-center shadow-xl relative">
-            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#5d4037] text-[#e6dccb] px-6 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border-2 border-[#e6dccb]">{currentFruit.name} Bin</div>
-            <div className="flex items-center gap-8 sm:gap-16">
-                <div className="text-center bg-white/40 p-2 sm:p-3 rounded-2xl border-2 border-white shadow-inner">
-                    <p className="text-[#8d6e63] font-black text-[8px] uppercase tracking-widest mb-1">Unit Weight</p>
-                    <div className="flex items-center gap-2">
-                        <span className="text-xl sm:text-2xl drop-shadow-md">{currentFruit.icon}</span>
-                        <span className="text-xl sm:text-2xl font-black text-[#5d4037] tracking-tighter leading-none">= {currentFruit.weight}g</span>
-                    </div>
-                </div>
-                <div className="relative w-24 h-24 sm:w-32 sm:h-32 flex items-center justify-center bg-black/5 rounded-full border-2 border-dashed border-[#c4a484]/40 overflow-visible">
-                   
-                   <div ref={appleGhostRef} className="absolute inset-0 flex items-center justify-center text-[38px] sm:text-[60px] opacity-100 pointer-events-none">
-                     {currentFruit.icon}
-                   </div>
+  const renderMatrixDiv = () => (
+    <div className={`w-full max-w-[1200px] shrink-0 px-2 min-h-[160px] z-50`}>
+      <div className="bg-[#dfd7cc] p-6 sm:p-8 rounded-[3rem] border-4 border-[#c4a484] w-full flex flex-row items-center justify-around shadow-xl relative overflow-visible">
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#5d4037] text-[#e6dccb] px-6 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border-2 border-white/20 shadow-md">Interaction Bin</div>
+          
+          <div className="flex flex-col items-center gap-2 bg-white/40 p-4 rounded-[2rem] border-2 border-white shadow-inner">
+              <span className="text-[#8d6e63] font-black text-[10px] uppercase">Unit Weight</span>
+              <div className="flex items-center gap-2">
+                <span className="text-3xl sm:text-5xl drop-shadow-md">{currentFruit.icon}</span>
+                <span className="text-2xl sm:text-4xl font-black text-[#3e2723]">= {currentFruit.weight}g</span>
+              </div>
+          </div>
 
-                   {!isBalanced && mode === 'practice' && (
-                     <motion.div 
-                        key={`drag-source-${placedCount}-${dragId}`} 
-                        ref={appleDragRef} 
-                        drag 
-                        dragMomentum={false}
-                        onDrag={handleDragUpdate}
-                        onDragEnd={handleDragEnd} 
-                        whileHover={{ scale: 1.15 }} 
-                        whileDrag={{ 
-                          scale: 1.2, 
-                          zIndex: 1000, 
-                          cursor: 'grabbing', 
-                          filter: 'drop-shadow(0 20px 20px rgba(0,0,0,0.3))' 
-                        }}
-                        className="text-[38px] sm:text-[60px] cursor-grab active:cursor-grabbing drop-shadow-2xl z-[60] select-none touch-none"
-                        style={{ position: 'absolute' }}
-                      >
-                        {currentFruit.icon}
-                      </motion.div>
-                   )}
-                </div>
-            </div>
-        </div>
+          <div className="relative w-28 h-28 sm:w-40 sm:h-40 bg-black/5 rounded-full border-4 border-dashed border-[#c4a484]/40 flex items-center justify-center">
+              <div ref={appleGhostRef} className="absolute inset-0 flex items-center justify-center opacity-30 text-5xl sm:text-7xl pointer-events-none">{currentFruit.icon}</div>
+              {!isBalanced && mode === 'practice' && (
+                <motion.div
+                  key={`drag-${dragId}`}
+                  drag
+                  dragMomentum={false}
+                  onDrag={handleDragUpdate}
+                  onDragEnd={handleDragEnd}
+                  whileDrag={{ scale: 1.25, zIndex: 2000, cursor: 'grabbing', filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.4))' }}
+                  className="text-5xl sm:text-7xl cursor-grab active:cursor-grabbing z-50 select-none touch-none"
+                >
+                  {currentFruit.icon}
+                </motion.div>
+              )}
+          </div>
       </div>
+    </div>
+  );
 
-      {/* NAVIGATION BAR */}
-      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4 items-center px-2 pb-1">
-          <button onClick={() => shuffleMission()} className={`relative flex items-center justify-between w-full p-2 sm:p-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-sm sm:text-xl active:scale-95 shadow-lg border-b-4 ${autoNextTimer !== null ? 'bg-indigo-600 text-white border-indigo-900' : 'bg-[#3e2723] text-[#dfc4a1] border-black'}`}>
-            <div className="flex items-center gap-3 z-10">
-              <div className="bg-white/10 p-1.5 sm:p-3 rounded-xl"><ChevronRight size={20} /></div>
-              <div className="leading-tight uppercase tracking-tighter text-xs sm:text-lg">{autoNextTimer !== null ? 'NEXT NOW' : 'NEW MISSION'}</div>
+  const renderButtonsDiv = () => (
+    <div className={`w-full max-w-[1200px] grid grid-cols-1 md:grid-cols-2 gap-4 items-center px-2 pb-12 shrink-0`}>
+        <button onClick={() => { if (sessionStep < SESSION_LENGTH - 1) setSessionStep(p => p + 1); else setSessionCompleted(true); }} className={`relative flex items-center justify-between p-4 rounded-[2rem] font-black text-sm active:scale-95 shadow-lg border-b-4 ${autoNextTimer !== null ? 'bg-indigo-600 text-white border-indigo-900' : 'bg-[#3e2723] text-[#dfc4a1] border-black'}`}>
+          <div className="flex items-center gap-2">
+            <ChevronRight size={20} />
+            <span className="uppercase tracking-tighter">{autoNextTimer !== null ? 'NEXT NOW' : 'SKIP MISSION'}</span>
+          </div>
+          {autoNextTimer !== null && (
+            <div className="flex items-center gap-2 bg-black/30 px-4 py-1 rounded-full text-xs">
+              <Timer size={14} className="animate-spin text-indigo-300" />
+              <span>Next in {autoNextTimer}s</span>
             </div>
-            <div className="flex items-center relative z-10">
-              {autoNextTimer !== null ? (
-                <div className="flex items-center gap-2 sm:gap-4 bg-black/50 px-3 sm:px-6 py-1 sm:py-2 rounded-full border border-white/10 shadow-inner relative overflow-hidden min-w-[100px] sm:min-w-[200px]">
-                  <div className="flex items-center gap-1 shrink-0"><Timer size={14} className="animate-spin text-indigo-300" /><span className="text-lg sm:text-3xl font-mono leading-none">{autoNextTimer}</span></div>
-                  <div className="flex justify-between w-full px-2 relative">
-                      {[...Array(10)].map((_, i) => (<div key={i} className={`text-[8px] sm:text-base ${ (10 - autoNextTimer) > i ? 'opacity-100' : 'opacity-20'}`}>👣</div>))}
-                      <motion.div animate={{ left: `${((10 - autoNextTimer) / 10) * 100}%`, scaleX: -1 }} className="absolute top-1/2 -translate-y-1/2 text-xs sm:text-2xl pointer-events-none">🏃</motion.div>
-                  </div>
-                </div>
-              ) : <FastForward className="opacity-30 w-6 h-6 sm:w-8 sm:h-8" />}
-            </div>
-          </button>
-          <button onClick={() => shuffleMission()} className="flex items-center justify-center gap-2 sm:gap-4 w-full bg-[#8d6e63] hover:bg-[#5d4037] text-white p-2 sm:p-4 rounded-[1.5rem] sm:rounded-[2.5rem] font-black text-sm sm:text-xl active:scale-95 shadow-lg border-b-4 border-[#3e2723]">
-            <Shuffle size={18} />
-            <span className="uppercase tracking-tighter text-xs sm:text-lg">Shuffle Lab</span>
-          </button>
+          )}
+        </button>
+        <button onClick={() => { setPlacedCount(0); setAutoNextTimer(null); }} className="flex items-center justify-center gap-3 bg-[#8d6e63] text-white p-4 rounded-[2rem] font-black text-sm active:scale-95 shadow-lg border-b-4 border-[#3e2723]">
+          <RefreshCcw size={18} /> <span className="uppercase tracking-tighter">Restart Mission</span>
+        </button>
+    </div>
+  );
+
+  const renderCompletionSummary = () => (
+    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center min-h-[70vh] p-6 text-center bg-[#f1f0ee] rounded-[3rem] shadow-xl border-4 border-[#3e2723]">
+      <div className="w-32 h-32 bg-[#3e2723] rounded-full flex items-center justify-center text-amber-400 mb-8 shadow-2xl border-4 border-white ring-8 ring-[#3e2723]/10">
+        <Trophy size={64} className="animate-bounce" />
       </div>
+      <h1 className="text-4xl sm:text-6xl font-black uppercase text-[#3e2723] tracking-tighter mb-4">Lab Verified!</h1>
+      <p className="text-xl font-bold text-[#8d6e63] uppercase tracking-widest max-w-xl mb-10 leading-tight">You have successfully mastered the physical logic of algebraic balance.</p>
+      <button onClick={() => window.location.reload()} className="px-16 py-6 bg-[#3e2723] text-white font-black rounded-[2.5rem] uppercase tracking-widest text-lg shadow-2xl border-b-8 border-black active:translate-y-2 transition-all">Move to next module</button>
+    </motion.div>
+  );
 
+  return (
+    <div className="relative min-h-screen w-full flex flex-col items-center py-6 px-2 lg:px-4 overflow-y-auto bg-[#f1f0ee] no-scrollbar">
+      <div className="absolute inset-0 bg-[#e6dccb] pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(93,64,55,0.02) 50px, rgba(93,64,55,0.02) 100px)" }} />
+      
       {/* VIRTUAL HAND GUIDE */}
       <AnimatePresence>
         {mode === 'concept' && virtualHandPos && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1, left: virtualHandPos.x, top: virtualHandPos.y }}
-                transition={{ duration: 1, ease: "easeInOut" }} className="fixed pointer-events-none z-[1000] -translate-x-1/2 -translate-y-1/2 drop-shadow-2xl">
+            <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1, left: virtualHandPos.x, top: virtualHandPos.y }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }} 
+                className="fixed pointer-events-none z-[2000] -translate-x-1/2 -translate-y-1/2"
+            >
                 <div className="relative flex items-center justify-center">
-                    <Hand className="text-stone-800 w-8 h-8 sm:w-16 sm:h-16" fill="white" />
+                    <Hand className="text-stone-800 w-10 h-10 sm:w-16 sm:h-16" fill="white" />
                     <AnimatePresence>
                       {isGrabbing && (
-                        <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0, opacity: 0 }}
-                          className="absolute text-[26px] sm:text-[40px] filter drop-shadow-xl z-[61] opacity-100">
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="absolute text-[30px] sm:text-[50px] drop-shadow-xl z-[2001]">
                           {currentFruit.icon}
                         </motion.div>
                       )}
@@ -481,10 +414,21 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
+      <div className="relative z-10 w-full flex flex-col items-center gap-y-10 sm:gap-y-12">
+        {!sessionCompleted ? (
+          <>
+            {renderHeaderDiv()}
+            {renderDotsDiv()}
+            {renderScaleDiv()}
+            {renderMatrixDiv()}
+            {renderButtonsDiv()}
+          </>
+        ) : (
+          <div className="w-full flex items-center justify-center p-4">
+            {renderCompletionSummary()}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
