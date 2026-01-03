@@ -2,13 +2,86 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   RefreshCcw, CheckCircle2, 
-  ChevronRight, Shuffle, 
-  FastForward, Scale,
+  Hand, Play, MousePointer2, 
+  Timer, ChevronRight, Shuffle, 
+  FastForward, XCircle, Scale,
   Trophy, Sparkles, Volume2, VolumeX,
-  XCircle, Timer, Info, X, Equal
+  Clock,ChevronLeft,Info
 } from 'lucide-react';
+import { 
+  HashRouter as Router, 
+  Routes, 
+  Route, 
+  useNavigate, 
+  useParams 
+} from 'react-router-dom';
 
 export default function App() {
+  const navigate = useNavigate();
+
+  const onBack = () => {
+    navigate("/learn/mathematics/algebra");
+  };
+
+  const [mode, setMode] = useState<'concept' | 'practice'>('concept');
+
+  const shuffleMission = () => {
+    generateMission();
+  };
+
+  const renderHeader = () => (
+    <header className="w-full max-w-5xl mb-2 bg-[#3e2723] p-4 sm:p-6 lg:p-10 rounded-[2rem] sm:rounded-[2.5rem] lg:rounded-[3.5rem] border-b-4 border-black/30 relative overflow-hidden shrink-0 shadow-2xl">
+      
+      <div
+        className="absolute inset-0 opacity-[0.15] pointer-events-none"
+        style={{
+          backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')`,
+        }}
+      />
+  
+      <div className="relative z-10 flex justify-between items-end">
+        {/* LEFT */}
+        <div className="flex flex-col gap-2 text-left">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-1 text-[#a88a6d] font-black uppercase text-[10px] hover:text-white transition-all active:scale-95"
+          >
+            <ChevronLeft size={14} />
+            Back to Dashboard
+          </button>
+  
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 rounded-sm bg-[#e6dccb] rotate-45 shadow-glow" />
+            <h2 className="text-xl sm:text-2xl lg:text-5xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">
+              Weight Lab
+            </h2>
+          </div>
+        </div>
+  
+        {/* RIGHT */}
+        <div className="hidden md:flex flex-col items-end">
+              <div className="bg-[#dfd7cc] p-1 rounded-2xl flex items-center gap-1 shadow-inner border border-[#c4a484]/20">
+                  <button onClick={() => { setMode('concept'); resetLevel(); }}
+                      className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[8px] sm:text-[10px] font-black transition-all ${mode === 'concept' ? 'bg-white text-blue-600 shadow-sm' : 'text-[#8d6e63]'}`}>
+                      CONCEPT BUILDING
+                  </button>
+                  <button onClick={() => { setMode('practice'); resetLevel(); }}
+                      className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[8px] sm:text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-white text-emerald-600 shadow-sm' : 'text-[#8d6e63]'}`}>
+                      PRACTICE
+                  </button>
+                  <div>
+                    <button onClick={() => setIsMuted(!isMuted)} className="p-2.5 bg-white text-[#8d6e63] rounded-xl shadow-sm border border-[#c4a484]/10 active:scale-95 transition-transform">
+                    {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                    </button>
+                    <button onClick={shuffleMission} className="p-2.5 bg-[#8d6e63] text-white rounded-xl shadow-md border-b-2 border-[#5d4037] active:scale-95 transition-transform">
+                        <RefreshCcw size={16} />
+                    </button>
+                  </div>
+                </div>
+        </div>
+      </div>
+    </header>
+  );
   const [currentAppleWeight, setCurrentAppleWeight] = useState(3);
   const [appleCount, setAppleCount] = useState(4);
   const [options, setOptions] = useState([]);
@@ -137,13 +210,17 @@ export default function App() {
   }, [autoNextTimer, generateMission]);
 
   const targetTotalWeight = appleCount * currentAppleWeight;
+  
+
 
   return (
     <div className="h-screen flex flex-col items-center bg-[#f1f0ee] font-sans select-none overflow-hidden text-[#5d4037] pt-4 sm:pt-6 pb-2 px-2 sm:px-4">
       
       {/* HEADER */}
       <div className="w-full max-w-5xl flex justify-between items-center px-2 py-1 z-50 mb-1">
-        <div className="flex items-center gap-2">
+      {renderHeader()}
+
+        {/* <div className="flex items-center gap-2">
           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#8d6e63] rounded-xl shadow-lg flex items-center justify-center text-white border-b-2 border-black/20">
             <Scale size={24} />
           </div>
@@ -160,7 +237,7 @@ export default function App() {
             <button onClick={generateMission} className="p-2.5 bg-[#8d6e63] text-white rounded-xl shadow-md border-b-2 border-[#5d4037] active:scale-95 transition-transform">
                 <RefreshCcw size={16} />
             </button>
-        </div>
+        </div> */}
       </div>
 
       {/* SECTION 1: THE SCALE STAGE */}

@@ -40,7 +40,7 @@ const navItems: NavItem[] = [
   {
     icon: <BookOpenIcon />,
     name: "Learn",
-    path: "/courses",
+    path: "/learn",
   },
   {
     icon: <AcademicCapIcon />,

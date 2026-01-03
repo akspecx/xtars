@@ -147,6 +147,29 @@ import {
   
 }
 from "./x-tars/courses/Puzzles/PuzzlesWrapper";
+
+
+import {
+  MathsMainRouter,
+  AlgebraicExpressionRouter
+  
+}
+from "./x-tars/courses/Learn/maths/MathsRouterWrapper"
+
+import {
+  AlgebraicIntroductionRouter,
+  FindingWeightUnknowRouter
+}
+from "./x-tars/courses/Learn/maths/AlgebraicExpression/AlgebraRouterWrapper"
+
+
+
+import {
+  LearnRouter
+  
+}
+from "./x-tars/courses/Learn/LearnModuleWrapper"
+
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import FeedBackComponent from "./pages/Feedback";
@@ -165,9 +188,15 @@ export default function App() {
               <Route path="/dashboard" element={<Home />} />
               <Route path="/home" element={<Home />} />
 
-              {/* Courses */}
-              <Route path="/courses" element={<CoursesHome />} />
-              <Route path="/courses/:courseid" element={<CoursesRouter />} />
+              {/* Courses Learn Module Router */}
+              <Route path="/learn" element={<LearnRouter />} />
+              <Route path="/learn/mathematics" element={<MathsMainRouter />} />
+              <Route path="/learn/mathematics/algebra" element={<AlgebraicExpressionRouter />} />
+
+              {/* Algebra sub modules */}
+              <Route path="/learn/mathematics/algebra/introduction" element={<AlgebraicIntroductionRouter />} />
+              <Route path="/learn/mathematics/algebra/unknown" element={<FindingWeightUnknowRouter />} />
+             
 
               {/* Games */}
               <Route path="/games" element={<GamesHome />} />
