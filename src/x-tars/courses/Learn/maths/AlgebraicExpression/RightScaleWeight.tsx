@@ -149,7 +149,7 @@ export default function WeightDiscovery() {
         <div className="absolute inset-0 opacity-[0.15] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex flex-col text-left w-full md:w-auto">
-            <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-2 hover:text-white transition-all">
+            <button onClick={() => navigate('/learn/mathematics/algebra')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-2 hover:text-white transition-all">
               <ChevronLeft size={16} /> Back to Dashboard
             </button>
             <div className="flex items-center gap-3">
