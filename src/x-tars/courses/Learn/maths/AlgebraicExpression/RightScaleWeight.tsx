@@ -121,13 +121,11 @@ export default function WeightDiscovery() {
     const total = calculateTotal();
     setIsExplaining(true);
     
-    // Step 1: Phrasing from LineNumbers.txt (Line 124)
     const line1 = "Total weight on right scale = Total weight of left scale as it is balanced scale";
     setFormulas([line1]);
     setExplanationText("Since the scale is balanced, the total weight on the left must equal the right.");
     await new Promise(r => setTimeout(r, 2000));
 
-    // Step 2: Multiplication (Line 128)
     const line2 = `Total left balance = ${total}, So, right scale weight = ${total}`;
     setFormulas(prev => [...prev, line2]);
     setExplanationText("We calculate the left side to discover the unknown right side.");
@@ -151,7 +149,7 @@ export default function WeightDiscovery() {
         <div className="absolute inset-0 opacity-[0.15] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex flex-col text-left w-full md:w-auto">
-            <button onClick={() => navigate('/learn/mathematics/algebra')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-2 hover:text-white transition-all">
+            <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-2 hover:text-white transition-all">
               <ChevronLeft size={16} /> Back to Dashboard
             </button>
             <div className="flex items-center gap-3">
@@ -241,19 +239,14 @@ export default function WeightDiscovery() {
             </div>
         </div>
 
-        {/* MESSAGING ZONE */}
         <div className="absolute bottom-6 left-0 w-full flex justify-center pointer-events-none px-4 z-[100]">
           <AnimatePresence mode="wait">
-            {isCorrect ? (
-              <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="bg-emerald-600 text-white py-3 px-8 rounded-full shadow-2xl flex items-center justify-center gap-4 border-b-4 border-emerald-800 backdrop-blur-md">
+            {isCorrect && (
+              <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="bg-emerald-600 text-white py-3 px-8 rounded-full shadow-2xl flex items-center justify-center gap-4 border-b-4 border-emerald-800 backdrop-blur-md pointer-events-auto">
                 <Trophy size={24} className="animate-bounce shrink-0" />
                 <span className="text-xs sm:text-lg font-bold uppercase tracking-tight">Balanced! Total is {calculateTotal()}g</span>
                 <Sparkles size={20} className="text-yellow-300 animate-pulse shrink-0" />
               </motion.div>
-            ) : (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white/90 backdrop-blur-md px-8 py-2 rounded-full shadow-xl font-bold uppercase tracking-widest text-[9px] sm:text-sm text-[#8d6e63] border-2 border-[#8d6e63]/20 flex items-center gap-2">
-                    <Calculator size={16} /> Total the Left to Discover the Right!
-                </motion.div>
             )}
           </AnimatePresence>
         </div>
@@ -263,48 +256,55 @@ export default function WeightDiscovery() {
 
   const renderMatrixDiv = () => (
     <div className={`w-full max-w-[1200px] shrink-0 transition-opacity px-2 min-h-[160px] z-50`}>
-      <div className="bg-[#dfd7cc] p-6 sm:p-8 rounded-[3rem] border-4 border-[#c4a484] w-full flex flex-col md:flex-row items-center justify-around shadow-xl relative overflow-visible gap-6">
+      <div className="bg-[#dfd7cc] p-6 sm:p-8 rounded-[3rem] border-4 border-[#c4a484] w-full flex flex-col items-center justify-center shadow-xl relative overflow-visible gap-6">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#5d4037] text-[#e6dccb] px-6 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border-2 border-white/20 shadow-md">Lab Console</div>
           
-          <div className="flex flex-col items-center gap-4 bg-white/40 p-4 rounded-[2rem] border-2 border-white shadow-inner w-full md:w-auto">
-              <span className="text-[#8d6e63] font-black text-[10px] uppercase tracking-widest">Yield Notes</span>
-              <div className="flex items-center gap-8">
-                  {mission.leftSide.map((item, idx) => (
-                    <div key={idx} className="flex flex-col items-center">
-                        <span className="text-3xl sm:text-5xl drop-shadow-md">{item.icon}</span>
-                        <span className="text-[8px] font-black text-[#a88a6d] uppercase mt-1">{item.name}</span>
-                        <span className="text-lg sm:text-2xl font-black text-[#3e2723]">{item.unitWeight}g</span>
-                    </div>
-                  ))}
-                  {mission.knownWeight > 0 && (
-                    <div className="flex flex-col items-center border-l border-black/10 pl-6">
-                        <Weight size={24} className="text-slate-600" />
-                        <span className="text-[8px] font-black text-[#a88a6d] uppercase mt-1">Block</span>
-                        <span className="text-lg sm:text-2xl font-black text-[#3e2723]">{mission.knownWeight}g</span>
-                    </div>
-                  )}
-              </div>
-          </div>
+          {/* SIMPLIFIED INSTRUCTION - No background, No icons */}
+          <p className="text-[#5d4037] font-black text-sm sm:text-lg uppercase tracking-tight text-center leading-tight mb-2">
+              Total the weight of objects on left scale and that is the weight on right scale
+          </p>
 
-          <div className="bg-white/60 p-4 sm:p-6 rounded-[2rem] border-2 border-white shadow-inner flex flex-col items-center gap-3 w-full md:w-auto">
-              <span className="text-[#8d6e63] font-black text-[10px] uppercase tracking-widest leading-none">Discovery Input</span>
-              <div className="flex items-stretch gap-3">
-                  <motion.div animate={isError ? { x: [-5, 5, -5, 5, 0] } : {}}>
-                    <input 
-                      type="number" value={userInput} disabled={isCorrect}
-                      onChange={(e) => { setUserInput(e.target.value); setIsError(false); }}
-                      placeholder="???"
-                      className={`w-[120px] sm:w-[150px] bg-white border-4 rounded-2xl py-3 text-center text-2xl sm:text-4xl font-black focus:ring-4 focus:outline-none shadow-lg transition-all
-                        ${isError ? 'border-red-500 text-red-500' : isCorrect ? 'border-emerald-500 text-emerald-600' : 'border-[#c4a484] text-[#3e2723]'}`}
-                    />
-                  </motion.div>
-                  <button 
-                    onClick={handleCheck} disabled={isCorrect || !userInput}
-                    className="px-6 bg-emerald-600 text-white rounded-2xl font-black uppercase text-xs sm:text-sm shadow-lg border-b-4 border-emerald-800 active:translate-y-1 transition-all"
-                  >
-                    Check
-                  </button>
-              </div>
+          <div className="flex flex-col md:flex-row items-center justify-around w-full gap-6">
+            <div className="flex flex-col items-center gap-4 bg-white/40 p-4 rounded-[2rem] border-2 border-white shadow-inner w-full md:w-auto">
+                <span className="text-[#8d6e63] font-black text-[10px] uppercase tracking-widest">Yield Notes</span>
+                <div className="flex items-center gap-8 px-4">
+                    {mission.leftSide.map((item, idx) => (
+                        <div key={idx} className="flex flex-col items-center">
+                            <span className="text-3xl sm:text-5xl drop-shadow-md">{item.icon}</span>
+                            <span className="text-[8px] font-black text-[#a88a6d] uppercase mt-1 leading-none">{item.name}</span>
+                            <span className="text-lg sm:text-2xl font-black text-[#3e2723]">{item.unitWeight}g</span>
+                        </div>
+                    ))}
+                    {mission.knownWeight > 0 && (
+                        <div className="flex flex-col items-center border-l border-black/10 pl-6">
+                            <Weight size={24} className="text-slate-600 mb-1" />
+                            <span className="text-[8px] font-black text-[#a88a6d] uppercase leading-none">Block</span>
+                            <span className="text-lg sm:text-2xl font-black text-[#3e2723]">{mission.knownWeight}g</span>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div className="bg-white/60 p-4 sm:p-6 rounded-[2rem] border-2 border-white shadow-inner flex flex-col items-center gap-3 w-full md:w-auto">
+                <span className="text-[#8d6e63] font-black text-[10px] uppercase tracking-widest leading-none">Discovery Input</span>
+                <div className="flex items-stretch gap-3">
+                    <motion.div animate={isError ? { x: [-5, 5, -5, 5, 0] } : {}}>
+                        <input 
+                        type="number" value={userInput} disabled={isCorrect}
+                        onChange={(e) => { setUserInput(e.target.value); setIsError(false); }}
+                        placeholder="???"
+                        className={`w-[120px] sm:w-[150px] bg-white border-4 rounded-2xl py-3 text-center text-2xl sm:text-4xl font-black focus:ring-4 focus:outline-none shadow-lg transition-all
+                            ${isError ? 'border-red-500 text-red-500' : isCorrect ? 'border-emerald-500 text-emerald-600' : 'border-[#c4a484] text-[#3e2723]'}`}
+                        />
+                    </motion.div>
+                    <button 
+                        onClick={handleCheck} disabled={isCorrect || !userInput}
+                        className="px-6 bg-emerald-600 text-white rounded-2xl font-black uppercase text-xs sm:text-sm shadow-lg border-b-4 border-emerald-800 active:translate-y-1 transition-all"
+                    >
+                        Check
+                    </button>
+                </div>
+            </div>
           </div>
       </div>
     </div>
@@ -312,7 +312,7 @@ export default function WeightDiscovery() {
 
   const renderButtonsDiv = () => (
     <div className={`w-full max-w-[1200px] grid grid-cols-1 md:grid-cols-2 gap-4 items-center px-2 pb-12 shrink-0`}>
-        <button onClick={() => { if (levelIndex < MISSIONS.length - 1) setLevelIndex(p => p + 1); else setSessionCompleted(true); }} className={`relative flex items-center justify-between p-4 rounded-[2rem] font-black text-sm active:scale-95 shadow-lg border-b-4 ${autoNextTimer !== null ? 'bg-indigo-600 text-white border-indigo-900' : 'bg-[#3e2723] text-[#dfc4a1] border-black'}`}>
+        <button onClick={handleNext} className={`relative flex items-center justify-between p-4 rounded-[2rem] font-black text-sm active:scale-95 shadow-lg border-b-4 ${autoNextTimer !== null ? 'bg-indigo-600 text-white border-indigo-900' : 'bg-[#3e2723] text-[#dfc4a1] border-black'}`}>
           <div className="flex items-center gap-2">
             <ChevronRight size={20} />
             <span className="uppercase tracking-tighter">{autoNextTimer !== null ? 'NEXT NOW' : 'SKIP MISSION'}</span>
@@ -358,12 +358,12 @@ export default function WeightDiscovery() {
 
   const renderCompletionSummary = () => (
     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center min-h-[70vh] p-6 text-center bg-[#f1f0ee] rounded-[3rem] shadow-xl border-4 border-[#3e2723]">
-      <div className="w-32 h-32 bg-[#3e2723] rounded-full flex items-center justify-center text-amber-400 mb-8 shadow-2xl border-4 border-white ring-8 ring-[#3e2723]/10">
+      <div className="w-32 h-32 bg-[#3e2723] rounded-full flex items-center justify-center text-amber-400 mb-8 shadow-2xl border-4 border-white ring-8 ring-[#3e2723]/10 shrink-0">
         <Trophy size={64} className="animate-bounce" />
       </div>
       <h1 className="text-4xl sm:text-6xl font-black uppercase text-[#3e2723] tracking-tighter mb-4">Discovery Confirmed!</h1>
       <p className="text-xl font-bold text-[#8d6e63] uppercase tracking-widest max-w-xl mb-10 leading-tight">You have successfully mastered the logic of solving unknowns via balanced cargo.</p>
-      <button onClick={() => window.location.reload()} className="px-16 py-6 bg-[#3e2723] text-white font-black rounded-[2.5rem] uppercase tracking-widest text-lg shadow-2xl border-b-8 border-black active:translate-y-2 transition-all">Move to next module</button>
+      <button onClick={() => navigate('/learn/mathematics/algebra/lhsrhsIntroduction')} className="px-16 py-6 bg-[#3e2723] text-white font-black rounded-[2.5rem] uppercase tracking-widest text-lg shadow-2xl border-b-8 border-black active:translate-y-2 transition-all">Move to next module</button>
     </motion.div>
   );
 

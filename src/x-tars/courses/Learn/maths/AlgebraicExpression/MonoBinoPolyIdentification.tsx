@@ -15,91 +15,101 @@ import { HashRouter as Router, useNavigate } from 'react-router-dom';
 const MISSIONS = [
   {
     id: 1,
-    title: 'Apple Harvest',
-    items: [{ icon: '🍎', name: 'Apple', count: 4, unitWeight: 5 }],
-    type: 'like',
-    rhsWeight: 20,
-    instruction: 'Look at the objects on the left scale. Are they all of the SAME kind?'
+    title: 'Single Crop',
+    items: [{ icon: '🍎', name: 'Apple', count: 3, unitWeight: 5 }],
+    type: 'monomial',
+    rhsWeight: 15,
+    explanation: 'There is only ONE kind of object (Apples) on the pan. This is a Monomial.'
   },
   {
     id: 2,
-    title: 'Fruit Medley',
+    title: 'Orchard Mix',
     items: [
       { icon: '🍎', name: 'Apple', count: 2, unitWeight: 5 },
       { icon: '🍐', name: 'Pear', count: 2, unitWeight: 10 }
     ],
-    type: 'unlike',
+    type: 'binomial',
     rhsWeight: 30,
-    instruction: 'Identify if these mixed fruits are Like or Unlike terms.'
+    explanation: 'There are TWO different kinds of objects (Apples + Pears). This is a Binomial (which is also a Polynomial!).'
   },
   {
     id: 3,
-    title: 'Pure Blocks',
-    items: [{ icon: '🧱', name: 'Weight Block', count: 3, unitWeight: 10 }],
-    type: 'like',
-    rhsWeight: 30,
-    instruction: 'Are these weight blocks considered Like Terms?'
+    title: 'Standard Weight',
+    items: [{ icon: '🧱', name: 'Weight Block', count: 1, unitWeight: 50 }],
+    type: 'monomial',
+    rhsWeight: 50,
+    explanation: 'A single object type makes a single algebraic term. This is a Monomial.'
   },
   {
     id: 4,
-    title: 'Mixed Cargo',
+    title: 'The Full Basket',
     items: [
-      { icon: '🍓', name: 'Strawberry', count: 3, unitWeight: 2 },
-      { icon: '🧱', name: 'Weight Block', count: 1, unitWeight: 15 }
+      { icon: '🍎', name: 'Apple', count: 1, unitWeight: 5 },
+      { icon: '🍐', name: 'Pear', count: 1, unitWeight: 10 },
+      { icon: '🍓', name: 'Strawberry', count: 1, unitWeight: 2 }
     ],
-    type: 'unlike',
-    rhsWeight: 21,
-    instruction: 'A fruit and a block are on the scale. Is this a Like or Unlike term?'
+    type: 'polynomial',
+    rhsWeight: 17,
+    explanation: 'There are THREE different types of objects. Since there are 2 or more, it is a Polynomial.'
   },
   {
     id: 5,
     title: 'Gem Collection',
-    items: [{ icon: '💎', name: 'Gem', count: 5, unitWeight: 20 }],
-    type: 'like',
-    rhsWeight: 100,
-    instruction: 'Check the objects on the left. Are they all identical?'
+    items: [
+      { icon: '💎', name: 'Gem', count: 2, unitWeight: 20 },
+      { icon: '🧱', name: 'Weight Block', count: 1, unitWeight: 10 }
+    ],
+    type: 'binomial',
+    rhsWeight: 50,
+    explanation: 'Gems and Blocks are two different kinds of objects. This is a Binomial.'
   },
   {
     id: 6,
-    title: 'Citrus Mix',
+    title: 'Mega Mix',
     items: [
       { icon: '🍊', name: 'Orange', count: 2, unitWeight: 5 },
-      { icon: '🍋', name: 'Lemon', count: 1, unitWeight: 5 }
+      { icon: '🍋', name: 'Lemon', count: 1, unitWeight: 5 },
+      { icon: '💎', name: 'Gem', count: 1, unitWeight: 50 },
+      { icon: '🍎', name: 'Apple', count: 1, unitWeight: 5 }
     ],
-    type: 'unlike',
-    rhsWeight: 15,
-    instruction: 'Oranges and Lemons: Categorize this term.'
+    type: 'polynomial',
+    rhsWeight: 65,
+    explanation: 'With four different kinds of objects, this is a multi-term Polynomial!'
   },
   {
     id: 7,
-    title: 'The Full Plate',
-    items: [
-      { icon: '🍐', name: 'Pear', count: 2, unitWeight: 10 },
-      { icon: '🍎', name: 'Apple', count: 1, unitWeight: 5 },
-      { icon: '🍓', name: 'Berry', count: 2, unitWeight: 2 }
-    ],
-    type: 'unlike',
-    rhsWeight: 29,
-    instruction: 'Identify the category for this triple mix.'
+    title: 'Pure Berry',
+    items: [{ icon: '🍓', name: 'Strawberry', count: 12, unitWeight: 1 }],
+    type: 'monomial',
+    rhsWeight: 12,
+    explanation: 'Even though there are many berries, they are all the SAME kind. This is a Monomial.'
   }
 ];
 
 const TEACHING_STEPS = [
   {
-    id: 'like',
-    label: 'Like Terms',
-    icon: <Combine size={20} />,
-    definition: 'Like Terms consist of the SAME KIND of object.',
-    visual: 'Notice that only Apples are on the left scale.',
+    id: 'monomial',
+    label: 'Monomial',
+    icon: <Hexagon size={20} />,
+    definition: 'A Monomial is an algebraic expression with only ONE term.',
+    visual: 'Notice there is only ONE KIND of object on the highlighted pan.',
     example: { items: [{ icon: '🍎', name: 'Apple', count: 3, unitWeight: 5 }], rhs: 15 }
   },
   {
-    id: 'unlike',
-    label: 'Unlike Terms',
-    icon: <Layers size={20} />,
-    definition: 'Unlike Terms consist of DIFFERENT KINDS of objects.',
-    visual: 'Notice the mixture of Apples and Pears on the left scale.',
+    id: 'binomial',
+    label: 'Binomial',
+    icon: <Shapes size={20} />,
+    definition: 'A Binomial is an algebraic expression with exactly TWO terms.',
+    visual: 'Notice there are TWO DIFFERENT KINDS of objects on the highlighted pan.',
     example: { items: [{ icon: '🍎', name: 'Apple', count: 2, unitWeight: 5 }, { icon: '🍐', name: 'Pear', count: 1, unitWeight: 10 }], rhs: 20 }
+  },
+  {
+    id: 'polynomial',
+    label: 'Polynomial',
+    icon: <Boxes size={20} />,
+    definition: 'A Polynomial is an algebraic expression with TWO OR MORE terms.',
+    visual: 'Binomials are also Polynomials! Polynomials can have 2 or more kinds of objects.',
+    example: { items: [{ icon: '🍎', name: 'Apple', count: 1, unitWeight: 5 }, { icon: '🍐', name: 'Pear', count: 1, unitWeight: 10 }, { icon: '🍓', name: 'Berry', count: 1, unitWeight: 2 }], rhs: 17 }
   }
 ];
 
@@ -120,14 +130,14 @@ const WeightBlock = ({ weight, size = "large" }) => (
 // ==========================================
 // 2. MAIN COMPONENT
 // ==========================================
-export default function AlgebraTermLab() {
+export default function AlgebraClassificationLab() {
   const navigate = useNavigate();
 
   // --- UI State ---
   const [appMode, setAppMode] = useState('teach'); // 'teach' or 'practice'
   const [teachIndex, setTeachIndex] = useState(0);
   
-  // --- Practice Session State ---
+  // --- Session State ---
   const [levelIndex, setLevelIndex] = useState(0);
   const [sessionCompleted, setSessionCompleted] = useState(false);
   
@@ -145,7 +155,10 @@ export default function AlgebraTermLab() {
     if (isCorrect || appMode === 'teach') return;
     setSelectedType(type);
     
-    if (type === mission.type) {
+    // Logic: If user clicks 'polynomial' for a binomial mission, it's technically correct based on definition
+    const isActuallyCorrect = type === mission.type || (mission.type === 'binomial' && type === 'polynomial');
+
+    if (isActuallyCorrect) {
       setIsCorrect(true);
       setIsError(false);
       setAutoNextTimer(10);
@@ -189,7 +202,7 @@ export default function AlgebraTermLab() {
             </button>
             <div className="flex items-center gap-3">
               <div className="w-2.5 h-2.5 rounded-sm bg-amber-400 rotate-45 shadow-glow" />
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Term Logic Laboratory</h2>
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Expression Classification</h2>
             </div>
           </div>
           <div className="flex items-center gap-3 ml-auto">
@@ -242,7 +255,7 @@ export default function AlgebraTermLab() {
                   <div className="relative w-full h-8 bg-[#2a1a16] rounded-full flex justify-between items-center shadow-lg px-2 border border-white/10">
                       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 bg-yellow-500 rounded-full border-2 border-[#3e2723] z-30 shadow-glow" />
                       
-                      {/* LHS PAN (Highlight during teaching) */}
+                      {/* LHS PAN (With Highlights for Teaching) */}
                       <div className="absolute left-[-20px] top-0 w-32 sm:w-64 flex flex-col items-center">
                           <svg className="w-24 sm:w-32 h-40 overflow-visible mb-[-4px]" viewBox="0 0 100 100" preserveAspectRatio="none">
                             <path d="M50 0 L40 100 M50 0 L60 100" stroke="#e6dccb" strokeWidth="2.5" fill="none" strokeOpacity="0.5" strokeLinecap="round" />
@@ -265,11 +278,11 @@ export default function AlgebraTermLab() {
                                       </React.Fragment>
                                   ))}
                               </div>
-                              <div className="absolute bottom-[-50px] bg-[#5d4037] text-[#e6dccb] px-6 py-2 rounded-xl font-black text-sm sm:text-xl shadow-lg border border-white/10 uppercase tracking-widest whitespace-nowrap">Left Scale</div>
+                              <div className="absolute bottom-[-50px] bg-[#5d4037] text-[#e6dccb] px-6 py-2 rounded-xl font-black text-sm sm:text-xl shadow-lg border border-white/10 uppercase tracking-widest whitespace-nowrap">Expression Pan</div>
                           </motion.div>
                       </div>
 
-                      {/* RHS PAN (Balanced Weight) */}
+                      {/* RHS PAN (Balanced Counterweight) */}
                       <div className="absolute right-[-20px] top-0 w-32 sm:w-64 flex flex-col items-center">
                           <svg className="w-24 sm:w-32 h-40 overflow-visible mb-[-4px]" viewBox="0 0 100 100" preserveAspectRatio="none">
                             <path d="M50 0 L40 100 M50 0 L60 100" stroke="#e6dccb" strokeWidth="2.5" fill="none" strokeOpacity="0.5" strokeLinecap="round" />
@@ -278,7 +291,7 @@ export default function AlgebraTermLab() {
                                <div className="mb-10">
                                   <WeightBlock weight={activeData.rhsWeight || activeData.rhs} />
                                </div>
-                               <div className="absolute bottom-[-50px] bg-[#5d4037] text-[#e6dccb] px-6 py-2 rounded-xl font-black text-sm sm:text-xl shadow-lg border border-white/10 uppercase tracking-widest whitespace-nowrap">Right Scale</div>
+                               <div className="absolute bottom-[-50px] bg-[#5d4037] text-[#e6dccb] px-6 py-2 rounded-xl font-black text-sm sm:text-xl shadow-lg border border-white/10 uppercase tracking-widest whitespace-nowrap">Total Weight</div>
                           </div>
                       </div>
                   </div>
@@ -290,7 +303,7 @@ export default function AlgebraTermLab() {
               {isCorrect && (
                 <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="bg-emerald-600 text-white py-3 px-8 rounded-full shadow-2xl flex items-center justify-center gap-4 border-b-4 border-emerald-800 backdrop-blur-md pointer-events-auto">
                   <Trophy size={24} className="animate-bounce shrink-0" />
-                  <span className="text-xs sm:text-lg font-bold uppercase tracking-tight">Correct! Those are {mission.type.toUpperCase()} terms!</span>
+                  <span className="text-xs sm:text-lg font-bold uppercase tracking-tight">Verified! This is a {mission.type.toUpperCase()}!</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -304,7 +317,7 @@ export default function AlgebraTermLab() {
     <div className={`w-full max-w-[1200px] shrink-0 transition-opacity px-2 min-h-[160px] z-50`}>
       <div className="bg-[#dfd7cc] p-6 sm:p-8 rounded-[3rem] border-4 border-[#c4a484] w-full flex flex-col items-center justify-center shadow-xl relative overflow-visible gap-4">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#5d4037] text-[#e6dccb] px-6 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border-2 border-white/20 shadow-md">
-            {appMode === 'teach' ? 'Concept Encyclopedia' : 'Practice Console'}
+            {appMode === 'teach' ? 'Term Encyclopedia' : 'Practice Console'}
           </div>
 
           {appMode === 'teach' ? (
@@ -329,18 +342,16 @@ export default function AlgebraTermLab() {
             </div>
           ) : (
             <div className="w-full flex flex-col items-center gap-6">
-               <p className="text-[#5d4037] font-black text-sm sm:text-lg uppercase tracking-tight text-center leading-tight mb-2">
-                 {mission.instruction}
-               </p>
-               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-xl">
-                  {['like', 'unlike'].map(type => (
+               <p className="text-sm sm:text-xl font-black text-[#5d4037] text-center leading-tight uppercase tracking-tight">Categorize the expression on the left scale:</p>
+               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl">
+                  {['monomial', 'binomial', 'polynomial'].map(type => (
                     <button key={type} onClick={() => handleClassification(type)} disabled={isCorrect}
                       className={`py-6 rounded-[2rem] font-black uppercase tracking-widest text-xs sm:text-sm transition-all border-b-8
                         ${selectedType === type && isCorrect ? 'bg-emerald-500 text-white border-emerald-700' : 
                           selectedType === type && isError ? 'bg-red-500 text-white border-red-700' :
                           'bg-white text-[#3e2723] border-[#d7ccc8] hover:bg-[#efebe9] active:translate-y-1'}`}>
-                      {type} terms
-                      <span className="block text-[8px] opacity-60 mt-1">({type === 'like' ? 'Same Kind' : 'Mixed Kinds'})</span>
+                      {type}
+                      {type === 'polynomial' && <span className="block text-[8px] opacity-60">(2+ Terms)</span>}
                     </button>
                   ))}
                </div>
@@ -356,17 +367,17 @@ export default function AlgebraTermLab() {
           <>
             <button onClick={() => setTeachIndex(p => Math.max(0, p - 1))} disabled={teachIndex === 0}
               className="flex items-center justify-center gap-3 bg-[#8d6e63] text-white p-5 rounded-[2rem] font-black uppercase text-sm border-b-4 border-[#3e2723] active:scale-95 disabled:opacity-30 transition-all">
-              Previous Concept
+              Previous Term
             </button>
             {teachIndex < TEACHING_STEPS.length - 1 ? (
               <button onClick={() => setTeachIndex(p => p + 1)}
                 className="flex items-center justify-center gap-3 bg-[#3e2723] text-white p-5 rounded-[2rem] font-black uppercase text-sm border-b-4 border-black active:scale-95 transition-all">
-                Next Concept <ChevronRight size={18} />
+                Next Term <ChevronRight size={18} />
               </button>
             ) : (
               <button onClick={() => { setAppMode('practice'); setLevelIndex(0); }}
                 className="flex items-center justify-center gap-3 bg-indigo-600 text-white p-5 rounded-[2rem] font-black uppercase text-sm border-b-4 border-indigo-900 animate-pulse active:scale-95 transition-all">
-                Start Practice Mode <PlayCircle size={18} />
+                Start Practice Lab <PlayCircle size={18} />
               </button>
             )}
           </>
@@ -376,7 +387,7 @@ export default function AlgebraTermLab() {
               className={`relative flex items-center justify-between p-4 rounded-[2rem] font-black text-sm active:scale-95 shadow-lg border-b-4 ${autoNextTimer !== null ? 'bg-indigo-600 text-white border-indigo-900' : 'bg-[#3e2723] text-[#dfc4a1] border-black'}`}>
               <div className="flex items-center gap-2">
                 <ChevronRight size={20} />
-                <span className="uppercase tracking-tighter">{autoNextTimer !== null ? 'NEXT NOW' : 'SKIP QUESTION'}</span>
+                <span className="uppercase tracking-tighter">{autoNextTimer !== null ? 'NEXT NOW' : 'SKIP CONFIG'}</span>
               </div>
               {autoNextTimer !== null && <span className="bg-black/20 px-3 py-1 rounded-full text-xs">Next in {autoNextTimer}s</span>}
             </button>
@@ -391,11 +402,11 @@ export default function AlgebraTermLab() {
   const renderCompletionSummary = () => (
     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center min-h-[70vh] p-6 text-center bg-[#f1f0ee] rounded-[3rem] shadow-xl border-4 border-[#3e2723]">
       <div className="w-32 h-32 bg-[#3e2723] rounded-full flex items-center justify-center text-amber-400 mb-8 shadow-2xl border-4 border-white ring-8 ring-[#3e2723]/10">
-        <Sparkles size={64} className="animate-pulse" />
+        <Shapes size={64} className="animate-bounce" />
       </div>
-      <h1 className="text-4xl sm:text-6xl font-black uppercase text-[#3e2723] tracking-tighter mb-4">Discovery Complete!</h1>
-      <p className="text-xl font-bold text-[#8d6e63] uppercase tracking-widest max-w-xl mb-10 leading-tight">You have mastered the physical logic of Like and Unlike terms.</p>
-      <button onClick={() => navigate('/learn/mathematics/algebra/monibiPoly')} className="px-16 py-6 bg-[#3e2723] text-white font-black rounded-[2.5rem] uppercase tracking-widest text-lg shadow-2xl border-b-8 border-black active:translate-y-2 transition-all">Finish Module</button>
+      <h1 className="text-4xl sm:text-6xl font-black uppercase text-[#3e2723] tracking-tighter mb-4">Expressly Verified!</h1>
+      <p className="text-xl font-bold text-[#8d6e63] uppercase tracking-widest max-w-xl mb-10 leading-tight">You have successfully mastered the structural logic of Monomials, Binomials, and Polynomials.</p>
+      <button onClick={() => window.location.reload()} className="px-16 py-6 bg-[#3e2723] text-white font-black rounded-[2.5rem] uppercase tracking-widest text-lg shadow-2xl border-b-8 border-black active:translate-y-2 transition-all">Move to next module</button>
     </motion.div>
   );
 

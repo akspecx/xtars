@@ -356,7 +356,7 @@ export default function WeightLab() {
       <div className="bg-[#dfd7cc] p-6 sm:p-8 rounded-[3rem] border-4 border-[#c4a484] w-full flex flex-col items-center shadow-xl relative">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#5d4037] text-[#e6dccb] px-6 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border-2 border-white/20 shadow-md">Matrix Logic Input</div>
           <p className="text-sm sm:text-xl font-bold text-[#5d4037] text-center mb-6 leading-tight">
-            If the scale is balanced, what is the mass of ONE <span className="inline-block scale-110 mx-1">{currentItem.icon}</span>?
+            If the scale is balanced, what is the weight of ONE <span className="inline-block scale-110 mx-1">{currentItem.icon}</span>?
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-2xl">
               {options.map((opt) => (

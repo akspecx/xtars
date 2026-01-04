@@ -27,20 +27,20 @@ const HIERARCHY_DATA = [
   {
     id: "maths1",
     title: "Fundamentals",
-    subtitle: "Understanding the balanced scale",
+    subtitle: "Fundamentals of equation",
     icon: "⚖️",
     gradient: "from-indigo-500 to-purple-500",
     path: "/learn/mathematics/algebra",
     subModules: [
       { id: 'alg_1', title: 'LHS and RHS', desc: 'Introduction to LHS and RHS', icon: '🔢', path: '/learn/mathematics/algebra/lhsrhsIntroduction' },
       { id: 'alg_2', title: 'Like Unlike terms', desc: 'Undrstanding the like and unlike terms.', icon: '🔗', path: '/learn/mathematics/algebra/likeunlike' },
-      { id: 'alg_3', title: 'Weight on right scale', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/mathematics/algebra/rightScale' }
+      { id: 'alg_3', title: 'Monomial Binomial and Polynomial', desc: 'Identify the polynomials', icon: '🔗', path: '/learn/mathematics/algebra/monibiPoly' }
     
     ]
   },
   {
     id: "maths2",
-    title: "Fundamentals",
+    title: "Advanced - Yet to build",
     subtitle: "Understanding the balanced scale",
     icon: "⚖️",
     gradient: "from-indigo-500 to-purple-500",
