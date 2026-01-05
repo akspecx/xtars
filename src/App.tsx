@@ -165,7 +165,8 @@ import {
   AlgebraicExpressionIntroRouter,
   MonoBinoPolyIdentificationRouter,
   VariableCoeffConstIntroRouter,
-  IntroToXRouter
+  IntroToXRouter,
+  ActionREactionRouter
 }
 from "./x-tars/courses/Learn/maths/AlgebraicExpression/AlgebraRouterWrapper"
 
@@ -210,6 +211,7 @@ export default function App() {
               <Route path="/learn/mathematics/algebra/expressionIntro" element={<AlgebraicExpressionIntroRouter />} />
               <Route path="/learn/mathematics/algebra/variableCoefficient" element={<VariableCoeffConstIntroRouter />} />
               <Route path="/learn/mathematics/algebra/IntroToX" element={<IntroToXRouter />} />
+              <Route path="/learn/mathematics/algebra/actionReaction" element={<ActionREactionRouter />} />
               
               
               

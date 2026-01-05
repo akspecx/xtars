@@ -33,8 +33,9 @@ const HIERARCHY_DATA = [
     path: "/learn/mathematics/algebra",
     subModules: [
       { id: 'alg_1', title: 'LHS and RHS', desc: 'Introduction to LHS and RHS', icon: '🔢', path: '/learn/mathematics/algebra/lhsrhsIntroduction' },
-      { id: 'alg_2', title: 'Like Unlike terms', desc: 'Undrstanding the like and unlike terms.', icon: '🔗', path: '/learn/mathematics/algebra/likeunlike' },
-      { id: 'alg_3', title: 'Monomial, Binomial and Polynomial', desc: 'Identify the polynomials', icon: '🔗', path: '/learn/mathematics/algebra/monibiPoly' }
+      { id: 'alg_2', title: 'Waht if we add random values to any scale?', desc: 'Undrstanding the actions', icon: '🔗', path: '/learn/mathematics/algebra/actionReaction' },
+      { id: 'alg_3', title: 'Like Unlike terms', desc: 'Undrstanding the like and unlike terms.', icon: '🔗', path: '/learn/mathematics/algebra/likeunlike' },
+      { id: 'alg_4', title: 'Monomial, Binomial and Polynomial', desc: 'Identify the polynomials', icon: '🔗', path: '/learn/mathematics/algebra/monibiPoly' }
     
     ]
   },
