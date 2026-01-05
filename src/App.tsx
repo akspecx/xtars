@@ -163,7 +163,9 @@ import {
   LhsrhsIntroductionRouter,
   AELikeUnlikeTermsRouter,
   AlgebraicExpressionIntroRouter,
-  MonoBinoPolyIdentificationRouter
+  MonoBinoPolyIdentificationRouter,
+  VariableCoeffConstIntroRouter,
+  IntroToXRouter
 }
 from "./x-tars/courses/Learn/maths/AlgebraicExpression/AlgebraRouterWrapper"
 
@@ -206,6 +208,10 @@ export default function App() {
               <Route path="/learn/mathematics/algebra/likeunlike" element={<AELikeUnlikeTermsRouter />} />
               <Route path="/learn/mathematics/algebra/monibiPoly" element={<MonoBinoPolyIdentificationRouter />} />
               <Route path="/learn/mathematics/algebra/expressionIntro" element={<AlgebraicExpressionIntroRouter />} />
+              <Route path="/learn/mathematics/algebra/variableCoefficient" element={<VariableCoeffConstIntroRouter />} />
+              <Route path="/learn/mathematics/algebra/IntroToX" element={<IntroToXRouter />} />
+              
+              
               
               
               {/* Games */}

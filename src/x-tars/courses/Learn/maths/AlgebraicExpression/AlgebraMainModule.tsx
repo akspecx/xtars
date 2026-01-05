@@ -34,21 +34,21 @@ const HIERARCHY_DATA = [
     subModules: [
       { id: 'alg_1', title: 'LHS and RHS', desc: 'Introduction to LHS and RHS', icon: '🔢', path: '/learn/mathematics/algebra/lhsrhsIntroduction' },
       { id: 'alg_2', title: 'Like Unlike terms', desc: 'Undrstanding the like and unlike terms.', icon: '🔗', path: '/learn/mathematics/algebra/likeunlike' },
-      { id: 'alg_3', title: 'Monomial Binomial and Polynomial', desc: 'Identify the polynomials', icon: '🔗', path: '/learn/mathematics/algebra/monibiPoly' }
+      { id: 'alg_3', title: 'Monomial, Binomial and Polynomial', desc: 'Identify the polynomials', icon: '🔗', path: '/learn/mathematics/algebra/monibiPoly' }
     
     ]
   },
   {
-    id: "maths2",
-    title: "Advanced - Yet to build",
+    id: "AlgebraicExpression",
+    title: "Introduction to Algebraic expression",
     subtitle: "Understanding the balanced scale",
     icon: "⚖️",
     gradient: "from-indigo-500 to-purple-500",
     path: "/learn/mathematics/algebra",
     subModules: [
       { id: 'alg_1', title: 'Introduction to expression', desc: 'Let us learn building the expression', icon: '🔢', path: '/learn/mathematics/algebra/expressionIntro' },
-      { id: 'alg_2', title: 'Finding the Unknown', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/mathematics/algebra/unknown' },
-      { id: 'alg_3', title: 'Weight on right scale', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/mathematics/algebra/rightScale' }
+      { id: 'alg_2', title: 'Variable, Coefficients and Constants', desc: 'Understand the Variable, coefficients and constants', icon: '🔗', path: '/learn/mathematics/algebra/variableCoefficient' },
+      { id: 'alg_3', title: 'Introduction to X', desc: 'Why we use X?', icon: '🔗', path: '/learn/mathematics/algebra/IntroToX' }
     
     ]
   }
