@@ -46,7 +46,7 @@ const HIERARCHY_DATA = [
     gradient: "from-indigo-500 to-purple-500",
     path: "/learn/mathematics/algebra",
     subModules: [
-      { id: 'alg_1', title: 'LHS = RHS', desc: 'Introduction to LHS and RHS', icon: '🔢', path: '/learn/mathematics/algebra/introduction' },
+      { id: 'alg_1', title: 'Introduction to expression', desc: 'Let us learn building the expression', icon: '🔢', path: '/learn/mathematics/algebra/expressionIntro' },
       { id: 'alg_2', title: 'Finding the Unknown', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/mathematics/algebra/unknown' },
       { id: 'alg_3', title: 'Weight on right scale', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/mathematics/algebra/rightScale' }
     

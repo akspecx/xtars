@@ -162,6 +162,7 @@ import {
   RightScaleRouter,
   LhsrhsIntroductionRouter,
   AELikeUnlikeTermsRouter,
+  AlgebraicExpressionIntroRouter,
   MonoBinoPolyIdentificationRouter
 }
 from "./x-tars/courses/Learn/maths/AlgebraicExpression/AlgebraRouterWrapper"
@@ -204,7 +205,7 @@ export default function App() {
               <Route path="/learn/mathematics/algebra/lhsrhsIntroduction" element={<LhsrhsIntroductionRouter />} />
               <Route path="/learn/mathematics/algebra/likeunlike" element={<AELikeUnlikeTermsRouter />} />
               <Route path="/learn/mathematics/algebra/monibiPoly" element={<MonoBinoPolyIdentificationRouter />} />
-              
+              <Route path="/learn/mathematics/algebra/expressionIntro" element={<AlgebraicExpressionIntroRouter />} />
               
               
               {/* Games */}
