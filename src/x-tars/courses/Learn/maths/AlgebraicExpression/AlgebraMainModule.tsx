@@ -52,6 +52,20 @@ const HIERARCHY_DATA = [
       { id: 'alg_3', title: 'Introduction to X', desc: 'Why we use X?', icon: '🔗', path: '/learn/mathematics/algebra/IntroToX' }
     
     ]
+  },
+  {
+    id: "SolveAlgebraicEquation",
+    title: "Solve Algebraic expression",
+    subtitle: "Understand the steps to solve the balanced equation",
+    icon: "⚖️",
+    gradient: "from-indigo-500 to-purple-500",
+    path: "/learn/mathematics/algebra",
+    subModules: [
+      { id: 'alg_1', title: 'Balanced Scale to Algebraic Expression', desc: 'Let us learn building the expression', icon: '🔢', path: '/learn/mathematics/algebra/balancedScaleToAE' },
+      { id: 'alg_2', title: 'Let us solve the basic equations', desc: 'Understand the Variable, coefficients and constants', icon: '🔗', path: '/learn/mathematics/algebra/SolveBasicEquation' },
+      { id: 'alg_3', title: 'Let us solve a bit crude ones', desc: 'Why we use X?', icon: '🔗', path: '/learn/mathematics/algebra/SolveAXPlusB'}
+    
+    ]
   }
 ];
 

@@ -166,7 +166,10 @@ import {
   MonoBinoPolyIdentificationRouter,
   VariableCoeffConstIntroRouter,
   IntroToXRouter,
-  ActionREactionRouter
+  ActionREactionRouter,
+  BalancedScaleToXTransitionRouter,
+  SolveTheBasicEquationRouter,
+  SolveEquationsAXPlusBRouter
 }
 from "./x-tars/courses/Learn/maths/AlgebraicExpression/AlgebraRouterWrapper"
 
@@ -212,10 +215,11 @@ export default function App() {
               <Route path="/learn/mathematics/algebra/variableCoefficient" element={<VariableCoeffConstIntroRouter />} />
               <Route path="/learn/mathematics/algebra/IntroToX" element={<IntroToXRouter />} />
               <Route path="/learn/mathematics/algebra/actionReaction" element={<ActionREactionRouter />} />
-              
-              
-              
-              
+              <Route path="/learn/mathematics/algebra/balancedScaleToAE" element={<BalancedScaleToXTransitionRouter />} />
+              <Route path="/learn/mathematics/algebra/SolveBasicEquation" element={<SolveTheBasicEquationRouter />} />
+              <Route path="/learn/mathematics/algebra/SolveAXPlusB" element={<SolveEquationsAXPlusBRouter />} />
+
+
               {/* Games */}
               <Route path="/games" element={<GamesHome />} />
 
