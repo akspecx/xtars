@@ -323,7 +323,7 @@ export default function AlgebraSolvingLab() {
         </motion.div>
         <h1 className="relative z-10 text-4xl sm:text-6xl font-black text-[#3e2723] uppercase mb-4 tracking-tighter">Algebra Mastered!</h1>
         <p className="relative z-10 text-lg sm:text-xl text-[#8d6e63] font-bold max-w-md mb-12 leading-relaxed">Two-step algebraic variable isolation mastered. Objectives achieved.</p>
-        <button onClick={() => window.location.reload()} className="relative z-10 px-12 sm:px-16 py-4 sm:py-6 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] sm:rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Restart Lab</button>
+        <button onClick={() => navigate('/learn/mathematics/algebra/WarModeAEBeginner')} className="relative z-10 px-12 sm:px-16 py-4 sm:py-6 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] sm:rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Restart Lab</button>
       </div>
     );
   }

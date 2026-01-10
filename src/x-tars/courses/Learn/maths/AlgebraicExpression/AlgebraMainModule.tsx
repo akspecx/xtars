@@ -63,8 +63,11 @@ const HIERARCHY_DATA = [
     subModules: [
       { id: 'alg_1', title: 'Balanced Scale to Algebraic Expression', desc: 'Let us learn building the expression', icon: '🔢', path: '/learn/mathematics/algebra/balancedScaleToAE' },
       { id: 'alg_2', title: 'Let us solve the basic equations', desc: 'Understand the Variable, coefficients and constants', icon: '🔗', path: '/learn/mathematics/algebra/SolveBasicEquation' },
-      { id: 'alg_3', title: 'Let us solve a bit crude ones', desc: 'Why we use X?', icon: '🔗', path: '/learn/mathematics/algebra/SolveAXPlusB'}
-    
+      { id: 'alg_3', title: 'Let us solve a bit crude ones', desc: 'Why we use X?', icon: '🔗', path: '/learn/mathematics/algebra/SolveAXPlusB'},
+      { id: 'alg_4', title: 'Practice some basic algebraic expressions', desc: 'Solve more algebraic expressions', icon: '🔗', path: '/learn/mathematics/algebra/WarModeAEBeginner'},
+      { id: 'alg_5', title: 'Practice the intermediate algebraic expressions ', desc: 'Let us build a bit more expertise', icon: '🔗', path: '/learn/mathematics/algebra/WarModeAEIntermediate'}
+
+
     ]
   }
 ];

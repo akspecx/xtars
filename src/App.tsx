@@ -169,7 +169,10 @@ import {
   ActionREactionRouter,
   BalancedScaleToXTransitionRouter,
   SolveTheBasicEquationRouter,
-  SolveEquationsAXPlusBRouter
+  SolveEquationsAXPlusBRouter,
+  WarModeAEBeginnerRouter,
+  WarModeAEIntermediateRouter
+
 }
 from "./x-tars/courses/Learn/maths/AlgebraicExpression/AlgebraRouterWrapper"
 
@@ -218,6 +221,10 @@ export default function App() {
               <Route path="/learn/mathematics/algebra/balancedScaleToAE" element={<BalancedScaleToXTransitionRouter />} />
               <Route path="/learn/mathematics/algebra/SolveBasicEquation" element={<SolveTheBasicEquationRouter />} />
               <Route path="/learn/mathematics/algebra/SolveAXPlusB" element={<SolveEquationsAXPlusBRouter />} />
+              <Route path="/learn/mathematics/algebra/WarModeAEBeginner" element={<WarModeAEBeginnerRouter />} /> 
+              <Route path="/learn/mathematics/algebra/WarModeAEIntermediate" element={<WarModeAEIntermediateRouter />} />
+
+             
 
 
               {/* Games */}
