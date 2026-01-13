@@ -139,6 +139,21 @@ import {
   GiraffeComplexArrangementGameWrapper
 } from "./x-tars/courses/Kids/basics/Arrangement/PuzzleGameWrappers";
 
+import{LinearArrangementMainRouter}
+from "./x-tars/courses/Learn/LogicalReasoning/LogicalReasoningRouterWrapper"
+
+import {LinearArrangementIntroductionRouter,
+  LinearArrangementLeftRightRouter,
+LADirectionMattersLeftRightRouter,
+ImmediateRightAndLeftRouter,
+LinearArrangementBetweenRouter,
+LAFirstSecondLeftRightRouter,
+LANumberOfPeopleSittingBetweenRouter,
+LAExtremeLeftRightRouter,
+LAFollowInstructionIntroRouter,
+}
+from "./x-tars/courses/Learn/LogicalReasoning/LinearArrangement/LinearArrangementRouterWrapper"
+
 import {
   PuzzleRouter,
   PuzzleMissionRouter,
@@ -150,7 +165,6 @@ from "./x-tars/courses/Puzzles/PuzzlesWrapper";
 
 
 import {
-  MathsMainRouter,
   AlgebraicExpressionRouter
   
 }
@@ -179,7 +193,9 @@ from "./x-tars/courses/Learn/maths/AlgebraicExpression/AlgebraRouterWrapper"
 
 
 import {
-  LearnRouter
+  LearnRouter,
+  LearnMathsRouter,
+  LogicalReasoningMainRouter
   
 }
 from "./x-tars/courses/Learn/LearnModuleWrapper"
@@ -204,11 +220,10 @@ export default function App() {
 
               {/* Courses Learn Module Router */}
               <Route path="/learn" element={<LearnRouter />} />
-              <Route path="/learn/mathematics" element={<MathsMainRouter />} />
+              <Route path="/learn/mathematics" element={<LearnMathsRouter />} />
               <Route path="/learn/mathematics/algebra" element={<AlgebraicExpressionRouter />} />
-
-              {/* Algebra sub modules */}
-              <Route path="/learn/mathematics/algebra/introduction" element={<AlgebraicIntroductionRouter />} />
+               {/* Algebra sub modules */}
+               <Route path="/learn/mathematics/algebra/introduction" element={<AlgebraicIntroductionRouter />} />
               <Route path="/learn/mathematics/algebra/unknown" element={<FindingWeightUnknowRouter />} />
               <Route path="/learn/mathematics/algebra/rightScale" element={<RightScaleRouter />} />
               <Route path="/learn/mathematics/algebra/lhsrhsIntroduction" element={<LhsrhsIntroductionRouter />} />
@@ -223,6 +238,26 @@ export default function App() {
               <Route path="/learn/mathematics/algebra/SolveAXPlusB" element={<SolveEquationsAXPlusBRouter />} />
               <Route path="/learn/mathematics/algebra/WarModeAEBeginner" element={<WarModeAEBeginnerRouter />} /> 
               <Route path="/learn/mathematics/algebra/WarModeAEIntermediate" element={<WarModeAEIntermediateRouter />} />
+
+             
+
+
+
+              <Route path="/learn/logicalreasoning" element={<LogicalReasoningMainRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement" element={<LinearArrangementMainRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/introduction" element={<LinearArrangementIntroductionRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/leftRight" element={<LinearArrangementLeftRightRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/leftRightWithDiffDirection" element={<LADirectionMattersLeftRightRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/immediateleftRight" element={<ImmediateRightAndLeftRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/between" element={<LinearArrangementBetweenRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/FirstSecondLeftRight" element={<LAFirstSecondLeftRightRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/PeopleSittingBetween" element={<LANumberOfPeopleSittingBetweenRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/extremeleftRight" element={<LAExtremeLeftRightRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/followInstructionLeft" element={<LAFollowInstructionIntroRouter />} />
+
+
+              
+            
 
              
 

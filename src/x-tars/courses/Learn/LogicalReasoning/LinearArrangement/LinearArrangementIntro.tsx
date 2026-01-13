@@ -77,7 +77,7 @@ const MISSIONS = [
 // ==========================================
 // 2. MAIN LAB COMPONENT
 // ==========================================
-export default function LinearArrangementIntro() {
+export default function LinearArrangementLab() {
   const navigate = useNavigate();
   const [levelIndex, setLevelIndex] = useState(0);
   const [sessionCompleted, setSessionCompleted] = useState(false);
@@ -129,7 +129,7 @@ export default function LinearArrangementIntro() {
   // DIV 1: HEADER
   const renderHeaderDiv = () => (
     <div className="w-full max-w-[1500px] shrink-0 px-4 pt-6">
-      <header className="w-full bg-[#2a1a16] p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] border-b-8 border-black/40 relative overflow-hidden shadow-2xl ring-4 ring-black/20">
+      <header className="w-full bg-[#3e2723] p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] border-b-8 border-black/40 relative overflow-hidden shadow-2xl">
         <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         <div className="relative z-10 flex items-center justify-between gap-4">
           <div className="flex flex-col text-left">
@@ -164,7 +164,7 @@ export default function LinearArrangementIntro() {
   const renderBoardDiv = () => (
     <div className="w-full max-w-5xl px-4 py-2 sm:py-4">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-        className="bg-[#2a1a16] p-1.5 sm:p-3 rounded-[2.5rem] sm:rounded-[3.5rem] shadow-2xl border-4 border-black/40 relative overflow-hidden ring-4 ring-black/10">
+        className="bg-[#2a1a16] p-1.5 sm:p-3 rounded-[2.5rem] sm:rounded-[3.5rem] shadow-2xl border-4 border-black/40 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         
         <div className="relative z-10 bg-[#3e2723] p-4 sm:p-8 md:p-12 rounded-[2rem] sm:rounded-[3rem] border-4 border-black/20 flex flex-col items-center justify-center min-h-[260px] sm:min-h-[380px] shadow-inner overflow-hidden">
@@ -376,3 +376,6 @@ export default function LinearArrangementIntro() {
     </div>
   );
 }
+
+
+
