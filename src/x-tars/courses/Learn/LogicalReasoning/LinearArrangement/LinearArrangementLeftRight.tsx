@@ -16,16 +16,20 @@ import {
   MousePointer2
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
+import AanyaBackPng from '../../../CommonUtility/Images/AanyaBack.png';
+import BenBackPng from '../../../CommonUtility/Images/BenBack.png';
+import ChintuBackPng from '../../../CommonUtility/Images/ChintuBack.png';
+import DiyaBackPng from '../../../CommonUtility/Images/DiyaBack.png';
 
 // ==========================================
 // 1. DATA CONFIGURATIONS
 // ==========================================
 // REPLACE THE 'image' URLS BELOW WITH YOUR ACTUAL IMAGE PATHS
 const PEOPLE = [
-  { id: 'p1', name: 'Aanya', image: 'https://via.placeholder.com/150?text=Aanya+Back', pos: '1st' },
-  { id: 'p2', name: 'Ben', image: 'https://via.placeholder.com/150?text=Ben+Back', pos: '2nd' },
-  { id: 'p3', name: 'Chintu', image: 'https://via.placeholder.com/150?text=Chintu+Back', pos: '3rd' },
-  { id: 'p4', name: 'Diya', image: 'https://via.placeholder.com/150?text=Diya+Back', pos: '4th' },
+  { id: 'p1', name: 'Aanya', image: AanyaBackPng, pos: '1st' },
+  { id: 'p2', name: 'Ben', image: BenBackPng, pos: '2nd' },
+  { id: 'p3', name: 'Chintu', image: ChintuBackPng, pos: '3rd' },
+  { id: 'p4', name: 'Diya', image: DiyaBackPng, pos: '4th' },
 ];
 
 const CONCEPT_STEPS = [
@@ -239,7 +243,7 @@ export default function DirectionalLab() {
                           ${isPartOfPair ? 'scale-110' : 'opacity-40 grayscale-[0.5]'}
                         `}>
                           {/* Bench Back - LAYERED IN FRONT (z-20) */}
-                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 sm:w-24 h-10 sm:h-16 bg-[#5d4037] rounded-t-xl border-t-4 border-x-4 border-black/20 z-20 shadow-lg" />
+                          {/* <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 sm:w-24 h-10 sm:h-16 bg-[#ead9d3] rounded-t-xl border-t-4 border-x-4 border-black/20 z-20 shadow-lg" /> */}
                           
                           {/* Image Placeholder (z-10) */}
                           <div className="w-16 h-24 sm:w-32 sm:h-44 relative z-10 flex items-center justify-center overflow-hidden rounded-xl border-2 border-white/5">

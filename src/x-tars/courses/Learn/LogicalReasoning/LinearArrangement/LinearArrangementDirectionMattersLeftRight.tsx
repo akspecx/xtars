@@ -17,16 +17,21 @@ import {
   MoveDown
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
+import AanyaBackPng from '../../../CommonUtility/Images/AanyaBack.png';
+import BenPng from '../../../CommonUtility/Images/Ben.png';
+import ChintuBackPng from '../../../CommonUtility/Images/ChintuBack.png';
+import DiyaPng from '../../../CommonUtility/Images/Diya.png';
+import EthanBackPng from '../../../CommonUtility/Images/EthanBack.png';
 
 // ==========================================
 // 1. DATA CONFIGURATIONS
 // ==========================================
 const PEOPLE = [
-  { id: 'p1', name: 'Aanya', image: 'https://via.placeholder.com/300x450?text=Aanya+Back', facing: 'away', pos: '1st' },
-  { id: 'p2', name: 'Ben', image: 'https://via.placeholder.com/300x450?text=Ben+Front', facing: 'towards', pos: '2nd' },
-  { id: 'p3', name: 'Chintu', image: 'https://via.placeholder.com/300x450?text=Chintu+Back', facing: 'away', pos: '3rd' },
-  { id: 'p4', name: 'Diya', image: 'https://via.placeholder.com/300x450?text=Diya+Front', facing: 'towards', pos: '4th' },
-  { id: 'p5', name: 'Ethan', image: 'https://via.placeholder.com/300x450?text=Ethan+Back', facing: 'away', pos: '5th' },
+  { id: 'p1', name: 'Aanya', image: AanyaBackPng, facing: 'away', pos: '1st' },
+  { id: 'p2', name: 'Ben', image: BenPng, facing: 'towards', pos: '2nd' },
+  { id: 'p3', name: 'Chintu', image: ChintuBackPng, facing: 'away', pos: '3rd' },
+  { id: 'p4', name: 'Diya', image: DiyaPng, facing: 'towards', pos: '4th' },
+  { id: 'p5', name: 'Ethan', image: EthanBackPng, facing: 'away', pos: '5th' },
 ];
 
 const CONCEPT_STEPS = [
@@ -240,7 +245,7 @@ export default function DirectionalLabLeftRight() {
 
                         <div className={`relative transition-all duration-500 p-1 ${isisPartOfPair ? 'scale-110' : (appMode === 'concept' ? 'opacity-30 grayscale' : '')}`}>
                           {/* Scaled Bench Back */}
-                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 sm:w-28 h-8 sm:h-16 bg-[#5d4037] rounded-t-xl border-t-4 border-x-4 border-black/20 z-20 shadow-2xl" />
+                          {/* <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 sm:w-28 h-8 sm:h-16 bg-[#5d4037] rounded-t-xl border-t-4 border-x-4 border-black/20 z-20 shadow-2xl" /> */}
                           
                           {/* Balanced Sized Image Holder */}
                           <div className="w-16 h-24 sm:w-32 sm:h-48 relative z-10 flex items-center justify-center overflow-hidden rounded-[1rem] sm:rounded-[1.5rem] border-2 border-white/10 bg-black/40 shadow-2xl ring-2 ring-black/10">
