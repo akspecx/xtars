@@ -140,10 +140,10 @@ export default function DirectionalBetween() {
         <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         <div className="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-4">
           <div className="flex flex-col text-left">
-            <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
+            <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
               <ChevronLeft size={16} /> Dashboard
             </button>
-            <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Between Logic Lab</h1>
+            <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">and now between</h1>
           </div>
           <div className="flex bg-black/30 p-1 rounded-2xl border border-white/10 w-full sm:w-auto">
             <button onClick={() => {setAppMode('concept'); setActiveTab(0);}} className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'concept' ? 'bg-yellow-400 text-[#2a1a16]' : 'text-[#a88a6d] hover:text-white'}`}>Concept</button>
@@ -324,7 +324,7 @@ export default function DirectionalBetween() {
             "You have mastered 'Between'! The middle spot is always between the two end spots, no matter the order!"
           </p>
         </div>
-        <button onClick={() => window.location.reload()} className="relative z-10 px-12 sm:px-20 py-5 sm:py-7 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] sm:rounded-[3rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Restart Lab</button>
+        <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/FirstSecondLeftRight')}  className="relative z-10 px-12 sm:px-20 py-5 sm:py-7 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] sm:rounded-[3rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Next Module</button>
       </div>
     );
   }

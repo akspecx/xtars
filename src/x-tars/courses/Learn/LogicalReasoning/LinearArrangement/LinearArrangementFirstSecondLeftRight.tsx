@@ -16,15 +16,65 @@ import {
   MoveDown
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
+import AanyaPng from '../../../CommonUtility/Images/Aanya.png';
+import AanyaBackPng from '../../../CommonUtility/Images/AanyaBack.png';
+import BenPng from '../../../CommonUtility/Images/Ben.png';
+import BenBackPng from '../../../CommonUtility/Images/BenBack.png';
+import ChintuPng from '../../../CommonUtility/Images/Chintu.png';
+import ChintuBackPng from '../../../CommonUtility/Images/ChintuBack.png';
+import DiyaPng from '../../../CommonUtility/Images/Diya.png';
+import DiyaBackPng from '../../../CommonUtility/Images/DiyaBack.png';
+import EthanPng from '../../../CommonUtility/Images/Ethan.png';
+import EthanBackPng from '../../../CommonUtility/Images/EthanBack.png';
+
+
+
+
 
 // ==========================================
 // 1. DATA CONFIGURATIONS
 // ==========================================
 const PEOPLE = [
-  { id: 'p1', name: 'Aanya', image: 'https://via.placeholder.com/300x450?text=Aanya+Back', facing: 'away', seat: 1 },
-  { id: 'p2', name: 'Ben', image: 'https://via.placeholder.com/300x450?text=Ben+Front', facing: 'towards', seat: 2 },
-  { id: 'p3', name: 'Chintu', image: 'https://via.placeholder.com/300x450?text=Chintu+Back', facing: 'away', seat: 3 },
-  { id: 'p4', name: 'Diya', image: 'https://via.placeholder.com/300x450?text=Diya+Front', facing: 'towards', seat: 4 },
+  { 
+    id: 'p1', 
+    name: 'Aanya', 
+    images: {
+      away: AanyaBackPng,
+      towards: AanyaPng
+    },
+    facing: 'away', 
+    seat: 1 
+  },
+  { 
+    id: 'p2', 
+    name: 'Ben', 
+    images: {
+      towards: BenPng,
+      away: BenBackPng
+    },
+    facing: 'towards', 
+    seat: 2 
+  },
+  { 
+    id: 'p3', 
+    name: 'Chintu', 
+    images: {
+      away: ChintuBackPng,
+      towards: ChintuPng
+    },
+    facing: 'away', 
+    seat: 3 
+  },
+  { 
+    id: 'p4', 
+    name: 'Diya', 
+    images: {
+      towards: DiyaPng,
+      away: DiyaBackPng
+    },
+    facing: 'towards', 
+    seat: 4 
+  },
 ];
 
 const CONCEPT_STEPS = [
@@ -76,9 +126,9 @@ const CONCEPT_STEPS = [
 
 const MISSIONS = [
   { 
-    id: 1, q: 'Who is 1st to Chintu\'s left?', 
+    id: 1, q: "Who is 1st to Chintu's left?", 
     options: ['Aanya', 'Ben', 'Diya'], correct: 1,
-    refIndex: 2, // Chintu Seat 3, Away. Left is Seat 2 (Ben).
+    refIndex: 2, // Chintu
     explanation: [
       "Step 1: Locate Chintu (Seat 3). His arrow points AWAY.",
       "Step 2: Imagine yourself as Chintu. Your left hand points towards Ben.",
@@ -86,9 +136,9 @@ const MISSIONS = [
     ]
   },
   { 
-    id: 2, q: 'Who is 2nd to Ben\'s left?', 
+    id: 2, q: "Who is 2nd to Ben's left?", 
     options: ['Aanya', 'Chintu', 'Diya'], correct: 2,
-    refIndex: 1, // Ben Seat 2, Towards. Left is Seat 3/4.
+    refIndex: 1, // Ben
     explanation: [
       "Step 1: Look at Ben (Seat 2). His arrow points TOWARDS you.",
       "Step 2: Imagine yourself as Ben. Your left hand points to the right side of the screen.",
@@ -96,9 +146,9 @@ const MISSIONS = [
     ]
   },
   { 
-    id: 3, q: 'Who is 1st to Aanya\'s right?', 
+    id: 3, q: "Who is 1st to Aanya's right?", 
     options: ['Ben', 'Chintu', 'Diya'], correct: 0,
-    refIndex: 0, // Aanya Seat 1, Away. Right is Seat 2 (Ben).
+    refIndex: 0, // Aanya
     explanation: [
       "Step 1: Find Aanya (Seat 1). She faces AWAY.",
       "Step 2: Imagine yourself as Aanya. Your right hand points toward Ben.",
@@ -106,9 +156,9 @@ const MISSIONS = [
     ]
   },
   { 
-    id: 4, q: 'Who is 2nd to Diya\'s right?', 
+    id: 4, q: "Who is 2nd to Diya's right?", 
     options: ['Aanya', 'Ben', 'Chintu'], correct: 1,
-    refIndex: 3, // Diya Seat 4, Towards. Right is Seat 3/2.
+    refIndex: 3, // Diya
     explanation: [
       "Step 1: Locate Diya (Seat 4). She faces TOWARDS you.",
       "Step 2: Imagine yourself as Diya. Your right hand points toward the center.",
@@ -116,9 +166,9 @@ const MISSIONS = [
     ]
   },
   { 
-    id: 5, q: 'Who is 2nd to Chintu\'s left?', 
+    id: 5, q: "Who is 2nd to Chintu's left?", 
     options: ['Aanya', 'Ben', 'Diya'], correct: 0,
-    refIndex: 2, 
+    refIndex: 2, // Chintu
     explanation: [
       "Step 1: Find Chintu (Seat 3). He faces AWAY.",
       "Step 2: Imagine himself facing away. Left is Seat 2, then Seat 1.",
@@ -185,10 +235,10 @@ export default function FirstSecondLeftRight() {
         <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         <div className="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-4">
           <div className="flex flex-col text-left">
-            <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
+            <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
               <ChevronLeft size={16} /> Dashboard
             </button>
-            <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Perspective Lab</h1>
+            <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">First and second to left and right</h1>
           </div>
           <div className="flex bg-black/30 p-1 rounded-2xl border border-white/10 w-full sm:w-auto">
             <button onClick={() => {setAppMode('concept'); setActiveTab(0);}} className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'concept' ? 'bg-yellow-400 text-[#2a1a16]' : 'text-[#a88a6d] hover:text-white'}`}>Concept</button>
@@ -231,20 +281,22 @@ export default function FirstSecondLeftRight() {
                   const isFirst = appMode === 'concept' && concept.firstPos === idx;
                   const isSecond = appMode === 'concept' && concept.secondPos === idx;
                   
-                  const facing = (appMode === 'concept' && idx === concept.refIndex) 
+                  const currentFacing = (appMode === 'concept' && idx === concept.refIndex) 
                     ? concept.facingOverride 
                     : person.facing;
+
+                  const currentImage = person.images[currentFacing] || person.images.towards;
 
                   return (
                     <motion.div key={person.id} className="flex flex-col items-center shrink-0 relative px-1">
                         
                         {/* Facing Indicator Arrow */}
                         <div className="absolute -top-20 left-1/2 -translate-x-1/2 flex flex-col items-center z-30">
-                           <div className={`p-2 rounded-full border-2 ${facing === 'away' ? 'bg-emerald-500 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'bg-rose-500 border-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.5)]'}`}>
-                             {facing === 'away' ? <MoveUp size={18} className="text-white" /> : <MoveDown size={18} className="text-white" />}
+                           <div className={`p-2 rounded-full border-2 ${currentFacing === 'away' ? 'bg-emerald-500 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'bg-rose-500 border-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.5)]'}`}>
+                             {currentFacing === 'away' ? <MoveUp size={18} className="text-white" /> : <MoveDown size={18} className="text-white" />}
                            </div>
-                           <span className={`text-[7px] sm:text-[9px] font-black uppercase mt-1.5 tracking-tighter ${facing === 'away' ? 'text-emerald-400' : 'text-rose-400'}`}>
-                              {facing === 'away' ? 'Away' : 'Towards'}
+                           <span className={`text-[7px] sm:text-[9px] font-black uppercase mt-1.5 tracking-tighter ${currentFacing === 'away' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                              {currentFacing === 'away' ? 'Away' : 'Towards'}
                            </span>
                         </div>
 
@@ -258,16 +310,16 @@ export default function FirstSecondLeftRight() {
 
                         <div className={`relative transition-all duration-500 p-1 ${(isRef || isFirst || isSecond) ? 'scale-105' : 'opacity-40 grayscale'}`}>
                           {/* Bench Back */}
-                          <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 bg-[#5d4037] rounded-t-xl border-t-4 border-x-4 border-black/20 z-20 shadow-2xl transition-all duration-500
+                          {/* <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 bg-[#5d4037] rounded-t-xl border-t-4 border-x-4 border-black/20 z-20 shadow-2xl transition-all duration-500
                              w-14 sm:w-32 h-10 sm:h-18`} 
-                          />
+                          /> */}
                           
                           {/* Image Box */}
                           <div className={`relative z-10 flex items-center justify-center overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] border-2 border-white/10 bg-black/40 shadow-2xl ring-2 ring-black/10 transition-all duration-500
                              w-20 h-32 sm:w-40 sm:h-60`}
                           >
                              <img 
-                                src={person.image} 
+                                src={currentImage} 
                                 alt={person.name}
                                 className={`w-full h-full object-cover filter brightness-[0.95]`}
                                 onError={(e) => { e.target.src = `https://via.placeholder.com/300x450?text=${person.name}`; }}
@@ -360,7 +412,7 @@ export default function FirstSecondLeftRight() {
                className="flex-1 bg-[#8d6e63] text-white p-4 rounded-2xl font-black uppercase text-[10px] border-b-4 border-[#5d4037] active:translate-y-1 disabled:opacity-30">Back</button>
              {activeTab < CONCEPT_STEPS.length - 1 ? (
                <button onClick={() => setActiveTab(p => p + 1)}
-                 className="flex-[2] bg-[#2a1a16] text-[#e6dccb] p-4 rounded-2xl font-black uppercase text-[10px] border-b-4 border-black active:translate-y-1">Next Rule</button>
+                 className="flex-[2] bg-[#2a1a16] text-[#e6dccb] p-4 rounded-2xl font-black uppercase text-[10px] border-b-4 border-black active:translate-y-1">Next Scenario</button>
              ) : (
                <button onClick={() => { setAppMode('practice'); setLevelIndex(0); }}
                  className="flex-[2] bg-green-600 text-white p-4 rounded-2xl font-black uppercase text-[10px] border-b-4 border-green-800 animate-pulse active:translate-y-1">Start Lab</button>
@@ -398,7 +450,7 @@ export default function FirstSecondLeftRight() {
             "You have mastered perspective-based positioning! Left and Right change based on where you are facing!"
           </p>
         </div>
-        <button onClick={() => window.location.reload()} className="relative z-10 px-12 sm:px-20 py-5 sm:py-7 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] sm:rounded-[3rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Restart Lab</button>
+        <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/PeopleSittingBetween')} className="relative z-10 px-12 sm:px-20 py-5 sm:py-7 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] sm:rounded-[3rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Next Module</button>
       </div>
     );
   }
@@ -420,7 +472,7 @@ export default function FirstSecondLeftRight() {
         {isExplaining && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 bg-black/70 backdrop-blur-md">
-            <div className="w-full max-w-3xl bg-[#dfd7cc] rounded-[2.5rem] sm:rounded-[4.5rem] p-6 sm:p-12 shadow-2xl relative border-8 border-[#3e2723] max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="w-full max-w-3xl bg-[#dfd7cc] rounded-[2.5rem] sm:rounded-[4.5rem] p-6 sm:p-12 shadow-2xl relative border-8 border-[#3e2723] max-h-[90vh] flex flex-col overflow-hidden text-left">
               <button onClick={() => setIsExplaining(false)} className="absolute top-6 right-6 sm:top-10 sm:right-10 p-2 sm:p-3 bg-[#3e2723] text-white rounded-full transition-transform hover:rotate-90 active:scale-90 shadow-lg z-20"><CloseIcon size={20} /></button>
               
               <h3 className="text-xl sm:text-3xl font-black text-[#3e2723] uppercase mb-6 sm:mb-10 flex items-center gap-4">
@@ -428,27 +480,15 @@ export default function FirstSecondLeftRight() {
               </h3>
 
               <div className="flex-1 overflow-y-auto no-scrollbar pr-2 flex flex-col gap-6">
-                {mission.explanation.map((line, i) => {
-                  const [header, ...detailParts] = line.split(" - ");
-                  const detail = detailParts.join(" - ");
-                  
-                  return (
+                {mission.explanation.map((line, i) => (
                     <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
-                      className="bg-white/60 rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden shadow-xl border-2 border-[#3e2723]/10"
+                      className="bg-white/60 rounded-[1.5rem] overflow-hidden shadow-xl border-2 border-[#3e2723]/10 p-6 sm:p-8"
                     >
-                      <div className="bg-[#3e2723] p-4 sm:p-5 border-l-[12px] border-yellow-400">
-                        <h4 className="text-yellow-400 font-black uppercase text-xs sm:text-sm tracking-widest">
-                           {header}
-                        </h4>
-                      </div>
-                      <div className="p-5 sm:p-8 text-center">
                         <p className="font-mono text-[#3e2723] text-sm sm:text-lg leading-relaxed italic font-bold">
-                          {detail}
+                          {line}
                         </p>
-                      </div>
                     </motion.div>
-                  );
-                })}
+                ))}
               </div>
 
               <button onClick={() => setIsExplaining(false)} className="w-full mt-8 py-5 sm:py-6 bg-[#3e2723] text-[#e6dccb] font-black rounded-xl sm:rounded-[3rem] uppercase tracking-widest text-xs sm:text-sm border-b-8 border-black active:translate-y-1 shadow-xl hover:bg-black transition-colors">Understood</button>

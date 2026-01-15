@@ -136,7 +136,7 @@ export default function LinearArrangementLab() {
             <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
               <ChevronLeft size={16} /> Dashboard
             </button>
-            <h1 className="text-white text-lg sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Arrangement Laboratory</h1>
+            <h1 className="text-white text-lg sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Let's stand in line for ice-cream</h1>
           </div>
           <div className="bg-yellow-400/10 p-2 sm:p-3 rounded-2xl border border-yellow-400/20">
             <Users className="text-yellow-400" size={24} />
@@ -311,7 +311,7 @@ export default function LinearArrangementLab() {
             You have successfully completed the laboratory challenge on Linear Arrangement!
           </p>
         </div>
-        <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/leftRight')} className="relative z-10 px-10 sm:px-16 py-4 sm:py-6 bg-[#3e2723] text-[#e6dccb] rounded-[1.5rem] sm:rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Restart Lab</button>
+        <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/leftRight')} className="relative z-10 px-10 sm:px-16 py-4 sm:py-6 bg-[#3e2723] text-[#e6dccb] rounded-[1.5rem] sm:rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Next Module</button>
       </div>
     );
   }

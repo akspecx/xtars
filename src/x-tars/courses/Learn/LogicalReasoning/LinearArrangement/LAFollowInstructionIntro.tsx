@@ -19,13 +19,18 @@ import {
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
 
+// Assets (Using placeholders for environment stability)
+import AanyaBackPng from '../../../CommonUtility/Images/AanyaBack.png';
+import BenBackPng from '../../../CommonUtility/Images/BenBack.png';
+import ChintuBackPng from '../../../CommonUtility/Images/ChintuBack.png';
+
 // ==========================================
 // 1. DATA CONFIGURATIONS
 // ==========================================
 const PEOPLE_DATA = [
-  { id: 'p1', name: 'Aanya', image: 'https://via.placeholder.com/300x450?text=Aanya+Back' },
-  { id: 'p2', name: 'Ben', image: 'https://via.placeholder.com/300x450?text=Ben+Back' },
-  { id: 'p3', name: 'Chintu', image: 'https://via.placeholder.com/300x450?text=Chintu+Back' },
+  { id: 'p1', name: 'Aanya', image: AanyaBackPng },
+  { id: 'p2', name: 'Ben', image: BenBackPng },
+  { id: 'p3', name: 'Chintu', image: ChintuBackPng },
 ];
 
 const MISSIONS = {
@@ -38,14 +43,14 @@ const MISSIONS = {
     steps: [
       {
         personId: "p2",
-        targetSlot: 1, // Seat 2
+        targetSlot: 1, 
         why: "What if we place Ben at Seat 2? Let's check...",
         highlightIns: -1,
         clearAll: true
       },
       {
         personId: "p3",
-        targetSlot: 0, // Seat 1
+        targetSlot: 0, 
         why: "Chintu (Immediate Left) goes to Seat 1. But now where does Aanya go?",
         highlightIns: 1,
         clearAll: false
@@ -59,21 +64,21 @@ const MISSIONS = {
       },
       {
         personId: "p2",
-        targetSlot: 2, // Seat 3
+        targetSlot: 2, 
         why: "Let's place Ben at Seat 3. This gives us more room on his left side!",
         highlightIns: -1,
         clearAll: false
       },
       {
         personId: "p1",
-        targetSlot: 1, // Seat 2
+        targetSlot: 1, 
         why: "Let's try Aanya at Seat 2. She IS to the left of Ben...",
         highlightIns: 0,
         clearAll: false
       },
       {
         personId: null,
-        targetSlot: 1, // Seat 2
+        targetSlot: 1, 
         why: "Wait! Instruction 2 says Chintu is IMMEDIATELY left. Seat 2 belongs to him!",
         highlightIns: 1,
         clearAll: false,
@@ -81,20 +86,20 @@ const MISSIONS = {
       },
       {
         personId: "p3",
-        targetSlot: 1, // Seat 2
+        targetSlot: 1, 
         why: "So, Chintu must be in Seat 2 (Immediate Left of Ben).",
         highlightIns: 1,
         clearAll: false
       },
       {
         personId: "p1",
-        targetSlot: 0, // Seat 1
+        targetSlot: 0, 
         why: "And Aanya takes the remaining spot in Seat 1. Now both rules are perfect!",
         highlightIns: 0,
         clearAll: false
       }
     ],
-    questions: [] // No follow-up questions for concept mode
+    questions: []
   },
   practice: [
     {
@@ -122,12 +127,6 @@ const MISSIONS = {
           options: ["No one", "Chintu", "Diya"], 
           correct: 1,
           explanation: ["Chintu is in Seat 2, sitting right between Aanya and Ben."]
-        },
-        { 
-          q: "Who is sitting at the extreme right of the row?", 
-          options: ["Aanya", "Chintu", "Ben"], 
-          correct: 2,
-          explanation: ["Ben is in Seat 3, which is the last spot on the right side of this row."]
         }
       ]
     }
@@ -137,10 +136,11 @@ const MISSIONS = {
 // ==========================================
 // 2. MAIN LAB COMPONENT
 // ==========================================
-export default function followInstructionIntro() {
+export default function FollowInstruction() {
   const navigate = useNavigate();
   const containerRef = useRef(null);
   const slotRefs = useRef([]);
+  const tutorialTimeouts = useRef([]);
   
   // State
   const [appMode, setAppMode] = useState('concept'); 
@@ -161,8 +161,15 @@ export default function followInstructionIntro() {
   // Derived Mission Data
   const mission = (appMode === 'concept' ? MISSIONS.concept : MISSIONS.practice[levelIndex]) || MISSIONS.concept;
 
+  // Cleanup helper
+  const clearAllTutorials = useCallback(() => {
+    tutorialTimeouts.current.forEach(clearTimeout);
+    tutorialTimeouts.current = [];
+  }, []);
+
   // Navigation Logic
   const handleNext = useCallback(() => {
+    clearAllTutorials();
     if (appMode === 'concept') {
       setAppMode('practice');
       setLevelIndex(0);
@@ -173,7 +180,6 @@ export default function followInstructionIntro() {
     const currentMission = MISSIONS.practice[levelIndex];
     if (!currentMission) return;
 
-    // Check if there are more questions in the current practice mission
     if (activeQuestionIndex < (currentMission.questions?.length || 0) - 1) {
       setActiveQuestionIndex(prev => prev + 1);
       setSelectedOption(null);
@@ -181,34 +187,30 @@ export default function followInstructionIntro() {
       setIsError(false);
       setAutoNextTimer(null);
     } else {
-      // Move to next mission
       if (levelIndex < MISSIONS.practice.length - 1) {
         setLevelIndex(prev => prev + 1);
         setPlacedPeople([null, null, null]);
-        setActiveQuestionIndex(0);
-        setAutoNextTimer(null);
-        setSelectedOption(null);
-        setIsCorrect(false);
-        setIsError(false);
       } else {
         setSessionCompleted(true);
       }
     }
-  }, [appMode, levelIndex, activeQuestionIndex]);
+  }, [appMode, levelIndex, activeQuestionIndex, clearAllTutorials]);
 
   // Tutorial Engine
   const startTutorial = useCallback(() => {
+    clearAllTutorials();
     setPlacedPeople([null, null, null]);
     setTutorialStep(0);
     
     const runStep = (idx) => {
+      // Guard: Only run if we are still in concept mode
       if (!MISSIONS.concept.steps[idx]) return;
-      const step = MISSIONS.concept.steps[idx];
       
+      const step = MISSIONS.concept.steps[idx];
       setTutorialNarrative(step.why);
       setHighlightedInstruction(step.highlightIns);
 
-      setTimeout(() => {
+      const t1 = setTimeout(() => {
         setPlacedPeople(prev => {
           let next = step.clearAll ? [null, null, null] : [...prev];
           if (step.removeAt !== undefined) next[step.removeAt] = null;
@@ -219,18 +221,21 @@ export default function followInstructionIntro() {
         });
 
         if (idx < MISSIONS.concept.steps.length - 1) {
-          setTimeout(() => runStep(idx + 1), 2500);
+          const t2 = setTimeout(() => runStep(idx + 1), 2500);
+          tutorialTimeouts.current.push(t2);
           setTutorialStep(idx + 1);
         } else {
           setTutorialStep(MISSIONS.concept.steps.length - 1);
         }
       }, 1500);
+      
+      tutorialTimeouts.current.push(t1);
     };
 
     runStep(0);
-  }, []);
+  }, [clearAllTutorials]);
 
-  // Sync Logic: Arrangement Validation
+  // Validation
   useEffect(() => {
     if (appMode === 'practice') {
       const isCorrectArr = placedPeople.every((id, idx) => id === mission.correctOrder?.[idx]);
@@ -240,8 +245,9 @@ export default function followInstructionIntro() {
     }
   }, [placedPeople, mission, tutorialStep, appMode]);
 
-  // Sync Logic: Level/Mode Resets
+  // Mode/Level Reset Sync
   useEffect(() => {
+    clearAllTutorials();
     setPlacedPeople([null, null, null]);
     setTutorialStep(-1);
     setTutorialNarrative("");
@@ -251,9 +257,9 @@ export default function followInstructionIntro() {
     setSelectedOption(null);
     setIsCorrect(false);
     setIsError(false);
-  }, [appMode, levelIndex]);
+  }, [appMode, levelIndex, clearAllTutorials]);
 
-  // Timer Logic
+  // Timer
   useEffect(() => {
     let interval;
     if (autoNextTimer !== null && autoNextTimer > 0 && !isExplaining) {
@@ -264,7 +270,6 @@ export default function followInstructionIntro() {
     return () => clearInterval(interval);
   }, [autoNextTimer, handleNext, isExplaining]);
 
-  // Event Handlers
   const handleDragEnd = (event, info, personId) => {
     if (appMode === 'concept') return;
     const dropPoint = { x: info.point.x, y: info.point.y };
@@ -303,7 +308,6 @@ export default function followInstructionIntro() {
     if (index === currentQ.correct) {
       setIsCorrect(true);
       setIsError(false);
-      // Start the auto-timer for EVERY correct answer now
       setAutoNextTimer(10);
     } else {
       setIsError(true);
@@ -311,21 +315,20 @@ export default function followInstructionIntro() {
     }
   };
 
-  // Sub-Renderers
   const renderHeader = () => (
     <div className="w-full max-w-[1500px] shrink-0 px-4 pt-6">
       <header className="w-full bg-[#2a1a16] p-4 sm:p-6 rounded-[2rem] border-b-8 border-black/40 relative overflow-hidden shadow-2xl ring-4 ring-black/20">
-        <div className="absolute inset-0 opacity-[0.3]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
+        <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         <div className="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-4">
           <div className="flex flex-col text-left">
-            <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
+            <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
               <ChevronLeft size={16} /> Dashboard
             </button>
-            <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Perspective Lab: Seating</h1>
+            <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Let us make user sit by following the instructions</h1>
           </div>
           <div className="flex bg-black/30 p-1 rounded-2xl border border-white/10 w-full sm:w-auto">
             <button onClick={() => setAppMode('concept')} className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'concept' ? 'bg-yellow-400 text-[#2a1a16]' : 'text-[#a88a6d] hover:text-white'}`}>Concept Building</button>
-            <button onClick={() => setAppMode('practice')} className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'practice' ? 'bg-[#8d6e63] text-white shadow-inner' : 'text-[#a88a6d] hover:text-white'}`}>Challenge</button>
+            <button onClick={() => setAppMode('practice')} className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'practice' ? 'bg-[#8d6e63] text-white shadow-inner' : 'text-[#a88a6d] hover:text-white'}`}>Practice</button>
           </div>
         </div>
       </header>
@@ -336,7 +339,7 @@ export default function followInstructionIntro() {
     <div className="w-full max-w-5xl px-4 py-2">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
         className="bg-[#2a1a16] p-1.5 sm:p-2 rounded-[2.5rem] sm:rounded-[3.5rem] shadow-2xl border-4 border-black/40 relative ring-4 ring-black/10 overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.3]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
+        <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         
         <div className="relative z-10 bg-[#3e2723] pt-12 pb-12 px-4 rounded-[2rem] sm:rounded-[3rem] border-4 border-black/20 flex flex-col items-center justify-center min-h-[620px] shadow-inner">
           <div className="bg-black/50 backdrop-blur-md border border-white/10 px-8 py-5 rounded-[2rem] w-full max-w-2xl mb-8 shadow-2xl">
@@ -398,18 +401,31 @@ export default function followInstructionIntro() {
             })}
           </div>
 
-          {(!isArrangementCorrect && (appMode === 'practice' || (appMode === 'concept' && tutorialStep === -1))) && (
-            <div className="mt-8 p-6 bg-black/30 rounded-[2.5rem] border border-white/10 w-full max-w-2xl flex flex-col items-center shadow-2xl">
+          {/* PEOPLE POOL: Persistent logic implemented */}
+          {(appMode === 'practice' || appMode === 'concept') && (
+            <div className="mt-8 p-6 bg-black/30 rounded-[2.5rem] border border-white/10 w-full max-w-2xl flex flex-col items-center shadow-2xl transition-all">
               <span className="text-[10px] font-black text-[#a88a6d] uppercase tracking-[0.3em] mb-6">
-                {appMode === 'practice' ? "Drag people to seats" : "The characters waiting to be seated"}
+                People Pool
               </span>
               <div className="flex gap-6 justify-center w-full">
                 {PEOPLE_DATA.map(person => {
                   const isPlaced = placedPeople.includes(person.id);
+                  // Disabled if arrangement is done OR it's concept mode tutorial
+                  const isDisabledPool = isArrangementCorrect || isPlaced;
+
                   return (
                     <div key={person.id} className="relative w-16 h-24 sm:w-28 sm:h-40 shrink-0">
-                      <div className="absolute inset-0 rounded-2xl border-2 border-white/5 bg-black/20 flex items-center justify-center" />
-                      {!isPlaced && (
+                      {/* Shadow Card - Always visible but grayscale if placed or mission done */}
+                      <div className={`absolute inset-0 rounded-2xl border-2 overflow-hidden transition-all duration-300
+                        ${isDisabledPool ? 'opacity-30 grayscale border-white/10' : 'opacity-10 border-transparent'}`}
+                      >
+                         <img src={person.image} alt={person.name} className="w-full h-full object-cover" />
+                         <div className="absolute bottom-0 left-0 right-0 bg-black/80 py-1.5 border-t border-white/5">
+                            <p className="text-white text-[8px] sm:text-[10px] font-black text-center uppercase tracking-tighter">{person.name}</p>
+                         </div>
+                      </div>
+                      
+                      {!isPlaced && !isArrangementCorrect && (
                         <motion.div 
                           layoutId={`person-${person.id}`}
                           drag={appMode === 'practice'}
@@ -421,7 +437,7 @@ export default function followInstructionIntro() {
                         >
                           <img src={person.image} alt={person.name} className="w-full h-full object-cover pointer-events-none" />
                           <div className="absolute bottom-0 left-0 right-0 bg-black/80 py-1.5 border-t border-white/5">
-                            <p className="text-white text-[8px] sm:text-[10px] font-black text-center uppercase tracking-tighter">{person.name}</p>
+                            <p className="text-white text-[8px] sm:text-[10px] font-black text-center uppercase">{person.name}</p>
                           </div>
                         </motion.div>
                       )}
@@ -472,13 +488,13 @@ export default function followInstructionIntro() {
           <div className="relative z-10 w-full text-center py-2">
             {mission.questions && mission.questions.length > 0 ? (
               <>
-                <h2 className="text-[#3e2723] text-xl sm:text-4xl font-black uppercase mb-12 tracking-tight px-4">
+                <h2 className="text-[#3e2723] text-xl sm:text-4xl font-black uppercase mb-12 tracking-tight px-4 leading-tight">
                     {mission.questions[activeQuestionIndex]?.q}
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 w-full max-w-3xl mx-auto px-4">
                   {(mission.questions[activeQuestionIndex]?.options || []).map((option, idx) => {
                     const isCurrentSelected = selectedOption === idx;
-                    const buttonClass = isCurrentSelected && isCorrect ? 'bg-green-500 border-green-700 text-white' : 
+                    const buttonClass = isCurrentSelected && isCorrect ? 'bg-green-500 border-green-700 text-white shadow-green-200' : 
                                       isCurrentSelected && isError ? 'bg-red-500 border-red-700 text-white animate-shake' : 
                                       'bg-white border-slate-200 text-[#3e2723] hover:bg-slate-50';
                     return (
@@ -495,7 +511,7 @@ export default function followInstructionIntro() {
             ) : (
               <div className="py-8">
                  <h2 className="text-[#3e2723] text-3xl font-black uppercase mb-6 tracking-tight">Demo Complete!</h2>
-                 <p className="text-[#3e2723]/60 font-bold mb-8 italic max-w-lg mx-auto">You've seen how anchor clues solve the puzzle. Ready to try the practice challenge?</p>
+                 <p className="text-[#3e2723]/60 font-bold mb-8 italic max-w-lg mx-auto">Ready to try the practice challenge on your own?</p>
                  <button onClick={() => setAppMode('practice')} className="bg-[#2a1a16] text-[#e6dccb] px-12 py-5 rounded-2xl font-black uppercase border-b-8 border-black shadow-xl flex items-center gap-2 mx-auto hover:scale-105 active:scale-95 transition-all">
                     Start Challenge <ChevronRight size={20} />
                  </button>
@@ -534,7 +550,7 @@ export default function followInstructionIntro() {
         <div className="relative z-10 bg-white/60 p-10 rounded-[3.5rem] border-4 border-[#3e2723]/20 max-w-2xl mb-10 shadow-2xl mx-4 backdrop-blur-sm font-black text-lg">
            "You followed every instruction perfectly! Spatial logic is your strength."
         </div>
-        <button onClick={() => window.location.reload()} className="relative z-10 px-16 py-7 bg-[#3e2723] text-[#e6dccb] rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 transition-all active:translate-y-2">Restart Lab</button>
+        <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="relative z-10 px-16 py-7 bg-[#3e2723] text-[#e6dccb] rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 transition-all active:translate-y-2">Restart Lab</button>
       </div>
     );
   }
@@ -542,6 +558,8 @@ export default function followInstructionIntro() {
   return (
     <div className="min-h-screen bg-[#e6dccb] flex flex-col items-center no-scrollbar overflow-x-hidden font-sans relative" ref={containerRef}>
       <div className="absolute inset-0 opacity-[0.4]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
+      <div className="absolute inset-0 bg-[#3e2723] pointer-events-none opacity-[0.03]" />
+      
       <div className="relative z-10 w-full flex flex-col items-center">
         {renderHeader()}
         {renderBoard()}

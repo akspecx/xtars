@@ -16,15 +16,25 @@ import {
   MoveDown
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
+import AanyaPng from '../../../CommonUtility/Images/Aanya.png';
+import AanyaBackPng from '../../../CommonUtility/Images/AanyaBack.png';
+import BenPng from '../../../CommonUtility/Images/Ben.png';
+import BenBackPng from '../../../CommonUtility/Images/BenBack.png';
+import ChintuPng from '../../../CommonUtility/Images/Chintu.png';
+import ChintuBackPng from '../../../CommonUtility/Images/ChintuBack.png';
+import DiyaPng from '../../../CommonUtility/Images/Diya.png';
+import DiyaBackPng from '../../../CommonUtility/Images/DiyaBack.png';
+import EthanPng from '../../../CommonUtility/Images/Ethan.png';
+import EthanBackPng from '../../../CommonUtility/Images/EthanBack.png';
 
 // ==========================================
 // 1. DATA CONFIGURATIONS
 // ==========================================
 const PEOPLE = [
-  { id: 'p1', name: 'Aanya', image: 'https://via.placeholder.com/300x450?text=Aanya+Back', facing: 'away', seat: 1 },
-  { id: 'p2', name: 'Ben', image: 'https://via.placeholder.com/300x450?text=Ben+Back', facing: 'away', seat: 2 },
-  { id: 'p3', name: 'Chintu', image: 'https://via.placeholder.com/300x450?text=Chintu+Back', facing: 'away', seat: 3 },
-  { id: 'p4', name: 'Diya', image: 'https://via.placeholder.com/300x450?text=Diya+Back', facing: 'away', seat: 4 },
+  { id: 'p1', name: 'Aanya', image: AanyaBackPng, facing: 'away', seat: 1 },
+  { id: 'p2', name: 'Ben', image: BenBackPng, facing: 'away', seat: 2 },
+  { id: 'p3', name: 'Chintu', image: ChintuBackPng, facing: 'away', seat: 3 },
+  { id: 'p4', name: 'Diya', image: DiyaBackPng, facing: 'away', seat: 4 },
 ];
 
 const CONCEPT_STEPS = [
@@ -157,10 +167,10 @@ export default function NumberOfPeopleSittingBetween() {
         <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         <div className="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-4">
           <div className="flex flex-col text-left">
-            <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
+            <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
               <ChevronLeft size={16} /> Dashboard
             </button>
-            <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Counting Lab</h1>
+            <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Number of people sitting between</h1>
           </div>
           <div className="flex bg-black/30 p-1 rounded-2xl border border-white/10 w-full sm:w-auto">
             <button onClick={() => {setAppMode('concept'); setActiveTab(0);}} className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'concept' ? 'bg-yellow-400 text-[#2a1a16]' : 'text-[#a88a6d] hover:text-white'}`}>Concept</button>
@@ -218,9 +228,9 @@ export default function NumberOfPeopleSittingBetween() {
 
                         <div className={`relative transition-all duration-500 p-1 ${isRelevant ? 'scale-105' : (appMode === 'concept' ? 'opacity-30 grayscale' : '')}`}>
                           {/* Bench Back */}
-                          <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 bg-[#5d4037] rounded-t-xl border-t-4 border-x-4 border-black/20 z-20 shadow-2xl transition-all duration-500
+                          {/* <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 bg-[#5d4037] rounded-t-xl border-t-4 border-x-4 border-black/20 z-20 shadow-2xl transition-all duration-500
                              w-14 sm:w-32 h-10 sm:h-18`} 
-                          />
+                          /> */}
                           
                           {/* Image Box */}
                           <div className={`relative z-10 flex items-center justify-center overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] border-2 border-white/10 bg-black/40 shadow-2xl ring-2 ring-black/10 transition-all duration-500
@@ -229,7 +239,7 @@ export default function NumberOfPeopleSittingBetween() {
                              <img 
                                 src={person.image} 
                                 alt={person.name}
-                                className={`w-full h-full object-cover filter brightness-[0.95] scale-x-[-1]`}
+                                className={`w-full h-full object-cover filter brightness-[0.95]`}
                                 onError={(e) => { e.target.src = `https://via.placeholder.com/300x450?text=${person.name}`; }}
                              />
                           </div>
@@ -356,7 +366,7 @@ export default function NumberOfPeopleSittingBetween() {
             "You have mastered counting the number of people between others. Great job using the seat numbers!"
           </p>
         </div>
-        <button onClick={() => window.location.reload()} className="relative z-10 px-12 sm:px-20 py-5 sm:py-7 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] sm:rounded-[3rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Restart Lab</button>
+        <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/extremeleftRight')} className="relative z-10 px-12 sm:px-20 py-5 sm:py-7 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] sm:rounded-[3rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Next Module</button>
       </div>
     );
   }
