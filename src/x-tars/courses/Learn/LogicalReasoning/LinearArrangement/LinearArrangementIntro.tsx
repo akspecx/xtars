@@ -133,7 +133,7 @@ export default function LinearArrangementLab() {
         <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         <div className="relative z-10 flex items-center justify-between gap-4">
           <div className="flex flex-col text-left">
-            <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
+            <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
               <ChevronLeft size={16} /> Dashboard
             </button>
             <h1 className="text-white text-lg sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Arrangement Laboratory</h1>
@@ -311,7 +311,7 @@ export default function LinearArrangementLab() {
             You have successfully completed the laboratory challenge on Linear Arrangement!
           </p>
         </div>
-        <button onClick={() => window.location.reload()} className="relative z-10 px-10 sm:px-16 py-4 sm:py-6 bg-[#3e2723] text-[#e6dccb] rounded-[1.5rem] sm:rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Restart Lab</button>
+        <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/leftRight')} className="relative z-10 px-10 sm:px-16 py-4 sm:py-6 bg-[#3e2723] text-[#e6dccb] rounded-[1.5rem] sm:rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Restart Lab</button>
       </div>
     );
   }

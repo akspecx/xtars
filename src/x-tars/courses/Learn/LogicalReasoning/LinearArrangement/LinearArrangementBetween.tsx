@@ -14,16 +14,21 @@ import {
   MousePointer2
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
+import AanyaBackPng from '../../../CommonUtility/Images/AanyaBack.png';
+import BenPng from '../../../CommonUtility/Images/Ben.png';
+import ChintuBackPng from '../../../CommonUtility/Images/ChintuBack.png';
+import DiyaPng from '../../../CommonUtility/Images/Diya.png';
+import EthanBackPng from '../../../CommonUtility/Images/EthanBack.png';
 
 // ==========================================
 // 1. DATA CONFIGURATIONS
 // ==========================================
 const PEOPLE = [
-  { id: 'p1', name: 'Aanya', image: 'https://via.placeholder.com/300x450?text=Aanya+Back', facing: 'away', pos: '1st' },
-  { id: 'p2', name: 'Ben', image: 'https://via.placeholder.com/300x450?text=Ben+Front', facing: 'towards', pos: '2nd' },
-  { id: 'p3', name: 'Chintu', image: 'https://via.placeholder.com/300x450?text=Chintu+Back', facing: 'away', pos: '3rd' },
-  { id: 'p4', name: 'Diya', image: 'https://via.placeholder.com/300x450?text=Diya+Front', facing: 'towards', pos: '4th' },
-  { id: 'p5', name: 'Ethan', image: 'https://via.placeholder.com/300x450?text=Ethan+Back', facing: 'away', pos: '5th' },
+  { id: 'p1', name: 'Aanya', image: AanyaBackPng, facing: 'away', pos: '1st' },
+  { id: 'p2', name: 'Ben', image: BenPng, facing: 'towards', pos: '2nd' },
+  { id: 'p3', name: 'Chintu', image: ChintuBackPng, facing: 'away', pos: '3rd' },
+  { id: 'p4', name: 'Diya', image: DiyaPng, facing: 'towards', pos: '4th' },
+  { id: 'p5', name: 'Ethan', image: EthanBackPng, facing: 'away', pos: '5th' },
 ];
 
 const CONCEPT_STEPS = [

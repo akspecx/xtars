@@ -17,16 +17,21 @@ import {
   MoveDown
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
+import AanyaBackPng from '../../../CommonUtility/Images/AanyaBack.png';
+import BenPng from '../../../CommonUtility/Images/Ben.png';
+import ChintuBackPng from '../../../CommonUtility/Images/ChintuBack.png';
+import DiyaPng from '../../../CommonUtility/Images/Diya.png';
+import EthanBackPng from '../../../CommonUtility/Images/EthanBack.png';
 
 // ==========================================
 // 1. DATA CONFIGURATIONS
 // ==========================================
 const PEOPLE = [
-  { id: 'p1', name: 'Aanya', image: 'https://via.placeholder.com/300x450?text=Aanya+Back', facing: 'away', pos: '1st' },
-  { id: 'p2', name: 'Ben', image: 'https://via.placeholder.com/300x450?text=Ben+Front', facing: 'towards', pos: '2nd' },
-  { id: 'p3', name: 'Chintu', image: 'https://via.placeholder.com/300x450?text=Chintu+Back', facing: 'away', pos: '3rd' },
-  { id: 'p4', name: 'Diya', image: 'https://via.placeholder.com/300x450?text=Diya+Front', facing: 'towards', pos: '4th' },
-  { id: 'p5', name: 'Ethan', image: 'https://via.placeholder.com/300x450?text=Ethan+Back', facing: 'away', pos: '5th' },
+  { id: 'p1', name: 'Aanya', image: AanyaBackPng, facing: 'away', pos: '1st' },
+  { id: 'p2', name: 'Ben', image: BenPng, facing: 'towards', pos: '2nd' },
+  { id: 'p3', name: 'Chintu', image: ChintuBackPng, facing: 'away', pos: '3rd' },
+  { id: 'p4', name: 'Diya', image: DiyaPng, facing: 'towards', pos: '4th' },
+  { id: 'p5', name: 'Ethan', image: EthanBackPng, facing: 'away', pos: '5th' },
 ];
 
 const CONCEPT_STEPS = [
@@ -167,7 +172,7 @@ export default function DirectionalLab() {
         <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         <div className="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-4">
           <div className="flex flex-col text-left">
-            <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
+            <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
               <ChevronLeft size={16} /> Dashboard
             </button>
             <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Perspective Lab</h1>
@@ -393,7 +398,7 @@ export default function DirectionalLab() {
             "You have learned that 'Immediate' means the person right next to you, while 'General' direction means anyone sitting on that side!"
           </p>
         </div>
-        <button onClick={() => window.location.reload()} className="relative z-10 px-10 sm:px-16 py-4 sm:py-6 bg-[#3e2723] text-[#e6dccb] rounded-[1.5rem] sm:rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Restart Lab</button>
+        <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/between')}  className="relative z-10 px-10 sm:px-16 py-4 sm:py-6 bg-[#3e2723] text-[#e6dccb] rounded-[1.5rem] sm:rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Let's learn between</button>
       </div>
     );
   }
