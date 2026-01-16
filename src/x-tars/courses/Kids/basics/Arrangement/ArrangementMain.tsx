@@ -11,36 +11,17 @@ import {
   ChevronRight, BrainCircuit, Lightbulb, 
   ChevronLeft, Info, Calculator, Target, Star, Rocket
 } from 'lucide-react';
+
 import NumberGameCard from "../../../CommonUtility/CardsUtility"
 
 
 const USER_NAME = "Prabhat"; 
 
-const visualLogicData = [
-  // Size
-  { id: "big", title: "Big", subtitle: "Find the big one", icon: "🐘", path: "/games/visuallogic/big", category: "size" },
-  { id: "small", title: "Small", subtitle: "Find the small one", icon: "🐜", path: "/games/visuallogic/small", category: "size" },
-  { id: "big-small-mix", title: "Big & Small", subtitle: "Mixed size fun", icon: "⚖️", path: "/games/visuallogic/big-small-mix", category: "size" },
-  { id: "tall", title: "Tall", subtitle: "Who is taller?", icon: "🦒", path: "/games/visuallogic/tall", category: "size" },
-  { id: "short", title: "Short", subtitle: "Who is shorter?", icon: "🌵", path: "/games/visuallogic/short", category: "size" },
-  { id: "tall-short", title: "Tall & Short", subtitle: "Height challenge", icon: "📏", path: "/games/visuallogic/tall-short", category: "size" },
-
-  // Position
-  { id: "above", title: "Above", subtitle: "What is up there?", icon: "☁️", path: "/games/visuallogic/above", category: "position" },
-  { id: "below", title: "Below", subtitle: "What is down there?", icon: "🍄", path: "/games/visuallogic/below", category: "position" },
-  { id: "above-below-mix", title: "Above & Below", subtitle: "Up and down fun", icon: "↕️", path: "/games/visuallogic/above-below-mix", category: "position" },
-  { id: "inside", title: "Inside", subtitle: "In the box", icon: "🧸", path: "/games/visuallogic/inside", category: "position" },
-  { id: "outside", title: "Outside", subtitle: "Out of the box", icon: "🌳", path: "/games/visuallogic/outside", category: "position" },
-  { id: "inside-outside-mix", title: "In & Out", subtitle: "Where is it?", icon: "📦", path: "/games/visuallogic/inside-outside-mix", category: "position" },
-
-  // Quantity
-  { id: "full", title: "Full", subtitle: "All filled up", icon: "🧺", path: "/games/visuallogic/full", category: "quantity" },
-  { id: "empty", title: "Empty", subtitle: "Nothing inside", icon: "🥣", path: "/games/visuallogic/empty", category: "quantity" },
-  { id: "full-empty", title: "Full & Empty", subtitle: "Mixed volume fun", icon: "🥛", path: "/games/visuallogic/full-empty", category: "quantity" },
-
-  // Logic
-  { id: "same", title: "Same", subtitle: "Match the pictures", icon: "👯", path: "/games/visuallogic/same", category: "logic" },
-  { id: "different", title: "Different", subtitle: "Spot the odd one", icon: "🤔", path: "/games/visuallogic/different", category: "logic" },
+const ArrangementData = [
+  { id: "apple", title: "Apple arrangment", subtitle: "Can you drag and drop to create the apple?", icon: "🍎", gradient: "from-orange-500 to-amber-500", path: "/games/puzzles/apple" },
+  { id: "orange", title: "Orange arrangment", subtitle: "Can you drag and drop to create the Orange?", icon: "🍊", gradient: "from-lime-500 to-green-500", path: "/games/puzzles/orange" },
+  { id: "orangeComplex", title: "Complex orange arrangement", subtitle: "Let's make our level a bit higher", icon: "🍊🍊", gradient: "from-cyan-500 to-blue-500", path: "/games/puzzles/orange-complex" },
+  { id: "giraffeComplex", title: "Complex giraffe arrangement", subtitle: "Let's create a Giraffe", icon: "🦒", gradient: "from-purple-500 to-fuchsia-500", path: "/games/puzzles/giraffe-complex" }
 ];
 
 
@@ -51,7 +32,6 @@ const MOTIVATIONAL_QUOTES = [
   { text: "Intelligence plus character - that is the goal of true education.", author: "Martin Luther King Jr." }
 ];
 
-// --- KINETIC THEMATIC BACKGROUNDS ---
 
 
 const AuroraBackground = () => (
@@ -172,7 +152,7 @@ const BalanceScaleMission = () => {
 
 // --- PRIMARY HUB COMPONENT ---
 
-export default function VisualLogicLandingPage() {
+export default function ArrangementLandingPage() {
   const navigate = useNavigate();
   const { puzzleId } = useParams();
   const [quoteIndex, setQuoteIndex] = useState(0);
@@ -218,7 +198,7 @@ export default function VisualLogicLandingPage() {
                    <div className="flex items-center gap-6 shrink-0 bg-[#3e2723] p-8 rounded-[3rem] text-white shadow-2xl border-b-8 border-black">
                       <div className="text-center">
                         <span className="text-[11px] font-black uppercase block mb-2 tracking-widest opacity-40">Active Links</span>
-                        <span className="text-5xl font-black tabular-nums">{String(visualLogicData.length)}</span>
+                        <span className="text-5xl font-black tabular-nums">{String(ArrangementData.length)}</span>
                       </div>
                    </div>
                 </div>
@@ -226,7 +206,7 @@ export default function VisualLogicLandingPage() {
 
               {/* Game Tiles Grid using provided Full-Paths */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
-                 {visualLogicData.map((game) => (
+                 {ArrangementData.map((game) => (
                    <NumberGameCard 
                     key={String(game.id)} 
                     {...game} 

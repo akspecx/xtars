@@ -21,7 +21,8 @@ import Home from "./pages/Dashboard/Home";
 import { SettingsProvider } from "./contexts/SettingsContext";
 import CoursesHome from "./x-tars/courses/CourseHome";
 import CoursesRouter from "./x-tars/courses/Router";
-import GamesHome from "./x-tars/courses/Kids/MainModule/KidsMainPage";
+import GamesHome from "./x-tars/courses/Kids/basics/KidsMainPage";
+import PuzzlesHome from "./x-tars/courses/Puzzles/PuzzlesMain"
 import Roadmap from "./x-tars/Roadmap";
 // import ShapesIntroduction  from "./x-tars/courses/Kids/basics/Shapes/ShapesIntroduction";
 import { 
@@ -129,14 +130,76 @@ import {
   AnimalMatchingGameWrapper,
   FruitsMatchingGameWrapper,
   NumberMatchingGameWrapper
-} from "./x-tars/courses/Kids/games/MemoryGame/MemoryGameWrappers";
+} from "./x-tars/courses/Kids/basics/MemoryGame/MemoryGameWrappers";
 import { 
   PuzzlesPageWrapper,
   AppleArrangementGameWrapper,
   OrangeArrangementGameWrapper,
   OrangeComplexArrangementGameWrapper,
   GiraffeComplexArrangementGameWrapper
-} from "./x-tars/courses/Kids/games/puzzles/Arrangement/PuzzleGameWrappers";
+} from "./x-tars/courses/Kids/basics/Arrangement/PuzzleGameWrappers";
+
+import{LinearArrangementMainRouter}
+from "./x-tars/courses/Learn/LogicalReasoning/LogicalReasoningRouterWrapper"
+
+import {LinearArrangementIntroductionRouter,
+  LinearArrangementLeftRightRouter,
+LADirectionMattersLeftRightRouter,
+ImmediateRightAndLeftRouter,
+LinearArrangementBetweenRouter,
+LAFirstSecondLeftRightRouter,
+LANumberOfPeopleSittingBetweenRouter,
+LAExtremeLeftRightRouter,
+LAFollowInstructionIntroRouter,
+}
+from "./x-tars/courses/Learn/LogicalReasoning/LinearArrangement/LinearArrangementRouterWrapper"
+
+import {
+  PuzzleRouter,
+  PuzzleMissionRouter,
+  PuzzleMetricSumRouter,
+  SacredGameRouter
+  
+}
+from "./x-tars/courses/Puzzles/PuzzlesWrapper";
+
+
+import {
+  AlgebraicExpressionRouter
+  
+}
+from "./x-tars/courses/Learn/maths/MathsRouterWrapper"
+
+import {
+  AlgebraicIntroductionRouter,
+  FindingWeightUnknowRouter,
+  RightScaleRouter,
+  LhsrhsIntroductionRouter,
+  AELikeUnlikeTermsRouter,
+  AlgebraicExpressionIntroRouter,
+  MonoBinoPolyIdentificationRouter,
+  VariableCoeffConstIntroRouter,
+  IntroToXRouter,
+  ActionREactionRouter,
+  BalancedScaleToXTransitionRouter,
+  SolveTheBasicEquationRouter,
+  SolveEquationsAXPlusBRouter,
+  WarModeAEBeginnerRouter,
+  WarModeAEIntermediateRouter
+
+}
+from "./x-tars/courses/Learn/maths/AlgebraicExpression/AlgebraRouterWrapper"
+
+
+
+import {
+  LearnRouter,
+  LearnMathsRouter,
+  LogicalReasoningMainRouter
+  
+}
+from "./x-tars/courses/Learn/LearnModuleWrapper"
+
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import FeedBackComponent from "./pages/Feedback";
@@ -155,13 +218,59 @@ export default function App() {
               <Route path="/dashboard" element={<Home />} />
               <Route path="/home" element={<Home />} />
 
-              {/* Courses */}
-              <Route path="/courses" element={<CoursesHome />} />
-              <Route path="/courses/:courseid" element={<CoursesRouter />} />
+              {/* Courses Learn Module Router */}
+              <Route path="/learn" element={<LearnRouter />} />
+              <Route path="/learn/mathematics" element={<LearnMathsRouter />} />
+              <Route path="/learn/mathematics/algebra" element={<AlgebraicExpressionRouter />} />
+               {/* Algebra sub modules */}
+               <Route path="/learn/mathematics/algebra/introduction" element={<AlgebraicIntroductionRouter />} />
+              <Route path="/learn/mathematics/algebra/unknown" element={<FindingWeightUnknowRouter />} />
+              <Route path="/learn/mathematics/algebra/rightScale" element={<RightScaleRouter />} />
+              <Route path="/learn/mathematics/algebra/lhsrhsIntroduction" element={<LhsrhsIntroductionRouter />} />
+              <Route path="/learn/mathematics/algebra/likeunlike" element={<AELikeUnlikeTermsRouter />} />
+              <Route path="/learn/mathematics/algebra/monibiPoly" element={<MonoBinoPolyIdentificationRouter />} />
+              <Route path="/learn/mathematics/algebra/expressionIntro" element={<AlgebraicExpressionIntroRouter />} />
+              <Route path="/learn/mathematics/algebra/variableCoefficient" element={<VariableCoeffConstIntroRouter />} />
+              <Route path="/learn/mathematics/algebra/IntroToX" element={<IntroToXRouter />} />
+              <Route path="/learn/mathematics/algebra/actionReaction" element={<ActionREactionRouter />} />
+              <Route path="/learn/mathematics/algebra/balancedScaleToAE" element={<BalancedScaleToXTransitionRouter />} />
+              <Route path="/learn/mathematics/algebra/SolveBasicEquation" element={<SolveTheBasicEquationRouter />} />
+              <Route path="/learn/mathematics/algebra/SolveAXPlusB" element={<SolveEquationsAXPlusBRouter />} />
+              <Route path="/learn/mathematics/algebra/WarModeAEBeginner" element={<WarModeAEBeginnerRouter />} /> 
+              <Route path="/learn/mathematics/algebra/WarModeAEIntermediate" element={<WarModeAEIntermediateRouter />} />
+
+             
+
+
+
+              <Route path="/learn/logicalreasoning" element={<LogicalReasoningMainRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement" element={<LinearArrangementMainRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/introduction" element={<LinearArrangementIntroductionRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/leftRight" element={<LinearArrangementLeftRightRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/leftRightWithDiffDirection" element={<LADirectionMattersLeftRightRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/immediateleftRight" element={<ImmediateRightAndLeftRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/between" element={<LinearArrangementBetweenRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/FirstSecondLeftRight" element={<LAFirstSecondLeftRightRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/PeopleSittingBetween" element={<LANumberOfPeopleSittingBetweenRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/extremeleftRight" element={<LAExtremeLeftRightRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/followInstructionLeft" element={<LAFollowInstructionIntroRouter />} />
+
+
+              
+            
+
+             
+
 
               {/* Games */}
               <Route path="/games" element={<GamesHome />} />
-              
+
+              {/* Puzzle module router */}
+
+              <Route path="/puzzles" element={<PuzzleRouter />} />
+              <Route path="/puzzles/mission" element={<PuzzleMissionRouter />} />
+              <Route path="/puzzles/metricSum" element={<PuzzleMetricSumRouter />} />
+              <Route path="/puzzles/sacredGame" element={<SacredGameRouter />} />
               {/* Alphabet Games Menu */}
               <Route path="/games/alphabets" element={<AlphabetGamesPageWrapper />} />
               

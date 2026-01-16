@@ -11,39 +11,21 @@ import {
   ChevronRight, BrainCircuit, Lightbulb, 
   ChevronLeft, Info, Calculator, Target, Star, Rocket
 } from 'lucide-react';
-import NumberGameCard from "../../../CommonUtility/CardsUtility"
-
+import NumberGameCard from "../../CommonUtility/CardsUtility"
 
 const USER_NAME = "Prabhat"; 
 
-const visualLogicData = [
-  // Size
-  { id: "big", title: "Big", subtitle: "Find the big one", icon: "🐘", path: "/games/visuallogic/big", category: "size" },
-  { id: "small", title: "Small", subtitle: "Find the small one", icon: "🐜", path: "/games/visuallogic/small", category: "size" },
-  { id: "big-small-mix", title: "Big & Small", subtitle: "Mixed size fun", icon: "⚖️", path: "/games/visuallogic/big-small-mix", category: "size" },
-  { id: "tall", title: "Tall", subtitle: "Who is taller?", icon: "🦒", path: "/games/visuallogic/tall", category: "size" },
-  { id: "short", title: "Short", subtitle: "Who is shorter?", icon: "🌵", path: "/games/visuallogic/short", category: "size" },
-  { id: "tall-short", title: "Tall & Short", subtitle: "Height challenge", icon: "📏", path: "/games/visuallogic/tall-short", category: "size" },
 
-  // Position
-  { id: "above", title: "Above", subtitle: "What is up there?", icon: "☁️", path: "/games/visuallogic/above", category: "position" },
-  { id: "below", title: "Below", subtitle: "What is down there?", icon: "🍄", path: "/games/visuallogic/below", category: "position" },
-  { id: "above-below-mix", title: "Above & Below", subtitle: "Up and down fun", icon: "↕️", path: "/games/visuallogic/above-below-mix", category: "position" },
-  { id: "inside", title: "Inside", subtitle: "In the box", icon: "🧸", path: "/games/visuallogic/inside", category: "position" },
-  { id: "outside", title: "Outside", subtitle: "Out of the box", icon: "🌳", path: "/games/visuallogic/outside", category: "position" },
-  { id: "inside-outside-mix", title: "In & Out", subtitle: "Where is it?", icon: "📦", path: "/games/visuallogic/inside-outside-mix", category: "position" },
-
-  // Quantity
-  { id: "full", title: "Full", subtitle: "All filled up", icon: "🧺", path: "/games/visuallogic/full", category: "quantity" },
-  { id: "empty", title: "Empty", subtitle: "Nothing inside", icon: "🥣", path: "/games/visuallogic/empty", category: "quantity" },
-  { id: "full-empty", title: "Full & Empty", subtitle: "Mixed volume fun", icon: "🥛", path: "/games/visuallogic/full-empty", category: "quantity" },
-
-  // Logic
-  { id: "same", title: "Same", subtitle: "Match the pictures", icon: "👯", path: "/games/visuallogic/same", category: "logic" },
-  { id: "different", title: "Different", subtitle: "Spot the odd one", icon: "🤔", path: "/games/visuallogic/different", category: "logic" },
-];
-
-
+const KIDS_DATA = [
+   { id: "Alphabets", title: "Alphabets ✅", subtitle: "Learn letters A-Z with interactive exercises", icon: "🔤", gradient: "from-indigo-500 to-purple-500", path: "/games/alphabets"},
+   { id: "Numbers", title: "Numbers ✅", subtitle: "Master counting and basic math", icon: "🔢", gradient: "from-indigo-500 to-purple-500", path: "/games/numbers"},
+   { id: "Shapes", title: "Shapes✅", subtitle: "Identify and learn geometric shapes", icon: "🔺", gradient: "from-indigo-500 to-purple-500", path: "/games/shapes"},
+   { id: "Visuallogic", title: "Visual Logic", subtitle: "Learn comparison concepts and visual reasoning", icon: "", gradient: "from-rose-500 to-amber-500", path: "/games/visuallogic"},
+   { id: "Memory", title: "Memory Game✅", subtitle: "Test your memory with matching cards", icon: "🧠", gradient: "from-sky-500 to-blue-500", path: "/games/memory" },
+   { id: "Puzzles", title: "Puzzles✅", subtitle: "Solve fun puzzles and brain teasers", icon: "🧩", gradient: "from-orange-500 to-amber-500", path: "/games/puzzles"},
+//   // { id: "filltheblank", title: "Fill in the Blanks", subtitle: "Drag and drop the missing numbers", icon: "1️⃣_3️⃣", gradient: "from-lime-500 to-green-500", path: "/puzzles/filltheblank", type: 'numeric' },
+//   // { id: "descending", title: "Descending Order Train", subtitle: "Place the train coaches in descending order", icon: "3️⃣2️⃣1️⃣", gradient: "from-cyan-500 to-blue-500", path: "/puzzles/descending", type: 'numeric' }
+ ];
 
 const MOTIVATIONAL_QUOTES = [
   { text: "The roots of education are bitter, but the fruit is sweet.", author: "Aristotle" },
@@ -51,7 +33,6 @@ const MOTIVATIONAL_QUOTES = [
   { text: "Intelligence plus character - that is the goal of true education.", author: "Martin Luther King Jr." }
 ];
 
-// --- KINETIC THEMATIC BACKGROUNDS ---
 
 
 const AuroraBackground = () => (
@@ -63,7 +44,6 @@ const AuroraBackground = () => (
     />
   </div>
 );
-
 
 // --- MISSION MODULE: BALANCE SCALE ---
 
@@ -170,9 +150,10 @@ const BalanceScaleMission = () => {
   );
 };
 
+
 // --- PRIMARY HUB COMPONENT ---
 
-export default function VisualLogicLandingPage() {
+export default function LearningPlatform() {
   const navigate = useNavigate();
   const { puzzleId } = useParams();
   const [quoteIndex, setQuoteIndex] = useState(0);
@@ -218,7 +199,7 @@ export default function VisualLogicLandingPage() {
                    <div className="flex items-center gap-6 shrink-0 bg-[#3e2723] p-8 rounded-[3rem] text-white shadow-2xl border-b-8 border-black">
                       <div className="text-center">
                         <span className="text-[11px] font-black uppercase block mb-2 tracking-widest opacity-40">Active Links</span>
-                        <span className="text-5xl font-black tabular-nums">{String(visualLogicData.length)}</span>
+                        <span className="text-5xl font-black tabular-nums">{String(KIDS_DATA.length)}</span>
                       </div>
                    </div>
                 </div>
@@ -226,7 +207,7 @@ export default function VisualLogicLandingPage() {
 
               {/* Game Tiles Grid using provided Full-Paths */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
-                 {visualLogicData.map((game) => (
+                 {KIDS_DATA.map((game) => (
                    <NumberGameCard 
                     key={String(game.id)} 
                     {...game} 

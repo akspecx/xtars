@@ -11,47 +11,26 @@ import {
   ChevronRight, BrainCircuit, Lightbulb, 
   ChevronLeft, Info, Calculator, Target, Star, Rocket
 } from 'lucide-react';
-import NumberGameCard from "../../../CommonUtility/CardsUtility"
-
+import NumberGameCard from "../CommonUtility/CardsUtility"
 
 const USER_NAME = "Prabhat"; 
 
-const visualLogicData = [
-  // Size
-  { id: "big", title: "Big", subtitle: "Find the big one", icon: "🐘", path: "/games/visuallogic/big", category: "size" },
-  { id: "small", title: "Small", subtitle: "Find the small one", icon: "🐜", path: "/games/visuallogic/small", category: "size" },
-  { id: "big-small-mix", title: "Big & Small", subtitle: "Mixed size fun", icon: "⚖️", path: "/games/visuallogic/big-small-mix", category: "size" },
-  { id: "tall", title: "Tall", subtitle: "Who is taller?", icon: "🦒", path: "/games/visuallogic/tall", category: "size" },
-  { id: "short", title: "Short", subtitle: "Who is shorter?", icon: "🌵", path: "/games/visuallogic/short", category: "size" },
-  { id: "tall-short", title: "Tall & Short", subtitle: "Height challenge", icon: "📏", path: "/games/visuallogic/tall-short", category: "size" },
-
-  // Position
-  { id: "above", title: "Above", subtitle: "What is up there?", icon: "☁️", path: "/games/visuallogic/above", category: "position" },
-  { id: "below", title: "Below", subtitle: "What is down there?", icon: "🍄", path: "/games/visuallogic/below", category: "position" },
-  { id: "above-below-mix", title: "Above & Below", subtitle: "Up and down fun", icon: "↕️", path: "/games/visuallogic/above-below-mix", category: "position" },
-  { id: "inside", title: "Inside", subtitle: "In the box", icon: "🧸", path: "/games/visuallogic/inside", category: "position" },
-  { id: "outside", title: "Outside", subtitle: "Out of the box", icon: "🌳", path: "/games/visuallogic/outside", category: "position" },
-  { id: "inside-outside-mix", title: "In & Out", subtitle: "Where is it?", icon: "📦", path: "/games/visuallogic/inside-outside-mix", category: "position" },
-
-  // Quantity
-  { id: "full", title: "Full", subtitle: "All filled up", icon: "🧺", path: "/games/visuallogic/full", category: "quantity" },
-  { id: "empty", title: "Empty", subtitle: "Nothing inside", icon: "🥣", path: "/games/visuallogic/empty", category: "quantity" },
-  { id: "full-empty", title: "Full & Empty", subtitle: "Mixed volume fun", icon: "🥛", path: "/games/visuallogic/full-empty", category: "quantity" },
-
-  // Logic
-  { id: "same", title: "Same", subtitle: "Match the pictures", icon: "👯", path: "/games/visuallogic/same", category: "logic" },
-  { id: "different", title: "Different", subtitle: "Spot the odd one", icon: "🤔", path: "/games/visuallogic/different", category: "logic" },
-];
-
-
+const PUZZLES_SUB_MODULES = [
+   { id: "TheMission", title: "The Mission✅", subtitle: "Let's achieve the mission within contraints defined", icon: "🎯", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/mission"},
+   { id: "MetricSum", title: "Magic Square", subtitle: "Can you arrange the numbers so that sum is equal?", icon: "∑🔢", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/metricSum" },
+   { id: "identification", title: "The Sacred Game ✅", subtitle: "Can you offer flowers correctly?", icon: "🛕", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/sacredGame" }
+//   // { id: "counting", title: "Count On Your Body", subtitle: "Learn numbers with body-part examples", icon: "🤗", gradient: "from-rose-500 to-amber-500", path: "/puzzles/counting", type: 'numeric' },
+//   // { id: "tracing", title: "Trace the Numbers ✅", subtitle: "Practice drawing numbers with dotted guides", icon: "✍️", gradient: "from-sky-500 to-blue-500", path: "/puzzles/tracing", type: 'numeric' },
+//   // { id: "sequence", title: "Number Train Sequence ✅", subtitle: "Arrange train coaches in the correct order", icon: "🚂", gradient: "from-orange-500 to-amber-500", path: "/puzzles/sequence", type: 'numeric' },
+//   // { id: "filltheblank", title: "Fill in the Blanks", subtitle: "Drag and drop the missing numbers", icon: "1️⃣_3️⃣", gradient: "from-lime-500 to-green-500", path: "/puzzles/filltheblank", type: 'numeric' },
+//   // { id: "descending", title: "Descending Order Train", subtitle: "Place the train coaches in descending order", icon: "3️⃣2️⃣1️⃣", gradient: "from-cyan-500 to-blue-500", path: "/puzzles/descending", type: 'numeric' }
+ ];
 
 const MOTIVATIONAL_QUOTES = [
   { text: "The roots of education are bitter, but the fruit is sweet.", author: "Aristotle" },
   { text: "Education is what remains after one has forgotten what one has learned in school.", author: "Albert Einstein" },
   { text: "Intelligence plus character - that is the goal of true education.", author: "Martin Luther King Jr." }
 ];
-
-// --- KINETIC THEMATIC BACKGROUNDS ---
 
 
 const AuroraBackground = () => (
@@ -63,7 +42,6 @@ const AuroraBackground = () => (
     />
   </div>
 );
-
 
 // --- MISSION MODULE: BALANCE SCALE ---
 
@@ -172,7 +150,7 @@ const BalanceScaleMission = () => {
 
 // --- PRIMARY HUB COMPONENT ---
 
-export default function VisualLogicLandingPage() {
+export default function PuzzlesSubModules() {
   const navigate = useNavigate();
   const { puzzleId } = useParams();
   const [quoteIndex, setQuoteIndex] = useState(0);
@@ -218,7 +196,7 @@ export default function VisualLogicLandingPage() {
                    <div className="flex items-center gap-6 shrink-0 bg-[#3e2723] p-8 rounded-[3rem] text-white shadow-2xl border-b-8 border-black">
                       <div className="text-center">
                         <span className="text-[11px] font-black uppercase block mb-2 tracking-widest opacity-40">Active Links</span>
-                        <span className="text-5xl font-black tabular-nums">{String(visualLogicData.length)}</span>
+                        <span className="text-5xl font-black tabular-nums">{String(PUZZLES_SUB_MODULES.length)}</span>
                       </div>
                    </div>
                 </div>
@@ -226,7 +204,7 @@ export default function VisualLogicLandingPage() {
 
               {/* Game Tiles Grid using provided Full-Paths */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
-                 {visualLogicData.map((game) => (
+                 {PUZZLES_SUB_MODULES.map((game) => (
                    <NumberGameCard 
                     key={String(game.id)} 
                     {...game} 
