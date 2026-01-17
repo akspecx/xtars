@@ -51,7 +51,7 @@ const PUZZLES = [
     }
 ];
 
-const FlickeringFlame = ({ active, position = 'top' }) => {
+const FlickeringFlame = ({ active, position = 'top', offset = 0 }) => {
     if (!active) return null;
     const isTop = position === 'top';
     return (
@@ -63,7 +63,10 @@ const FlickeringFlame = ({ active, position = 'top' }) => {
                 y: isTop ? [0, -4, 0, -6, 0] : [0, 4, 0, 6, 0]
             }}
             transition={{ repeat: Infinity, duration: 0.4, ease: "easeInOut" }}
-            className={`absolute z-30 pointer-events-none left-1/2 -translate-x-1/2 ${isTop ? '-top-10' : '-bottom-10 rotate-180'}`}
+            className={`absolute z-30 pointer-events-none left-1/2 -translate-x-1/2`}
+            style={{ 
+                [isTop ? 'top' : 'bottom']: `calc(${offset}% - ${isTop ? '24px' : '20px'})`,
+            }}
         >
             <Flame size={isTop ? 44 : 36} className="text-orange-500 fill-orange-500 blur-[0.3px]" />
         </motion.div>
@@ -241,45 +244,62 @@ export default function App() {
                 <div className="absolute inset-0 opacity-[0.01] pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/wood-pattern.png")' }} />
                 
                 <div className="flex justify-around items-center h-80 relative mb-12 border-b-8 border-stone-100 rounded-b-[3rem]">
-                    {['A', 'B'].map(id => (
-                        <div key={id} className="flex flex-col items-center gap-6 group">
-                            <div className="relative w-12 sm:w-20 bg-stone-100 rounded-lg border-2 border-stone-200 shadow-inner flex flex-col items-center overflow-visible" style={{ height: '240px' }}>
-                                <div className="absolute inset-y-0 w-1 bg-stone-300/30 left-1/2 -translate-x-1/2" />
-                                
-                                <motion.div 
-                                    className="w-full bg-gradient-to-r from-orange-200 via-orange-50 to-orange-200 relative z-10 rounded-sm shadow-md border-x border-orange-100"
-                                    animate={{ 
-                                        height: `${((60 - candles[id].topConsumed - candles[id].btmConsumed) / 60) * 100}%`,
-                                        top: `${(candles[id].topConsumed / 60) * 100}%`
-                                    }}
-                                    transition={{ duration: 0.1, ease: "linear" }}
-                                />
+                    {['A', 'B'].map(id => {
+                        const topPercent = (candles[id].topConsumed / 60) * 100;
+                        const btmPercent = (candles[id].btmConsumed / 60) * 100;
+                        const remainingPercent = ((60 - candles[id].topConsumed - candles[id].btmConsumed) / 60) * 100;
 
-                                <FlickeringFlame active={candles[id].topLit && !candles[id].gone} position="top" />
-                                <FlickeringFlame active={candles[id].btmLit && !candles[id].gone} position="bottom" />
-                            </div>
+                        return (
+                            <div key={id} className="flex flex-col items-center gap-6 group">
+                                <div className="relative w-12 sm:w-20 bg-stone-100 rounded-lg border-2 border-stone-200 shadow-inner flex flex-col items-center overflow-visible" style={{ height: '240px' }}>
+                                    {/* THE THREAD / WICK */}
+                                    <div className="absolute inset-y-0 w-0.5 bg-stone-800/40 left-1/2 -translate-x-1/2 z-0" />
+                                    
+                                    {/* WAX BODY (Dynamic Melting) */}
+                                    <motion.div 
+                                        className="w-full bg-gradient-to-r from-orange-200 via-orange-50 to-orange-200 relative z-10 rounded-sm shadow-md border-x border-orange-100"
+                                        animate={{ 
+                                            height: `${remainingPercent}%`,
+                                            top: `${topPercent}%`
+                                        }}
+                                        transition={{ duration: 0.1, ease: "linear" }}
+                                    />
 
-                            <div className="flex flex-col gap-2 w-full max-w-[140px]">
-                                <span className="text-center font-black text-[10px] text-[#a88a6d] uppercase tracking-[0.3em]">Unit {id}</span>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <button 
-                                        onClick={() => toggleLight(id, 'topLit')}
-                                        disabled={candles[id].gone || isRunning}
-                                        className={`py-3 rounded-xl border-2 text-[9px] font-black transition-all ${candles[id].topLit ? 'bg-orange-500 text-white border-orange-700 shadow-inner' : 'bg-white border-stone-200 text-stone-400 hover:border-[#8d6e63]/30'}`}
-                                    >
-                                        TOP
-                                    </button>
-                                    <button 
-                                        onClick={() => toggleLight(id, 'btmLit')}
-                                        disabled={candles[id].gone || isRunning}
-                                        className={`py-3 rounded-xl border-2 text-[9px] font-black transition-all ${candles[id].btmLit ? 'bg-orange-500 text-white border-orange-700 shadow-inner' : 'bg-white border-stone-200 text-stone-400 hover:border-[#8d6e63]/30'}`}
-                                    >
-                                        BTM
-                                    </button>
+                                    {/* FLAMES - Moving with the wax */}
+                                    <FlickeringFlame 
+                                        active={candles[id].topLit && !candles[id].gone} 
+                                        position="top" 
+                                        offset={topPercent}
+                                    />
+                                    <FlickeringFlame 
+                                        active={candles[id].btmLit && !candles[id].gone} 
+                                        position="bottom" 
+                                        offset={btmPercent}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col gap-2 w-full max-w-[140px]">
+                                    <span className="text-center font-black text-[10px] text-[#a88a6d] uppercase tracking-[0.3em]">Unit {id}</span>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <button 
+                                            onClick={() => toggleLight(id, 'topLit')}
+                                            disabled={candles[id].gone || isRunning}
+                                            className={`py-3 rounded-xl border-2 text-[9px] font-black transition-all ${candles[id].topLit ? 'bg-orange-500 text-white border-orange-700 shadow-inner' : 'bg-white border-stone-200 text-stone-400 hover:border-[#8d6e63]/30'}`}
+                                        >
+                                            TOP
+                                        </button>
+                                        <button 
+                                            onClick={() => toggleLight(id, 'btmLit')}
+                                            disabled={candles[id].gone || isRunning}
+                                            className={`py-3 rounded-xl border-2 text-[9px] font-black transition-all ${candles[id].btmLit ? 'bg-orange-500 border-orange-700 text-white shadow-inner' : 'bg-white border-stone-200 text-stone-400 hover:border-[#8d6e63]/30'}`}
+                                        >
+                                            BTM
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
                 <div className="flex flex-col gap-4">
