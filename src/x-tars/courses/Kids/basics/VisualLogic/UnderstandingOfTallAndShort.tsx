@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   RefreshCcw, CheckCircle2, 
@@ -29,7 +30,7 @@ const SCENARIOS = [
 ];
 
 export default function App() {
-  const [mode, setMode] = useState('practice'); 
+  const [mode, setMode] = useState(forcedMode || 'practice'); 
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const [tallSide, setTallSide] = useState('left'); // Physical position of the TALL object
   const [targetType, setTargetType] = useState('tall'); // Challenge: 'tall' or 'short'
@@ -42,6 +43,21 @@ export default function App() {
   const [isMuted, setIsMuted] = useState(false);
   const [journeyFinished, setJourneyFinished] = useState(false);
   const [score, setScore] = useState(0);
+  
+  const location = useLocation();
+  const navigate = useNavigate();
+  const forcedMode = location.state?.initialMode;
+
+  const games = [
+    'understandingofsamepictures',
+    'understandingofabove',
+    'understandingofbigandsmallmix',
+    'understandingoffullandempty',
+    'understandingofinsideandoutsidemix',
+    'understandingoftallandshort',
+    'understandingofsmall',
+    'understandingofoutside'
+  ];
   
   const timerIntervalRef = useRef(null);
   const sideRefs = useRef({ left: null, right: null });
@@ -129,7 +145,18 @@ export default function App() {
       
       if (mode === 'kid') {
         if (scenarioIdx === SCENARIOS.length - 1) {
+          if (forcedMode === 'kid') {
+            const currentGame = 'understandingoftallandshort';
+            const currentIndex = games.indexOf(currentGame);
+            if (currentIndex < games.length - 1) {
+              const nextGame = games[currentIndex + 1];
+              setTimeout(() => navigate(`/xtars/games/visuallogic/${nextGame}`, { state: { initialMode: 'kid' } }), 3000);
+            } else {
+              setTimeout(() => setJourneyFinished(true), 1200);
+            }
+          } else {
             setTimeout(() => setJourneyFinished(true), 1200);
+          }
         } else {
             setAutoNextTimer(10);
         }
@@ -235,15 +262,17 @@ export default function App() {
         <div className="flex items-center gap-4">
             <div className="bg-[#F3E5D5] p-2 rounded-3xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-2">
                 <button 
-                    onClick={() => { setMode('kid'); setScore(0); resetLevel(0); }}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-lg scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
+                    onClick={() => { if (!forcedMode) { setMode('kid'); setScore(0); resetLevel(0); } }}
+                    disabled={!!forcedMode}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-lg scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'} ${forcedMode ? 'opacity-50' : ''}`}
                 >
                     <Play size={16} fill={mode === 'kid' ? 'white' : 'none'} />
                     KID MODE
                 </button>
                 <button 
-                    onClick={() => { setMode('practice'); setScore(0); resetLevel(scenarioIdx); }}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-lg scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
+                    onClick={() => { if (!forcedMode) { setMode('practice'); setScore(0); resetLevel(scenarioIdx); } }}
+                    disabled={!!forcedMode}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-lg scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'} ${forcedMode ? 'opacity-50' : ''}`}
                 >
                     <MousePointer2 size={16} />
                     PRACTICE
@@ -360,7 +389,7 @@ export default function App() {
                           YOU ARE A HEIGHT EXPERT!
                         </p>
                         <button 
-                            onClick={() => { setMode('kid'); setScore(0); resetLevel(0); }}
+                            onClick={() => { setMode(forcedMode || 'kid'); setScore(0); resetLevel(0); }}
                             className="bg-[#4CAF50] text-white px-24 py-8 rounded-[3.5rem] font-black text-4xl sm:text-6xl shadow-[0_15px_0_#388E3C] active:translate-y-2 active:shadow-none transition-all"
                         >
                             PLAY AGAIN
