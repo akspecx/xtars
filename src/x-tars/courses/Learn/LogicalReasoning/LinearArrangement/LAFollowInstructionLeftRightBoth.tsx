@@ -21,13 +21,12 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
+import AanyaBackPng from '../../../CommonUtility/Images/AanyaBack.png';
+import BenPng from '../../../CommonUtility/Images/Ben.png';
+import ChintuBackPng from '../../../CommonUtility/Images/ChintuBack.png';
+import DiyaPng from '../../../CommonUtility/Images/Diya.png';
+import EthanBackPng from '../../../CommonUtility/Images/EthanBack.png';
 
-// Assets (Using placeholders for environment stability)
-const AanyaBackPng = 'https://via.placeholder.com/300x450?text=Aanya+Back';
-const BenPng = 'https://via.placeholder.com/300x450?text=Ben+Front';
-const ChintuBackPng = 'https://via.placeholder.com/300x450?text=Chintu+Back';
-const DiyaPng = 'https://via.placeholder.com/300x450?text=Diya+Front';
-const EthanBackPng = 'https://via.placeholder.com/300x450?text=Ethan+Back';
 
 // ==========================================
 // 1. DATA CONFIGURATIONS
@@ -412,10 +411,10 @@ export default function LabContent() {
           <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
           <div className="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-4">
             <div className="flex flex-col text-left">
-              <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
+              <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
                 <ChevronLeft size={16} /> Dashboard
               </button>
-              <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Perspective Lab</h1>
+              <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">What if instructions are for both left and right</h1>
             </div>
             <div className="flex bg-black/30 p-1 rounded-2xl border border-white/10 w-full sm:w-auto">
               <button onClick={() => setAppMode('concept')} className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'concept' ? 'bg-yellow-400 text-[#2a1a16]' : 'text-[#a88a6d] hover:text-white'}`}>Concept Building</button>
@@ -683,7 +682,7 @@ export default function LabContent() {
                 <p className="text-[#3e2723] text-lg sm:text-2xl leading-relaxed font-black mb-10 max-w-md mx-auto">
                   "You followed the rules and verified the line! Spatial reasoning is now one of your greatest strengths!"
                 </p>
-                <button onClick={() => window.location.reload()} className="px-12 py-6 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 transition-all">Restart Lab</button>
+                <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/InstrDiffDirection')} className="px-12 py-6 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 transition-all">Next Module</button>
               </div>
             </div>
           </motion.div>

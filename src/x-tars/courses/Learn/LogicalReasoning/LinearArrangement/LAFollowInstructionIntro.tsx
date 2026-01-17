@@ -547,10 +547,10 @@ export default function FollowInstruction() {
           <Trophy size={80} className="animate-bounce" />
         </div>
         <h1 className="relative z-10 text-3xl sm:text-6xl font-black text-[#3e2723] uppercase mb-4 tracking-tighter">Arrangement Master!</h1>
-        <div className="relative z-10 bg-white/60 p-10 rounded-[3.5rem] border-4 border-[#3e2723]/20 max-w-2xl mb-10 shadow-2xl mx-4 backdrop-blur-sm font-black text-lg">
+        <div className="relative z-10 bg-white/60 p-10 rounded-[3.5rem] border-4 border-[#3e2723]/20 max-w-2xl mb-10 shadow-2xl mx-4 backdrop-blur-sm font-black text-[#3e2723]">
            "You followed every instruction perfectly! Spatial logic is your strength."
         </div>
-        <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="relative z-10 px-16 py-7 bg-[#3e2723] text-[#e6dccb] rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 transition-all active:translate-y-2">Restart Lab</button>
+        <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/InstrRight')} className="relative z-10 px-16 py-7 bg-[#3e2723] text-[#e6dccb] rounded-[2.5rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 transition-all active:translate-y-2">Next Module</button>
       </div>
     );
   }

@@ -8,7 +8,15 @@ import LinearArrangementBetween from "./LinearArrangementBetween";
 import  LAFirstSecondLeftRight from "./LinearArrangementFirstSecondLeftRight";
 import LANumberOfPeopleSittingBetween from "./LinearArrangementNumberOfPeopleSittingBetween";
 import LAExtremeLeftRight from "./LinearArrangementExtremeLeftRight";
-import LAFollowInstructionIntro from "./LAFollowInstructionIntro";
+import LAFollowInstructionIntro from "./LAFollowInstructionIntro"
+import LAFollowInstructionRight from "./LAFollowInstructionRight";
+import LAFollowInstructionLeftRightBoth from "./LAFollowInstructionLeftRightBoth";
+import LAFollowInstructionDirectionLeftRight from "./LAFollowInstructionDirectionLeftRight";
+import LAFollowingInstructionWithBetweenAndExtremeEnd from "./LAFollowingInstructionWithBetweenAndExtremeEnd";
+import LAFollowingInstructionDiffDirectionIntermediate from "./LAFollowingInstructionDiffDirectionIntermediate";
+import LAFollowingInstructionComplexityHigh from "./LAFollowingInstructionComplexityHigh";
+
+
 
 // To handle back from Maths page
 
@@ -264,6 +272,181 @@ export const LAFollowInstructionIntroRouter: React.FC = () => {
     />
   );
 };
+
+export const LAFollowInstructionRightRouter: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
+
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
+
+  return (
+    <LAFollowInstructionRight 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
+
+export const LAFollowInstructionLeftRightBothRouter: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
+
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
+
+  return (
+    <LAFollowInstructionLeftRightBoth 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
+
+export const LAFollowInstructionDirectionLeftRightRouter: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
+
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
+
+  return (
+    <LAFollowInstructionDirectionLeftRight 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
+
+export const LAFollowingInstructionWithBetweenAndExtremeEndRouter: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
+
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
+
+  return (
+    <LAFollowingInstructionWithBetweenAndExtremeEnd 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
+
+export const LAFollowingInstructionDiffDirectionIntermediateRouter: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
+
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
+
+  return (
+    <LAFollowingInstructionDiffDirectionIntermediate 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
+
+export const LAFollowingInstructionComplexityHighRouter: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
+
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
+
+  return (
+    <LAFollowingInstructionComplexityHigh 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
+
+
+
+
+
+
+
 
 
 

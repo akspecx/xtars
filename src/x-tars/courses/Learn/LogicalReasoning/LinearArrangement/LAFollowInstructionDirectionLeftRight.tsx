@@ -25,27 +25,27 @@ import {
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
 
-// Assets
-const AanyaBackPng = 'https://via.placeholder.com/300x450?text=Aanya+Back';
-const AanyaFrontPng = 'https://via.placeholder.com/300x450?text=Aanya+Front';
-const BenBackPng = 'https://via.placeholder.com/300x450?text=Ben+Back';
-const BenFrontPng = 'https://via.placeholder.com/300x450?text=Ben+Front';
-const ChintuBackPng = 'https://via.placeholder.com/300x450?text=Chintu+Back';
-const ChintuFrontPng = 'https://via.placeholder.com/300x450?text=Chintu+Front';
-const DiyaBackPng = 'https://via.placeholder.com/300x450?text=Diya+Back';
-const DiyaFrontPng = 'https://via.placeholder.com/300x450?text=Diya+Front';
-const EthanBackPng = 'https://via.placeholder.com/300x450?text=Ethan+Back';
-const EthanFrontPng = 'https://via.placeholder.com/300x450?text=Ethan+Front';
+import AanyaBackPng from '../../../CommonUtility/Images/AanyaBack.png';
+import AanyaPng from '../../../CommonUtility/Images/Aanya.png';
+import BenBackPng from '../../../CommonUtility/Images/BenBack.png';
+import BenPng from '../../../CommonUtility/Images/Ben.png';
+import ChintuBackPng from '../../../CommonUtility/Images/ChintuBack.png';
+import ChintuPng from '../../../CommonUtility/Images/Chintu.png';
+import DiyaBackPng from '../../../CommonUtility/Images/DiyaBack.png';
+import DiyaPng from '../../../CommonUtility/Images/Diya.png';
+import EthanBackPng from '../../../CommonUtility/Images/EthanBack.png';
+import EthanPng from '../../../CommonUtility/Images/Ethan.png';
+
 
 // ==========================================
 // 1. DATA CONFIGURATIONS
 // ==========================================
 const PEOPLE_DATA = {
-  p1: { name: 'Aanya', images: { away: AanyaBackPng, towards: AanyaFrontPng } },
-  p2: { name: 'Ben', images: { away: BenBackPng, towards: BenFrontPng } },
-  p3: { name: 'Chintu', images: { away: ChintuBackPng, towards: ChintuFrontPng } },
-  p4: { name: 'Diya', images: { away: DiyaBackPng, towards: DiyaFrontPng } },
-  p5: { name: 'Ethan', images: { away: EthanBackPng, towards: EthanFrontPng } },
+  p1: { name: 'Aanya', images: { away: AanyaBackPng, towards: AanyaPng } },
+  p2: { name: 'Ben', images: { away: BenBackPng, towards: BenPng } },
+  p3: { name: 'Chintu', images: { away: ChintuBackPng, towards: ChintuPng } },
+  p4: { name: 'Diya', images: { away: DiyaBackPng, towards: DiyaPng } },
+  p5: { name: 'Ethan', images: { away: EthanBackPng, towards: EthanPng } },
 };
 
 const MISSIONS = {
@@ -337,10 +337,10 @@ export default function LabContent() {
           <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
           <div className="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-4">
             <div className="flex flex-col text-left">
-              <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
+              <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
                 <ChevronLeft size={16} /> Dashboard
               </button>
-              <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Perspective Lab</h1>
+              <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none">Facing different direction</h1>
             </div>
             <div className="flex bg-black/30 p-1 rounded-2xl border border-white/10 w-full sm:w-auto">
               <button onClick={() => setAppMode('concept')} className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'concept' ? 'bg-yellow-400 text-[#2a1a16]' : 'text-[#a88a6d] hover:text-white'}`}>Concept Building</button>
@@ -557,7 +557,7 @@ export default function LabContent() {
                 <div className="w-32 h-32 bg-[#3e2723] rounded-full flex items-center justify-center text-amber-400 mb-8 shadow-2xl border-4 border-white"><Trophy size={64} className="animate-bounce" /></div>
                 <h1 className="text-4xl sm:text-6xl font-black text-[#3e2723] uppercase mb-4 tracking-tighter">Logic Pro!</h1>
                 <p className="text-[#3e2723] text-lg sm:text-2xl leading-relaxed font-black mb-10 max-w-md mx-auto text-center">"You mastered the perspective chain! You can now solve complex seating logic from any character's view."</p>
-                <button onClick={() => window.location.reload()} className="px-12 py-6 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 transition-all">Restart Lab</button>
+                <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/InstrExtremEnd')} className="px-12 py-6 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 transition-all">Next Module</button>
               </div>
             </div>
           </motion.div>

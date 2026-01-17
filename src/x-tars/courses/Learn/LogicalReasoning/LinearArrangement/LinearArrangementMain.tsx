@@ -57,9 +57,14 @@ const HIERARCHY_DATA = [
     gradient: "from-indigo-500 to-purple-500",
     path: "/learn/logicalReasoning/LinearArrangement",
     subModules: [
-      { id: 'LA_6', title: 'Follow instrucions of left and right?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/followInstructionLeft' },
-      // { id: 'LA_7', title: 'Number of people between?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/PeopleSittingBetween' },
-      // { id: 'LA_8', title: 'Sitting at extreme end?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/extremeleftRight' }  
+      { id: 'LA_6', title: 'Follow instructions?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/followInstructionLeft' },
+      { id: 'LA_7', title: 'Follow Instruction for right', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrRight' },
+      { id: 'LA_8', title: 'Let us make people sit by following both left and right', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrBothLeftRight' } , 
+      { id: 'LA_9', title: 'instruction says they are facing in different directions', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffDirection' },
+      { id: 'LA_10', title: 'When extreme ends are also involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrExtremEnd' },
+      { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
+      { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
+ 
     ]
   },
   

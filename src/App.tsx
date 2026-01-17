@@ -142,6 +142,7 @@ import {
 import{LinearArrangementMainRouter}
 from "./x-tars/courses/Learn/LogicalReasoning/LogicalReasoningRouterWrapper"
 
+
 import {LinearArrangementIntroductionRouter,
   LinearArrangementLeftRightRouter,
 LADirectionMattersLeftRightRouter,
@@ -151,6 +152,12 @@ LAFirstSecondLeftRightRouter,
 LANumberOfPeopleSittingBetweenRouter,
 LAExtremeLeftRightRouter,
 LAFollowInstructionIntroRouter,
+LAFollowInstructionRightRouter,
+LAFollowInstructionLeftRightBothRouter,
+LAFollowInstructionDirectionLeftRightRouter,
+LAFollowingInstructionWithBetweenAndExtremeEndRouter,
+LAFollowingInstructionDiffDirectionIntermediateRouter,
+LAFollowingInstructionComplexityHighRouter
 }
 from "./x-tars/courses/Learn/LogicalReasoning/LinearArrangement/LinearArrangementRouterWrapper"
 
@@ -254,9 +261,13 @@ export default function App() {
               <Route path="/learn/logicalReasoning/LinearArrangement/PeopleSittingBetween" element={<LANumberOfPeopleSittingBetweenRouter />} />
               <Route path="/learn/logicalReasoning/LinearArrangement/extremeleftRight" element={<LAExtremeLeftRightRouter />} />
               <Route path="/learn/logicalReasoning/LinearArrangement/followInstructionLeft" element={<LAFollowInstructionIntroRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/InstrRight" element={<LAFollowInstructionRightRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/InstrBothLeftRight" element={<LAFollowInstructionLeftRightBothRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/InstrDiffDirection" element={<LAFollowInstructionDirectionLeftRightRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/InstrExtremEnd" element={<LAFollowingInstructionWithBetweenAndExtremeEndRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate" element={<LAFollowingInstructionDiffDirectionIntermediateRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/Instrcomplex" element={<LAFollowingInstructionComplexityHighRouter />} />
 
-
-              
             
 
              
