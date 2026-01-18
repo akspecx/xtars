@@ -15,7 +15,7 @@ import LAFollowInstructionDirectionLeftRight from "./LAFollowInstructionDirectio
 import LAFollowingInstructionWithBetweenAndExtremeEnd from "./LAFollowingInstructionWithBetweenAndExtremeEnd";
 import LAFollowingInstructionDiffDirectionIntermediate from "./LAFollowingInstructionDiffDirectionIntermediate";
 import LAFollowingInstructionComplexityHigh from "./LAFollowingInstructionComplexityHigh";
-
+import LAActualWorldIntro from "./LAActualWorldIntro"
 
 
 // To handle back from Maths page
@@ -433,6 +433,34 @@ export const LAFollowingInstructionComplexityHighRouter: React.FC = () => {
 
   return (
     <LAFollowingInstructionComplexityHigh 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
+
+export const LAActualWorldIntroHighRouter: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
+
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
+
+  return (
+    <LAActualWorldIntro 
       onBack={handleBack}
       theme={theme}
       title="Numbers"

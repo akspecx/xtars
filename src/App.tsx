@@ -157,7 +157,8 @@ LAFollowInstructionLeftRightBothRouter,
 LAFollowInstructionDirectionLeftRightRouter,
 LAFollowingInstructionWithBetweenAndExtremeEndRouter,
 LAFollowingInstructionDiffDirectionIntermediateRouter,
-LAFollowingInstructionComplexityHighRouter
+LAFollowingInstructionComplexityHighRouter,
+LAActualWorldIntroHighRouter
 }
 from "./x-tars/courses/Learn/LogicalReasoning/LinearArrangement/LinearArrangementRouterWrapper"
 
@@ -245,9 +246,9 @@ export default function App() {
               <Route path="/learn/mathematics/algebra/SolveAXPlusB" element={<SolveEquationsAXPlusBRouter />} />
               <Route path="/learn/mathematics/algebra/WarModeAEBeginner" element={<WarModeAEBeginnerRouter />} /> 
               <Route path="/learn/mathematics/algebra/WarModeAEIntermediate" element={<WarModeAEIntermediateRouter />} />
-
              
-
+             
+              
 
 
               <Route path="/learn/logicalreasoning" element={<LogicalReasoningMainRouter />} />
@@ -267,7 +268,7 @@ export default function App() {
               <Route path="/learn/logicalReasoning/LinearArrangement/InstrExtremEnd" element={<LAFollowingInstructionWithBetweenAndExtremeEndRouter />} />
               <Route path="/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate" element={<LAFollowingInstructionDiffDirectionIntermediateRouter />} />
               <Route path="/learn/logicalReasoning/LinearArrangement/Instrcomplex" element={<LAFollowingInstructionComplexityHighRouter />} />
-
+              <Route path="/learn/logicalReasoning/LinearArrangement/ActualWorldIntro" element={<LAActualWorldIntroHighRouter />} />
             
 
              

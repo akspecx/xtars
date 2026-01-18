@@ -577,7 +577,7 @@ export default function LabContent() {
                 <div className="w-32 h-32 bg-[#3e2723] rounded-full flex items-center justify-center text-amber-400 mb-8 shadow-2xl border-4 border-white"><Trophy size={64} className="animate-bounce" /></div>
                 <h1 className="text-4xl sm:text-6xl font-black text-[#3e2723] uppercase mb-4 tracking-tighter">Grandmaster Logician!</h1>
                 <p className="text-[#3e2723] text-lg sm:text-2xl leading-relaxed font-black mb-10 max-w-md mx-auto text-center px-4">"You solved a spatially complex chain using only relative clues and orientation logic. You are in the top 1% of logicians!"</p>
-                <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="relative z-10 px-12 py-6 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Next Module</button>
+                <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/ActualWorldIntro')} className="relative z-10 px-12 py-6 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-widest shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Next Module</button>
               </div>
             </div>
           </motion.div>

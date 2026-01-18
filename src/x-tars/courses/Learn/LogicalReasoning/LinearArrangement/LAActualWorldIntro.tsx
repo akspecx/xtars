@@ -339,10 +339,10 @@ export default function LabContent() {
           <div className="absolute inset-0 opacity-[0.3] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
           <div className="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-4">
             <div className="flex flex-col text-left">
-              <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
+              <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all">
                 <ChevronLeft size={16} /> Dashboard
               </button>
-              <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none text-shadow-sm">Perspective Lab</h1>
+              <h1 className="text-white text-xl sm:text-2xl font-black uppercase tracking-tighter text-[#e6dccb] leading-none text-shadow-sm">Introduction to real world situation</h1>
             </div>
             <div className="flex bg-black/30 p-1 rounded-2xl border border-white/10 w-full sm:w-auto">
               <button onClick={() => setAppMode('concept')} className={`flex-1 sm:flex-none px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'concept' ? 'bg-yellow-400 text-[#2a1a16]' : 'text-[#a88a6d] hover:text-white'}`}>Concept Building</button>
@@ -612,7 +612,7 @@ export default function LabContent() {
                 <div className="w-28 h-28 sm:w-36 sm:h-36 bg-[#3e2723] rounded-full flex items-center justify-center text-amber-400 mb-8 shadow-2xl border-4 border-white"><Trophy size={72} className="animate-bounce" /></div>
                 <h1 className="text-4xl sm:text-6xl font-black text-[#3e2723] uppercase mb-6 tracking-tighter">Grandmaster Logic!</h1>
                 <p className="text-[#3e2723] text-lg sm:text-2xl leading-relaxed font-black mb-12 max-w-md mx-auto text-center px-4">"You successfully solved complex spatial chains using abstract markers and perspective logic. You've reached the highest tier of spatial reasoning!"</p>
-                <button onClick={() => window.location.reload()} className="relative z-10 px-12 sm:px-16 py-6 sm:py-8 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all text-sm sm:text-xl">Restart Lab Session</button>
+                <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="relative z-10 px-12 sm:px-16 py-6 sm:py-8 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all text-sm sm:text-xl">Next Module</button>
               </div>
             </div>
           </motion.div>
