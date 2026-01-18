@@ -76,9 +76,9 @@ const HIERARCHY_DATA = [
     path: "/learn/logicalReasoning/LinearArrangement",
     subModules: [
       { id: 'LA_13', title: 'We do not use images in actual world', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldIntro' },
-      // { id: 'LA_7', title: 'Follow Instruction for right', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrRight' },
-      // { id: 'LA_8', title: 'Let us make people sit by following both left and right', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrBothLeftRight' } , 
-      // { id: 'LA_9', title: 'instruction says they are facing in different directions', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffDirection' },
+      { id: 'LA_14', title: 'What If peole are facing north?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldNorth' },
+      { id: 'LA_15', title: 'And when they are facing south?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSouth' } , 
+      { id: 'LA_16', title: 'Oops they are sitting in parallel', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSittingParallel' }
       // { id: 'LA_10', title: 'When extreme ends are also involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrExtremEnd' },
       // { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
       // { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  

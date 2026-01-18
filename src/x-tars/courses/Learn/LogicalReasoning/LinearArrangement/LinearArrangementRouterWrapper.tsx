@@ -16,7 +16,9 @@ import LAFollowingInstructionWithBetweenAndExtremeEnd from "./LAFollowingInstruc
 import LAFollowingInstructionDiffDirectionIntermediate from "./LAFollowingInstructionDiffDirectionIntermediate";
 import LAFollowingInstructionComplexityHigh from "./LAFollowingInstructionComplexityHigh";
 import LAActualWorldIntro from "./LAActualWorldIntro"
-
+import LAActualWorldNorth from "./LAActualWorldFacingNorth"
+import LAActualWorldSouth from "./LAActualWorldFacingSouth"
+import LAActualWorldSittingParallel from "./LAActualWorldSittingInParallel"
 
 // To handle back from Maths page
 
@@ -469,6 +471,89 @@ export const LAActualWorldIntroHighRouter: React.FC = () => {
   );
 };
 
+export const LAActualWorldNorthRouter: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
+
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
+
+  return (
+    <LAActualWorldNorth 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
+
+export const LAActualWorldSouthRouter: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
+
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
+
+  return (
+    <LAActualWorldSouth 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
+
+export const LAActualWorldSittingParallelRouter: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
+
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
+
+  return (
+    <LAActualWorldSittingParallel 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
 
 

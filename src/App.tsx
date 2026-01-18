@@ -158,7 +158,10 @@ LAFollowInstructionDirectionLeftRightRouter,
 LAFollowingInstructionWithBetweenAndExtremeEndRouter,
 LAFollowingInstructionDiffDirectionIntermediateRouter,
 LAFollowingInstructionComplexityHighRouter,
-LAActualWorldIntroHighRouter
+LAActualWorldIntroHighRouter,
+LAActualWorldNorthRouter,
+LAActualWorldSouthRouter,
+LAActualWorldSittingParallelRouter
 }
 from "./x-tars/courses/Learn/LogicalReasoning/LinearArrangement/LinearArrangementRouterWrapper"
 
@@ -269,7 +272,12 @@ export default function App() {
               <Route path="/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate" element={<LAFollowingInstructionDiffDirectionIntermediateRouter />} />
               <Route path="/learn/logicalReasoning/LinearArrangement/Instrcomplex" element={<LAFollowingInstructionComplexityHighRouter />} />
               <Route path="/learn/logicalReasoning/LinearArrangement/ActualWorldIntro" element={<LAActualWorldIntroHighRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/ActualWorldNorth" element={<LAActualWorldNorthRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/ActualWorldSouth" element={<LAActualWorldSouthRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/ActualWorldSittingParallel" element={<LAActualWorldSittingParallelRouter />} />
             
+              
+
 
              
 
