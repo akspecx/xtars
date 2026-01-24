@@ -161,7 +161,16 @@ LAFollowingInstructionComplexityHighRouter,
 LAActualWorldIntroHighRouter,
 LAActualWorldNorthRouter,
 LAActualWorldSouthRouter,
-LAActualWorldSittingParallelRouter
+LAActualWorldSittingParallelRouter,
+LAActualWorldDirectionDoesNotMatterRouter,
+LAActualWorldMultipleCaseIntroRouter,
+LAActualWorldMultipleCaseIntermediateRouter,
+LAActualWorld2DIntroRouter,
+LAActualWorld3DIntroRouter,
+LAInstructionGyaanAnchorRouter,
+LAInstructionGyaanAnchorFromMultipleInstrRouter,
+LAInstructionGyaanLeadingToAnchorRouter,
+LAInstructionGyaanUseMultipleInstrForAnchorRouter
 }
 from "./x-tars/courses/Learn/LogicalReasoning/LinearArrangement/LinearArrangementRouterWrapper"
 
@@ -275,8 +284,28 @@ export default function App() {
               <Route path="/learn/logicalReasoning/LinearArrangement/ActualWorldNorth" element={<LAActualWorldNorthRouter />} />
               <Route path="/learn/logicalReasoning/LinearArrangement/ActualWorldSouth" element={<LAActualWorldSouthRouter />} />
               <Route path="/learn/logicalReasoning/LinearArrangement/ActualWorldSittingParallel" element={<LAActualWorldSittingParallelRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/DirectionDoesnotMatter" element={<LAActualWorldDirectionDoesNotMatterRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/MultipleCaseIntro" element={<LAActualWorldMultipleCaseIntroRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/MultipleCaseIntermediate" element={<LAActualWorldMultipleCaseIntermediateRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/2DArrangement" element={<LAActualWorld2DIntroRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/3DArrangement" element={<LAActualWorld3DIntroRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/ChooseAnchor" element={<LAInstructionGyaanAnchorRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/anchorFromMultipleInstruction" element={<LAInstructionGyaanAnchorFromMultipleInstrRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/WhatAfterAnchor" element={<LAInstructionGyaanLeadingToAnchorRouter />} />
+              <Route path="/learn/logicalReasoning/LinearArrangement/MultipleInstructionCreateAnchor" element={<LAInstructionGyaanUseMultipleInstrForAnchorRouter />} />
             
               
+
+
+
+
+            
+
+
+
+
+
+
 
 
              

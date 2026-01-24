@@ -1586,7 +1586,7 @@ export default function SittingInParallel() {
                 <div className="w-28 h-28 sm:w-36 sm:h-36 bg-[#3e2723] rounded-full flex items-center justify-center text-amber-400 mb-8 shadow-2xl border-4 border-white"><Trophy size={72} className="animate-bounce" /></div>
                 <h1 className="text-4xl sm:text-6xl font-black text-[#3e2723] uppercase mb-6 tracking-tighter text-center">Grid Master!</h1>
                 <p className="text-[#3e2723] text-lg sm:text-2xl leading-relaxed font-black mb-12 max-w-md mx-auto text-center px-4">"You successfully solved the parallel grid challenges. You can handle inverted perspectives and complex neighbor rules with ease!"</p>
-                <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/ActualWorldSittingParallel')} className="relative z-10 px-12 sm:px-16 py-6 sm:py-8 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Next Module</button>
+                <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/MultipleCaseIntro')} className="relative z-10 px-12 sm:px-16 py-6 sm:py-8 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Next Module</button>
               </div>
             </div>
           </motion.div>

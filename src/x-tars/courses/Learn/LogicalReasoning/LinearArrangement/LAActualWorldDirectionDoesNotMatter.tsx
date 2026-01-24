@@ -410,12 +410,12 @@ export default function DirectionDoesNotMatter() {
       <div className="w-full max-w-[1500px] shrink-0 px-4 pt-6 relative z-10">
         <header className="w-full bg-[#2a1a16] p-4 rounded-[2rem] border-b-8 border-black/40 shadow-2xl flex flex-col lg:flex-row justify-between items-center gap-4">
           <div className="flex flex-col text-left">
-            <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all"><ChevronLeft size={16} /> Dashboard</button>
-            <h1 className="text-white text-xl font-black uppercase tracking-tighter text-[#e6dccb]">Assumption Laboratory</h1>
+            <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement')} className="flex items-center gap-1.5 text-[#a88a6d] font-black uppercase text-[10px] mb-1 hover:text-white transition-all"><ChevronLeft size={16} /> Dashboard</button>
+            <h1 className="text-white text-xl font-black uppercase tracking-tighter text-[#e6dccb]">Instructions does not mention direction then what?</h1>
           </div>
           <div className="flex bg-black/30 p-1 rounded-2xl border border-white/10">
-            <button onClick={() => setAppMode('concept')} className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'concept' ? 'bg-yellow-400 text-[#2a1a16]' : 'text-[#a88a6d] hover:text-white'}`}>Theory</button>
-            <button onClick={() => setAppMode('practice')} className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'practice' ? 'bg-[#8d6e63] text-white shadow-inner' : 'text-[#a88a6d] hover:text-white'}`}>Solve Puzzle</button>
+            <button onClick={() => setAppMode('concept')} className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'concept' ? 'bg-yellow-400 text-[#2a1a16]' : 'text-[#a88a6d] hover:text-white'}`}>Concept</button>
+            <button onClick={() => setAppMode('practice')} className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${appMode === 'practice' ? 'bg-[#8d6e63] text-white shadow-inner' : 'text-[#a88a6d] hover:text-white'}`}>Practice</button>
           </div>
         </header>
       </div>
@@ -600,7 +600,7 @@ export default function DirectionDoesNotMatter() {
                 <div className="w-28 h-28 sm:w-36 sm:h-36 bg-[#3e2723] rounded-full flex items-center justify-center text-amber-400 mb-8 shadow-2xl border-4 border-white"><Trophy size={72} className="animate-bounce" /></div>
                 <h1 className="text-4xl sm:text-6xl font-black text-[#3e2723] uppercase mb-6 tracking-tighter text-center px-4 leading-tight">Perspective Genius!</h1>
                 <p className="text-[#3e2723] text-lg sm:text-2xl leading-relaxed font-black mb-12 max-w-md mx-auto text-center px-4">"You mastered the Assumption Rule. Aligning everything to a single row facing Away (North) is the most efficient path to logic mastery!"</p>
-                <button onClick={() => window.location.reload()} className="relative z-10 px-12 sm:px-16 py-6 sm:py-8 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Restart Lab Session</button>
+                <button onClick={() => navigate('/learn/logicalReasoning/LinearArrangement/ActualWorldSittingParallel')} className="relative z-10 px-12 sm:px-16 py-6 sm:py-8 bg-[#3e2723] text-[#e6dccb] rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-xl border-b-8 border-black hover:scale-105 active:translate-y-2 transition-all">Next Module</button>
               </div>
             </div>
           </motion.div>

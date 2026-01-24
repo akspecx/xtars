@@ -68,6 +68,26 @@ const HIERARCHY_DATA = [
     ]
   },
   {
+    id: "linearArrangmentGyaan",
+    title: "Let's understand the basics first",
+    subtitle: "Understanding the balanced scale",
+    icon: "⚖️",
+    gradient: "from-indigo-500 to-purple-500",
+    path: "/learn/logicalReasoning/LinearArrangement",
+    subModules: [
+      { id: 'LA_22', title: 'How to choose Anchor?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/ChooseAnchor' },
+      { id: 'LA_23', title: 'Who is anchor from multiple instructions?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/anchorFromMultipleInstruction' },
+      { id: 'LA_24', title: 'Anchor Ok but what next?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/WhatAfterAnchor' } , 
+      { id: 'LA_25', title: 'What if anchor instruction is not there?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/MultipleInstructionCreateAnchor' }
+      // { id: 'LA_10', title: 'When extreme ends are also involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrExtremEnd' },
+      // { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
+      // { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
+ 
+    ]
+  },
+
+
+  {
     id: "linearArrangmentActualWorldIntro",
     title: "Let's move beyond images",
     subtitle: "Understanding the balanced scale",
@@ -78,13 +98,17 @@ const HIERARCHY_DATA = [
       { id: 'LA_13', title: 'We do not use images in actual world', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldIntro' },
       { id: 'LA_14', title: 'What If peole are facing north?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldNorth' },
       { id: 'LA_15', title: 'And when they are facing south?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSouth' } , 
-      { id: 'LA_16', title: 'Oops they are sitting in parallel', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSittingParallel' }
-      // { id: 'LA_10', title: 'When extreme ends are also involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrExtremEnd' },
+      { id: 'LA_16', title: 'What if no direction given in question', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/DirectionDoesnotMatter' },
+      { id: 'LA_17', title: 'Oops they are sitting in parallel', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSittingParallel' },
+      { id: 'LA_18', title: 'If arrangement can lead to many cases', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/MultipleCaseIntro' },
+      { id: 'LA_19', title: 'Let us see a bit complex multiple case', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/MultipleCaseIntermediate' },
+      { id: 'LA_20', title: 'what if 2 dimensions are involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/2DArrangement' },
+      { id: 'LA_21', title: 'When 3 dimensions are involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/3DArrangement' }
       // { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
       // { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
  
     ]
-  },
+  },      
 
   
 ];
