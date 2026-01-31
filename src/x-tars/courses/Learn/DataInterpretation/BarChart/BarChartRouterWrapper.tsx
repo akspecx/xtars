@@ -9,12 +9,12 @@ import  DoubleBarChartTwoClass from "./DoubleBarChartTwoClass";
 import DoubleBarComparisonIntro from "./DoubleBarComparisonIntro";
 import DoubleBCCumulativeDataAnalysis from "./DoubleBarChartCumulativeDataAnalysis";
 import DoubleBarChartMissingBars from "./DoubleBarChartMissingBars"
-// import LAFollowInstructionRight from "./LAFollowInstructionRight";
-// import LAFollowInstructionLeftRightBoth from "./LAFollowInstructionLeftRightBoth";
-// import LAFollowInstructionDirectionLeftRight from "./LAFollowInstructionDirectionLeftRight";
-// import LAFollowingInstructionWithBetweenAndExtremeEnd from "./LAFollowingInstructionWithBetweenAndExtremeEnd";
-// import LAFollowingInstructionDiffDirectionIntermediate from "./LAFollowingInstructionDiffDirectionIntermediate";
-// import LAFollowingInstructionComplexityHigh from "./LAFollowingInstructionComplexityHigh";
+import DoubleBCMoreComplexAnalysis from "./DoubleBarChartMoreComplexAnalysis";
+import DoubleBarChartComputationMinAvgOne from "./DoubleBarChartComputationMinAvgOne";
+import DoubleBCComputationRatioPercentageTwo from "./DoubleBarChartComputationRatioPercentageTwo";
+import DoubleBarChartProfitLossSeven from "./DoubleBarChartComputationProfitLossSeven";
+import AdvancedBarChartStackedOne from "./AdvancedBarChartStackedOne";
+import AdvancedBarChartTradeTwo from "./AdvancedBarChartTradeTwo";
 // import LAActualWorldIntro from "./LAActualWorldIntro"
 // import LAActualWorldNorth from "./LAActualWorldFacingNorth"
 // import LAActualWorldSouth from "./LAActualWorldFacingSouth"
@@ -284,173 +284,173 @@ export const DoubleBarChartMissingBarsRouter: React.FC = () => {
   );
 };
 
-// export const LAFollowInstructionRightRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const DoubleBCMoreComplexAnalysisRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/dataInterpretation/barChart");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LAFollowInstructionRight 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <DoubleBCMoreComplexAnalysis 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
-// export const LAFollowInstructionLeftRightBothRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const DoubleBarChartComputationMinAvgRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/dataInterpretation/barChart");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LAFollowInstructionLeftRightBoth 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <DoubleBarChartComputationMinAvgOne 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
-// export const LAFollowInstructionDirectionLeftRightRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const DoubleBCComputationRatioPercentageRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/dataInterpretation/barChart");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LAFollowInstructionDirectionLeftRight 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <DoubleBCComputationRatioPercentageTwo 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
-// export const LAFollowingInstructionWithBetweenAndExtremeEndRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const DoubleBarChartProfitLossRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/dataInterpretation/barChart");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LAFollowingInstructionWithBetweenAndExtremeEnd 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <DoubleBarChartProfitLossSeven 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
-// export const LAFollowingInstructionDiffDirectionIntermediateRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const AdvancedBarChartStackedOneRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/dataInterpretation/barChart");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LAFollowingInstructionDiffDirectionIntermediate 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <AdvancedBarChartStackedOne 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
-// export const LAFollowingInstructionComplexityHighRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const AdvancedBarChartTradeTwoRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/dataInterpretation/barChart");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LAFollowingInstructionComplexityHigh 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <AdvancedBarChartTradeTwo 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
 // export const LAActualWorldIntroHighRouter: React.FC = () => {
 //   const navigate = useNavigate();

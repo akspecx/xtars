@@ -236,7 +236,13 @@ import
   DoubleBarChartTwoClassRouter,
   DoubleBarComparisonIntroRouter,
   DoubleBCCumulativeDataAnalysisRouter,
-  DoubleBarChartMissingBarsRouter
+  DoubleBarChartMissingBarsRouter,
+  DoubleBCMoreComplexAnalysisRouter,
+  DoubleBarChartComputationMinAvgRouter,
+  DoubleBCComputationRatioPercentageRouter,
+  DoubleBarChartProfitLossRouter,
+  AdvancedBarChartStackedOneRouter,
+  AdvancedBarChartTradeTwoRouter
 }
 from "./x-tars/courses/Learn/DataInterpretation/BarChart/BarChartRouterWrapper"
 
@@ -332,10 +338,17 @@ export default function App() {
               <Route path="/learn/dataInterpretation/barChart/doubleBarChart" element={<DoubleBarComparisonIntroRouter />} />
               <Route path="/learn/dataInterpretation/barChart/doubleBCCumulative" element={<DoubleBCCumulativeDataAnalysisRouter />} />
               <Route path="/learn/dataInterpretation/barChart/doubleBCMissingBars" element={<DoubleBarChartMissingBarsRouter />} />
+              <Route path="/learn/dataInterpretation/barChart/doubleBCComplexAnalysis" element={<DoubleBCMoreComplexAnalysisRouter />} />
+
+              <Route path="/learn/dataInterpretation/barChart/doubleBCMinAvg" element={<DoubleBarChartComputationMinAvgRouter />} />
+              <Route path="/learn/dataInterpretation/barChart/doubleBCRatioPercent" element={<DoubleBCComputationRatioPercentageRouter />} />
+              <Route path="/learn/dataInterpretation/barChart/doubleBCProfitLoss" element={<DoubleBarChartProfitLossRouter />} />
+              
+              <Route path="/learn/dataInterpretation/barChart/stackedBarChart" element={<AdvancedBarChartStackedOneRouter />} />
+              <Route path="/learn/dataInterpretation/barChart/tradeBarChart" element={<AdvancedBarChartTradeTwoRouter />} />
 
               
               
-
 
               {/* Games */}
               <Route path="/games" element={<GamesHome />} />

@@ -6,14 +6,19 @@ import {
   RotateCcw,
   GraduationCap,
   ArrowRight,
+  BarChart3,
   XCircle,
   CheckCircle2,
+  ArrowRightCircle,
+  RotateCw,
+  ChevronRight,
   Lightbulb,
   Target,
   Calculator,
+  Repeat,
   ArrowLeft,
-  TrendingUp,
-  Wallet
+  MinusCircle,
+   RefreshCcw 
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
 
@@ -23,31 +28,34 @@ import { HashRouter as Router, useNavigate } from 'react-router-dom';
 const UI_CONFIG = {
   headerSize: '16px', 
   textSize: '14px',   
-  badgeSize: '16px', 
+  badgeSize: '16px', // Increased for difference value
   smallText: '11px',
-  expGradient: 'from-blue-600 to-blue-800',
-  incGradient: 'from-green-500 to-green-700',
+  passGradient: 'from-indigo-900 to-indigo-950',
+  failGradient: 'from-gray-300 to-gray-400',
   panelBg: '#3e2723',
   headerBg: '#2a1a16'
 };
 
-const COMPANIES = [
-  { id: 'm', label: 'M', expenditure: 45, income: 35 },
-  { id: 'n', label: 'N', expenditure: 40, income: 50 },
-  { id: 'p', label: 'P', expenditure: 45, income: 40 },
-  { id: 'q', label: 'Q', expenditure: 30, income: 40 },
-  { id: 'r', label: 'R', expenditure: 45, income: 50 }
+const YEARS = [
+  { id: 'y1', label: '1991-92', p: 150, f: 100, gap: 50 },
+  { id: 'y2', label: '1992-93', p: 200, f: 100, gap: 100 },
+  { id: 'y3', label: '1993-94', p: 300, f: 50, gap: 250 },
+  { id: 'y4', label: '1994-95', p: 250, f: 100, gap: 150 },
+  { id: 'y5', label: '1995-96', p: 300, f: 100, gap: 200 }
 ];
 
-const FORMULA = "% Profit/Loss = [(Income - Expenditure) / Expenditure] x 100";
+const SCHOOL_DATA = {
+  pass: { y1: 150, y2: 200, y3: 300, y4: 250, y5: 300 },
+  fail: { y1: 100, y2: 100, y3: 50, y4: 100, y5: 100 }
+};
 
 // ==========================================
 // SHARED COMPONENTS
 // ==========================================
 const MiniTable = ({ rows, cols, activeId }) => (
-  <div className="w-full mt-2 rounded-xl border-2 border-white/10 bg-black/40 shadow-inner shrink-0 flex flex-col min-h-0 overflow-hidden">
-    <div className="max-h-[180px] overflow-y-auto no-scrollbar overflow-x-auto">
-      <table className="w-full text-left border-separate border-spacing-0 min-w-[340px]">
+  <div className="w-full mt-2 rounded-xl border-2 border-white/10 bg-black/40 shadow-2xl flex flex-col min-h-0 overflow-hidden">
+    <div className="max-h-[140px] overflow-y-auto no-scrollbar overflow-x-auto">
+      <table className="w-full text-left border-separate border-spacing-0 min-w-[300px]">
         <thead>
           <tr className="bg-[#1a0f0d]">
             {cols.map(c => (
@@ -62,7 +70,7 @@ const MiniTable = ({ rows, cols, activeId }) => (
         </thead>
         <tbody>
           {rows.map((r, i) => {
-            const isRowActive = activeId && (r.id === activeId || r.key === activeId);
+            const isRowActive = activeId && r.id === activeId;
             return (
               <tr 
                 key={i} 
@@ -99,76 +107,78 @@ const MiniTable = ({ rows, cols, activeId }) => (
 // ==========================================
 const CONCEPT_SCENARIOS = [
   {
-    id: 'c1',
-    title: "Joint Performance Analysis",
-    shortTitle: "Combined Market",
-    icon: <TrendingUp size={16} />,
-    question: "What was the joint % Profit/Loss of M and N together?",
-    coreExplanation: "To find combined profit, we must sum all Incomes and all Expenditures before applying the rule.",
+    id: 'diff_logic',
+    title: "Smallest Difference",
+    shortTitle: "Difference",
+    icon: <MinusCircle size={16} />,
+    question: "Which year has the smallest difference?",
+    coreExplanation: "Difference = Pass - Fail. We will add each year's data to our table one by one and calculate the gaps.",
     steps: [
       {
-        text: "Step 1: Identify totals for Company M. Expenditure = 45, Income = 35.",
-        highlightIds: ['m'], highlightType: 'both', activeId: 'm',
-        tableRows: [{ id: 'm', label: 'M', exp: 45, inc: 35, res: '-' }],
-        tableCols: [{key:'label', label:'Co'}, {key:'exp', label:'Expenditure'}, {key:'inc', label:'Income'}, {key:'res', label:'Total'}]
+        text: "Step 1: Check 1991-92. Pass is 150, Fail is 100. Gap = 50.",
+        highlightYears: ['y1'], highlightType: 'both', activeId: 'y1',
+        tableRows: [YEARS[0]],
+        tableCols: [{key:'label', label:'Year'}, {key:'p', label:'Pass'}, {key:'f', label:'Fail'}, {key:'gap', label:'Result', highlight: true}]
       },
       {
-        text: "Step 2: Identify totals for Company N. Expenditure = 40, Income = 50.",
-        highlightIds: ['n'], highlightType: 'both', activeId: 'n',
-        tableRows: [
-            { id: 'm', label: 'M', exp: 45, inc: 35 },
-            { id: 'n', label: 'N', exp: 40, inc: 50 }
-        ],
-        tableCols: [{key:'label', label:'Co'}, {key:'exp', label:'Expenditure'}, {key:'inc', label:'Income'}]
+        text: "Step 2: Add 1992-93. Pass is 200, Fail is 100. Gap = 100.",
+        highlightYears: ['y2'], highlightType: 'both', activeId: 'y2',
+        tableRows: YEARS.slice(0, 2),
+        tableCols: [{key:'label', label:'Year'}, {key:'p', label:'Pass'}, {key:'f', label:'Fail'}, {key:'gap', label:'Result', highlight: true}]
       },
       {
-        text: "Step 3: Combine them. Total Expenditure = 85. Total Income = 85. Result is 0% Profit.",
-        highlightIds: ['m', 'n'], highlightType: 'both',
-        tableRows: [{ id: 'sum', label: 'COMBINED', exp: 85, inc: 85, res: '0%' }],
-        tableCols: [{key:'label', label:'Type'}, {key:'exp', label:'Total Expenditure'}, {key:'inc', label:'Total Income'}, {key:'res', label:'Profit %', highlight: true}],
-        overlay: "Net Profit: 0%"
+        text: "Step 3: Add 1993-94. Pass is 300, Fail is 50. Gap = 250.",
+        highlightYears: ['y3'], highlightType: 'both', activeId: 'y3',
+        tableRows: YEARS.slice(0, 3),
+        tableCols: [{key:'label', label:'Year'}, {key:'p', label:'Pass'}, {key:'f', label:'Fail'}, {key:'gap', label:'Result', highlight: true}]
+      },
+      {
+        text: "Step 4: Add 1994-95. Pass is 250, Fail is 100. Gap = 150.",
+        highlightYears: ['y4'], highlightType: 'both', activeId: 'y4',
+        tableRows: YEARS.slice(0, 4),
+        tableCols: [{key:'label', label:'Year'}, {key:'p', label:'Pass'}, {key:'f', label:'Fail'}, {key:'gap', label:'Result', highlight: true}]
+      },
+      {
+        text: "Step 5: Add 1995-96. Pass is 300, Fail is 100. Gap = 200.",
+        highlightYears: ['y5'], highlightType: 'both', activeId: 'y5',
+        tableRows: YEARS.slice(0, 5),
+        tableCols: [{key:'label', label:'Year'}, {key:'p', label:'Pass'}, {key:'f', label:'Fail'}, {key:'gap', label:'Result', highlight: true}]
+      },
+      {
+        text: "Final Result: The smallest gap in the table is 50 (from 1991-92).",
+        highlightYears: ['y1'], highlightType: 'both', activeId: 'y1',
+        tableRows: YEARS,
+        tableCols: [{key:'label', label:'Year'}, {key:'gap', label:'Gap Analysis', highlight: true}],
+        overlay: "Smallest Gap: 50"
       }
     ]
   },
   {
-    id: 'c3',
-    title: "Backward Variable Discovery",
-    shortTitle: "Historical Analysis",
+    id: 'avg_logic',
+    title: "Average Failure",
+    shortTitle: "Average",
     icon: <Calculator size={16} />,
-    question: "If R's Expenditure increased by 20% from 2000 to 2001, find its 2000 Income (Profit was 10%).",
-    coreExplanation: "We work backward from the current chart value to find the historical data point.",
+    question: "What was the average failure?",
+    coreExplanation: "Average = (Sum of all Failures) / (Total Years).",
     steps: [
       {
-        text: "Step 1: Look at the chart for Company R in 2001. Its Expenditure bar shows 45 million.",
-        highlightIds: ['r'], highlightType: 'exp', activeId: 'r',
-        tableRows: [{ id: 'r21', year: '2001', expenditure: 45, status: 'Current Data' }],
-        tableCols: [{key:'year', label:'Year'}, {key:'expenditure', label:'Expenditure'}, {key:'status', label:'Note'}]
+        text: "Identify Fail (Grey) bars for all five years.",
+        highlightYears: ['y1', 'y2', 'y3', 'y4', 'y5'], highlightType: 'fail',
+        tableRows: YEARS,
+        tableCols: [{key:'label', label:'Year'}, {key:'f', label:'Failures'}]
       },
       {
-        text: "Step 2: State the 20% growth rule. This means: Expenditure(2000) x 1.20 = Expenditure(2001).",
-        highlightIds: ['r'], highlightType: 'exp',
-        tableRows: [{ id: 'r20l', year: 'Relation', expenditure: '?', status: 'Prev Exp x 1.20 = 45' }],
-        tableCols: [{key:'year', label:'Logic'}, {key:'expenditure', label:'Value'}, {key:'status', label:'Relationship'}]
+        text: "Calculate Sum: 100 + 100 + 50 + 100 + 100 = 450 total students.",
+        highlightYears: ['y1', 'y2', 'y3', 'y4', 'y5'], highlightType: 'fail',
+        tableRows: [{ id:'sum', item: 'Total Sum', math: '100+100+50+100+100', res: '450' }],
+        tableCols: [{key:'item', label:'Task'}, {key:'math', label:'Math'}, {key:'res', label:'Total', highlight: true}]
       },
       {
-        text: "Step 3: Rearrange to solve. So, Expenditure(2000) = 45 / 1.20.",
-        highlightIds: ['r'], highlightType: 'exp',
-        tableRows: [{ id: 'r20r', year: 'Solve', expenditure: '?', status: '45 ÷ 1.20' }],
-        tableCols: [{key:'year', label:'Logic'}, {key:'expenditure', label:'Value'}, {key:'status', label:'Formula'}]
-      },
-      {
-        text: "Step 4: The Expenditure in year 2000 was 37.5 million.",
-        highlightIds: ['r'], highlightType: 'exp',
-        tableRows: [{ id: 'r20f', year: '2000', expenditure: 37.5, status: 'Solved' }],
-        tableCols: [{key:'year', label:'Year'}, {key:'expenditure', label:'Expenditure', highlight: true}, {key:'status', label:'Status'}],
-        overlay: "Expenditure 2000 = 37.5"
-      },
-      {
-        text: "Step 5: Find Income. Profit was 10%, so Income = 110% of Expenditure. 37.5 x 1.10 = 41.25.",
-        highlightIds: ['r'], highlightType: 'both',
-        tableRows: [{ id: 'ri', year: '2000', income: 41.25, status: '37.5 x 1.10' }],
-        tableCols: [{key:'year', label:'Year'}, {key:'income', label:'Income 2000', highlight: true}, {key:'status', label:'Math Step'}],
-        overlay: "Income 2000 = 41.25M"
+        text: "Divide 450 by 5 years to get an average of 90 students per year.",
+        highlightYears: ['y1', 'y2', 'y3', 'y4', 'y5'], highlightType: 'fail',
+        tableRows: [{ id:'avg', item: 'Average', math: '450 ÷ 5', res: '90' }],
+        tableCols: [{key:'item', label:'Final'}, {key:'math', label:'Division'}, {key:'res', label:'Result', highlight: true}],
+        overlay: "Avg Result: 90"
       }
     ]
   }
@@ -177,73 +187,50 @@ const CONCEPT_SCENARIOS = [
 const PRACTICE_SCENARIOS = [
   {
     id: 'p1',
-    question: "Income of Q in 2001 was 10% more than 2000. Profit in 2000 was 20%. Find Q's 2000 Expenditure.",
-    options: ['30.30', '32.50', '28.40'],
-    answer: '30.30',
-    explanation: "Let's uncover the answer step-by-step to avoid any confusion:",
-    highlightIds: ['q'], highlightType: 'both',
-    tableRows: [
-        { label: 'Step 1', task: 'Income 2001 (From Bar)', val: '40' },
-        { label: 'Step 2', task: 'Logic: Inc 2000 x 1.10', val: '40' },
-        { label: 'Step 3', task: 'Solve: 40 ÷ 1.10', val: '36.36' },
-        { label: 'Step 4', task: 'Income 2000 Result', val: '36.36' },
-        { label: 'Step 5', task: 'Profit: Exp 2000 x 1.20', val: '36.36' },
-        { label: 'Step 6', task: 'Solve: 36.36 ÷ 1.20', val: '30.30' }
-    ],
-    tableCols: [{key:'label', label:'Phase'}, {key:'task', label:'Operation'}, {key:'val', label:'Value', highlight: true}]
+    question: "In 1993-94, what is the exact difference between Pass and Fail students?",
+    options: ['150', '250', '200'],
+    answer: '250',
+    explanation: "Correct! In 1993-94, 300 passed and 50 failed. 300 - 50 = 250.",
+    highlightYears: ['y3'], highlightType: 'both',
+    tableRows: [{ id: 'y3', label: '1993-94', p: 300, f: 50, gap: 250 }],
+    tableCols: [{key:'label', label:'Year'}, {key:'p', label:'Pass'}, {key:'f', label:'Fail'}, {key:'gap', label:'Gap Result', highlight: true}]
   },
   {
     id: 'p2',
-    question: "For Company N, if Income in 2001 was a 25% increase from 2000, what was the Income in 2000?",
-    options: ['40.00', '37.50', '42.00'],
-    answer: '40.00',
-    explanation: "Working backward from the bar height of 50 for Company N:",
-    highlightIds: ['n'], highlightType: 'inc',
-    tableRows: [
-        { label: 'Phase 1', task: 'Identify 2001 Income', val: '50' },
-        { label: 'Phase 2', task: 'Growth Relation', val: 'Inc 2000 x 1.25 = 50' },
-        { label: 'Phase 3', task: 'Rearrange Formula', val: 'Inc 2000 = 50 ÷ 1.25' },
-        { label: 'Phase 4', task: 'Calculate Result', val: '40' }
-    ],
-    tableCols: [{key:'label', label:'Phase'}, {key:'task', label:'Deduction'}, {key:'val', label:'Value', highlight: true}]
-  },
-  {
-    id: 'p3',
-    question: "Which company faced the highest percentage loss in 2001?",
-    options: ['Company M', 'Company P', 'Company Q'],
-    answer: 'Company M',
-    explanation: "Let's compare the Loss % of both companies using the rule:",
-    highlightIds: ['m', 'p'], highlightType: 'both',
-    tableRows: [
-        { label: 'Company M', calc: '(10 loss / 45 exp)', res: '22.2% Loss' },
-        { label: 'Company P', calc: '(5 loss / 45 exp)', res: '11.1% Loss' }
-    ],
-    tableCols: [{key:'label', label:'Company'}, {key:'calc', label:'Math'}, {key:'res', label:'Result', highlight: true}]
+    question: "Identify the year where Passing students were exactly double the failing students.",
+    options: ['1991-92', '1992-93', '1994-95'],
+    answer: '1992-93',
+    explanation: "Great! 100 kids failed and 200 passed. Since 100 x 2 = 200, it is double.",
+    highlightYears: ['y2'], highlightType: 'both',
+    tableRows: [{ id: 'y2', label: '1992-93', f: 100, double: 200, p: 200 }],
+    tableCols: [{key:'label', label:'Year'}, {key:'f', label:'Fail'}, {key:'double', label:'Double'}, {key:'p', label:'Pass Result', highlight: true}]
   }
 ];
 
 // ==========================================
 // CHART COMPONENT
 // ==========================================
-const CompanyChart = memo(({ highlightIds, highlightType, currentOverlay }) => {
+const SchoolChart = memo(({ highlightYears, highlightType, currentOverlay }) => {
   return (
     <div className="flex-1 flex flex-col relative px-8 sm:px-12 overflow-hidden min-h-0 pt-8">
       <div className="flex-1 flex items-end justify-around border-b-2 border-white/10 relative h-full">
         {/* Y-Axis */}
         <div className="absolute inset-0 pointer-events-none">
-          {[0, 10, 20, 30, 40, 50].map((val) => (
-            <div key={val} className="absolute w-full h-[1px] bg-white/5 flex items-center" style={{ bottom: `${(val / 55) * 100}%` }}>
+          {[0, 100, 200, 300].map((val) => (
+            <div key={val} className="absolute w-full h-[1px] bg-white/5 flex items-center" style={{ bottom: `${(val / 350) * 100}%` }}>
               <span className="absolute -left-10 font-black text-white/40 text-right w-8 leading-none text-[10px]">{val}</span>
             </div>
           ))}
         </div>
         
-        {/* Premium Light Theme Badge */}
+        {/* Animated Badge - Lighter Theme & Larger Text */}
         <AnimatePresence>
             {currentOverlay && (
                 <motion.div 
-                  initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} 
-                  className="absolute top-[-15px] left-1/2 -translate-x-1/2 bg-white text-indigo-950 font-black px-6 py-2.5 rounded-full shadow-[0_15px_40px_rgba(0,0,0,0.4)] z-50 border-2 border-indigo-100"
+                  initial={{ opacity: 0, y: -10 }} 
+                  animate={{ opacity: 1, y: 0 }} 
+                  exit={{ opacity: 0 }} 
+                  className="absolute top-[-10px] left-1/2 -translate-x-1/2 bg-white text-indigo-950 font-black px-6 py-2 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.5)] z-50 border-2 border-indigo-200"
                   style={{ fontSize: UI_CONFIG.badgeSize }}
                 >
                     {currentOverlay}
@@ -251,35 +238,38 @@ const CompanyChart = memo(({ highlightIds, highlightType, currentOverlay }) => {
             )}
         </AnimatePresence>
 
-        {COMPANIES.map((company) => {
-          const isLit = highlightIds?.includes(company.id);
-          const showExp = highlightType === 'both' || highlightType === 'exp';
-          const showInc = highlightType === 'both' || highlightType === 'inc';
+        {/* Bars */}
+        {YEARS.map((year) => {
+          const vP = SCHOOL_DATA.pass[year.id];
+          const vF = SCHOOL_DATA.fail[year.id];
+          const isYearLit = highlightYears?.includes(year.id);
+          const showPass = highlightType === 'both' || highlightType === 'pass';
+          const showFail = highlightType === 'both' || highlightType === 'fail';
 
           return (
-            <div key={company.id} className="flex flex-col items-center justify-end h-full flex-1 max-w-[85px] relative z-10 px-1">
+            <div key={year.id} className="flex flex-col items-center justify-end h-full flex-1 max-w-[80px] relative z-10 px-1">
               <div className="flex items-end gap-1 w-full h-full relative">
                 <motion.div 
-                  className={`flex-1 rounded-t-sm bg-gradient-to-t ${UI_CONFIG.expGradient} border-x border-t transition-all duration-500`} 
+                  className={`flex-1 rounded-t-sm bg-gradient-to-t ${UI_CONFIG.passGradient} border-x border-t transition-all duration-500`} 
                   animate={{ 
-                    height: `${(company.expenditure / 55) * 100}%`, 
-                    opacity: (isLit && showExp) || !highlightIds?.length ? 1 : 0.1, 
-                    borderColor: (isLit && showExp) ? '#fbbf24' : 'rgba(255,255,255,0.1)',
+                    height: `${(vP / 350) * 100}%`, 
+                    opacity: (isYearLit && showPass) || !highlightYears?.length ? 1 : 0.1, 
+                    borderColor: (isYearLit && showPass) ? '#fbbf24' : 'rgba(255,255,255,0.1)',
                     scale: 1 
                   }}
                 >
-                   {(isLit && showExp) && <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-[9px] font-bold text-white bg-black/40 px-1 rounded shadow-lg">{company.expenditure}</div>}
+                   {(isYearLit && showPass) && <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-[9px] font-bold text-white bg-black/40 px-1 rounded shadow-lg">{vP}</div>}
                 </motion.div>
                 <motion.div 
-                  className={`flex-1 rounded-t-sm bg-gradient-to-t ${UI_CONFIG.incGradient} border-x border-t transition-all duration-500`} 
+                  className={`flex-1 rounded-t-sm bg-gradient-to-t ${UI_CONFIG.failGradient} border-x border-t transition-all duration-500`} 
                   animate={{ 
-                    height: `${(company.income / 55) * 100}%`, 
-                    opacity: (isLit && showInc) || !highlightIds?.length ? 1 : 0.1, 
-                    borderColor: (isLit && showInc) ? '#fbbf24' : 'rgba(255,255,255,0.1)',
+                    height: `${(vF / 350) * 100}%`, 
+                    opacity: (isYearLit && showFail) || !highlightYears?.length ? 1 : 0.1, 
+                    borderColor: (isYearLit && showFail) ? '#fbbf24' : 'rgba(255,255,255,0.1)',
                     scale: 1 
                   }}
                 >
-                   {(isLit && showInc) && <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-[9px] font-bold text-white bg-black/40 px-1 rounded shadow-lg">{company.income}</div>}
+                   {(isYearLit && showFail) && <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-[9px] font-bold text-black bg-white/40 px-1 rounded shadow-lg">{vF}</div>}
                 </motion.div>
               </div>
             </div>
@@ -287,9 +277,9 @@ const CompanyChart = memo(({ highlightIds, highlightType, currentOverlay }) => {
         })}
       </div>
       <div className="flex justify-around pt-2 shrink-0 h-8">
-        {COMPANIES.map(c => (
-          <div key={c.id} className="flex flex-col items-center flex-1">
-            <span className="font-black text-white/40 uppercase text-[10px] tracking-tighter">{c.label}</span>
+        {YEARS.map(y => (
+          <div key={y.id} className="flex flex-col items-center flex-1">
+            <span className="font-black text-white/40 uppercase text-[9px] tracking-tighter">{y.label.split('-')[0]}</span>
           </div>
         ))}
       </div>
@@ -346,7 +336,7 @@ export default function LabContent() {
     if (ans === currentScenario.answer) {
       setQuizFeedback({ isCorrect: true, explanation: currentScenario.explanation });
     } else {
-      setQuizFeedback({ isCorrect: false, explanation: "Incorrect calculation. Follow the logic map steps!" });
+      setQuizFeedback({ isCorrect: false, explanation: "Calculation mismatch. Check the heights again!" });
     }
   };
 
@@ -356,11 +346,18 @@ export default function LabContent() {
     setQuizFeedback(null);
   };
 
+  const resetLab = () => {
+    setMode('concept');
+    setScenarioIndex(0);
+    setStepIndex(-1);
+    setQuizFeedback(null);
+  };
+
   const activeHighlights = useMemo(() => {
     if (isMastery || !currentScenario) return [];
-    if (mode === 'practice') return quizFeedback ? (currentScenario.highlightIds || []) : [];
+    if (mode === 'practice') return quizFeedback ? (currentScenario.highlightYears || []) : [];
     if (stepIndex === -1) return []; 
-    return currentScenario.steps?.[stepIndex]?.highlightIds || [];
+    return currentScenario.steps?.[stepIndex]?.highlightYears || [];
   }, [mode, stepIndex, currentScenario, isMastery, quizFeedback]);
 
   const highlightType = useMemo(() => {
@@ -378,27 +375,34 @@ export default function LabContent() {
 
   if (isMastery) {
     return (
-        <div className="h-screen w-screen bg-[#e6dccb] flex items-center justify-center p-4 font-sans relative overflow-hidden">
-             <div className="absolute inset-0 opacity-[0.3]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
-             <div className="bg-[#e6dccb] w-full max-w-sm p-8 rounded-[2.5rem] border-8 border-[#3e2723] text-center shadow-2xl relative z-40">
-                <Trophy size={64} className="mx-auto mb-4 text-[#3e2723] animate-bounce" />
-                <h2 className="text-xl font-black text-[#3e2723] uppercase mb-4 tracking-tighter" style={{ fontSize: UI_CONFIG.headerSize }}>Statistical Master!</h2>
-                <p className="text-[#3e2723] font-bold mb-8" style={{ fontSize: UI_CONFIG.textSize }}>"You've mastered financial data interpretation using logical step-by-step variables!"</p>
-                <button onClick={() => { setMode('concept'); setScenarioIndex(0); setStepIndex(-1); }} className="bg-[#3e2723] text-white py-4 w-full rounded-full font-black uppercase tracking-widest text-[11px] shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer">Restart Lab</button>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div className="bg-[#e6dccb] w-full max-w-xl p-8 rounded-[2.5rem] border-8 border-[#3e2723] text-center shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 opacity-[0.3]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
+            <div className="relative z-10 flex flex-col items-center">
+                <div className="w-16 h-16 bg-[#3e2723] rounded-full flex items-center justify-center text-amber-400 mb-6 border-2 border-white shadow-xl"><Trophy size={40} className="animate-bounce" /></div>
+                <h2 className="text-2xl sm:text-3xl font-black text-[#3e2723] uppercase mb-4 tracking-tighter">Analytical Master!</h2>
+                <p className="text-[#3e2723] font-bold mb-8 italic px-4 leading-relaxed text-center" style={{ fontSize: UI_CONFIG.textSize }}>
+                    "Phenomenal! You've transitioned from guided concepts to independent practice with perfect logic. You're a true data scientist!"
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 w-full justify-center px-4">
+                    <button onClick={resetLab} className={`bg-[#3e2723] text-[#e6dccb] px-8 py-4 rounded-full font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl border-b-4 border-black flex items-center justify-center gap-2`} style={{ fontSize: UI_CONFIG.textSize }}><RefreshCcw size={16} /> Re-start</button>
+                    <button onClick={() => navigate('/learn/dataInterpretation/barChart/doubleBCRatioPercent')} className="bg-green-600 text-white px-8 py-4 rounded-full font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl border-b-4 border-green-900 flex items-center justify-center gap-2" style={{ fontSize: UI_CONFIG.textSize }}>Next Module<ArrowRightCircle size={18} /></button>
+                </div>
             </div>
         </div>
+    </motion.div>
     );
   }
 
   return (
-    <div className="h-screen w-screen bg-[#e6dccb] flex flex-col items-center overflow-hidden font-sans relative select-none">
+    <div className="h-screen w-full bg-[#e6dccb] flex flex-col items-center overflow-hidden font-sans relative select-none">
       <div className="absolute inset-0 opacity-[0.3]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
       
       <header className="w-full shrink-0 p-2 sm:p-3 relative z-40">
         <div className="w-full bg-[#2a1a16] p-2 sm:p-3 rounded-2xl border-b-4 border-black/40 shadow-xl flex justify-between items-center text-white">
-          <button onClick={() => navigate('/')} className="flex items-center gap-1 text-[#a88a6d] font-black uppercase hover:text-white transition-all text-[11px]"><ChevronLeft size={14} /> Dashboard</button>
+          <button onClick={() => navigate('/learn/dataInterpretation/barChart')} className="flex items-center gap-1 text-[#a88a6d] font-black uppercase hover:text-white transition-all text-[11px]"><ChevronLeft size={14} /> Dashboard</button>
           <div className="flex items-center gap-1 sm:gap-2 bg-black/30 p-1 rounded-full border border-white/10 shadow-inner">
-             <button onClick={() => { setMode('concept'); setScenarioIndex(0); setStepIndex(-1); setQuizFeedback(null); }} className={`px-4 py-1.5 rounded-full font-black uppercase text-[10px] transition-all cursor-pointer ${mode === 'concept' ? 'bg-yellow-400 text-black shadow-lg' : 'text-white/40 hover:text-white'}`}>Guided</button>
+             <button onClick={() => { setMode('concept'); setScenarioIndex(0); setStepIndex(-1); setQuizFeedback(null); }} className={`px-4 py-1.5 rounded-full font-black uppercase text-[10px] transition-all cursor-pointer ${mode === 'concept' ? 'bg-yellow-400 text-black shadow-lg' : 'text-white/40 hover:text-white'}`}>Concept</button>
              <button onClick={() => { setMode('practice'); setScenarioIndex(0); setQuizFeedback(null); }} className={`px-4 py-1.5 rounded-full font-black uppercase text-[10px] transition-all cursor-pointer ${mode === 'practice' ? 'bg-green-500 text-white shadow-lg' : 'text-white/40 hover:text-white'}`}>Practice</button>
           </div>
         </div>
@@ -412,13 +416,13 @@ export default function LabContent() {
                 <div className="flex flex-col">
                     <h3 className="text-white font-black uppercase tracking-tighter" style={{ fontSize: UI_CONFIG.headerSize }}>Statistical Analysis</h3>
                     <div className="flex items-center gap-4 mt-1">
-                        <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-blue-700" /><span className="text-white/40 font-bold uppercase text-[9px]">Expenditure</span></div>
-                        <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-green-600" /><span className="text-white/40 font-bold uppercase text-[9px]">Income</span></div>
+                        <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-indigo-950" /><span className="text-white/40 font-bold uppercase text-[9px]">Pass</span></div>
+                        <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-gray-300" /><span className="text-white/40 font-bold uppercase text-[9px]">Fail</span></div>
                     </div>
                 </div>
                 <button onClick={() => setStepIndex(-1)} className="p-1.5 bg-black/40 hover:bg-black/60 rounded-full text-white/40 transition-colors cursor-pointer relative z-50 shadow-inner"><RotateCcw size={14} /></button>
             </div>
-            <CompanyChart highlightIds={activeHighlights} highlightType={highlightType} currentOverlay={activeOverlay} />
+            <SchoolChart highlightYears={activeHighlights} highlightType={highlightType} currentOverlay={activeOverlay} />
           </div>
         </section>
 
@@ -460,13 +464,13 @@ export default function LabContent() {
                                     </div>
                                 </div>
                                 
+                                {/* FIX: Split description and table to prevent entire section scrolling */}
                                 <div className="flex flex-col min-h-0 flex-1 overflow-hidden">
                                   <div className="bg-white/5 p-4 rounded-t-2xl border-x border-t border-white/10 shadow-xl shrink-0">
                                       {stepIndex === -1 ? (
                                           <div className="flex flex-col gap-1.5">
                                               <span className="text-yellow-400 font-black uppercase text-[10px] flex items-center gap-1.5 underline underline-offset-4 decoration-yellow-400/30">The Concept Rule</span>
-                                              <p className="text-white font-black italic leading-relaxed" style={{ fontSize: UI_CONFIG.textSize }}>"{FORMULA}"</p>
-                                              <p className="text-white/60 font-medium text-[12px]">{currentScenario.coreExplanation}</p>
+                                              <p className="text-white font-medium italic leading-relaxed" style={{ fontSize: UI_CONFIG.textSize }}>"{currentScenario.coreExplanation}"</p>
                                           </div>
                                       ) : (
                                           <div className="flex gap-4 items-start">
@@ -535,7 +539,7 @@ export default function LabContent() {
                                         className="bg-white text-black px-12 py-3.5 rounded-full font-black uppercase tracking-widest shadow-2xl active:scale-95 transition-all cursor-pointer relative z-50"
                                         style={{ fontSize: '12px' }}
                                     >
-                                        {quizFeedback.isCorrect ? "Continue" : "Back to Task"}
+                                        {quizFeedback.isCorrect ? "Continue Training" : "Back to Task"}
                                     </button>
                                 </div>
                             )}
@@ -548,7 +552,7 @@ export default function LabContent() {
           </div>
         </section>
       </main>
-
+  
       <div className="shrink-0 mb-2 flex flex-col items-center opacity-10 py-1 relative z-0">
           <GraduationCap size={20} className="text-[#3e2723]" />
           <h3 className="text-[#3e2723] font-black uppercase text-[8px] tracking-[0.3em]">Statistical Interpretation Lab</h3>
@@ -563,7 +567,7 @@ export default function LabContent() {
 //       <LabContent />
 //       <style>{`
 //         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700;900&display=swap');
-//         html, body, #root { height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden; background: #f1f0ee; }
+//         html, body, #root { height: 100%; margin: 0; padding: 0; overflow: hidden; background: #f1f0ee; }
 //         body { font-family: 'Noto Sans', sans-serif; color: #1a1a1a; }
 //         .no-scrollbar::-webkit-scrollbar { display: none; }
 //         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
