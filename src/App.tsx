@@ -235,7 +235,8 @@ import
   CreateBarChartRouter,
   DoubleBarChartTwoClassRouter,
   DoubleBarComparisonIntroRouter,
-  DoubleBCCumulativeDataAnalysisRouter
+  DoubleBCCumulativeDataAnalysisRouter,
+  DoubleBarChartMissingBarsRouter
 }
 from "./x-tars/courses/Learn/DataInterpretation/BarChart/BarChartRouterWrapper"
 
@@ -329,8 +330,8 @@ export default function App() {
               <Route path="/learn/dataInterpretation/barChart/twoClassBarChart" element={<DoubleBarChartTwoClassRouter />} />
 
               <Route path="/learn/dataInterpretation/barChart/doubleBarChart" element={<DoubleBarComparisonIntroRouter />} />
-
               <Route path="/learn/dataInterpretation/barChart/doubleBCCumulative" element={<DoubleBCCumulativeDataAnalysisRouter />} />
+              <Route path="/learn/dataInterpretation/barChart/doubleBCMissingBars" element={<DoubleBarChartMissingBarsRouter />} />
 
               
               

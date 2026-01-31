@@ -47,7 +47,7 @@ const HIERARCHY_DATA = [
     subModules: [
       { id: 'BC_7', title: 'What!! Double bar chart?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/dataInterpretation/barChart/doubleBarChart' },
       { id: 'BC_8', title: 'Analysis of double bar chart', desc: 'cumulative double bar chart analysis.', icon: '🔗', path: '/learn/dataInterpretation/barChart/doubleBCCumulative' },
-      // { id: 'LA_8', title: 'Sitting at extreme end?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/extremeleftRight' }  
+      { id: 'BC_8', title: 'Oops there are some missing bars!', desc: 'missing bars in double bar chart', icon: '🔗', path: '/learn/dataInterpretation/barChart/doubleBCMissingBars' }  
     ]
   },
 

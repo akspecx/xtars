@@ -8,7 +8,7 @@ import CreateBarChart from "./CreateBarChart";
 import  DoubleBarChartTwoClass from "./DoubleBarChartTwoClass";
 import DoubleBarComparisonIntro from "./DoubleBarComparisonIntro";
 import DoubleBCCumulativeDataAnalysis from "./DoubleBarChartCumulativeDataAnalysis";
-// import LAFollowInstructionIntro from "./LAFollowInstructionIntro"
+import DoubleBarChartMissingBars from "./DoubleBarChartMissingBars"
 // import LAFollowInstructionRight from "./LAFollowInstructionRight";
 // import LAFollowInstructionLeftRightBoth from "./LAFollowInstructionLeftRightBoth";
 // import LAFollowInstructionDirectionLeftRight from "./LAFollowInstructionDirectionLeftRight";
@@ -91,7 +91,7 @@ export const IncreaseTheScaleTo2Router: React.FC = () => {
   const navigate = useNavigate();
   
   const handleBack = () => {
-    navigate("/learn/logicalReasoning/LinearArrangement");
+    navigate("/learn/dataInterpretation/barChart");
   };
 
   // Default theme (dark theme)
@@ -119,7 +119,7 @@ export const FindingAnomaliesInBarChartRouter: React.FC = () => {
   const navigate = useNavigate();
   
   const handleBack = () => {
-    navigate("/learn/logicalReasoning/LinearArrangement");
+    navigate("/learn/dataInterpretation/barChart");
   };
 
   // Default theme (dark theme)
@@ -147,7 +147,7 @@ export const CreateBarChartRouter: React.FC = () => {
   const navigate = useNavigate();
   
   const handleBack = () => {
-    navigate("/learn/logicalReasoning/LinearArrangement");
+    navigate("/learn/dataInterpretation/barChart");
   };
 
   // Default theme (dark theme)
@@ -175,7 +175,7 @@ export const DoubleBarChartTwoClassRouter: React.FC = () => {
   const navigate = useNavigate();
   
   const handleBack = () => {
-    navigate("/learn/logicalReasoning/LinearArrangement");
+    navigate("/learn/dataInterpretation/barChart");
   };
 
   // Default theme (dark theme)
@@ -204,7 +204,7 @@ export const DoubleBarComparisonIntroRouter: React.FC = () => {
   const navigate = useNavigate();
   
   const handleBack = () => {
-    navigate("/learn/logicalReasoning/LinearArrangement");
+    navigate("/learn/dataInterpretation/barChart");
   };
 
   // Default theme (dark theme)
@@ -232,7 +232,7 @@ export const DoubleBCCumulativeDataAnalysisRouter: React.FC = () => {
   const navigate = useNavigate();
   
   const handleBack = () => {
-    navigate("/learn/logicalReasoning/LinearArrangement");
+    navigate("/learn/dataInterpretation/barChart");
   };
 
   // Default theme (dark theme)
@@ -256,33 +256,33 @@ export const DoubleBCCumulativeDataAnalysisRouter: React.FC = () => {
   );
 };
 
-// export const LAFollowInstructionIntroRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const DoubleBarChartMissingBarsRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/dataInterpretation/barChart");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LAFollowInstructionIntro 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <DoubleBarChartMissingBars 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
 // export const LAFollowInstructionRightRouter: React.FC = () => {
 //   const navigate = useNavigate();
