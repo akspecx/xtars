@@ -5,7 +5,7 @@ import TheLargestAndSmallest from "./TheLargestAndSmallest";
 import IncreaseTheScaleTo2 from "./IncreaseTheScaleTo2";
 import FindingAnomaliesInBarChart from "./FindingAnomaliesInBarChart";
 import CreateBarChart from "./CreateBarChart";
-// import  LAFirstSecondLeftRight from "./LinearArrangementFirstSecondLeftRight";
+import  DoubleBarChartTwoClass from "./DoubleBarChartTwoClass";
 // import LANumberOfPeopleSittingBetween from "./LinearArrangementNumberOfPeopleSittingBetween";
 // import LAExtremeLeftRight from "./LinearArrangementExtremeLeftRight";
 // import LAFollowInstructionIntro from "./LAFollowInstructionIntro"
@@ -171,33 +171,33 @@ export const CreateBarChartRouter: React.FC = () => {
   );
 };
 
-// export const LAFirstSecondLeftRightRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const DoubleBarChartTwoClassRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LAFirstSecondLeftRight 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <DoubleBarChartTwoClass 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
 
 // export const LANumberOfPeopleSittingBetweenRouter: React.FC = () => {

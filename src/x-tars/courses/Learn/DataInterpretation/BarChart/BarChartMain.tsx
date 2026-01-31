@@ -30,9 +30,10 @@ const HIERARCHY_DATA = [
     subModules: [
       { id: 'BC_1', title: 'What is Bar Chart?', desc: 'To go through the introduction.', icon: '🔢', path: '/learn/dataInterpretation/barChart/introduction' },
       { id: 'BC_2', title: 'The Largest and Smallest', desc: 'Which one is the largest and smallest', icon: '🔗', path: '/learn/dataInterpretation/barChart/largestSmallest' },
-      { id: 'BC_4', title: 'What if scale has changed?', desc: 'Change the scale to 2', icon: '🔗', path: '/learn/dataInterpretation/barChart/differentScale' },
-      { id: 'BC_5', title: 'Identify anomalies in bar', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/dataInterpretation/barChart/anomaliesInBar' },
-      { id: 'BC_6', title: 'Let us create Bar Chart?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/dataInterpretation/barChart/createBarChart' }
+      { id: 'BC_3', title: 'What if scale has changed?', desc: 'Change the scale to 2', icon: '🔗', path: '/learn/dataInterpretation/barChart/differentScale' },
+      { id: 'BC_4', title: 'Identify anomalies in bar', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/dataInterpretation/barChart/anomaliesInBar' },
+      { id: 'BC_5', title: 'Let us create Bar Chart?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/dataInterpretation/barChart/createBarChart' },
+      { id: 'BC_6', title: 'What if there is bar chart for two class?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/dataInterpretation/barChart/twoClassBarChart' }
     
     ]
   },

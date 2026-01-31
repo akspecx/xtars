@@ -394,7 +394,7 @@ export default function LabContent() {
                             <button onClick={handleRestart} className={`bg-[#3e2723] text-[#e6dccb] px-8 py-4 rounded-full font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl border-b-4 border-black flex items-center justify-center gap-2`} style={{ fontSize: UI_CONFIG.textSize }}>
                                 <RefreshCcw size={16} /> Re-start
                             </button>
-                            <button onClick={() => navigate('/learn/dataInterpretation/barChart')} className={`bg-green-600 text-white px-8 py-4 rounded-full font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl border-b-4 border-green-900 flex items-center justify-center gap-2`} style={{ fontSize: UI_CONFIG.textSize }}>
+                            <button onClick={() => navigate('/learn/dataInterpretation/barChart/twoClassBarChart')} className={`bg-green-600 text-white px-8 py-4 rounded-full font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl border-b-4 border-green-900 flex items-center justify-center gap-2`} style={{ fontSize: UI_CONFIG.textSize }}>
                                 Next Module <ArrowRightCircle size={18} />
                             </button>
                         </div>

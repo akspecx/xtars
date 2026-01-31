@@ -232,7 +232,8 @@ import
   TheLargestAndSmallestRouter,
   IncreaseTheScaleTo2Router,
   FindingAnomaliesInBarChartRouter,
-  CreateBarChartRouter
+  CreateBarChartRouter,
+  DoubleBarChartTwoClassRouter
 }
 from "./x-tars/courses/Learn/DataInterpretation/BarChart/BarChartRouterWrapper"
 
@@ -323,10 +324,11 @@ export default function App() {
               <Route path="/learn/dataInterpretation/barChart/differentScale" element={<IncreaseTheScaleTo2Router />} />
               <Route path="/learn/dataInterpretation/barChart/anomaliesInBar" element={<FindingAnomaliesInBarChartRouter />} />
               <Route path="/learn/dataInterpretation/barChart/createBarChart" element={<CreateBarChartRouter />} />
+              <Route path="/learn/dataInterpretation/barChart/twoClassBarChart" element={<DoubleBarChartTwoClassRouter />} />
 
               
 
-
+              
              
 
 
