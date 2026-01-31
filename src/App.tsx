@@ -233,7 +233,9 @@ import
   IncreaseTheScaleTo2Router,
   FindingAnomaliesInBarChartRouter,
   CreateBarChartRouter,
-  DoubleBarChartTwoClassRouter
+  DoubleBarChartTwoClassRouter,
+  DoubleBarComparisonIntroRouter,
+  DoubleBCCumulativeDataAnalysisRouter
 }
 from "./x-tars/courses/Learn/DataInterpretation/BarChart/BarChartRouterWrapper"
 
@@ -326,10 +328,12 @@ export default function App() {
               <Route path="/learn/dataInterpretation/barChart/createBarChart" element={<CreateBarChartRouter />} />
               <Route path="/learn/dataInterpretation/barChart/twoClassBarChart" element={<DoubleBarChartTwoClassRouter />} />
 
-              
+              <Route path="/learn/dataInterpretation/barChart/doubleBarChart" element={<DoubleBarComparisonIntroRouter />} />
+
+              <Route path="/learn/dataInterpretation/barChart/doubleBCCumulative" element={<DoubleBCCumulativeDataAnalysisRouter />} />
 
               
-             
+              
 
 
               {/* Games */}

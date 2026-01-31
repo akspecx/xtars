@@ -6,8 +6,8 @@ import IncreaseTheScaleTo2 from "./IncreaseTheScaleTo2";
 import FindingAnomaliesInBarChart from "./FindingAnomaliesInBarChart";
 import CreateBarChart from "./CreateBarChart";
 import  DoubleBarChartTwoClass from "./DoubleBarChartTwoClass";
-// import LANumberOfPeopleSittingBetween from "./LinearArrangementNumberOfPeopleSittingBetween";
-// import LAExtremeLeftRight from "./LinearArrangementExtremeLeftRight";
+import DoubleBarComparisonIntro from "./DoubleBarComparisonIntro";
+import DoubleBCCumulativeDataAnalysis from "./DoubleBarChartCumulativeDataAnalysis";
 // import LAFollowInstructionIntro from "./LAFollowInstructionIntro"
 // import LAFollowInstructionRight from "./LAFollowInstructionRight";
 // import LAFollowInstructionLeftRightBoth from "./LAFollowInstructionLeftRightBoth";
@@ -200,61 +200,61 @@ export const DoubleBarChartTwoClassRouter: React.FC = () => {
 };
 
 
-// export const LANumberOfPeopleSittingBetweenRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const DoubleBarComparisonIntroRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LANumberOfPeopleSittingBetween 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <DoubleBarComparisonIntro 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
-// export const LAExtremeLeftRightRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const DoubleBCCumulativeDataAnalysisRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/LinearArrangement");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LAExtremeLeftRight 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <DoubleBCCumulativeDataAnalysis 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
 // export const LAFollowInstructionIntroRouter: React.FC = () => {
 //   const navigate = useNavigate();

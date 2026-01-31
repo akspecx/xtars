@@ -20,8 +20,8 @@ import {
 
 const HIERARCHY_DATA = [
   {
-    id: "linearArrangmentIntro",
-    title: "Bar char introduction",
+    id: "barChartIntro",
+    title: "Bar chart introduction",
     subtitle: "Understanding the bar chart",
     icon: "⚖️",
     gradient: "from-indigo-500 to-purple-500",
@@ -37,19 +37,19 @@ const HIERARCHY_DATA = [
     
     ]
   },
-  // {
-  //   id: "linearArrangmentAdvanced",
-  //   title: "Let's get into depth",
-  //   subtitle: "Understanding the balanced scale",
-  //   icon: "⚖️",
-  //   gradient: "from-indigo-500 to-purple-500",
-  //   path: "/learn/logicalReasoning/LinearArrangement",
-  //   subModules: [
-  //     { id: 'LA_6', title: 'Who is second to the left?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/FirstSecondLeftRight' },
-  //     { id: 'LA_7', title: 'Number of people between?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/PeopleSittingBetween' },
-  //     { id: 'LA_8', title: 'Sitting at extreme end?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/extremeleftRight' }  
-  //   ]
-  // },
+  {
+    id: "barChartDouble",
+    title: "Let's get into double bar chart",
+    subtitle: "Understanding the double bar chart",
+    icon: "⚖️",
+    gradient: "from-indigo-500 to-purple-500",
+    path: "/learn/dataInterpretation/barChart",
+    subModules: [
+      { id: 'BC_7', title: 'What!! Double bar chart?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/dataInterpretation/barChart/doubleBarChart' },
+      { id: 'BC_8', title: 'Analysis of double bar chart', desc: 'cumulative double bar chart analysis.', icon: '🔗', path: '/learn/dataInterpretation/barChart/doubleBCCumulative' },
+      // { id: 'LA_8', title: 'Sitting at extreme end?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/extremeleftRight' }  
+    ]
+  },
 
   // {
   //   id: "linearArrangmentInstructions",
