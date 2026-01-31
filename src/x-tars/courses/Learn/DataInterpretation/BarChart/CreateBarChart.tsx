@@ -73,7 +73,7 @@ const SWEETS = [
 // ==========================================
 export default function LabContent() {
   const navigate = useNavigate();
-  // States: intro, drawing, quiz_total, quiz_diff, mastery
+  // States: intro, drawing, quiz_total, quiz_diff, quiz_combined, mastery
   const [gameState, setGameState] = useState('intro'); 
   const [userVotes, setUserVotes] = useState({ iceCream: 0, donut: 0, chocolate: 0, candy: 0 });
   const [teacherSpeech, setTeacherSpeech] = useState("Today, you are the scientist! Use the data below to draw your own bar chart.");
@@ -141,6 +141,7 @@ export default function LabContent() {
       
       if (next === 'quiz_total') setTeacherSpeech("How many people actually voted for sweets?");
       if (next === 'quiz_diff') setTeacherSpeech("How many more children like Ice Cream than Donut?");
+      if (next === 'quiz_combined') setTeacherSpeech("How many chose chocolate and ice-cream together?");
     }
   };
 
@@ -171,7 +172,7 @@ export default function LabContent() {
       <header className="w-full max-w-[1500px] shrink-0 pt-2 sm:pt-4 relative z-20">
         <div className="w-full bg-[#2a1a16] p-2 sm:p-3 rounded-2xl border-b-4 border-black/40 shadow-xl flex justify-between items-center text-white">
           <div className="flex flex-col">
-            <button onClick={() => navigate('/')} className={`flex items-center gap-1 text-[#a88a6d] font-black uppercase hover:text-white transition-all`} style={{ fontSize: UI_CONFIG.smallText }}><ChevronLeft size={14} /> Dashboard</button>
+            <button onClick={() => navigate('/learn/dataInterpretation/barChart')} className={`flex items-center gap-1 text-[#a88a6d] font-black uppercase hover:text-white transition-all`} style={{ fontSize: UI_CONFIG.smallText }}><ChevronLeft size={14} /> Dashboard</button>
             <h1 className={`text-white font-black uppercase tracking-tighter`} style={{ fontSize: UI_CONFIG.headerSize }}>Data Drawing Lab</h1>
           </div>
           <div className="flex items-center gap-2 bg-black/30 px-3 py-1 rounded-full border border-white/10 shadow-inner">
@@ -355,7 +356,15 @@ export default function LabContent() {
                   {!quizFeedback && gameState === 'quiz_diff' && (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl px-2">
                         {[1, 2, 3].map(num => (
-                            <button key={num} onClick={() => handleQuizAnswer(num === 2, num === 2 ? "Spot on! The Ice Cream bar (6) is 2 blocks taller than the Donut bar (4)." : `Look at the bars again. Is the difference really ${num}?`, 'mastery', ['iceCream', 'donut'])} className="bg-white/5 hover:bg-white/10 border-2 border-white/10 p-4 rounded-xl text-white font-bold transition-all text-center" style={{ fontSize: UI_CONFIG.textSize }}>{num} children</button>
+                            <button key={num} onClick={() => handleQuizAnswer(num === 2, num === 2 ? "Spot on! The Ice Cream bar (6) is 2 blocks taller than the Donut bar (4)." : `Look at the bars again. Is the difference really ${num}?`, 'quiz_combined', ['iceCream', 'donut'])} className="bg-white/5 hover:bg-white/10 border-2 border-white/10 p-4 rounded-xl text-white font-bold transition-all text-center" style={{ fontSize: UI_CONFIG.textSize }}>{num} children</button>
+                        ))}
+                    </div>
+                  )}
+
+                  {!quizFeedback && gameState === 'quiz_combined' && (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl px-2">
+                        {[8, 10, 12].map(num => (
+                            <button key={num} onClick={() => handleQuizAnswer(num === 10, num === 10 ? "Correct! By combining the 4 votes for Chocolate and the 6 votes for Ice Cream, we get 10 in total." : `Try again! That's not the sum of Chocolate and Ice Cream.`, 'mastery', ['chocolate', 'iceCream'])} className="bg-white/5 hover:bg-white/10 border-2 border-white/10 p-4 rounded-xl text-white font-bold transition-all text-center" style={{ fontSize: UI_CONFIG.textSize }}>{num} Voters</button>
                         ))}
                     </div>
                   )}
@@ -385,7 +394,7 @@ export default function LabContent() {
                             <button onClick={handleRestart} className={`bg-[#3e2723] text-[#e6dccb] px-8 py-4 rounded-full font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl border-b-4 border-black flex items-center justify-center gap-2`} style={{ fontSize: UI_CONFIG.textSize }}>
                                 <RefreshCcw size={16} /> Re-start
                             </button>
-                            <button className={`bg-green-600 text-white px-8 py-4 rounded-full font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl border-b-4 border-green-900 flex items-center justify-center gap-2`} style={{ fontSize: UI_CONFIG.textSize }}>
+                            <button onClick={() => navigate('/learn/dataInterpretation/barChart')} className={`bg-green-600 text-white px-8 py-4 rounded-full font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl border-b-4 border-green-900 flex items-center justify-center gap-2`} style={{ fontSize: UI_CONFIG.textSize }}>
                                 Next Module <ArrowRightCircle size={18} />
                             </button>
                         </div>

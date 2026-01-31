@@ -176,13 +176,13 @@ export default function LabContent() {
       <header className="w-full max-w-[1500px] shrink-0 pt-2 sm:pt-4 relative z-20">
         <div className="w-full bg-[#2a1a16] p-2 sm:p-3 rounded-2xl border-b-4 border-black/40 shadow-xl flex justify-between items-center text-white">
           <div className="flex flex-col">
-            <button onClick={() => navigate('/')} className={`flex items-center gap-1 text-[#a88a6d] font-black uppercase text-[${UI_CONFIG.smallText}] hover:text-white transition-all`}><ChevronLeft size={14} /> Dashboard</button>
+            <button onClick={() => navigate('/learn/dataInterpretation/barChart')} className={`flex items-center gap-1 text-[#a88a6d] font-black uppercase text-[${UI_CONFIG.smallText}] hover:text-white transition-all`}><ChevronLeft size={14} /> Dashboard</button>
             <h1 className={`text-white text-[${UI_CONFIG.headerSize}] font-black uppercase tracking-tighter`}>Bar Chart Introduction</h1>
           </div>
-          <div className="flex items-center gap-2 bg-black/30 px-3 py-1 rounded-full border border-white/10 shadow-inner">
+          {/* <div className="flex items-center gap-2 bg-black/30 px-3 py-1 rounded-full border border-white/10 shadow-inner">
              <BarChart3 className="text-yellow-400" size={16} />
              <span className={`text-[${UI_CONFIG.textSize}] font-black uppercase tracking-widest text-white/70 whitespace-nowrap`}>Scale 0 - 6</span>
-          </div>
+          </div> */}
         </div>
       </header>
 
@@ -395,7 +395,7 @@ export default function LabContent() {
                             <button onClick={handleRestart} className={`bg-[#3e2723] text-[#e6dccb] px-8 py-4 rounded-full font-black uppercase tracking-widest text-[${UI_CONFIG.textSize}] hover:scale-105 active:scale-95 transition-all shadow-xl border-b-4 border-black flex items-center justify-center gap-2`}>
                                 <RefreshCcw size={16} /> Replay Session
                             </button>
-                            <button className={`bg-green-600 text-white px-8 py-4 rounded-full font-black uppercase tracking-widest text-[${UI_CONFIG.textSize}] hover:scale-105 active:scale-95 transition-all shadow-xl border-b-4 border-green-900 flex items-center justify-center gap-2`}>
+                            <button onClick={() => navigate('/learn/dataInterpretation/barChart/largestSmallest')} className={`bg-green-600 text-white px-8 py-4 rounded-full font-black uppercase tracking-widest text-[${UI_CONFIG.textSize}] hover:scale-105 active:scale-95 transition-all shadow-xl border-b-4 border-green-900 flex items-center justify-center gap-2`}>
                                 Next Module <ArrowRightCircle size={18} />
                             </button>
                         </div>

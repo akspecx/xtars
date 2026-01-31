@@ -215,10 +215,26 @@ from "./x-tars/courses/Learn/maths/AlgebraicExpression/AlgebraRouterWrapper"
 import {
   LearnRouter,
   LearnMathsRouter,
-  LogicalReasoningMainRouter
-  
-}
+  LogicalReasoningMainRouter,
+  DataInterpretationMainRouter
+  }
 from "./x-tars/courses/Learn/LearnModuleWrapper"
+
+import 
+{
+  BarChartMainRouter
+}
+from "./x-tars/courses/Learn/DataInterpretation/DIRouterWrapper"
+
+import 
+{
+  BarChartIntroRouter,
+  TheLargestAndSmallestRouter,
+  IncreaseTheScaleTo2Router,
+  FindingAnomaliesInBarChartRouter,
+  CreateBarChartRouter
+}
+from "./x-tars/courses/Learn/DataInterpretation/BarChart/BarChartRouterWrapper"
 
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -300,12 +316,15 @@ export default function App() {
 
 
             
+              <Route path="/learn/dataInterpretation" element={<DataInterpretationMainRouter />} />
+              <Route path="/learn/dataInterpretation/barChart" element={<BarChartMainRouter />} />
+              <Route path="/learn/dataInterpretation/barChart/introduction" element={<BarChartIntroRouter />} />
+              <Route path="/learn/dataInterpretation/barChart/largestSmallest" element={<TheLargestAndSmallestRouter />} />
+              <Route path="/learn/dataInterpretation/barChart/differentScale" element={<IncreaseTheScaleTo2Router />} />
+              <Route path="/learn/dataInterpretation/barChart/anomaliesInBar" element={<FindingAnomaliesInBarChartRouter />} />
+              <Route path="/learn/dataInterpretation/barChart/createBarChart" element={<CreateBarChartRouter />} />
 
-
-
-
-
-
+              
 
 
              
