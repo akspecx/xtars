@@ -16,9 +16,9 @@ import NumberGameCard from "../../CommonUtility/CardsUtility"
 const USER_NAME = "Prabhat"; 
 
 const LEARN_SUB_MODULES = [
-   { id: "maths", title: "Linear Arrangement", subtitle: "Let's learn the linear arrangement", icon: "👥👥", gradient: "from-indigo-500 to-purple-500", path: "/learn/logicalReasoning/LinearArrangement"}
-//    { id: "logicalReasoning", title: "Logical Reasoning✅", subtitle: "Can we solve the arrangements?", icon: "👥🔄↔️", gradient: "from-indigo-500 to-purple-500", path: "/learn/logicalreasoning" }
-//    { id: "identification", title: "The Sacred Game ✅", subtitle: "Can you offer flowers correctly?", icon: "🛕", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/sacredGame" }
+   { id: "linearArrangement", title: "Linear Arrangement", subtitle: "Let's learn the linear arrangement", icon: "👥👥", gradient: "from-indigo-500 to-purple-500", path: "/learn/logicalReasoning/LinearArrangement"},
+   { id: "orderAndRanking", title: "Order and Ranking", subtitle: "We will see order and ranking now", icon: "👥🔄↔️", gradient: "from-indigo-500 to-purple-500", path: "/learn/logicalreasoning/orderRanking" },
+   { id: "bloodRelations", title: "Blood relations", subtitle: "Do we know the blood relations well", icon: "🛕", gradient: "from-indigo-500 to-purple-500", path: "/learn/logicalreasoning/bloodRelations" }
 //   // { id: "counting", title: "Count On Your Body", subtitle: "Learn numbers with body-part examples", icon: "🤗", gradient: "from-rose-500 to-amber-500", path: "/puzzles/counting", type: 'numeric' },
 //   // { id: "tracing", title: "Trace the Numbers ✅", subtitle: "Practice drawing numbers with dotted guides", icon: "✍️", gradient: "from-sky-500 to-blue-500", path: "/puzzles/tracing", type: 'numeric' },
 //   // { id: "sequence", title: "Number Train Sequence ✅", subtitle: "Arrange train coaches in the correct order", icon: "🚂", gradient: "from-orange-500 to-amber-500", path: "/puzzles/sequence", type: 'numeric' },

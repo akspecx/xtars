@@ -139,9 +139,21 @@ import {
   GiraffeComplexArrangementGameWrapper
 } from "./x-tars/courses/Kids/basics/Arrangement/PuzzleGameWrappers";
 
-import{LinearArrangementMainRouter}
+import{LinearArrangementMainRouter,
+  BloodRelationsMainRouter,
+  OrderAndRankingMainRouter
+
+}
 from "./x-tars/courses/Learn/LogicalReasoning/LogicalReasoningRouterWrapper"
 
+
+import {
+  BRIntroRouter,
+  BRAncilliaryRouter,
+  BRFundamentalsRouter
+}
+from 
+"./x-tars/courses/Learn/LogicalReasoning/BloodRelationship/BloodRelationsRouterWrapper"
 
 import {LinearArrangementIntroductionRouter,
   LinearArrangementLeftRightRouter,
@@ -321,6 +333,16 @@ export default function App() {
               <Route path="/learn/logicalReasoning/LinearArrangement/MultipleInstructionCreateAnchor" element={<LAInstructionGyaanUseMultipleInstrForAnchorRouter />} />
             
               
+              <Route path="/learn/logicalreasoning/bloodRelations" element={<BloodRelationsMainRouter />} />
+              <Route path="/learn/logicalreasoning/bloodRelations/introduction" element={<BRIntroRouter />} />
+              <Route path="/learn/logicalreasoning/bloodRelations/ancilliary" element={<BRAncilliaryRouter />} />
+              <Route path="/learn/logicalreasoning/bloodRelations/fundamentals" element={<BRFundamentalsRouter />} />
+
+              
+              
+
+              
+              <Route path="/learn/logicalreasoning/orderRanking" element={<OrderAndRankingMainRouter />} />
 
 
 
