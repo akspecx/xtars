@@ -21,94 +21,94 @@ import {
 const HIERARCHY_DATA = [
   {
     id: "linearArrangmentIntro",
-    title: "Linear Arrangment",
+    title: "Introduction",
     subtitle: "Understanding the balanced scale",
     icon: "⚖️",
     gradient: "from-indigo-500 to-purple-500",
-    path: "/learn/logicalReasoning/LinearArrangement",
+    path: "/learn/logicalReasoning/orderRanking/",
     subModules: [
-      { id: 'LA_1', title: 'Who is at first for Ice-cream?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/introduction' },
-      { id: 'LA_2', title: 'Do you know left and right?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/leftRight' },
-      { id: 'LA_3', title: 'Who is to your left and right?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/leftRightWithDiffDirection' },
-      { id: 'LA_4', title: 'Left and immediate left', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/immediateleftRight' },
-      { id: 'LA_5', title: 'What about between?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/between' }
+      { id: 'OR_1', title: 'Introduction', desc: 'Ascending Descending', icon: '🔢', path: '/learn/logicalReasoning/orderRanking/ORAscendingDescending' },
+      { id: 'OR_2', title: 'Let us put the weight in ascending descending', desc: 'arranging in ascending descending', icon: '🔗', path: '/learn/logicalReasoning/orderRanking/ORAscendingDescendingWeight' },
+      { id: 'OR_3', title: 'Now we will follow the instructions', desc: 'Mapping as per the instructions.', icon: '🔗', path: '/learn/logicalReasoning/orderRanking/ORAscendingDescendingInstruction' },
+      // { id: 'LA_4', title: 'Left and immediate left', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/immediateleftRight' },
+      // { id: 'LA_5', title: 'What about between?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/between' }
     
     ]
   },
-  {
-    id: "linearArrangmentAdvanced",
-    title: "Let's get into depth",
-    subtitle: "Understanding the balanced scale",
-    icon: "⚖️",
-    gradient: "from-indigo-500 to-purple-500",
-    path: "/learn/logicalReasoning/LinearArrangement",
-    subModules: [
-      { id: 'LA_6', title: 'Who is second to the left?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/FirstSecondLeftRight' },
-      { id: 'LA_7', title: 'Number of people between?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/PeopleSittingBetween' },
-      { id: 'LA_8', title: 'Sitting at extreme end?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/extremeleftRight' }  
-    ]
-  },
+  // {
+  //   id: "linearArrangmentAdvanced",
+  //   title: "Let's get into depth",
+  //   subtitle: "Understanding the balanced scale",
+  //   icon: "⚖️",
+  //   gradient: "from-indigo-500 to-purple-500",
+  //   path: "/learn/logicalReasoning/LinearArrangement",
+  //   subModules: [
+  //     { id: 'LA_6', title: 'Who is second to the left?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/FirstSecondLeftRight' },
+  //     { id: 'LA_7', title: 'Number of people between?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/PeopleSittingBetween' },
+  //     { id: 'LA_8', title: 'Sitting at extreme end?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/extremeleftRight' }  
+  //   ]
+  // },
 
-  {
-    id: "linearArrangmentInstructions",
-    title: "Let's follow the instructions",
-    subtitle: "Understanding the balanced scale",
-    icon: "⚖️",
-    gradient: "from-indigo-500 to-purple-500",
-    path: "/learn/logicalReasoning/LinearArrangement",
-    subModules: [
-      { id: 'LA_6', title: 'Follow instructions?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/followInstructionLeft' },
-      { id: 'LA_7', title: 'Follow Instruction for right', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrRight' },
-      { id: 'LA_8', title: 'Let us make people sit by following both left and right', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrBothLeftRight' } , 
-      { id: 'LA_9', title: 'instruction says they are facing in different directions', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffDirection' },
-      { id: 'LA_10', title: 'When extreme ends are also involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrExtremEnd' },
-      { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
-      { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
+  // {
+  //   id: "linearArrangmentInstructions",
+  //   title: "Let's follow the instructions",
+  //   subtitle: "Understanding the balanced scale",
+  //   icon: "⚖️",
+  //   gradient: "from-indigo-500 to-purple-500",
+  //   path: "/learn/logicalReasoning/LinearArrangement",
+  //   subModules: [
+  //     { id: 'LA_6', title: 'Follow instructions?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/followInstructionLeft' },
+  //     { id: 'LA_7', title: 'Follow Instruction for right', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrRight' },
+  //     { id: 'LA_8', title: 'Let us make people sit by following both left and right', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrBothLeftRight' } , 
+  //     { id: 'LA_9', title: 'instruction says they are facing in different directions', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffDirection' },
+  //     { id: 'LA_10', title: 'When extreme ends are also involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrExtremEnd' },
+  //     { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
+  //     { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
  
-    ]
-  },
-  {
-    id: "linearArrangmentGyaan",
-    title: "Let's understand the basics first",
-    subtitle: "Understanding the balanced scale",
-    icon: "⚖️",
-    gradient: "from-indigo-500 to-purple-500",
-    path: "/learn/logicalReasoning/LinearArrangement",
-    subModules: [
-      { id: 'LA_22', title: 'How to choose Anchor?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/ChooseAnchor' },
-      { id: 'LA_23', title: 'Who is anchor from multiple instructions?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/anchorFromMultipleInstruction' },
-      { id: 'LA_24', title: 'Anchor Ok but what next?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/WhatAfterAnchor' } , 
-      { id: 'LA_25', title: 'What if anchor instruction is not there?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/MultipleInstructionCreateAnchor' }
-      // { id: 'LA_10', title: 'When extreme ends are also involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrExtremEnd' },
-      // { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
-      // { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
+  //   ]
+  // },
+  // {
+  //   id: "linearArrangmentGyaan",
+  //   title: "Let's understand the basics first",
+  //   subtitle: "Understanding the balanced scale",
+  //   icon: "⚖️",
+  //   gradient: "from-indigo-500 to-purple-500",
+  //   path: "/learn/logicalReasoning/LinearArrangement",
+  //   subModules: [
+  //     { id: 'LA_22', title: 'How to choose Anchor?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/ChooseAnchor' },
+  //     { id: 'LA_23', title: 'Who is anchor from multiple instructions?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/anchorFromMultipleInstruction' },
+  //     { id: 'LA_24', title: 'Anchor Ok but what next?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/WhatAfterAnchor' } , 
+  //     { id: 'LA_25', title: 'What if anchor instruction is not there?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/MultipleInstructionCreateAnchor' }
+  //     // { id: 'LA_10', title: 'When extreme ends are also involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrExtremEnd' },
+  //     // { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
+  //     // { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
  
-    ]
-  },
+  //   ]
+  // },
 
 
-  {
-    id: "linearArrangmentActualWorldIntro",
-    title: "Let's move beyond images",
-    subtitle: "Understanding the balanced scale",
-    icon: "⚖️",
-    gradient: "from-indigo-500 to-purple-500",
-    path: "/learn/logicalReasoning/LinearArrangement",
-    subModules: [
-      { id: 'LA_13', title: 'We do not use images in actual world', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldIntro' },
-      { id: 'LA_14', title: 'What If peole are facing north?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldNorth' },
-      { id: 'LA_15', title: 'And when they are facing south?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSouth' } , 
-      { id: 'LA_16', title: 'What if no direction given in question', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/DirectionDoesnotMatter' },
-      { id: 'LA_17', title: 'Oops they are sitting in parallel', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSittingParallel' },
-      { id: 'LA_18', title: 'If arrangement can lead to many cases', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/MultipleCaseIntro' },
-      { id: 'LA_19', title: 'Let us see a bit complex multiple case', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/MultipleCaseIntermediate' },
-      { id: 'LA_20', title: 'what if 2 dimensions are involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/2DArrangement' },
-      { id: 'LA_21', title: 'When 3 dimensions are involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/3DArrangement' }
-      // { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
-      // { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
+  // {
+  //   id: "linearArrangmentActualWorldIntro",
+  //   title: "Let's move beyond images",
+  //   subtitle: "Understanding the balanced scale",
+  //   icon: "⚖️",
+  //   gradient: "from-indigo-500 to-purple-500",
+  //   path: "/learn/logicalReasoning/LinearArrangement",
+  //   subModules: [
+  //     { id: 'LA_13', title: 'We do not use images in actual world', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldIntro' },
+  //     { id: 'LA_14', title: 'What If peole are facing north?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldNorth' },
+  //     { id: 'LA_15', title: 'And when they are facing south?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSouth' } , 
+  //     { id: 'LA_16', title: 'What if no direction given in question', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/DirectionDoesnotMatter' },
+  //     { id: 'LA_17', title: 'Oops they are sitting in parallel', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSittingParallel' },
+  //     { id: 'LA_18', title: 'If arrangement can lead to many cases', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/MultipleCaseIntro' },
+  //     { id: 'LA_19', title: 'Let us see a bit complex multiple case', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/MultipleCaseIntermediate' },
+  //     { id: 'LA_20', title: 'what if 2 dimensions are involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/2DArrangement' },
+  //     { id: 'LA_21', title: 'When 3 dimensions are involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/3DArrangement' }
+  //     // { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
+  //     // { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
  
-    ]
-  },      
+  //   ]
+  // },      
 
   
 ];

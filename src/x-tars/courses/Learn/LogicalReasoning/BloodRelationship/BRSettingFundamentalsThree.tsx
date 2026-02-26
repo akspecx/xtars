@@ -35,128 +35,156 @@ import { HashRouter as Router, useNavigate } from 'react-router-dom';
 // DATA & CONFIG
 // ==========================================
 
+const NOTATION_LEGEND = [
+  { code: "(M)", meaning: "Male Marker", genderA: "M" },
+  { code: "(F)", meaning: "Female Marker", genderA: "F" },
+  { code: "(=)", meaning: "Marriage Bond", genderA: "N/A" },
+  { code: "(--)", meaning: "Sibling Bond", genderA: "N/A" },
+  { code: "(↓)", meaning: "Generational Drop", genderA: "N/A" }
+];
+
 const CONCEPT_PROTOCOLS = [
   {
-    id: "parents",
-    tab: "Parents",
-    title: "Protocol: Direct Lineage (Up)",
-    definition: "Parents are direct ancestors sitting exactly one generation above you.",
+    id: "rule-1",
+    tab: "Genders",
+    title: "Rule 1: Gender Markers",
+    highlight: "(M) and (F)",
+    definition: "Every character requires a defined gender to trace relations accurately.",
     logicPoints: [
-      "FATHER: Male parent (M).",
-      "MOTHER: Female parent (F).",
-      "HIERARCHY: Origin is at the Top."
+      "MALE: Defined using a bracket and M -> (M).",
+      "FEMALE: Defined using a bracket and F -> (F).",
+      "UNKNOWN: Kept empty or marked with (?) until deduced."
     ],
-    visual: { 
-      type: 'dual-case-vertical-direct', 
-      case1: { title: "FATHER", top: {id:'FATHER', g:'M'}, btm: {id:'CHILD', g:'?'} },
-      case2: { title: "MOTHER", top: {id:'MOTHER', g:'F'}, btm: {id:'CHILD', g:'?'} }
-    }
+    visual: { type: 'basic-genders' }
   },
   {
-    id: "children",
-    tab: "Children",
-    title: "Protocol: Direct Lineage (Down)",
-    definition: "Children are direct descendants sitting exactly one generation below you.",
+    id: "rule-2",
+    tab: "Marriage",
+    title: "Rule 2: Marital Bond",
+    highlight: "husband of",
+    definition: "Spouses share the exact same generation tier.",
     logicPoints: [
-      "SON: Male descendant (M).",
-      "DAUGHTER: Female descendant (F).",
-      "HIERARCHY: Descendant is at the Bottom."
+      "VISUAL: Connected by a double horizontal line (=).",
+      "DEDUCTION: If A is the husband (M), B is automatically the wife (F).",
+      "PLACEMENT: They sit side-by-side horizontally."
     ],
-    visual: { 
-      type: 'dual-case-vertical-direct', 
-      case1: { title: "SON", top: {id:'PARENT', g:'?'}, btm: {id:'SON', g:'M'} },
-      case2: { title: "DAUGHTER", top: {id:'PARENT', g:'?'}, btm: {id:'DAUGHTER', g:'F'} }
-    }
+    visual: { type: 'basic-marriage' }
   },
   {
-    id: "inlaws",
-    tab: "In-laws",
-    title: "Marriage Protocol: In-Laws",
-    definition: "Tracing direct relationships through marriage bonds. Identifying Father-in-law and Son-in-law.",
+    id: "rule-3",
+    tab: "Siblings",
+    title: "Rule 3: Sibling Bond",
+    highlight: "brother of",
+    definition: "Brothers and sisters share the same generation tier.",
     logicPoints: [
-      "FATHER-IN-LAW: Father sits above your Spouse.",
-      "SON-IN-LAW: Husband is married to your Daughter.",
-      "BOND: Dotted deduction line traces the 'In-law' relation."
+      "VISUAL: Connected by a dotted horizontal line (--).",
+      "WARNING: 'A is the brother of B' only tells us A's gender. B could be a brother or sister!",
+      "PLACEMENT: They sit side-by-side horizontally."
     ],
-    visual: { 
-      type: 'dual-case-inlaw-screenshot-flow', 
-      case1: { title: "FATHER-IN-LAW", father: {id:'FATHER', g:'M'}, spouse: {id:'SPOUSE', g:'?'}, me: {id:'ME', g:'?'} },
-      case2: { title: "SON-IN-LAW", me: {id:'ME', g:'?'}, daughter: {id:'DAUGHTER', g:'F'}, husband: {id:'HUSBAND', g:'M'} }
-    }
+    visual: { type: 'basic-siblings' }
   },
   {
-    id: "grandparents",
-    tab: "Grandparents",
-    title: "Protocol: Grand-Generations (Up)",
-    definition: "Ancestors sitting two generational steps above you (+2).",
+    id: "rule-4",
+    tab: "Lineage",
+    title: "Rule 4: Direct Lineage",
+    highlight: "father of",
+    definition: "Generations strictly dictate vertical placement.",
     logicPoints: [
-      "GAP: Requires two vertical arrows.",
-      "STANDARD: Grandfather (M), Grandmother (F).",
-      "MIDDLE: Parent node sits in the center."
+      "VISUAL: Connected by a solid vertical arrow pointing down (↓).",
+      "HIERARCHY: Older generations (Parents, Grandparents) always sit ABOVE.",
+      "HIERARCHY: Younger generations (Children) always sit BELOW."
     ],
-    visual: { 
-      type: 'dual-case-chain', 
-      case1: { title: "GRANDFATHER", top: {id:'GRANDFATHER', g:'M'}, mid: {id:'PARENT', g:'?'}, btm: {id:'ME', g:'?'} },
-      case2: { title: "GRANDMOTHER", top: {id:'GRANDMOTHER', g:'F'}, mid: {id:'PARENT', g:'?'}, btm: {id:'ME', g:'?'} }
-    }
+    visual: { type: 'basic-vertical' }
   },
   {
-    id: "grandkids",
-    tab: "Grand-Kids",
-    title: "Protocol: Grand-Generations (Down)",
-    definition: "Descendants sitting two generational steps below you (-2).",
+    id: "rule-5",
+    tab: "Family",
+    title: "Rule 5: The Family Tree",
+    highlight: "son of",
+    definition: "Combining horizontal and vertical bonds creates a family tree.",
     logicPoints: [
-      "GAP: Requires two vertical steps down.",
-      "STANDARD: Grandson (M), Granddaughter (F).",
-      "MIDDLE: Child node sits in the center."
+      "PARENTS: Sit together bonded by marriage (=) on the top tier.",
+      "CHILD: Descends vertically (↓) from the parents' bond.",
+      "Always respect the vertical hierarchy!"
     ],
-    visual: { 
-      type: 'dual-case-chain', 
-      case1: { title: "GRANDSON", top: {id:'ME', g:'?'}, mid: {id:'CHILD', g:'?'}, btm: {id:'GRANDSON', g:'M'} },
-      case2: { title: "GRANDDAUGHTER", top: {id:'ME', g:'?'}, mid: {id:'CHILD', g:'?'}, btm: {id:'GRANDDAUGHTER', g:'F'} }
-    }
+    visual: { type: 'basic-family' }
+  },
+  {
+    id: "trap-1",
+    tab: "Trap: Lineage",
+    title: "Trap 1: Lineage Gender",
+    highlight: "father of S",
+    definition: "'F is the father of S'. What is the gender of S?",
+    logicPoints: [
+      "We know F is the father -> F is Male (M).",
+      "BUT we do NOT know if S is a son or a daughter.",
+      "S's gender remains UNKNOWN (?) until explicitly proven."
+    ],
+    visual: { type: 'basic-edge-lineage' }
+  },
+  {
+    id: "trap-2",
+    tab: "Trap: Sibling",
+    title: "Trap 2: Sibling Gender",
+    highlight: "brother of B",
+    definition: "'A is the brother of B'. What is the gender of B?",
+    logicPoints: [
+      "We know A is the brother -> A is Male (M).",
+      "BUT B could be a brother OR a sister.",
+      "B's gender remains UNKNOWN (?) until explicitly proven."
+    ],
+    visual: { type: 'basic-edge-sibling' }
+  },
+  {
+    id: "trap-3",
+    tab: "Trap: Names",
+    title: "Trap 3: Name Bias",
+    highlight: "Name alone",
+    definition: "Never assume a person's gender based purely on their name.",
+    logicPoints: [
+      "In logical puzzles, names do not dictate gender.",
+      "Only explicit relational words (Father, Sister, Wife) or pronouns define gender.",
+      "When in doubt, use the (?) marker."
+    ],
+    visual: { type: 'basic-edge-name' }
   }
 ];
 
 const PRACTICE_TASKS = [
   {
-    mission: "Trial 1: Identify the Genders. 'A is Male, B is Female, C is Unknown.'",
-    clues: [
-      "Rule 1: Node A is a Male.",
-      "Rule 2: Node B is a Female.",
-      "Rule 3: Node C's gender is not specified."
-    ],
+    mission: "Trial 1: Identify Genders",
+    expression: "A is Male, B is Female, C is Unknown",
     characters: [
-      { id: 'C', gender: '?', label: 'NODE C' },
-      { id: 'A', gender: 'M', label: 'NODE A' },
-      { id: 'B', gender: 'F', label: 'NODE B' }
+      { id: 'C', gender: '?' },
+      { id: 'A', gender: 'M' },
+      { id: 'B', gender: 'F' }
     ],
+    clues: ["Map the exact gender markers to the correct nodes."],
     template: 'practice-genders',
     slots: [
-      { id: 0, expectedId: 'A', label: 'Male' },
-      { id: 1, expectedId: 'B', label: 'Female' },
-      { id: 2, expectedId: 'C', label: 'Unknown' }
+      { id: 0, expectedId: 'A', label: '' },
+      { id: 1, expectedId: 'B', label: '' },
+      { id: 2, expectedId: 'C', label: '' }
     ],
     followUp: {
-      q: "In a blood relations puzzle, if a person's gender is not explicitly stated or implied, what should you assume?",
-      options: ["Assume they are Male", "Assume they are Female", "Leave it Unknown"],
+      q: "In a blood relations exam, if a person's gender is not explicitly stated or implied, what should you assume?",
+      options: ["Assume Male", "Assume Female", "Leave it Unknown"],
       correct: 2,
       explanation: "Never assume a gender based on a name alone unless explicitly defined by terms like 'brother', 'father', 'wife', etc."
     }
   },
   {
-    mission: "Trial 2: Establish a Marriage. 'X is the husband of Y.'",
-    clues: [
-      "Rule 1: X is the husband of Y."
-    ],
+    mission: "Trial 2: Marital Bond",
+    expression: "X is the husband of Y",
     characters: [
-      { id: 'Y', gender: 'F', label: 'Y' },
-      { id: 'X', gender: 'M', label: 'X' }
+      { id: 'Y', gender: 'F' },
+      { id: 'X', gender: 'M' }
     ],
+    clues: ["Map the married couple to the horizontal bond."],
     template: 'practice-marriage',
     slots: [
-      { id: 0, expectedId: 'X', label: 'Husband' },
-      { id: 1, expectedId: 'Y', label: 'Wife' }
+      { id: 0, expectedId: 'X', label: '' },
+      { id: 1, expectedId: 'Y', label: '' }
     ],
     followUp: {
       q: "Based on this relationship, what is the exact gender of Y?",
@@ -166,18 +194,17 @@ const PRACTICE_TASKS = [
     }
   },
   {
-    mission: "Trial 3: Establish Siblings. 'P is the brother of Q.'",
-    clues: [
-      "Rule 1: P is the brother of Q."
-    ],
+    mission: "Trial 3: Sibling Bond Trap",
+    expression: "P is the brother of Q",
     characters: [
-      { id: 'Q', gender: '?', label: 'Q' },
-      { id: 'P', gender: 'M', label: 'P' }
+      { id: 'Q', gender: '?' },
+      { id: 'P', gender: 'M' }
     ],
+    clues: ["Map the siblings to the dotted horizontal line."],
     template: 'practice-siblings',
     slots: [
-      { id: 0, expectedId: 'P', label: 'Brother' },
-      { id: 1, expectedId: 'Q', label: 'Sibling' }
+      { id: 0, expectedId: 'P', label: '' },
+      { id: 1, expectedId: 'Q', label: '' }
     ],
     followUp: {
       q: "Do we know the exact gender of Q based on this statement?",
@@ -187,42 +214,42 @@ const PRACTICE_TASKS = [
     }
   },
   {
-    mission: "Trial 4: Direct Lineage. 'M is the mother of N.'",
-    clues: [
-      "Rule 1: M is the mother of N."
-    ],
+    mission: "Trial 4: Vertical Lineage Trap",
+    expression: "F is the father of S",
     characters: [
-      { id: 'N', gender: '?', label: 'N' },
-      { id: 'M', gender: 'F', label: 'M' }
+      { id: 'S', gender: '?' },
+      { id: 'F', gender: 'M' }
     ],
+    clues: ["Map the parent and child respecting the vertical hierarchy."],
     template: 'practice-vertical',
     slots: [
-      { id: 0, expectedId: 'M', label: 'Parent' },
-      { id: 1, expectedId: 'N', label: 'Child' }
+      { id: 0, expectedId: 'F', label: '' },
+      { id: 1, expectedId: 'S', label: '' }
     ],
     followUp: {
-      q: "If N is later identified as a male, what is his exact relationship to M?",
-      options: ["Father", "Brother", "Son"],
+      q: "Based strictly on the statement 'F is the father of S', what is the exact gender of S?",
+      options: ["Male (Son)", "Female (Daughter)", "Unknown (?)"],
       correct: 2,
-      explanation: "Since M is the mother, a male child N would logically be her son."
+      explanation: "'Father of' only defines the parent's gender. The child (S) could be either a son or a daughter until explicitly stated otherwise."
     }
   },
   {
-    mission: "Trial 5: Nuclear Family. 'H is the husband of W. S is their son.'",
-    clues: [
-      "Rule 1: H is the husband of W.",
-      "Rule 2: S is the son of H and W."
-    ],
+    mission: "Trial 5: Nuclear Family",
+    expression: "H is married to W. S is their son.",
     characters: [
-      { id: 'S', gender: 'M', label: 'S' },
-      { id: 'W', gender: 'F', label: 'W' },
-      { id: 'H', gender: 'M', label: 'H' }
+      { id: 'S', gender: 'M' },
+      { id: 'W', gender: 'F' },
+      { id: 'H', gender: 'M' }
     ],
-    template: 'practice-family-tree',
+    clues: [
+      "Construct the complete family tree.",
+      "Ensure parents are on top and the son drops below."
+    ],
+    template: 'practice-family',
     slots: [
-      { id: 0, expectedId: 'H', label: 'Husband' },
-      { id: 1, expectedId: 'W', label: 'Wife' },
-      { id: 2, expectedId: 'S', label: 'Son' }
+      { id: 0, expectedId: 'H', label: '' },
+      { id: 1, expectedId: 'W', label: '' },
+      { id: 2, expectedId: 'S', label: '' }
     ],
     followUp: {
       q: "If S has a sister named D, how is D related to H?",
@@ -237,10 +264,42 @@ const PRACTICE_TASKS = [
 // RENDER COMPONENTS
 // ==========================================
 
-function Node({ data, color, isSmall, isDraggable = false, onDragEnd, onRemove, showRemove }) {
+const HighlightedString = ({ fullString, highlight }) => {
+  if (!highlight || !fullString.includes(highlight)) return <span>{fullString}</span>;
+  const parts = fullString.split(highlight);
+  return (
+    <span>
+      {parts[0]}
+      <span className="bg-amber-400 text-black px-1.5 py-0.5 mx-0.5 rounded shadow-sm">{highlight}</span>
+      {parts[1]}
+    </span>
+  );
+};
+
+function Node({ data, color, isSmall, isExtraSmall, isDraggable = false, onDragEnd, onRemove, showRemove }) {
   if (!data) return null;
   const genderLabel = data.gender || data.g;
   const Icon = genderLabel === 'M' ? UserCircle : genderLabel === 'F' ? User : Baby;
+
+  const sizeClasses = isExtraSmall
+    ? 'w-14 h-14 sm:w-[72px] sm:h-[72px]'
+    : isSmall
+      ? 'w-20 h-20 sm:w-28 sm:h-28'
+      : 'w-24 h-24 sm:w-36 sm:h-36';
+
+  const textClasses = isExtraSmall
+    ? 'text-lg sm:text-2xl'
+    : data.id.length <= 2
+      ? 'text-4xl sm:text-6xl'
+      : isSmall
+        ? 'text-[10px] sm:text-sm'
+        : 'text-sm sm:text-xl';
+        
+  const badgeClasses = isExtraSmall
+    ? '-top-2 w-5 h-5 text-[6px] sm:-top-3 sm:w-7 sm:h-7 sm:text-[8px]'
+    : isSmall
+      ? '-top-2 w-7 h-7 text-[8px] sm:-top-3.5 sm:w-10 sm:h-10 sm:text-[10px]'
+      : '-top-2 w-7 h-7 text-[8px] sm:-top-3.5 sm:w-10 sm:h-10 sm:text-[12px]';
 
   return (
     <motion.div 
@@ -250,43 +309,45 @@ function Node({ data, color, isSmall, isDraggable = false, onDragEnd, onRemove, 
       whileDrag={{ scale: 1.1, zIndex: 100 }}
       className={`flex flex-col items-center gap-1 ${isDraggable ? 'cursor-grab active:cursor-grabbing' : ''}`}
     >
-      <div className={`${isSmall ? 'w-20 h-20 sm:w-28 sm:h-28' : 'w-24 h-24 sm:w-36 sm:h-36'} rounded-full ${color} flex items-center justify-center text-white shadow-2xl border-2 border-white/20 relative z-10 transition-transform`}>
+      <div className={`${sizeClasses} rounded-full ${color} flex items-center justify-center text-white shadow-2xl border-2 border-white/20 relative z-10 transition-transform`}>
         <Icon className="absolute inset-0 m-auto opacity-30 w-3/5 h-3/5" />
-        <div className={`${data.id.length <= 2 ? 'text-4xl sm:text-6xl' : (isSmall ? 'text-[10px] sm:text-sm' : 'text-sm sm:text-xl')} font-black drop-shadow-md text-center px-1 z-10 uppercase tracking-tighter`}>{data.id}</div>
-        <div className={`absolute ${isSmall ? '-top-2 w-7 h-7 text-[8px]' : '-top-3.5 w-10 h-10 text-[10px] sm:text-[12px]'} left-1/2 -translate-x-1/2 rounded-full bg-yellow-400 text-black font-black flex items-center justify-center shadow-md border-2 border-[#1a0f0d] z-20`}>
+        <div className={`${textClasses} font-black drop-shadow-md text-center px-1 z-10 uppercase tracking-tighter`}>{data.id}</div>
+        <div className={`absolute ${badgeClasses} left-1/2 -translate-x-1/2 rounded-full bg-yellow-400 text-black font-black flex items-center justify-center shadow-md border-2 border-[#1a0f0d] z-20`}>
           ({genderLabel})
         </div>
         {showRemove && (
             <button 
                 onClick={onRemove}
-                className="absolute -bottom-3 -right-3 bg-rose-600 text-white rounded-full p-1.5 shadow-lg hover:bg-rose-500 active:scale-90 transition-all z-50 border border-white/20"
+                className="absolute -bottom-2 -right-2 bg-rose-600 text-white rounded-full p-1 shadow-lg hover:bg-rose-500 active:scale-90 transition-all z-50 border border-white/20"
             >
-                <X size={14} strokeWidth={3} />
+                <X size={12} strokeWidth={3} />
             </button>
         )}
       </div>
-      {data.label && (
-        <span className="text-white/80 font-black text-[9px] sm:text-[11px] uppercase tracking-widest text-center mt-1 whitespace-nowrap bg-black/40 px-3 py-0.5 rounded-full border border-white/5">
-          {data.label}
-        </span>
-      )}
     </motion.div>
   );
 }
 
-function Slot({ data, placedId, characters, isSmall, onRemove, showRemove }) {
+function Slot({ data, placedId, characters, isSmall, isExtraSmall, onRemove, showRemove }) {
     const placedData = placedId ? characters.find(c => c.id === placedId) : null;
+    
+    const sizeClasses = isExtraSmall
+      ? 'w-14 h-14 sm:w-[72px] sm:h-[72px]'
+      : isSmall
+        ? 'w-20 h-20 sm:w-28 sm:h-28'
+        : 'w-24 h-24 sm:w-36 sm:h-36';
+
     return (
-        <div data-slot-id={data.id} className="flex flex-col items-center gap-2 relative">
+        <div data-slot-id={data.id} className="flex flex-col items-center gap-1 sm:gap-2 relative">
             <div className={`absolute inset-0 z-0 ${isSmall ? 'scale-[2.5]' : 'scale-[2.2]'} opacity-0 rounded-full bg-white/5 pointer-events-none`} />
             {placedData ? (
-                <Node data={placedData} color="bg-indigo-600" isSmall={isSmall} showRemove={showRemove} onRemove={onRemove} />
+                <Node data={placedData} color="bg-indigo-600" isSmall={isSmall} isExtraSmall={isExtraSmall} showRemove={showRemove} onRemove={onRemove} />
             ) : (
-                <div className={`${isSmall ? 'w-20 h-20 sm:w-28 sm:h-28' : 'w-24 h-24 sm:w-36 sm:h-36'} rounded-full border-2 border-dashed border-white/10 bg-white/5 flex items-center justify-center transition-colors hover:bg-white/10 shadow-inner relative z-10`}>
-                    <MousePointer2 className="text-white/10 w-8 h-8" />
+                <div className={`${sizeClasses} rounded-full border-2 border-dashed border-white/10 bg-white/5 flex items-center justify-center transition-colors hover:bg-white/10 shadow-inner relative z-10`}>
+                    <MousePointer2 className="text-white/10 w-6 h-6 sm:w-8 sm:h-8" />
                 </div>
             )}
-            <span className="text-white/20 font-black text-[8px] sm:text-[11px] uppercase tracking-widest bg-black/10 px-3 rounded-full mt-1 relative z-10">{data.label}</span>
+            {data.label && <span className={`text-white/20 font-black ${isExtraSmall ? 'text-[6px] sm:text-[8px] px-2' : 'text-[8px] sm:text-[11px] px-3'} uppercase tracking-widest bg-black/10 rounded-full mt-1 relative z-10`}>{data.label}</span>}
         </div>
     );
 }
@@ -320,19 +381,37 @@ export default function LabContent() {
     setCompletedClues(prev => prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]);
   };
 
-  const handleDragEnd = (itemId, point) => {
+  const handleDragEnd = (itemId, event, info) => {
+    let clientX, clientY;
+
+    // Extract viewport coordinates securely for both touch and mouse
+    if (event && (event.type.includes('touch') || event.pointerType === 'touch')) {
+        const touch = event.changedTouches ? event.changedTouches[0] : (event.touches ? event.touches[0] : event);
+        clientX = touch.clientX;
+        clientY = touch.clientY;
+    } else if (event && event.clientX !== undefined && event.clientY !== undefined) {
+        clientX = event.clientX;
+        clientY = event.clientY;
+    } else if (info && info.point) {
+        // Fallback to framer motion point adjusted for scroll
+        clientX = info.point.x - window.scrollX;
+        clientY = info.point.y - window.scrollY;
+    } else {
+        return;
+    }
+
     const slots = document.querySelectorAll(`[data-slot-id]`);
     const slotElement = Array.from(slots).find(s => {
         const rect = s.getBoundingClientRect();
-        const pad = 60; 
+        const pad = 50; 
         return (
-            point.x > rect.left - pad && point.x < rect.right + pad &&
-            point.y > rect.top - pad && point.y < rect.bottom + pad
+            clientX > rect.left - pad && clientX < rect.right + pad &&
+            clientY > rect.top - pad && clientY < rect.bottom + pad
         );
     });
 
     if (slotElement) {
-        const sId = parseInt(slotElement.getAttribute('data-slot-id'));
+        const sId = parseInt(slotElement.getAttribute('data-slot-id'), 10);
         if (placedItems[sId]) return;
         setPlacedItems(prev => ({ ...prev, [sId]: itemId }));
     }
@@ -395,7 +474,7 @@ export default function LabContent() {
                     <ChevronLeft size={12} /> Dashboard
                 </button>
                 <span className="text-white font-black uppercase text-[14px] sm:text-[18px] tracking-tight flex items-center gap-2">
-                    <Search size={18} className="text-amber-400" /> {appMode === 'concept' ? "Concept Lab" : "Diagnostic Hub"}
+                    <Search size={18} className="text-amber-400" /> {appMode === 'concept' ? "Relation Fundamentals" : "Fundamentals Lab"}
                 </span>
             </div>
             <div className="flex items-center gap-2">
@@ -409,10 +488,26 @@ export default function LabContent() {
       </header>
 
       <main className="flex-1 flex flex-col items-center gap-2 p-2 sm:p-4 w-full max-w-7xl mx-auto relative z-10 overflow-hidden">
-        <div className="w-full flex-none overflow-hidden flex flex-col gap-2 h-[480px] sm:h-[620px]">
+        <div className="w-full flex-none overflow-hidden flex flex-col gap-2 min-h-[580px] lg:h-[620px] relative">
+          
           <motion.div className="w-full h-full bg-[#110c0b] p-4 sm:p-12 rounded-[3rem] border-2 sm:border-4 border-black shadow-2xl flex flex-col items-center justify-center relative overflow-hidden ring-1 ring-white/5">
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
-            <div className="w-full h-full flex flex-col items-center justify-center overflow-y-auto no-scrollbar relative pt-12">
+            
+            {/* PERSISTENT TARGET STRING HEADER */}
+            {!lessonFinished && (
+                <div className="absolute top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-[#1a110f] px-6 py-3 rounded-2xl border-2 border-white/10 shadow-2xl">
+                    <span className="text-[10px] sm:text-xs text-white/50 uppercase tracking-[0.2em] font-black hidden sm:block">Scenario:</span>
+                    <span className="font-mono text-xl sm:text-2xl text-white font-black tracking-widest flex items-center">
+                      {appMode === 'concept' ? (
+                         <HighlightedString fullString={CONCEPT_PROTOCOLS[activeTab].definition} highlight={CONCEPT_PROTOCOLS[activeTab].highlight} />
+                      ) : (
+                         PRACTICE_TASKS[practiceStep].expression
+                      )}
+                    </span>
+                </div>
+            )}
+
+            <div className="w-full h-full flex flex-col items-center justify-center overflow-y-auto no-scrollbar relative pt-16 sm:pt-20">
               <AnimatePresence mode="wait">
                 {!lessonFinished ? (
                    <motion.div 
@@ -427,27 +522,30 @@ export default function LabContent() {
                           <TreeVisual data={CONCEPT_PROTOCOLS[activeTab].visual} />
                        </div>
                      ) : (
-                       <div className="w-full h-full flex flex-col md:grid md:grid-cols-[1fr_auto_1fr] items-center justify-center gap-6 sm:gap-8 pb-4 md:pb-0">
-                         <div className="hidden md:block"></div>
+                       <div className="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-6 sm:gap-12 pb-4 sm:pb-0 px-2 sm:px-4">
                          
-                         <div className="relative w-full flex items-center justify-center">
-                            <PracticeTemplate 
-                                task={PRACTICE_TASKS[practiceStep]} 
-                                placedItems={placedItems}
-                                onRemove={practicePhase === 'build' ? removePlaced : null}
-                                showRemove={practicePhase === 'build'}
-                            />
+                         {/* IDENTICAL CONCEPT CIRCULAR WRAPPER */}
+                         <div className="flex flex-col items-center bg-[#1a110f] p-6 sm:p-12 rounded-[3rem] sm:rounded-full border border-white/5 shadow-inner w-[340px] sm:w-[480px] h-[340px] sm:h-[540px] justify-center relative overflow-hidden shrink-0">
+                             <div className="w-full flex justify-center items-center mt-4">
+                                <PracticeTemplate 
+                                    task={PRACTICE_TASKS[practiceStep]} 
+                                    placedItems={placedItems}
+                                    onRemove={practicePhase === 'build' ? removePlaced : null}
+                                    showRemove={practicePhase === 'build'}
+                                />
+                             </div>
                          </div>
                          
-                         <div className="flex items-center justify-center md:justify-end w-full md:pr-4 lg:pr-8">
+                         {/* DRAGGABLE CHARACTER PALETTE */}
+                         <div className="flex items-center justify-center shrink-0">
                              {practicePhase === 'build' && (
-                                 <div className="flex md:flex-col gap-4 sm:gap-6 p-4 sm:p-6 bg-[#1a110f] rounded-[2rem] sm:rounded-[3rem] border border-white/5 shadow-2xl backdrop-blur-sm relative z-20 shrink-0">
+                                 <div className="flex flex-row lg:flex-col gap-4 sm:gap-6 p-4 sm:p-6 bg-[#1a110f] rounded-[2rem] sm:rounded-[3rem] border border-white/5 shadow-2xl backdrop-blur-sm relative z-20">
                                     {PRACTICE_TASKS[practiceStep].characters.map(char => {
                                         const isPlaced = Object.values(placedItems).includes(char.id);
                                         return (
                                             <div key={char.id} className="relative">
                                                 <div className={isPlaced ? 'opacity-20 grayscale pointer-events-none scale-90' : ''}>
-                                                    <Node data={char} color="bg-indigo-600" isDraggable={!isPlaced} onDragEnd={(_, info) => handleDragEnd(char.id, info.point)} isSmall />
+                                                    <Node data={char} color="bg-indigo-600" isDraggable={!isPlaced} onDragEnd={(e, info) => handleDragEnd(char.id, e, info)} isSmall={PRACTICE_TASKS[practiceStep].template !== 'practice-family'} isExtraSmall={PRACTICE_TASKS[practiceStep].template === 'practice-family'} />
                                                 </div>
                                                 {isPlaced && <div className="absolute inset-0 flex items-center justify-center"><Check className="text-white/20" size={40} /></div>}
                                             </div>
@@ -467,7 +565,7 @@ export default function LabContent() {
                         <button onClick={handleReset} className="flex-1 bg-black/40 text-[#a88a6d] hover:text-white border-2 border-white/10 px-6 py-4 rounded-2xl font-black uppercase text-sm sm:text-base shadow-xl transition-all">
                             Restart Module
                         </button>
-                        <button onClick={handleReset} className="flex-1 bg-amber-400 text-black border-b-8 border-amber-600 px-6 py-4 rounded-2xl font-black uppercase text-sm sm:text-base shadow-xl hover:scale-105 transition-all">
+                        <button onClick={() => navigate('/learn/logicalReasoning/bloodRelations/moreRelations')} className="flex-1 bg-amber-400 text-black border-b-8 border-amber-600 px-6 py-4 rounded-2xl font-black uppercase text-sm sm:text-base shadow-xl hover:scale-105 transition-all">
                             Next Module
                         </button>
                     </div>
@@ -478,12 +576,32 @@ export default function LabContent() {
           </motion.div>
         </div>
 
+        {/* BOTTOM PANEL */}
         <div className="w-full flex-none mt-2 bg-[#1a0f0d] p-4 sm:p-6 rounded-[3rem] border-t-4 border-black shadow-2xl relative z-50 flex flex-col gap-4 overflow-hidden border-b-[10px] border-black/40 min-h-[300px] sm:min-h-[380px]">
           <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1.8fr] gap-6 h-full relative z-10">
+            
+            {/* LEFT LOG PANEL - ALWAYS SHOWS LEGEND */}
             <div className="flex flex-col gap-2 min-h-0">
               <div className="bg-black/40 p-4 rounded-[1.5rem] border border-white/10 flex flex-col gap-2 flex-1 overflow-y-auto custom-scrollbar shadow-inner text-white font-black">
+                
+                {/* STATIC MASTER LEGEND */}
+                <div className="bg-[#1a110f] p-3 sm:p-4 rounded-xl border border-white/5 mb-2 shadow-sm shrink-0">
+                  <p className="text-amber-400 text-[10px] sm:text-xs uppercase tracking-widest mb-3 border-b border-white/10 pb-2 flex items-center gap-2">
+                    <Key size={14} /> Notation Legend
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+                    {NOTATION_LEGEND.map((leg, i) => (
+                      <div key={i} className="flex items-center gap-3 text-xs sm:text-sm bg-white/5 p-2 rounded-lg border border-white/5">
+                        <span className="text-yellow-400 font-mono text-base px-2 py-0.5 bg-black/50 rounded-md border border-white/10">{leg.code}</span>
+                        <span className="text-white/80 font-bold leading-tight flex-1">{leg.meaning}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* DYNAMIC CONTENT */}
                 {appMode === 'concept' ? (
-                   <div className="space-y-4">
+                   <div className="space-y-4 mt-2 pl-1">
                      <p className="text-white text-base sm:text-xl font-black border-b border-white/5 pb-2 flex items-center gap-2 uppercase tracking-tighter"><GitBranch size={16} className="text-yellow-400" /> {CONCEPT_PROTOCOLS[activeTab].title}</p>
                      <div className="space-y-2 text-white/80">
                         {CONCEPT_PROTOCOLS[activeTab].logicPoints.map((pt, i) => (
@@ -492,10 +610,10 @@ export default function LabContent() {
                      </div>
                    </div>
                 ) : (
-                   <div className="flex flex-col gap-3 h-full">
+                   <div className="flex flex-col gap-3 h-full mt-1">
                      <div className="flex items-center justify-between pb-2 border-b border-white/10 mb-2">
                         <span className="text-orange-400 font-black text-[10px] sm:text-xs uppercase tracking-[0.2em] opacity-80">
-                            Trial {practiceStep + 1} of {PRACTICE_TASKS.length}
+                            {PRACTICE_TASKS[practiceStep].mission}
                         </span>
                         <div className="flex items-center gap-2">
                             <button onClick={prevPracticeTask} disabled={practiceStep === 0} className="p-1.5 bg-white/5 rounded-lg hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none transition-all border border-white/5">
@@ -506,7 +624,7 @@ export default function LabContent() {
                             </button>
                         </div>
                      </div>
-                     <div className="space-y-2 overflow-y-auto custom-scrollbar pr-2">
+                     <div className="space-y-2 overflow-y-auto custom-scrollbar pr-2 pt-2">
                         {PRACTICE_TASKS[practiceStep].clues.map((clue, i) => (
                             <div key={i} className="flex items-start gap-3 group cursor-pointer text-left py-1" onClick={() => toggleClue(i)}>
                                 {completedClues.includes(i) ? <CheckSquare className="text-emerald-500 shrink-0" size={18} /> : <Square className="text-white/20 shrink-0" size={18} />}
@@ -519,19 +637,20 @@ export default function LabContent() {
               </div>
             </div>
 
+            {/* RIGHT INTERACTION PANEL */}
             <div className="flex flex-col gap-2 min-h-0">
               <div className="bg-[#2a1a16] p-4 rounded-[1.5rem] border border-white/5 flex flex-col items-center justify-center gap-4 shadow-inner flex-1 overflow-hidden relative">
                 <AnimatePresence mode="wait">
                   {!lessonFinished ? (
                     appMode === 'concept' ? (
                       <motion.div key="academy-tabs" className="w-full h-full flex flex-col gap-4">
-                         <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/5">
-                            {CONCEPT_PROTOCOLS.map((rel, i) => (<button key={rel.id} onClick={() => setActiveTab(i)} className={`py-2 rounded-lg text-[9px] font-black uppercase transition-all ${activeTab === i ? 'bg-yellow-400 text-black shadow-lg scale-105' : 'text-[#a88a6d] hover:text-white'}`}>{rel.tab}</button>))}
+                         <div className="flex flex-wrap justify-center gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/5 max-h-[80px] sm:max-h-[none] overflow-y-auto no-scrollbar">
+                            {CONCEPT_PROTOCOLS.map((rel, i) => (<button key={rel.id} onClick={() => setActiveTab(i)} className={`py-1.5 px-3 rounded-lg text-[9px] font-black uppercase transition-all whitespace-nowrap ${activeTab === i ? 'bg-yellow-400 text-black shadow-lg scale-105' : 'text-[#a88a6d] hover:text-white'}`}>{rel.tab}</button>))}
                          </div>
                          <div className="flex-1 bg-black/20 p-5 rounded-2xl border border-white/5 flex flex-col items-center justify-center text-center gap-3 shadow-inner">
-                            <p className="text-white text-[14px] sm:text-[18px] font-bold leading-relaxed italic">{CONCEPT_PROTOCOLS[activeTab].definition}</p>
-                            <button onClick={() => activeTab === CONCEPT_PROTOCOLS.length - 1 ? setAppMode('practice') : setActiveTab(prev => prev + 1)} className="mt-2 flex items-center gap-3 bg-emerald-500 text-white px-8 py-2.5 rounded-full font-black uppercase text-[11px] shadow-xl border-b-4 border-emerald-800 active:scale-95 transition-all">
-                                {activeTab === CONCEPT_PROTOCOLS.length - 1 ? "Engage Practice Hub" : "Observe Next"} <ArrowRight size={16} />
+                            <p className="text-white text-[14px] sm:text-[18px] font-bold leading-relaxed italic px-4">Observe how the fundamental notation is applied on the grid.</p>
+                            <button onClick={() => activeTab === CONCEPT_PROTOCOLS.length - 1 ? setAppMode('practice') : setActiveTab(prev => prev + 1)} className="mt-4 flex items-center gap-3 bg-emerald-500 text-white px-8 py-3 rounded-full font-black uppercase text-xs shadow-xl border-b-4 border-emerald-800 active:scale-95 transition-all">
+                                {activeTab === CONCEPT_PROTOCOLS.length - 1 ? "Engage Practice Hub" : "Next Step"} <ArrowRight size={16} />
                             </button>
                          </div>
                       </motion.div>
@@ -539,25 +658,27 @@ export default function LabContent() {
                       <motion.div key="practice-ui" className="w-full flex flex-col gap-3 h-full">
                          {practicePhase === 'build' ? (
                              <div className="flex flex-col items-center justify-center flex-1 gap-4">
-                                <p className="text-stone-400 text-[10px] uppercase font-black text-center px-4 leading-tight tracking-widest">Construct the mapping defined in the log.</p>
-                                <button onClick={validateBuild} disabled={Object.keys(placedItems).length < PRACTICE_TASKS[practiceStep].slots.length} className={`px-16 py-4 rounded-2xl font-black uppercase text-[13px] shadow-2xl transition-all active:scale-95 flex items-center gap-3 border-b-4 ${Object.keys(placedItems).length >= PRACTICE_TASKS[practiceStep].slots.length ? 'bg-amber-400 text-black border-amber-700' : 'bg-black/20 text-white/20 border-transparent pointer-events-none'}`}>Validate Arrangement <ChevronRight size={18} /></button>
+                                <p className="text-stone-400 text-xs sm:text-sm uppercase font-black text-center px-4 leading-relaxed tracking-widest border-b border-white/5 pb-4">
+                                  Build the tree. Place horizontally mapped nodes left-to-right, and respect the vertical hierarchy.
+                                </p>
+                                <button onClick={validateBuild} disabled={Object.keys(placedItems).length < PRACTICE_TASKS[practiceStep].slots.length} className={`px-16 py-4 rounded-2xl font-black uppercase text-[13px] shadow-2xl transition-all active:scale-95 flex items-center gap-3 border-b-4 ${Object.keys(placedItems).length >= PRACTICE_TASKS[practiceStep].slots.length ? 'bg-amber-400 text-black border-amber-700 hover:scale-105' : 'bg-black/20 text-white/20 border-transparent pointer-events-none'}`}>Validate Arrangement <ChevronRight size={18} /></button>
                              </div>
                          ) : (
                             <div className="flex flex-col gap-2 h-full overflow-y-auto no-scrollbar pt-1 text-white">
-                                <div className="bg-black/20 p-3 rounded-xl border border-white/5 mb-1 text-left"><p className="text-white text-[15px] sm:text-lg font-black leading-tight tracking-tight px-2">{PRACTICE_TASKS[practiceStep].followUp.q}</p></div>
+                                <div className="bg-black/20 p-4 rounded-xl border border-white/5 mb-2 text-left shadow-inner"><p className="text-white text-base sm:text-xl font-black leading-tight tracking-tight px-2">{PRACTICE_TASKS[practiceStep].followUp.q}</p></div>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                                     {PRACTICE_TASKS[practiceStep].followUp.options.map((opt, i) => {
                                         const isSelected = quizFeedback?.selected === i;
                                         const isCorrectIdx = i === PRACTICE_TASKS[practiceStep].followUp.correct;
                                         let btnClass = isSelected ? (quizFeedback.isCorrect ? "bg-emerald-600 border-emerald-400 scale-105 shadow-emerald-500/20" : "bg-rose-600 border-rose-400 shadow-rose-500/20") : "bg-black/40 border-white/10 text-white/80";
                                         if (quizFeedback && isCorrectIdx) btnClass = "bg-emerald-600 border-emerald-400 text-white scale-105 shadow-emerald-500/20";
-                                        return (<button key={i} disabled={quizFeedback?.isCorrect} onClick={() => handleQuizSelection(i)} className={`p-3 rounded-xl font-black uppercase transition-all text-[11px] border-2 ${btnClass} ${!quizFeedback ? 'hover:bg-black/80' : ''}`}>{opt}</button>);
+                                        return (<button key={i} disabled={quizFeedback?.isCorrect} onClick={() => handleQuizSelection(i)} className={`p-4 rounded-xl font-black uppercase transition-all text-[11px] sm:text-xs border-2 ${btnClass} ${!quizFeedback ? 'hover:bg-black/80 hover:border-white/30' : ''}`}>{opt}</button>);
                                     })}
                                 </div>
                                 {quizFeedback && (
-                                    <div className="flex gap-2 w-full mt-auto">
-                                        {!quizFeedback.isCorrect && <button onClick={() => setQuizFeedback(null)} className="flex-1 py-2.5 bg-rose-600 text-white rounded-full font-black text-[10px] uppercase shadow-lg flex items-center justify-center gap-2"><RefreshCw size={14} /> Try Again</button>}
-                                        <button onClick={quizFeedback.isCorrect ? nextPracticeTask : () => setShowExplanation(!showExplanation)} className={`flex-1 py-2.5 text-white rounded-full font-black text-[10px] uppercase shadow-xl flex items-center justify-center gap-2 transition-all ${quizFeedback.isCorrect ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-blue-600 hover:bg-blue-500'}`}>{quizFeedback.isCorrect ? "Next Mission" : (showExplanation ? "Hide Logic" : "View Logic")} {quizFeedback.isCorrect && <ChevronRight size={14} />}</button>
+                                    <div className="flex gap-2 w-full mt-auto pt-2">
+                                        {!quizFeedback.isCorrect && <button onClick={() => setQuizFeedback(null)} className="flex-1 py-3 sm:py-4 bg-rose-600 text-white rounded-2xl font-black text-xs uppercase shadow-lg flex items-center justify-center gap-2 hover:bg-rose-500 transition-all border-b-4 border-rose-800"><RefreshCw size={16} /> Try Again</button>}
+                                        <button onClick={quizFeedback.isCorrect ? nextPracticeTask : () => setShowExplanation(!showExplanation)} className={`flex-1 py-3 sm:py-4 text-white rounded-2xl font-black text-xs uppercase shadow-xl flex items-center justify-center gap-2 transition-all border-b-4 ${quizFeedback.isCorrect ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-800' : 'bg-blue-600 hover:bg-blue-500 border-blue-800'}`}>{quizFeedback.isCorrect ? "Next Mission" : (showExplanation ? "Hide Logic" : "View Logic")} {quizFeedback.isCorrect && <ChevronRight size={16} />}</button>
                                     </div>
                                 )}
                             </div>
@@ -578,103 +699,145 @@ export default function LabContent() {
 }
 
 function TreeVisual({ data }) {
-    if (data.type === 'dual-case-vertical-direct') return (
-      <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 items-center overflow-x-auto w-full justify-center px-4">
-        {[data.case1, data.case2].map((c, i) => (
-          <div key={i} className="flex flex-col items-center gap-2 bg-[#1a110f] p-12 rounded-full border border-white/5 shadow-inner min-w-[340px] sm:min-w-[480px] h-[480px] justify-center relative overflow-hidden">
-            <span className="text-amber-400 font-black uppercase text-[10px] tracking-widest mb-12 text-center absolute top-12">{c.title}</span>
-            <Node data={c.top} color={i === 0 ? "bg-amber-600" : "bg-purple-600"} isSmall />
-            <div className="w-[2px] bg-yellow-400 h-24 relative mt-2 mb-2">
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[12px] border-l-transparent border-r-transparent border-t-yellow-400" />
+    if (data.type === 'basic-genders') {
+        return (
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] flex items-center justify-center gap-6 mt-4">
+                <Node data={{id:'M', g:'M'}} color="bg-blue-600" isSmall />
+                <Node data={{id:'F', g:'F'}} color="bg-purple-600" isSmall />
+                <Node data={{id:'?', g:'?'}} color="bg-stone-600" isSmall />
             </div>
-            <Node data={c.btm} color="bg-stone-600" isSmall />
-          </div>
-        ))}
-      </div>
-    );
+        );
+    }
 
-    if (data.type === 'dual-case-chain') return (
-        <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 items-center overflow-x-auto w-full justify-center px-4">
-          {[data.case1, data.case2].map((c, i) => (
-            <div key={i} className="flex flex-col items-center gap-2 bg-[#1a110f] p-12 rounded-full border border-white/5 shadow-inner min-w-[340px] sm:min-w-[480px] h-[520px] justify-center relative overflow-hidden">
-              <span className="text-amber-400 font-black uppercase text-[10px] tracking-widest mb-8 text-center absolute top-12">{c.title}</span>
-              <Node data={c.top} color="bg-amber-600" isSmall />
-              <div className="w-[1.5px] bg-yellow-400 h-14 relative mt-1 mb-1">
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 border-l-[5px] border-r-[5px] border-t-[10px] border-l-transparent border-r-transparent border-t-yellow-400" />
-              </div>
-              <Node data={c.mid} color="bg-blue-600" isSmall />
-              <div className="w-[1.5px] bg-yellow-400 h-14 relative mt-1 mb-1">
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 border-l-[5px] border-r-[5px] border-t-[10px] border-l-transparent border-r-transparent border-t-yellow-400" />
-              </div>
-              <Node data={c.btm} color="bg-stone-600" isSmall />
-            </div>
-          ))}
-        </div>
-      );
-
-    if (data.type === 'dual-case-inlaw-screenshot-flow') return (
-      <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 items-center overflow-x-auto w-full justify-center px-4">
-        {[data.case1, data.case2].map((c, i) => (
-          <div key={i} className="flex flex-col items-center bg-[#1a110f] p-12 rounded-full border border-white/5 shadow-inner min-w-[340px] sm:min-w-[480px] h-[480px] sm:h-[540px] justify-center relative overflow-hidden shrink-0">
-            <span className="text-amber-400 font-black uppercase text-[10px] tracking-widest mb-10 text-center absolute top-12">{c.title}</span>
-            
-            <div className="relative w-full max-w-[280px] sm:max-w-[300px] aspect-square mt-12 shrink-0">
-                {/* Fixed Grid Nodes (110x110 wrappers for perfect scaling within viewBox 300 300) */}
-                <div className="absolute top-0 left-0 w-[110px] h-[110px] flex items-center justify-center z-10">
-                    <Node data={i === 0 ? c.father : c.me} color={i === 0 ? "bg-amber-600" : "bg-blue-600"} isSmall />
+    if (data.type === 'basic-marriage') {
+        return (
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[50%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Node data={{id:'H', g:'M'}} color="bg-blue-600" isSmall />
                 </div>
-                <div className="absolute bottom-0 left-0 w-[110px] h-[110px] flex items-center justify-center z-10">
-                    <Node data={i === 0 ? c.spouse : c.daughter} color="bg-purple-600" isSmall />
-                </div>
-                <div className="absolute bottom-0 right-0 w-[110px] h-[110px] flex items-center justify-center z-10">
-                    <Node data={i === 0 ? c.me : c.husband} color={i === 0 ? "bg-blue-600" : "bg-stone-600"} isSmall />
+                <div className="absolute top-[50%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Node data={{id:'W', g:'F'}} color="bg-purple-600" isSmall />
                 </div>
 
-                {/* SVG Connectors Matrix (300x300 viewbox) - Coords matched to 55px centers */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet">
-                    {/* Vertical Arrow */}
-                    <line x1="55" y1="115" x2="55" y2="185" stroke="#facc15" strokeWidth="2.5" />
-                    <polygon points="48,183 62,183 55,193" fill="#facc15" />
-
-                    {/* Marriage Bond */}
-                    <line x1="115" y1="241" x2="185" y2="241" stroke="#facc15" strokeWidth="2" opacity="0.6" />
-                    <line x1="115" y1="249" x2="185" y2="249" stroke="#facc15" strokeWidth="2" opacity="0.6" />
-                    
-                    {/* Dotted Logic Line */}
-                    {i === 0 ? (
-                        <>
-                           {/* Father-in-law: Arrow points from Me (Right, 245, 245) up to Father (Left, 55, 55) */}
-                           <path d="M 245 185 L 245 55 L 120 55" fill="none" stroke="#fbbf24" strokeWidth="2.5" strokeDasharray="8 8" />
-                           <polygon points="120,48 120,62 110,55" fill="#fbbf24" />
-                        </>
-                    ) : (
-                        <>
-                           {/* Son-in-law: Arrow points from Me (Left, 55, 55) down to Husband (Right, 245, 245) */}
-                           <path d="M 115 55 L 245 55 L 245 185" fill="none" stroke="#fbbf24" strokeWidth="2.5" strokeDasharray="8 8" />
-                           <polygon points="238,185 252,185 245,195" fill="#fbbf24" />
-                        </>
-                    )}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="20" y1="48" x2="80" y2="48" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                    <line x1="20" y1="52" x2="80" y2="52" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
                 </svg>
 
-                {/* Heart Icon centered on Marriage Bond */}
-                <div className="absolute bottom-[40px] left-[50%] -translate-x-1/2 z-20 bg-[#1a110f] rounded-full px-1.5 py-0.5 border border-white/5 shadow-inner">
+                <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1a110f] rounded-full p-[2px] border border-white/5 shadow-inner">
                     <Heart size={14} className="text-rose-500 fill-rose-500" />
                 </div>
             </div>
-          </div>
-        ))}
-      </div>
-    );
+        );
+    }
+
+    if (data.type === 'basic-siblings') {
+        return (
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[50%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Node data={{id:'A', g:'M'}} color="bg-blue-600" isSmall />
+                </div>
+                <div className="absolute top-[50%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Node data={{id:'B', g:'F'}} color="bg-purple-600" isSmall />
+                </div>
+
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="20" y1="50" x2="80" y2="50" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />
+                </svg>
+            </div>
+        );
+    }
+
+    if (data.type === 'basic-vertical') {
+        return (
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[20%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Node data={{id:'M', g:'F'}} color="bg-purple-600" isSmall />
+                </div>
+                <div className="absolute top-[80%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Node data={{id:'N', g:'M'}} color="bg-blue-600" isSmall />
+                </div>
+
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="50" y1="20" x2="50" y2="75" stroke="#facc15" strokeWidth="1.5" />
+                    <polygon points="48,72 52,72 50,76" fill="#facc15" />
+                </svg>
+            </div>
+        );
+    }
+
+    if (data.type === 'basic-family') {
+        return (
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[20%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Node data={{id:'H', g:'M'}} color="bg-blue-600" isSmall />
+                </div>
+                <div className="absolute top-[20%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Node data={{id:'W', g:'F'}} color="bg-purple-600" isSmall />
+                </div>
+                <div className="absolute top-[80%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Node data={{id:'S', g:'M'}} color="bg-blue-600" isSmall />
+                </div>
+
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="20" y1="18" x2="80" y2="18" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                    <line x1="20" y1="22" x2="80" y2="22" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                    
+                    <line x1="50" y1="20" x2="50" y2="75" stroke="#facc15" strokeWidth="1.5" />
+                    <polygon points="48,72 52,72 50,76" fill="#facc15" />
+                </svg>
+                
+                <div className="absolute top-[20%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1a110f] rounded-full p-[2px] border border-white/5 shadow-inner">
+                    <Heart size={14} className="text-rose-500 fill-rose-500" />
+                </div>
+            </div>
+        );
+    }
+    
+    if (data.type === 'basic-edge-lineage') {
+        return (
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] flex flex-col items-center justify-center gap-4 mt-4">
+                <Node data={{id:'F', g:'M'}} color="bg-blue-600" isSmall />
+                <div className="w-[3px] h-12 sm:h-16 bg-yellow-400 z-0 relative">
+                   <div className="absolute bottom-0 left-1/2 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[12px] border-l-transparent border-r-transparent border-t-yellow-400" />
+                </div>
+                <Node data={{id:'S', g:'?'}} color="bg-stone-600" isSmall />
+                <span className="text-amber-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-2 bg-[#1a110f] px-3 py-1 rounded-full border border-white/10 shadow-lg">Son or Daughter?</span>
+            </div>
+        );
+    }
+
+    if (data.type === 'basic-edge-sibling') {
+        return (
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] flex flex-col items-center justify-center gap-8 mt-4">
+                <div className="flex justify-between items-center w-full relative px-6 sm:px-10">
+                     <div className="z-10"><Node data={{id:'A', g:'M'}} color="bg-blue-600" isSmall /></div>
+                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 sm:w-32 h-0 border-t-[4px] border-dotted border-yellow-400/60 z-0" />
+                     <div className="z-10"><Node data={{id:'B', g:'?'}} color="bg-stone-600" isSmall /></div>
+                </div>
+                <span className="text-amber-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest bg-[#1a110f] px-3 py-1 rounded-full border border-white/10 shadow-lg">Brother or Sister?</span>
+            </div>
+        );
+    }
+
+    if (data.type === 'basic-edge-name') {
+        return (
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] flex flex-col items-center justify-center gap-4 mt-8">
+                <Node data={{id:'ALEX', g:'?'}} color="bg-stone-600" isSmall />
+                <span className="text-amber-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-4 text-center max-w-[200px] leading-relaxed">Name does not prove gender</span>
+            </div>
+        );
+    }
 
     return null;
 }
 
 function PracticeTemplate({ task, placedItems, onRemove, showRemove }) {
     const { template, slots, characters } = task;
-    
+
     if (template === 'practice-genders') {
         return (
-            <div className="flex items-center gap-4 sm:gap-8 justify-center">
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] flex items-center justify-center gap-6 mt-4">
                 <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isSmall />
                 <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isSmall />
                 <Slot data={slots[2]} placedId={placedItems[2]} characters={characters} onRemove={() => onRemove(2)} showRemove={showRemove} isSmall />
@@ -684,73 +847,90 @@ function PracticeTemplate({ task, placedItems, onRemove, showRemove }) {
 
     if (template === 'practice-marriage') {
         return (
-            <div className="flex items-start gap-[64px] sm:gap-[128px] justify-center relative pt-4">
-                <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isSmall />
-                
-                {/* Precisely anchored marriage bond */}
-                <div className="absolute top-[56px] sm:top-[72px] left-1/2 -translate-x-1/2 w-[144px] sm:w-[240px] h-0.5 border-t-4 border-double border-yellow-400/40 flex items-center justify-center -z-10">
-                    <Heart size={16} className="text-rose-500 fill-rose-500 bg-[#0f0a09] px-1 absolute" />
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[50%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isSmall />
                 </div>
-                
-                <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isSmall />
+                <div className="absolute top-[50%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isSmall />
+                </div>
+
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="20" y1="48" x2="80" y2="48" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                    <line x1="20" y1="52" x2="80" y2="52" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                </svg>
+
+                <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1a110f] rounded-full p-[2px] border border-white/5 shadow-inner">
+                    <Heart size={14} className="text-rose-500 fill-rose-500" />
+                </div>
             </div>
         );
     }
 
     if (template === 'practice-siblings') {
         return (
-            <div className="flex items-start gap-[64px] sm:gap-[128px] justify-center relative pt-4">
-                <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isSmall />
-                
-                {/* Precisely anchored sibling bond */}
-                <div className="absolute top-[56px] sm:top-[72px] left-1/2 -translate-x-1/2 w-[144px] sm:w-[240px] h-0 border-t-2 border-dotted border-yellow-400/60 -z-10" />
-                
-                <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isSmall />
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[50%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isSmall />
+                </div>
+                <div className="absolute top-[50%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isSmall />
+                </div>
+
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="20" y1="50" x2="80" y2="50" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />
+                </svg>
             </div>
         );
     }
 
     if (template === 'practice-vertical') {
         return (
-            <div className="flex flex-col items-center justify-center gap-2">
-                <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isSmall />
-                <div className="w-[2px] bg-yellow-400 h-16 sm:h-20 relative mt-1 mb-1">
-                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[12px] border-l-transparent border-r-transparent border-t-yellow-400" />
-                </div>
-                <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isSmall />
-            </div>
-        );
-    }
-
-    if (template === 'practice-family-tree') {
-        return (
-            <div className="flex flex-col items-center py-4 relative">
-                {/* Top Row: Husband & Wife */}
-                <div className="flex items-start gap-[64px] sm:gap-[128px] z-10">
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[20%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
                     <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isSmall />
+                </div>
+                <div className="absolute top-[80%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
                     <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isSmall />
                 </div>
 
-                {/* Central Structural Matrix */}
-                <div className="absolute top-[56px] sm:top-[72px] left-1/2 -translate-x-1/2 flex flex-col items-center z-0 pointer-events-none">
-                    {/* Marriage Bond spanning the exact gap */}
-                    <div className="w-[144px] sm:w-[240px] h-0.5 border-t-4 border-double border-yellow-400/40 flex items-center justify-center">
-                         <Heart size={16} className="text-rose-500 fill-rose-500 bg-[#0f0a09] px-1 absolute" />
-                    </div>
-                    {/* Downward Arrow dropping cleanly from the center of the bond */}
-                    <div className="w-[2.5px] bg-yellow-400 h-[80px] sm:h-[100px] relative">
-                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[10px] border-l-transparent border-r-transparent border-t-yellow-400" />
-                    </div>
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="50" y1="20" x2="50" y2="75" stroke="#facc15" strokeWidth="1.5" />
+                    <polygon points="48,72 52,72 50,76" fill="#facc15" />
+                </svg>
+            </div>
+        );
+    }
+
+    if (template === 'practice-family') {
+        return (
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[20%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isExtraSmall />
+                </div>
+                <div className="absolute top-[20%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isExtraSmall />
+                </div>
+                <div className="absolute top-[80%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    <Slot data={slots[2]} placedId={placedItems[2]} characters={characters} onRemove={() => onRemove(2)} showRemove={showRemove} isExtraSmall />
                 </div>
 
-                {/* Bottom Row: Son */}
-                <div className="mt-[20px] sm:mt-[30px] z-10">
-                    <Slot data={slots[2]} placedId={placedItems[2]} characters={characters} onRemove={() => onRemove(2)} showRemove={showRemove} isSmall />
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="20" y1="18" x2="80" y2="18" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                    <line x1="20" y1="22" x2="80" y2="22" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                    <line x1="50" y1="20" x2="50" y2="75" stroke="#facc15" strokeWidth="1.5" />
+                    <polygon points="48,72 52,72 50,76" fill="#facc15" />
+                </svg>
+                
+                <div className="absolute top-[20%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1a110f] rounded-full p-[2px] border border-white/5 shadow-inner">
+                    <Heart size={14} className="text-rose-500 fill-rose-500" />
                 </div>
             </div>
         );
     }
+
     return null;
 }
 
-// export default function App() { return ( <Router> <LabContent /> </Router> ); }
+// export function App() { return ( <Router> <LabContent /> </Router> ); }
+// export default App;

@@ -437,7 +437,7 @@ export default function LabContent() {
                         <button onClick={handleReset} className="flex-1 bg-black/40 text-[#a88a6d] hover:text-white border-2 border-white/10 px-6 py-4 rounded-2xl font-black uppercase text-sm sm:text-base shadow-xl transition-all">
                             Restart Module
                         </button>
-                        <button onClick={handleReset} className="flex-1 bg-amber-400 text-black border-b-8 border-amber-600 px-6 py-4 rounded-2xl font-black uppercase text-sm sm:text-base shadow-xl hover:scale-105 transition-all">
+                        <button onClick={() => navigate('/learn/logicalReasoning/bloodRelations/brCodedIntro')} className="flex-1 bg-amber-400 text-black border-b-8 border-amber-600 px-6 py-4 rounded-2xl font-black uppercase text-sm sm:text-base shadow-xl hover:scale-105 transition-all">
                             Next Module
                         </button>
                     </div>

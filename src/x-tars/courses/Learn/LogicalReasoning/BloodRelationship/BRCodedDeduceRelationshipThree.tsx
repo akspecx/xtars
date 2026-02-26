@@ -1,24 +1,19 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft,
   RotateCcw,
   Trophy,
-  Target,
   BookOpen,
-  Layers,
   UserCircle,
   User,
   Check,
   Zap,
   Baby,
   ChevronRight,
-  Binary,
   GitBranch,
-  Crown,
   ArrowRight,
   MousePointer2,
-  Dna,
   X,
   Square,
   CheckSquare,
@@ -27,7 +22,8 @@ import {
   Search,
   Key,
   Heart,
-  Sparkles
+  Sparkles,
+  Target
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
 
@@ -44,15 +40,29 @@ const CODE_LEGEND = [
 
 const CONCEPT_PROTOCOLS = [
   {
+    id: "step-0",
+    tab: "Objective",
+    title: "The Objective",
+    highlight: "",
+    definition: "Objective: How is S related to R if 'S $ J @ K # P + R'?",
+    logicPoints: [
+      "Before building the tree, clearly identify your target.",
+      "We need to deduce the final connection between S and R.",
+      "We will construct the family tree step-by-step to find out."
+    ],
+    visual: { type: 'step-build', step: 0 }
+  },
+  {
     id: "step-1",
     tab: "Step 1",
     title: "Parse: S $ J",
     highlight: "S $ J",
-    definition: "Always read the string left-to-right in pairs.",
+    definition: "Target String: S $ J @ K # P + R",
     logicPoints: [
+      "Rule: Always read left-to-right in pairs.",
       "Match '$' in Legend: S is the Father of J.",
       "Gender: S is strictly Male (M).",
-      "Action: Place S vertically above J."
+      "Action: Place S strictly vertical, directly above J."
     ],
     visual: { type: 'step-build', step: 1 }
   },
@@ -61,11 +71,11 @@ const CONCEPT_PROTOCOLS = [
     tab: "Step 2",
     title: "Parse: J @ K",
     highlight: "J @ K",
-    definition: "Connect the next segment to our existing nodes.",
+    definition: "Target String: S $ J @ K # P + R",
     logicPoints: [
       "Match '@' in Legend: J is the Son of K.",
       "Deduction: We already know S is J's father.",
-      "Action: If K is also J's parent, K must be the Mother! Bond S and K (=)."
+      "Action: If K is also J's parent, K must be the Mother! Bond S and K (=) on the top tier."
     ],
     visual: { type: 'step-build', step: 2 }
   },
@@ -74,7 +84,7 @@ const CONCEPT_PROTOCOLS = [
     tab: "Step 3",
     title: "Parse: K # P",
     highlight: "K # P",
-    definition: "Continue expanding the family tree horizontally.",
+    definition: "Target String: S $ J @ K # P + R",
     logicPoints: [
       "Match '#' in Legend: K is the Sister of P.",
       "Gender check: K is Female (F), matching our previous deduction.",
@@ -87,7 +97,7 @@ const CONCEPT_PROTOCOLS = [
     tab: "Step 4",
     title: "Parse: P + R",
     highlight: "P + R",
-    definition: "The final link completes the tree.",
+    definition: "Target String: S $ J @ K # P + R",
     logicPoints: [
       "Match '+' in Legend: P is the Daughter of R.",
       "Action: Place R vertically above P as her parent.",
@@ -99,98 +109,127 @@ const CONCEPT_PROTOCOLS = [
 
 const PRACTICE_TASKS = [
   {
-    mission: "Trial 1",
-    expression: "A $ B # C",
+    mission: "Trial 1: Common Parent",
+    expression: "A @ B # C $ D",
+    objective: "How is A related to D?",
     characters: [
-      { id: 'C', gender: '?' },
+      { id: 'C', gender: 'M' },
+      { id: 'B', gender: 'F' },
       { id: 'A', gender: 'M' },
-      { id: 'B', gender: 'F' }
+      { id: 'D', gender: '?' }
     ],
-    clues: ["Map the expression 'A $ B # C' into the visual grid."],
-    template: 'practice-3node',
+    clues: [
+      "Construct the tree using the Master Legend.",
+      "Pay attention to horizontal sibling lines versus vertical parent lines."
+    ],
+    template: 'practice-t1',
     slots: [
-      { id: 0, expectedId: 'A', label: '' },
-      { id: 1, expectedId: 'B', label: '' },
-      { id: 2, expectedId: 'C', label: '' }
+      { id: 0, expectedId: 'B', label: 'Drop Node' },
+      { id: 1, expectedId: 'C', label: 'Drop Node' },
+      { id: 2, expectedId: 'A', label: 'Drop Node' },
+      { id: 3, expectedId: 'D', label: 'Drop Node' }
     ],
     followUp: {
-      q: "Based on the arrangement you built, what is the relationship of A to C?",
-      options: ["Uncle", "Brother", "Father"],
+      q: "Based on the completed arrangement, how is A related to D?",
+      options: ["Nephew", "Uncle", "Cousin"],
       correct: 2,
-      explanation: "Since B and C are siblings, they share the same parents. A is the father of B, making A the Father of C as well."
+      explanation: "A is the son of B. D is the child of C. B and C are siblings. Therefore, the children of siblings are Cousins."
     }
   },
   {
-    mission: "Trial 2",
-    expression: "D @ E $ F",
+    mission: "Trial 2: The Sibling Trap",
+    expression: "P + Q $ R @ S # T",
+    objective: "How is T related to P?",
     characters: [
-      { id: 'F', gender: '?' },
-      { id: 'E', gender: 'M' },
-      { id: 'D', gender: 'M' }
+      { id: 'Q', gender: 'M' },
+      { id: 'S', gender: 'F' },
+      { id: 'T', gender: '?' },
+      { id: 'P', gender: 'F' },
+      { id: 'R', gender: 'M' }
     ],
-    clues: ["Map the expression 'D @ E $ F' into the visual grid."],
-    template: 'practice-3node-sib',
+    clues: [
+      "Use the grid structure to align the generations.",
+      "Deduce the unwritten bond between Q and S!"
+    ],
+    template: 'practice-t2',
     slots: [
-      { id: 0, expectedId: 'E', label: '' },
-      { id: 1, expectedId: 'D', label: '' },
-      { id: 2, expectedId: 'F', label: '' }
+      { id: 0, expectedId: 'Q', label: 'Drop Node' },
+      { id: 1, expectedId: 'S', label: 'Drop Node' },
+      { id: 2, expectedId: 'T', label: 'Drop Node' },
+      { id: 3, expectedId: 'P', label: 'Drop Node' },
+      { id: 4, expectedId: 'R', label: 'Drop Node' }
     ],
     followUp: {
-      q: "What is the relationship of D to F?",
-      options: ["Father", "Brother", "Cousin"],
-      correct: 1,
-      explanation: "E is the father of both D and F. Since D is identified as a son (Male), D must be the Brother of F."
-    }
-  },
-  {
-    mission: "Trial 3",
-    expression: "G # H + I",
-    characters: [
-      { id: 'I', gender: '?' },
-      { id: 'H', gender: 'F' },
-      { id: 'G', gender: 'F' }
-    ],
-    clues: ["Map the expression 'G # H + I' into the visual grid."],
-    template: 'practice-3node',
-    slots: [
-      { id: 0, expectedId: 'I', label: '' },
-      { id: 1, expectedId: 'H', label: '' },
-      { id: 2, expectedId: 'G', label: '' }
-    ],
-    followUp: {
-      q: "What is the relationship of G to I?",
-      options: ["Daughter", "Niece", "Sister"],
+      q: "Looking at the final grid, how is T related to P?",
+      options: ["Maternal Aunt / Uncle", "Paternal Aunt", "Sister"],
       correct: 0,
-      explanation: "G and H are sisters. Since H is the daughter of I, G is also the Daughter of I."
+      explanation: "T is the sibling of S (who is P's mother). Since T's gender is unknown, T is either the Maternal Aunt or Maternal Uncle."
     }
   },
   {
-    mission: "Trial 4",
-    expression: "W $ X @ Y # Z",
+    mission: "Trial 3: The In-Law Offset",
+    expression: "U $ V @ W + X $ Y",
+    objective: "How is Y related to V?",
     characters: [
-      { id: 'Y', gender: 'F' },
       { id: 'X', gender: 'M' },
-      { id: 'Z', gender: '?' },
-      { id: 'W', gender: 'M' }
+      { id: 'U', gender: 'M' },
+      { id: 'W', gender: 'F' },
+      { id: 'Y', gender: '?' },
+      { id: 'V', gender: 'M' }
     ],
-    clues: ["Map the extended expression 'W $ X @ Y # Z' into the grid."],
-    template: 'practice-4node',
+    clues: [
+      "Watch the flow closely. Who sits at the very top of this hierarchy?"
+    ],
+    template: 'practice-t3',
     slots: [
-      { id: 0, expectedId: 'W', label: '' },
-      { id: 1, expectedId: 'Y', label: '' },
-      { id: 2, expectedId: 'Z', label: '' },
-      { id: 3, expectedId: 'X', label: '' }
+      { id: 0, expectedId: 'X', label: 'Drop Node' },
+      { id: 1, expectedId: 'U', label: 'Drop Node' },
+      { id: 2, expectedId: 'W', label: 'Drop Node' },
+      { id: 3, expectedId: 'Y', label: 'Drop Node' },
+      { id: 4, expectedId: 'V', label: 'Drop Node' }
     ],
     followUp: {
-      q: "Looking at the completed grid, how is W related to Z?",
-      options: ["Brother", "Brother-in-law", "Uncle"],
+      q: "How is Y related to V?",
+      options: ["Grandfather", "Maternal Aunt / Uncle", "Cousin"],
       correct: 1,
-      explanation: "W is married to Y. Y is the sister of Z. The husband of someone's sister is their Brother-in-law."
+      explanation: "Y is the sibling of W. W is the mother of V. Therefore, Y is the Maternal Aunt or Uncle of V."
     }
   },
   {
-    mission: "Trial 5",
+    mission: "Trial 4: The Large Family",
+    expression: "M @ N # O @ P $ Q # R",
+    objective: "How is Q related to M?",
+    characters: [
+      { id: 'P', gender: 'M' },
+      { id: 'N', gender: 'F' },
+      { id: 'O', gender: 'M' },
+      { id: 'Q', gender: 'F' },
+      { id: 'R', gender: '?' },
+      { id: 'M', gender: 'M' }
+    ],
+    clues: [
+      "Four siblings share the same parent tier. Map them carefully!"
+    ],
+    template: 'practice-t4',
+    slots: [
+      { id: 0, expectedId: 'P', label: 'Drop Node' },
+      { id: 1, expectedId: 'N', label: 'Drop Node' },
+      { id: 2, expectedId: 'O', label: 'Drop Node' },
+      { id: 3, expectedId: 'Q', label: 'Drop Node' },
+      { id: 4, expectedId: 'R', label: 'Drop Node' },
+      { id: 5, expectedId: 'M', label: 'Drop Node' }
+    ],
+    followUp: {
+      q: "Based on the massive sibling chain, how is Q related to M?",
+      options: ["Sister", "Mother", "Maternal Aunt"],
+      correct: 2,
+      explanation: "Q is the sister of N. N is the mother of M. The sister of one's mother is the Maternal Aunt."
+    }
+  },
+  {
+    mission: "Trial 5: The Master Exam",
     expression: "S $ J @ K # P + R",
+    objective: "How is S related to R?",
     characters: [
       { id: 'R', gender: '?' },
       { id: 'K', gender: 'F' },
@@ -199,16 +238,15 @@ const PRACTICE_TASKS = [
       { id: 'J', gender: 'M' }
     ],
     clues: [
-      "Master Challenge: Construct the complete 5-node family tree.",
-      "Ensure nodes align strictly by their generational levels."
+      "Combine everything you've learned to build the complete tree."
     ],
     template: 'practice-5node',
     slots: [
-      { id: 0, expectedId: 'R', label: '' },
-      { id: 1, expectedId: 'S', label: '' },
-      { id: 2, expectedId: 'K', label: '' },
-      { id: 3, expectedId: 'P', label: '' },
-      { id: 4, expectedId: 'J', label: '' }
+      { id: 0, expectedId: 'R', label: 'Drop Node' },
+      { id: 1, expectedId: 'S', label: 'Drop Node' },
+      { id: 2, expectedId: 'K', label: 'Drop Node' },
+      { id: 3, expectedId: 'P', label: 'Drop Node' },
+      { id: 4, expectedId: 'J', label: 'Drop Node' }
     ],
     followUp: {
       q: "FINAL DEDUCTION: How is S related to R?",
@@ -241,23 +279,23 @@ function Node({ data, color, isSmall, isExtraSmall, isDraggable = false, onDragE
   const Icon = genderLabel === 'M' ? UserCircle : genderLabel === 'F' ? User : Baby;
 
   const sizeClasses = isExtraSmall
-    ? 'w-14 h-14 sm:w-[72px] sm:h-[72px]'
+    ? 'w-12 h-12 sm:w-[64px] sm:h-[64px]'
     : isSmall
-      ? 'w-20 h-20 sm:w-28 sm:h-28'
+      ? 'w-16 h-16 sm:w-24 sm:h-24'
       : 'w-24 h-24 sm:w-36 sm:h-36';
 
   const textClasses = isExtraSmall
     ? 'text-lg sm:text-2xl'
     : data.id.length <= 2
-      ? 'text-4xl sm:text-6xl'
+      ? 'text-3xl sm:text-5xl'
       : isSmall
         ? 'text-[10px] sm:text-sm'
         : 'text-sm sm:text-xl';
         
   const badgeClasses = isExtraSmall
-    ? '-top-2 w-5 h-5 text-[6px] sm:-top-3 sm:w-7 sm:h-7 sm:text-[8px]'
+    ? '-top-2 w-5 h-5 text-[6px] sm:-top-2 sm:w-6 sm:h-6 sm:text-[7px]'
     : isSmall
-      ? '-top-2 w-7 h-7 text-[8px] sm:-top-3.5 sm:w-10 sm:h-10 sm:text-[10px]'
+      ? '-top-2 w-7 h-7 text-[8px] sm:-top-3 sm:w-8 sm:h-8 sm:text-[10px]'
       : '-top-2 w-7 h-7 text-[8px] sm:-top-3.5 sm:w-10 sm:h-10 sm:text-[12px]';
 
   return (
@@ -291,22 +329,25 @@ function Slot({ data, placedId, characters, isSmall, isExtraSmall, onRemove, sho
     const placedData = placedId ? characters.find(c => c.id === placedId) : null;
     
     const sizeClasses = isExtraSmall
-      ? 'w-14 h-14 sm:w-[72px] sm:h-[72px]'
+      ? 'w-12 h-12 sm:w-[64px] sm:h-[64px]'
       : isSmall
-        ? 'w-20 h-20 sm:w-28 sm:h-28'
+        ? 'w-16 h-16 sm:w-24 sm:h-24'
         : 'w-24 h-24 sm:w-36 sm:h-36';
 
     return (
-        <div data-slot-id={data.id} className="flex flex-col items-center gap-1 sm:gap-2 relative">
-            <div className={`absolute inset-0 z-0 ${isSmall ? 'scale-[2.5]' : 'scale-[2.2]'} opacity-0 rounded-full bg-white/5 pointer-events-none`} />
+        <div data-slot-id={data.id} className="flex flex-col items-center justify-center relative">
             {placedData ? (
                 <Node data={placedData} color="bg-indigo-600" isSmall={isSmall} isExtraSmall={isExtraSmall} showRemove={showRemove} onRemove={onRemove} />
             ) : (
-                <div className={`${sizeClasses} rounded-full border-2 border-dashed border-white/10 bg-white/5 flex items-center justify-center transition-colors hover:bg-white/10 shadow-inner relative z-10`}>
-                    <MousePointer2 className="text-white/10 w-6 h-6 sm:w-8 sm:h-8" />
+                <div className={`${sizeClasses} rounded-full border-[3px] border-dashed border-[#c4a484]/40 bg-[#1a110f] flex items-center justify-center transition-colors hover:bg-white/10 shadow-inner relative z-10`}>
+                    <MousePointer2 className="text-white/20 w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
             )}
-            {data.label && <span className={`text-white/20 font-black ${isExtraSmall ? 'text-[6px] sm:text-[8px] px-2' : 'text-[8px] sm:text-[11px] px-3'} uppercase tracking-widest bg-black/10 rounded-full mt-1 relative z-10`}>{data.label}</span>}
+            {data.label && !placedData && (
+                <span className={`absolute -bottom-6 text-[#dfc4a1] font-black ${isExtraSmall ? 'text-[6px] sm:text-[7px] px-2 py-0.5' : 'text-[7px] sm:text-[9px] px-3 py-1'} uppercase tracking-widest bg-black/40 rounded-full mt-1 z-10 border border-white/10 shadow-lg whitespace-nowrap`}>
+                    {data.label}
+                </span>
+            )}
         </div>
     );
 }
@@ -343,7 +384,6 @@ export default function LabContent() {
   const handleDragEnd = (itemId, event, info) => {
     let clientX, clientY;
 
-    // Extract viewport coordinates securely for both touch and mouse
     if (event && (event.type.includes('touch') || event.pointerType === 'touch')) {
         const touch = event.changedTouches ? event.changedTouches[0] : (event.touches ? event.touches[0] : event);
         clientX = touch.clientX;
@@ -352,7 +392,6 @@ export default function LabContent() {
         clientX = event.clientX;
         clientY = event.clientY;
     } else if (info && info.point) {
-        // Fallback to framer motion point adjusted for scroll
         clientX = info.point.x - window.scrollX;
         clientY = info.point.y - window.scrollY;
     } else {
@@ -362,7 +401,7 @@ export default function LabContent() {
     const slots = document.querySelectorAll(`[data-slot-id]`);
     const slotElement = Array.from(slots).find(s => {
         const rect = s.getBoundingClientRect();
-        const pad = 50; 
+        const pad = 40; 
         return (
             clientX > rect.left - pad && clientX < rect.right + pad &&
             clientY > rect.top - pad && clientY < rect.bottom + pad
@@ -433,7 +472,7 @@ export default function LabContent() {
                     <ChevronLeft size={12} /> Dashboard
                 </button>
                 <span className="text-white font-black uppercase text-[14px] sm:text-[18px] tracking-tight flex items-center gap-2">
-                    <Search size={18} className="text-amber-400" /> {appMode === 'concept' ? "Coded Relations" : "Decoding Hub"}
+                    <Search size={18} className="text-amber-400" /> {appMode === 'concept' ? "Coded Deductions" : "Deduction Lab"}
                 </span>
             </div>
             <div className="flex items-center gap-2">
@@ -454,11 +493,19 @@ export default function LabContent() {
             
             {/* PERSISTENT TARGET STRING HEADER */}
             {!lessonFinished && (
-                <div className="absolute top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-[#1a110f] px-6 py-3 rounded-2xl border-2 border-white/10 shadow-2xl">
-                    <span className="text-[10px] sm:text-xs text-white/50 uppercase tracking-[0.2em] font-black hidden sm:block">Target String:</span>
-                    <span className="font-mono text-xl sm:text-2xl text-white font-black tracking-widest flex items-center">
+                <div className="absolute top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-1.5 bg-[#1a110f] px-6 py-3 rounded-2xl border-2 border-white/10 shadow-2xl min-w-[280px] sm:min-w-[380px]">
+                    <div className="flex items-center gap-2 text-emerald-400">
+                        <Target size={14} />
+                        <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-black">
+                            {appMode === 'concept' ? "How is S related to R?" : PRACTICE_TASKS[practiceStep].objective}
+                        </span>
+                    </div>
+                    <div className="w-full h-[1px] bg-white/10"></div>
+                    <span className="font-mono text-lg sm:text-2xl text-white font-black tracking-widest flex items-center mt-0.5">
                       {appMode === 'concept' ? (
-                         <HighlightedString fullString="S $ J @ K # P + R" highlight={CONCEPT_PROTOCOLS[activeTab].highlight} />
+                         CONCEPT_PROTOCOLS[activeTab].tab === "Objective" 
+                            ? <span className="text-emerald-400">S $ J @ K # P + R</span>
+                            : <HighlightedString fullString="S $ J @ K # P + R" highlight={CONCEPT_PROTOCOLS[activeTab].highlight} />
                       ) : (
                          PRACTICE_TASKS[practiceStep].expression
                       )}
@@ -466,7 +513,7 @@ export default function LabContent() {
                 </div>
             )}
 
-            <div className="w-full h-full flex flex-col items-center justify-center overflow-y-auto no-scrollbar relative pt-16 sm:pt-20">
+            <div className="w-full h-full flex flex-col items-center justify-center overflow-y-auto no-scrollbar relative pt-20 sm:pt-24">
               <AnimatePresence mode="wait">
                 {!lessonFinished ? (
                    <motion.div 
@@ -484,7 +531,7 @@ export default function LabContent() {
                        <div className="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-6 sm:gap-12 pb-4 sm:pb-0 px-2 sm:px-4">
                          
                          {/* IDENTICAL CONCEPT CIRCULAR WRAPPER */}
-                         <div className="flex flex-col items-center bg-[#1a110f] p-6 sm:p-12 rounded-[3rem] sm:rounded-full border border-white/5 shadow-inner w-[340px] sm:w-[480px] h-[340px] sm:h-[540px] justify-center relative overflow-hidden shrink-0">
+                         <div className="flex flex-col items-center bg-[#1a110f] p-4 sm:p-12 rounded-[3rem] sm:rounded-full border border-white/5 shadow-inner w-[340px] sm:w-[480px] h-[340px] sm:h-[540px] justify-center relative overflow-hidden shrink-0">
                              <div className="w-full flex justify-center items-center mt-4">
                                 <PracticeTemplate 
                                     task={PRACTICE_TASKS[practiceStep]} 
@@ -498,15 +545,16 @@ export default function LabContent() {
                          {/* DRAGGABLE CHARACTER PALETTE */}
                          <div className="flex items-center justify-center shrink-0">
                              {practicePhase === 'build' && (
-                                 <div className="flex flex-row lg:flex-col gap-4 sm:gap-6 p-4 sm:p-6 bg-[#1a110f] rounded-[2rem] sm:rounded-[3rem] border border-white/5 shadow-2xl backdrop-blur-sm relative z-20">
+                                 <div className="flex flex-row lg:flex-col flex-wrap justify-center max-w-[300px] lg:max-w-none gap-3 sm:gap-6 p-4 sm:p-6 bg-[#1a110f] rounded-[2rem] sm:rounded-[3rem] border border-white/5 shadow-2xl backdrop-blur-sm relative z-20">
                                     {PRACTICE_TASKS[practiceStep].characters.map(char => {
                                         const isPlaced = Object.values(placedItems).includes(char.id);
+                                        const isComplexGrid = PRACTICE_TASKS[practiceStep].template !== 'practice-t1';
                                         return (
                                             <div key={char.id} className="relative">
                                                 <div className={isPlaced ? 'opacity-20 grayscale pointer-events-none scale-90' : ''}>
-                                                    <Node data={char} color="bg-indigo-600" isDraggable={!isPlaced} onDragEnd={(e, info) => handleDragEnd(char.id, e, info)} isSmall={PRACTICE_TASKS[practiceStep].template !== 'practice-5node'} isExtraSmall={PRACTICE_TASKS[practiceStep].template === 'practice-5node' || PRACTICE_TASKS[practiceStep].template === 'practice-4node'} />
+                                                    <Node data={char} color="bg-indigo-600" isDraggable={!isPlaced} onDragEnd={(e, info) => handleDragEnd(char.id, e, info)} isSmall={!isComplexGrid} isExtraSmall={isComplexGrid} />
                                                 </div>
-                                                {isPlaced && <div className="absolute inset-0 flex items-center justify-center"><Check className="text-white/20" size={40} /></div>}
+                                                {isPlaced && <div className="absolute inset-0 flex items-center justify-center"><Check className="text-white/20" size={32} /></div>}
                                             </div>
                                         );
                                     })}
@@ -519,14 +567,13 @@ export default function LabContent() {
                 ) : (
                   <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex flex-col items-center gap-8 text-center p-6 sm:p-10 w-full">
                     <Trophy size={100} className="text-yellow-400 animate-bounce shadow-amber-400/20 drop-shadow-xl" />
-                    <h2 className="text-white text-4xl sm:text-6xl font-black uppercase tracking-tighter leading-none mb-4">CODES DECODED</h2>
+                    <h2 className="text-white text-4xl sm:text-6xl font-black uppercase tracking-tighter leading-none mb-4">LOGIC CERTIFIED</h2>
                     <div className="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-lg mt-6">
                         <button onClick={handleReset} className="flex-1 bg-black/40 text-[#a88a6d] hover:text-white border-2 border-white/10 px-6 py-4 rounded-2xl font-black uppercase text-sm sm:text-base shadow-xl transition-all">
                             Restart Module
                         </button>
-                        <button onClick={() => navigate('/learn/logicalReasoning/bloodRelations/deduceRelationships')} className="flex-1 bg-amber-400 text-black border-b-8 border-amber-600 px-6 py-4 rounded-2xl font-black uppercase text-sm sm:text-base shadow-xl hover:scale-105 transition-all">
+                        <button onClick={handleReset} className="flex-1 bg-amber-400 text-black border-b-8 border-amber-600 px-6 py-4 rounded-2xl font-black uppercase text-sm sm:text-base shadow-xl hover:scale-105 transition-all">
                             Next Module
-                            
                         </button>
                     </div>
                   </motion.div>
@@ -547,12 +594,12 @@ export default function LabContent() {
                 {/* STATIC MASTER LEGEND */}
                 <div className="bg-[#1a110f] p-3 sm:p-4 rounded-xl border border-white/5 mb-2 shadow-sm shrink-0">
                   <p className="text-amber-400 text-[10px] sm:text-xs uppercase tracking-widest mb-3 border-b border-white/10 pb-2 flex items-center gap-2">
-                    <Key size={14} /> Master Legend
+                    <Key size={14} /> Code Legend
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
                     {CODE_LEGEND.map((leg, i) => (
                       <div key={i} className="flex items-center gap-3 text-xs sm:text-sm bg-white/5 p-2 rounded-lg border border-white/5">
-                        <span className="text-yellow-400 font-mono text-base px-2 py-0.5 bg-black/50 rounded-md border border-white/10">{leg.code}</span>
+                        <span className="text-yellow-400 font-mono text-base px-2 py-0.5 bg-black/50 rounded-md border border-white/10">{leg.code.split(' ')[1]}</span>
                         <span className="text-white/80 font-bold leading-tight flex-1">{leg.meaning}</span>
                       </div>
                     ))}
@@ -563,7 +610,6 @@ export default function LabContent() {
                 {appMode === 'concept' ? (
                    <div className="space-y-4 mt-2 pl-1">
                      <p className="text-white text-base sm:text-xl font-black border-b border-white/5 pb-2 flex items-center gap-2 uppercase tracking-tighter"><GitBranch size={16} className="text-yellow-400" /> {CONCEPT_PROTOCOLS[activeTab].title}</p>
-                     <p className="text-sm text-white/90 italic mb-2">{CONCEPT_PROTOCOLS[activeTab].definition}</p>
                      <div className="space-y-2 text-white/80">
                         {CONCEPT_PROTOCOLS[activeTab].logicPoints.map((pt, i) => (
                            <div key={i} className="flex items-start gap-2 text-left py-0.5"><Check size={14} className="text-yellow-400 shrink-0 mt-0.5" strokeWidth={4} /><p className="text-white font-bold italic text-[12px] sm:text-[14px] leading-tight tracking-tight">{pt}</p></div>
@@ -587,9 +633,9 @@ export default function LabContent() {
                      </div>
                      <div className="space-y-2 overflow-y-auto custom-scrollbar pr-2 pt-2">
                         {PRACTICE_TASKS[practiceStep].clues.map((clue, i) => (
-                            <div key={i} className="flex items-start gap-3 group cursor-pointer text-left py-1" onClick={() => toggleClue(i)}>
-                                {completedClues.includes(i) ? <CheckSquare className="text-emerald-500 shrink-0" size={18} /> : <Square className="text-white/20 shrink-0" size={18} />}
-                                <p className={`text-white font-bold leading-tight ${completedClues.includes(i) ? 'opacity-40 line-through italic text-emerald-400' : ''}`}>{clue}</p>
+                            <div key={i} className="flex items-start gap-3 text-left py-1 text-white/60 text-xs italic">
+                                <Info size={16} className="shrink-0 mt-0.5" />
+                                <p className="leading-tight">{clue}</p>
                             </div>
                         ))}
                      </div>
@@ -605,11 +651,11 @@ export default function LabContent() {
                   {!lessonFinished ? (
                     appMode === 'concept' ? (
                       <motion.div key="academy-tabs" className="w-full h-full flex flex-col gap-4">
-                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/5">
-                            {CONCEPT_PROTOCOLS.map((rel, i) => (<button key={rel.id} onClick={() => setActiveTab(i)} className={`py-2 rounded-lg text-[9px] font-black uppercase transition-all ${activeTab === i ? 'bg-yellow-400 text-black shadow-lg scale-105' : 'text-[#a88a6d] hover:text-white'}`}>{rel.tab}</button>))}
+                         <div className="flex flex-wrap justify-center gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/5 max-h-[80px] sm:max-h-[none] overflow-y-auto no-scrollbar">
+                            {CONCEPT_PROTOCOLS.map((rel, i) => (<button key={rel.id} onClick={() => setActiveTab(i)} className={`py-1.5 px-3 rounded-lg text-[9px] font-black uppercase transition-all whitespace-nowrap ${activeTab === i ? 'bg-yellow-400 text-black shadow-lg scale-105' : 'text-[#a88a6d] hover:text-white'}`}>{rel.tab}</button>))}
                          </div>
                          <div className="flex-1 bg-black/20 p-5 rounded-2xl border border-white/5 flex flex-col items-center justify-center text-center gap-3 shadow-inner">
-                            <p className="text-white text-[14px] sm:text-[18px] font-bold leading-relaxed italic px-4">Observe how the logic path is assembled chunk by chunk from left to right.</p>
+                            <p className="text-white text-[14px] sm:text-[18px] font-bold leading-relaxed italic px-4">Observe how the logical deduction progresses piece by piece.</p>
                             <button onClick={() => activeTab === CONCEPT_PROTOCOLS.length - 1 ? setAppMode('practice') : setActiveTab(prev => prev + 1)} className="mt-4 flex items-center gap-3 bg-emerald-500 text-white px-8 py-3 rounded-full font-black uppercase text-xs shadow-xl border-b-4 border-emerald-800 active:scale-95 transition-all">
                                 {activeTab === CONCEPT_PROTOCOLS.length - 1 ? "Engage Practice Hub" : "Next Step"} <ArrowRight size={16} />
                             </button>
@@ -620,7 +666,7 @@ export default function LabContent() {
                          {practicePhase === 'build' ? (
                              <div className="flex flex-col items-center justify-center flex-1 gap-4">
                                 <p className="text-stone-400 text-xs sm:text-sm uppercase font-black text-center px-4 leading-relaxed tracking-widest border-b border-white/5 pb-4">
-                                  Build the tree. Place horizontally mapped nodes left-to-right following their order in the expression.
+                                  Construct the family tree on the grid to answer the question.
                                 </p>
                                 <button onClick={validateBuild} disabled={Object.keys(placedItems).length < PRACTICE_TASKS[practiceStep].slots.length} className={`px-16 py-4 rounded-2xl font-black uppercase text-[13px] shadow-2xl transition-all active:scale-95 flex items-center gap-3 border-b-4 ${Object.keys(placedItems).length >= PRACTICE_TASKS[practiceStep].slots.length ? 'bg-amber-400 text-black border-amber-700 hover:scale-105' : 'bg-black/20 text-white/20 border-transparent pointer-events-none'}`}>Validate Arrangement <ChevronRight size={18} /></button>
                              </div>
@@ -663,168 +709,258 @@ function TreeVisual({ data }) {
     if (data.type === 'step-build') {
         const { step } = data;
 
+        if (step === 0) {
+            return (
+                <div className="relative flex flex-col items-center bg-[#1a110f] p-8 sm:p-12 rounded-full border border-white/5 shadow-inner w-[340px] sm:w-[480px] h-[480px] sm:h-[540px] justify-center overflow-hidden shrink-0">
+                    <span className="text-amber-400 font-black uppercase text-[10px] tracking-widest mb-10 text-center absolute top-12">THE TARGET</span>
+                    <Target size={80} className="text-emerald-400 mb-8 animate-pulse" />
+                    <p className="text-white text-xl sm:text-2xl font-black text-center mb-4 leading-relaxed">Find the hidden relation between <span className="text-emerald-400">S</span> and <span className="text-emerald-400">R</span>!</p>
+                    <p className="text-[#a88a6d] text-sm sm:text-base font-bold text-center px-4">We will use the Master Legend to trace the path and unlock the answer.</p>
+                </div>
+            );
+        }
+
         return (
             <div className="relative flex flex-col items-center bg-[#1a110f] p-12 rounded-full border border-white/5 shadow-inner min-w-[340px] sm:min-w-[480px] h-[480px] sm:h-[540px] justify-center overflow-hidden shrink-0">
-                <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-square mt-4 shrink-0">
+                <div className="relative w-full max-w-[320px] sm:max-w-[420px] aspect-square mt-4 shrink-0">
                     
-                    {step >= 4 && <div className="absolute top-[0%] left-[100%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    {step >= 4 && <motion.div layout className="absolute top-[15%] left-[70%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                         <Node data={{id:'R', g:'?'}} color="bg-stone-600" isExtraSmall />
-                    </div>}
+                    </motion.div>}
                     
-                    {step >= 1 && <div className="absolute top-[50%] left-[0%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    {/* S gracefully slides left to make room for K in Step 2 */}
+                    {step >= 1 && <motion.div layout className={`absolute top-[50%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10 transition-all duration-700 ease-in-out ${step === 1 ? 'left-[40%]' : 'left-[25%]'}`}>
                         <Node data={{id:'S', g:'M'}} color="bg-blue-600" isExtraSmall />
-                    </div>}
+                    </motion.div>}
 
-                    {step >= 2 && <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    {step >= 2 && <motion.div layout className="absolute top-[50%] left-[55%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                         <Node data={{id:'K', g:'F'}} color="bg-purple-600" isExtraSmall />
-                    </div>}
+                    </motion.div>}
                     
-                    {step >= 3 && <div className="absolute top-[50%] left-[100%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    {step >= 3 && <motion.div layout className="absolute top-[50%] left-[85%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                         <Node data={{id:'P', g:'F'}} color="bg-purple-600" isExtraSmall />
-                    </div>}
+                    </motion.div>}
                     
-                    {step >= 1 && <div className="absolute top-[100%] left-[25%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                    {step >= 1 && <motion.div layout className="absolute top-[85%] left-[40%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                         <Node data={{id:'J', g:'M'}} color="bg-blue-600" isExtraSmall />
-                    </div>}
+                    </motion.div>}
 
                     <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        {step === 1 && <>
+                            {/* Perfectly straight vertical line when only S and J exist */}
+                            <line x1="40" y1="50" x2="40" y2="85" stroke="#facc15" strokeWidth="1.5" />
+                            <polygon points="37.5,77 42.5,77 40,81" fill="#facc15" />
+                        </>}
+
                         {step >= 2 && <>
-                            <line x1="0" y1="48" x2="50" y2="48" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
-                            <line x1="0" y1="52" x2="50" y2="52" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                            <line x1="25" y1="48" x2="55" y2="48" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                            <line x1="25" y1="52" x2="55" y2="52" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                            {/* Drop line from center of marriage bond */}
+                            <line x1="40" y1="50" x2="40" y2="85" stroke="#facc15" strokeWidth="1.5" />
+                            <polygon points="37.5,77 42.5,77 40,81" fill="#facc15" />
                         </>}
-                        {step >= 3 && <line x1="50" y1="50" x2="100" y2="50" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />}
+
+                        {step >= 3 && <line x1="55" y1="50" x2="85" y2="50" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />}
+                        
                         {step >= 4 && <>
-                            <line x1="100" y1="0" x2="100" y2="45" stroke="#facc15" strokeWidth="1.5" />
-                            <polygon points="98,42 102,42 100,46" fill="#facc15" />
-                        </>}
-                        {step >= 1 && <>
-                            <line x1="25" y1="50" x2="25" y2="95" stroke="#facc15" strokeWidth="1.5" />
-                            <polygon points="23,92 27,92 25,96" fill="#facc15" />
+                            <path d="M 70 15 V 30 H 55 V 45 M 70 30 H 85 V 45" stroke="#facc15" strokeWidth="1.5" fill="none" />
+                            <polygon points="52.5,40 57.5,40 55,44" fill="#facc15" />
+                            <polygon points="82.5,40 87.5,40 85,44" fill="#facc15" />
                         </>}
                     </svg>
 
-                    {step >= 2 && <div className="absolute top-[50%] left-[25%] -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1a110f] rounded-full p-[2px] border border-white/5 shadow-inner">
+                    {step >= 2 && <div className="absolute top-[50%] left-[40%] -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1a110f] rounded-full p-[2px] border border-white/5 shadow-inner">
                         <Heart size={10} className="text-rose-500 fill-rose-500" />
                     </div>}
                 </div>
             </div>
         );
     }
+
     return null;
 }
 
 function PracticeTemplate({ task, placedItems, onRemove, showRemove }) {
     const { template, slots, characters } = task;
 
-    if (template === 'practice-3node') {
+    if (template === 'practice-t1') {
         return (
-            <div className="relative w-full max-w-[240px] sm:max-w-[280px] aspect-square flex-shrink-0 mt-4">
-                <div className="absolute top-[0%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
-                    <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isExtraSmall />
+            <div className="relative w-full max-w-[320px] sm:max-w-[420px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[25%] left-[25%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isSmall />
                 </div>
-                <div className="absolute top-[100%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
-                    <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isExtraSmall />
+                <div className="absolute top-[25%] left-[75%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isSmall />
                 </div>
-                <div className="absolute top-[100%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
-                    <Slot data={slots[2]} placedId={placedItems[2]} characters={characters} onRemove={() => onRemove(2)} showRemove={showRemove} isExtraSmall />
+                <div className="absolute top-[75%] left-[25%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[2]} placedId={placedItems[2]} characters={characters} onRemove={() => onRemove(2)} showRemove={showRemove} isSmall />
+                </div>
+                <div className="absolute top-[75%] left-[75%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[3]} placedId={placedItems[3]} characters={characters} onRemove={() => onRemove(3)} showRemove={showRemove} isSmall />
                 </div>
 
                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <line x1="50" y1="0" x2="20" y2="95" stroke="#facc15" strokeWidth="1.5" />
-                    <polygon points="18,92 24,92 20,96" fill="#facc15" />
-                    <line x1="20" y1="100" x2="80" y2="100" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />
-                </svg>
-            </div>
-        );
-    }
-
-    if (template === 'practice-3node-sib') {
-        return (
-            <div className="relative w-full max-w-[240px] sm:max-w-[280px] aspect-square flex-shrink-0 mt-4">
-                <div className="absolute top-[0%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
-                    <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isExtraSmall />
-                </div>
-                <div className="absolute top-[100%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
-                    <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isExtraSmall />
-                </div>
-                <div className="absolute top-[100%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
-                    <Slot data={slots[2]} placedId={placedItems[2]} characters={characters} onRemove={() => onRemove(2)} showRemove={showRemove} isExtraSmall />
-                </div>
-
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <line x1="50" y1="0" x2="20" y2="95" stroke="#facc15" strokeWidth="1.5" />
-                    <polygon points="18,92 24,92 20,96" fill="#facc15" />
+                    <line x1="25" y1="25" x2="75" y2="25" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />
                     
-                    <line x1="50" y1="0" x2="80" y2="95" stroke="#facc15" strokeWidth="1.5" />
-                    <polygon points="76,92 82,92 80,96" fill="#facc15" />
-
-                    <line x1="20" y1="100" x2="80" y2="100" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />
+                    <line x1="25" y1="25" x2="25" y2="75" stroke="#facc15" strokeWidth="1.5" />
+                    <polygon points="22.5,63 27.5,63 25,67" fill="#facc15" />
+                    
+                    <line x1="75" y1="25" x2="75" y2="75" stroke="#facc15" strokeWidth="1.5" />
+                    <polygon points="72.5,63 77.5,63 75,67" fill="#facc15" />
                 </svg>
             </div>
         );
     }
 
-    if (template === 'practice-4node') {
+    if (template === 'practice-t2') {
         return (
-            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-square flex-shrink-0 mt-4">
-                <div className="absolute top-[30%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+            <div className="relative w-full max-w-[320px] sm:max-w-[420px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[25%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                     <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isExtraSmall />
                 </div>
-                <div className="absolute top-[30%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                <div className="absolute top-[25%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                     <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isExtraSmall />
                 </div>
-                <div className="absolute top-[30%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                <div className="absolute top-[25%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                     <Slot data={slots[2]} placedId={placedItems[2]} characters={characters} onRemove={() => onRemove(2)} showRemove={showRemove} isExtraSmall />
                 </div>
-                <div className="absolute top-[80%] left-[35%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                <div className="absolute top-[75%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                     <Slot data={slots[3]} placedId={placedItems[3]} characters={characters} onRemove={() => onRemove(3)} showRemove={showRemove} isExtraSmall />
                 </div>
+                <div className="absolute top-[75%] left-[35%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[4]} placedId={placedItems[4]} characters={characters} onRemove={() => onRemove(4)} showRemove={showRemove} isExtraSmall />
+                </div>
 
                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <line x1="20" y1="28" x2="50" y2="28" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
-                    <line x1="20" y1="32" x2="50" y2="32" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
-                    <line x1="50" y1="30" x2="80" y2="30" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />
-                    <line x1="35" y1="30" x2="35" y2="75" stroke="#facc15" strokeWidth="1.5" />
-                    <polygon points="33,72 37,72 35,76" fill="#facc15" />
+                    <line x1="20" y1="23" x2="50" y2="23" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                    <line x1="20" y1="27" x2="50" y2="27" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                    <line x1="50" y1="25" x2="80" y2="25" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />
+                    
+                    <line x1="20" y1="25" x2="20" y2="75" stroke="#facc15" strokeWidth="1.5" />
+                    <polygon points="17.5,63 22.5,63 20,67" fill="#facc15" />
+                    
+                    <line x1="35" y1="25" x2="35" y2="75" stroke="#facc15" strokeWidth="1.5" />
+                    <polygon points="32.5,63 37.5,63 35,67" fill="#facc15" />
                 </svg>
                 
-                <div className="absolute top-[30%] left-[35%] -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1a110f] rounded-full p-[2px] border border-white/5 shadow-inner">
+                <div className="absolute top-[25%] left-[35%] -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1a110f] rounded-full p-[2px] border border-white/5 shadow-inner">
                     <Heart size={10} className="text-rose-500 fill-rose-500" />
                 </div>
             </div>
         );
     }
 
-    if (template === 'practice-5node') {
+    if (template === 'practice-t3') {
         return (
-            <div className="relative w-full max-w-[280px] sm:max-w-[340px] aspect-square flex-shrink-0 mt-4">
-                <div className="absolute top-[0%] left-[100%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+            <div className="relative w-full max-w-[320px] sm:max-w-[420px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[15%] left-[65%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                     <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isExtraSmall />
                 </div>
-                <div className="absolute top-[50%] left-[0%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                <div className="absolute top-[50%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                     <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isExtraSmall />
                 </div>
-                <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                     <Slot data={slots[2]} placedId={placedItems[2]} characters={characters} onRemove={() => onRemove(2)} showRemove={showRemove} isExtraSmall />
                 </div>
-                <div className="absolute top-[50%] left-[100%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                <div className="absolute top-[50%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                     <Slot data={slots[3]} placedId={placedItems[3]} characters={characters} onRemove={() => onRemove(3)} showRemove={showRemove} isExtraSmall />
                 </div>
-                <div className="absolute top-[100%] left-[25%] -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] flex items-center justify-center z-10">
+                <div className="absolute top-[85%] left-[35%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
                     <Slot data={slots[4]} placedId={placedItems[4]} characters={characters} onRemove={() => onRemove(4)} showRemove={showRemove} isExtraSmall />
                 </div>
 
                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <line x1="0" y1="48" x2="50" y2="48" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
-                    <line x1="0" y1="52" x2="50" y2="52" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
-                    <line x1="50" y1="50" x2="100" y2="50" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />
-                    <line x1="100" y1="0" x2="100" y2="45" stroke="#facc15" strokeWidth="1.5" />
-                    <polygon points="98,42 102,42 100,46" fill="#facc15" />
-                    <line x1="25" y1="50" x2="25" y2="95" stroke="#facc15" strokeWidth="1.5" />
-                    <polygon points="23,92 27,92 25,96" fill="#facc15" />
+                    <path d="M 65 15 V 30 H 50 V 50 M 65 30 H 80 V 50" stroke="#facc15" strokeWidth="1.5" fill="none" />
+                    <polygon points="47.5,40 52.5,40 50,44" fill="#facc15" />
+                    <polygon points="77.5,40 82.5,40 80,44" fill="#facc15" />
+
+                    <line x1="50" y1="50" x2="80" y2="50" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />
+                    <line x1="20" y1="48" x2="50" y2="48" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                    <line x1="20" y1="52" x2="50" y2="52" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+
+                    <line x1="35" y1="50" x2="35" y2="85" stroke="#facc15" strokeWidth="1.5" />
+                    <polygon points="32.5,75 37.5,75 35,79" fill="#facc15" />
+                </svg>
+                
+                <div className="absolute top-[50%] left-[35%] -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1a110f] rounded-full p-[2px] border border-white/5 shadow-inner">
+                    <Heart size={10} className="text-rose-500 fill-rose-500" />
+                </div>
+            </div>
+        );
+    }
+
+    if (template === 'practice-t4') {
+        return (
+            <div className="relative w-full max-w-[320px] sm:max-w-[420px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[15%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isExtraSmall />
+                </div>
+                <div className="absolute top-[50%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isExtraSmall />
+                </div>
+                <div className="absolute top-[50%] left-[40%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[2]} placedId={placedItems[2]} characters={characters} onRemove={() => onRemove(2)} showRemove={showRemove} isExtraSmall />
+                </div>
+                <div className="absolute top-[50%] left-[60%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[3]} placedId={placedItems[3]} characters={characters} onRemove={() => onRemove(3)} showRemove={showRemove} isExtraSmall />
+                </div>
+                <div className="absolute top-[50%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[4]} placedId={placedItems[4]} characters={characters} onRemove={() => onRemove(4)} showRemove={showRemove} isExtraSmall />
+                </div>
+                <div className="absolute top-[85%] left-[20%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[5]} placedId={placedItems[5]} characters={characters} onRemove={() => onRemove(5)} showRemove={showRemove} isExtraSmall />
+                </div>
+
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path d="M 50 15 V 30 H 20 V 50 M 40 30 V 50 M 60 30 V 50 M 80 30 V 50" stroke="#facc15" strokeWidth="1.5" fill="none" />
+                    <polygon points="17.5,40 22.5,40 20,44" fill="#facc15" />
+                    <polygon points="37.5,40 42.5,40 40,44" fill="#facc15" />
+                    <polygon points="57.5,40 62.5,40 60,44" fill="#facc15" />
+                    <polygon points="77.5,40 82.5,40 80,44" fill="#facc15" />
+
+                    <line x1="20" y1="50" x2="80" y2="50" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />
+                    
+                    <line x1="20" y1="50" x2="20" y2="85" stroke="#facc15" strokeWidth="1.5" />
+                    <polygon points="17.5,75 22.5,75 20,79" fill="#facc15" />
+                </svg>
+            </div>
+        );
+    }
+
+    if (template === 'practice-5node') {
+        return (
+            <div className="relative w-full max-w-[320px] sm:max-w-[420px] aspect-square flex-shrink-0 mt-4">
+                <div className="absolute top-[15%] left-[70%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[0]} placedId={placedItems[0]} characters={characters} onRemove={() => onRemove(0)} showRemove={showRemove} isExtraSmall />
+                </div>
+                <div className="absolute top-[50%] left-[25%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[1]} placedId={placedItems[1]} characters={characters} onRemove={() => onRemove(1)} showRemove={showRemove} isExtraSmall />
+                </div>
+                <div className="absolute top-[50%] left-[55%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[2]} placedId={placedItems[2]} characters={characters} onRemove={() => onRemove(2)} showRemove={showRemove} isExtraSmall />
+                </div>
+                <div className="absolute top-[50%] left-[85%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[3]} placedId={placedItems[3]} characters={characters} onRemove={() => onRemove(3)} showRemove={showRemove} isExtraSmall />
+                </div>
+                <div className="absolute top-[85%] left-[40%] -translate-x-1/2 -translate-y-1/2 w-0 h-0 flex items-center justify-center z-10">
+                    <Slot data={slots[4]} placedId={placedItems[4]} characters={characters} onRemove={() => onRemove(4)} showRemove={showRemove} isExtraSmall />
+                </div>
+
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="25" y1="48" x2="55" y2="48" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                    <line x1="25" y1="52" x2="55" y2="52" stroke="#facc15" strokeWidth="1.5" opacity="0.6" />
+                    
+                    <line x1="55" y1="50" x2="85" y2="50" stroke="#facc15" strokeWidth="1.5" strokeDasharray="3 3" />
+                    
+                    <path d="M 70 15 V 30 H 55 V 50 M 70 30 H 85 V 50" stroke="#facc15" strokeWidth="1.5" fill="none" />
+                    <polygon points="52.5,40 57.5,40 55,44" fill="#facc15" />
+                    <polygon points="82.5,40 87.5,40 85,44" fill="#facc15" />
+                    
+                    <line x1="40" y1="50" x2="40" y2="85" stroke="#facc15" strokeWidth="1.5" />
+                    <polygon points="37.5,75 42.5,75 40,79" fill="#facc15" />
                 </svg>
 
-                <div className="absolute top-[50%] left-[25%] -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1a110f] rounded-full p-[2px] border border-white/5 shadow-inner">
+                <div className="absolute top-[50%] left-[40%] -translate-x-1/2 -translate-y-1/2 z-20 bg-[#1a110f] rounded-full p-[2px] border border-white/5 shadow-inner">
                     <Heart size={10} className="text-rose-500 fill-rose-500" />
                 </div>
             </div>
@@ -834,4 +970,5 @@ function PracticeTemplate({ task, placedItems, onRemove, showRemove }) {
     return null;
 }
 
-// export default function App() { return ( <Router> <LabContent /> </Router> ); }
+// export function App() { return ( <Router> <LabContent /> </Router> ); }
+// export default App;

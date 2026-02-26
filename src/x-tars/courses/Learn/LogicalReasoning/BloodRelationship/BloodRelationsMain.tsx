@@ -21,7 +21,7 @@ import {
 const HIERARCHY_DATA = [
   {
     id: "bloodRelationsIntro",
-    title: "Blood Relations",
+    title: "Relations",
     subtitle: "Understanding the blood relations",
     icon: "⚖️",
     gradient: "from-indigo-500 to-purple-500",
@@ -29,9 +29,41 @@ const HIERARCHY_DATA = [
     subModules: [
       { id: 'BR_1', title: 'Immediate Blood Relations', desc: 'To go trhough the immediate relations.', icon: '🔢', path: '/learn/logicalReasoning/bloodRelations/introduction' },
       { id: 'BR_2', title: 'What about cousins and niece?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/bloodRelations/ancilliary' },
-      { id: 'BR_3', title: 'Let us build the fundamentals', desc: 'Building fundamentals of blood relations', icon: '🔗', path: '/learn/logicalReasoning/bloodRelations/fundamentals' }
-      // { id: 'LA_4', title: 'Left and immediate left', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/immediateleftRight' },
+      { id: 'BR_3', title: 'Let us build the fundamentals', desc: 'Building fundamentals of blood relations', icon: '🔗', path: '/learn/logicalReasoning/bloodRelations/fundamentals' },
+      { id: 'BR_4', title: 'More Relationships', desc: 'Other relations', icon: '🔗', path: '/learn/logicalReasoning/bloodRelations/moreRelations' }
       // { id: 'LA_5', title: 'What about between?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/between' }
+    
+    ]
+  },
+  {
+    id: "bloodRelationsInstruction",
+    title: "Working with instructions",
+    subtitle: "Understanding the blood relations",
+    icon: "⚖️",
+    gradient: "from-indigo-500 to-purple-500",
+    path: "/learn/logicalreasoning/bloodRelations",
+    subModules: [
+      { id: 'BR_5', title: 'Let us build the tree', desc: 'To go trhough the instructions', icon: '🔢', path: '/learn/logicalReasoning/bloodRelations/brWorkingWithInstructions' },
+      // { id: 'BR_2', title: 'What about cousins and niece?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/bloodRelations/ancilliary' },
+      // { id: 'BR_3', title: 'Let us build the fundamentals', desc: 'Building fundamentals of blood relations', icon: '🔗', path: '/learn/logicalReasoning/bloodRelations/fundamentals' },
+      // { id: 'BR_4', title: 'More Relationships', desc: 'Other relations', icon: '🔗', path: '/learn/logicalReasoning/bloodRelations/moreRelations' }
+      // // { id: 'LA_5', title: 'What about between?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/between' }
+    
+    ]
+  },
+  {
+    id: "bloodRelationsCoded",
+    title: "Let us work with codes",
+    subtitle: "Understanding the blood relations",
+    icon: "⚖️",
+    gradient: "from-indigo-500 to-purple-500",
+    path: "/learn/logicalreasoning/bloodRelations",
+    subModules: [
+      { id: 'BR_9', title: 'Let us understand the codes', desc: 'To go trhough the coded instructions', icon: '🔢', path: '/learn/logicalReasoning/bloodRelations/brCodedIntro' },
+      { id: 'BR_10', title: 'we will build the tree with the give codes', desc: 'Go through the instruction to build the tree', icon: '🔗', path: '/learn/logicalReasoning/bloodRelations/brCodedBuildingTree' },
+      { id: 'BR_11', title: 'Deduce the relationship', desc: 'Deduce the relationship from given code', icon: '🔗', path: '/learn/logicalReasoning/bloodRelations/deduceRelationships' },
+      // { id: 'BR_4', title: 'More Relationships', desc: 'Other relations', icon: '🔗', path: '/learn/logicalReasoning/bloodRelations/moreRelations' }
+      // // { id: 'LA_5', title: 'What about between?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/between' }
     
     ]
   }

@@ -150,10 +150,26 @@ from "./x-tars/courses/Learn/LogicalReasoning/LogicalReasoningRouterWrapper"
 import {
   BRIntroRouter,
   BRAncilliaryRouter,
-  BRFundamentalsRouter
+  BRFundamentalsRouter,
+  BRMoreRelationshipsRouter,
+  BRWorkingWithInstructionRouter,
+  BRCodeIntroRouter,
+  BRCodedBuildingTreeRouter,
+  BRCodedDeduceRelationshipRouter
 }
 from 
 "./x-tars/courses/Learn/LogicalReasoning/BloodRelationship/BloodRelationsRouterWrapper"
+
+import {
+  ORAscendingDescendingRouter,
+  ORAscendingDescendingWeightRouter,
+  ORAscendingDescendingFollowInstrRouter
+}
+from 
+"./x-tars/courses/Learn/LogicalReasoning/OrderAndRanking/OrderAndRankingRouterWrapper"
+
+
+
 
 import {LinearArrangementIntroductionRouter,
   LinearArrangementLeftRightRouter,
@@ -337,16 +353,22 @@ export default function App() {
               <Route path="/learn/logicalreasoning/bloodRelations/introduction" element={<BRIntroRouter />} />
               <Route path="/learn/logicalreasoning/bloodRelations/ancilliary" element={<BRAncilliaryRouter />} />
               <Route path="/learn/logicalreasoning/bloodRelations/fundamentals" element={<BRFundamentalsRouter />} />
+              <Route path="/learn/logicalReasoning/bloodRelations/moreRelations" element={<BRMoreRelationshipsRouter />} />
+              <Route path="/learn/logicalReasoning/bloodRelations/brWorkingWithInstructions" element={<BRWorkingWithInstructionRouter />} />
+              <Route path="/learn/logicalReasoning/bloodRelations/brCodedIntro" element={<BRCodeIntroRouter />} />
+              <Route path="/learn/logicalReasoning/bloodRelations/brCodedBuildingTree" element={<BRCodedBuildingTreeRouter />} />
+              <Route path="/learn/logicalReasoning/bloodRelations/deduceRelationships" element={<BRCodedDeduceRelationshipRouter />} />
 
-              
               
 
               
               <Route path="/learn/logicalreasoning/orderRanking" element={<OrderAndRankingMainRouter />} />
-
-
-
-
+              <Route path="/learn/logicalReasoning/orderRanking/ORAscendingDescending/" element={<ORAscendingDescendingRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORAscendingDescendingWeight/" element={<ORAscendingDescendingWeightRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORAscendingDescendingInstruction/" element={<ORAscendingDescendingFollowInstrRouter />} />
+              
+              
+              
             
               <Route path="/learn/dataInterpretation" element={<DataInterpretationMainRouter />} />
               <Route path="/learn/dataInterpretation/barChart" element={<BarChartMainRouter />} />

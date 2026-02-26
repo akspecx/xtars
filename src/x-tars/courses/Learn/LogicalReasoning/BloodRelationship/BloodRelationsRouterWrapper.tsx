@@ -3,11 +3,11 @@ import { useNavigate } from "react-router";
 import BRIntro from "./BRIntroductionOne";
 import BRAncilliary from "./BRAncilliaryRelationshipTwo";
 import BRFundamentals from "./BRSettingFundamentalsThree";
-// import ImmediateRightAndLeft from "./ImmediateRightAndLeft";
-// import LinearArrangementBetween from "./LinearArrangementBetween";
-// import  LAFirstSecondLeftRight from "./LinearArrangementFirstSecondLeftRight";
-// import LANumberOfPeopleSittingBetween from "./LinearArrangementNumberOfPeopleSittingBetween";
-// import LAExtremeLeftRight from "./LinearArrangementExtremeLeftRight";
+import BRMoreRelationships from "./BRMoreRelationshipsFour";
+import BRWorkingWithInstruction from "./BRWorkingWithInstructionsFive";
+import  BRCodeIntro from "./BRCodeIntroOne";
+import BRCodedBuildingTree from "./BRCodedBuildingTheTreeTwo";
+import BRCodedDeduceRelationship from "./BRCodedDeduceRelationshipThree";
 // import LAFollowInstructionIntro from "./LAFollowInstructionIntro"
 // import LAFollowInstructionRight from "./LAFollowInstructionRight";
 // import LAFollowInstructionLeftRightBoth from "./LAFollowInstructionLeftRightBoth";
@@ -115,146 +115,146 @@ export const BRFundamentalsRouter: React.FC = () => {
   );
 };
 
-// export const ImmediateRightAndLeftRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const BRMoreRelationshipsRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/bloodRelations");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <ImmediateRightAndLeft 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <BRMoreRelationships 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
-// export const LinearArrangementBetweenRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const BRWorkingWithInstructionRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/bloodRelations");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LinearArrangementBetween 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <BRWorkingWithInstruction 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
-// export const LAFirstSecondLeftRightRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const BRCodeIntroRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/bloodRelations");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LAFirstSecondLeftRight 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <BRCodeIntro 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
 
-// export const LANumberOfPeopleSittingBetweenRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const BRCodedBuildingTreeRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/bloodRelations");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LANumberOfPeopleSittingBetween 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <BRCodedBuildingTree 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
-// export const LAExtremeLeftRightRouter: React.FC = () => {
-//   const navigate = useNavigate();
+export const BRCodedDeduceRelationshipRouter: React.FC = () => {
+  const navigate = useNavigate();
   
-//   const handleBack = () => {
-//     navigate("/learn/logicalReasoning/LinearArrangement");
-//   };
+  const handleBack = () => {
+    navigate("/learn/logicalReasoning/bloodRelations");
+  };
 
-//   // Default theme (dark theme)
-//   const theme = {
-//     background: 'from-gray-900 to-black',
-//     surface: 'bg-gray-800 border-gray-700',
-//     surfaceHover: 'hover:bg-gray-700',
-//     text: 'text-white',
-//     textSecondary: 'text-gray-300',
-//     border: 'border-gray-700',
-//     shadow: 'shadow-lg shadow-black/50'
-//   };
+  // Default theme (dark theme)
+  const theme = {
+    background: 'from-gray-900 to-black',
+    surface: 'bg-gray-800 border-gray-700',
+    surfaceHover: 'hover:bg-gray-700',
+    text: 'text-white',
+    textSecondary: 'text-gray-300',
+    border: 'border-gray-700',
+    shadow: 'shadow-lg shadow-black/50'
+  };
 
-//   return (
-//     <LAExtremeLeftRight 
-//       onBack={handleBack}
-//       theme={theme}
-//       title="Numbers"
-//       icon="🔢"
-//     />
-//   );
-// };
+  return (
+    <BRCodedDeduceRelationship 
+      onBack={handleBack}
+      theme={theme}
+      title="Numbers"
+      icon="🔢"
+    />
+  );
+};
 
 // export const LAFollowInstructionIntroRouter: React.FC = () => {
 //   const navigate = useNavigate();
