@@ -16,8 +16,8 @@ import {
   MousePointer2,
   Eye,
   FileText,
-  ArrowRightCircle,
-  ArrowLeftCircle,
+  ArrowDownCircle,
+  ArrowUpCircle,
   UserCircle,
   UserCheck,
   User as UserIcon,
@@ -58,180 +58,151 @@ function HeaderSection({ onBack, title, appMode, setAppMode, onReset }) {
 // DATA & CONFIG
 // ==========================================
 const ALL_PEOPLE = [
-  { id: 'Anil', name: 'Anil', icon: UserCircle, color: 'from-blue-500 to-blue-700' },
-  { id: 'Vikas', name: 'Vikas', icon: UserCheck, color: 'from-emerald-500 to-emerald-700' },
-  { id: 'Gopal', name: 'Gopal', icon: UserCircle, color: 'from-amber-500 to-amber-700' },
-  { id: 'Alice', name: 'Alice', icon: UserCircle, color: 'from-pink-500 to-pink-700' },
-  { id: 'Bob', name: 'Bob', icon: UserCheck, color: 'from-indigo-500 to-indigo-700' },
-  { id: 'Charlie', name: 'Charlie', icon: UserCircle, color: 'from-teal-500 to-teal-700' },
-  { id: 'Student', name: 'Student', icon: UserIcon, color: 'from-slate-400 to-slate-600' }
+  { id: 'Rahul', name: 'Rahul', icon: UserCircle, color: 'from-indigo-600 to-indigo-800' },
+  { id: 'Sam', name: 'Sam', icon: UserCheck, color: 'from-emerald-600 to-emerald-800' },
+  { id: 'Boy', name: 'Boy', icon: UserIcon, color: 'from-blue-400 to-blue-600' },
+  { id: 'Girl', name: 'Girl', icon: UserIcon, color: 'from-pink-400 to-pink-600' }
 ];
 
 const LOGIC_DATA = {
   concept: {
-    question: "Anil is standing at 3rd position from the left end in a row. Vikas is in 7th position from the right end. Gopal is 4th from Anil towards the right and 2nd from Vikas towards the right end. How many persons are standing in this row?",
+    question: "In a class of 15 students, where girls are twice that of boys, Rahul (a boy) ranked 6th from the top. If there are 4 girls ahead of Rahul, how many boys are after him in rank?",
     clues: [
-      { id: 1, step: 0, concept: "First Anchor", explanation: "Start by placing the person anchored to an absolute end.", text: "Anil is 3rd from the Left end." },
-      { id: 2, step: 1, concept: "Relative to Anil", explanation: "Add the relative distance to Anil's rank to find Gopal.", text: "Gopal is 4th from Anil towards the right." },
-      { id: 3, step: 2, concept: "Relative to Vikas", explanation: "If Gopal is to the right of Vikas, then Vikas is to the left of Gopal.", text: "Gopal is 2nd from Vikas towards the right end." },
-      { id: 4, step: 3, concept: "Right Anchor Math", explanation: "Use the relative distance to find Gopal's rank from the Right end.", text: "Vikas is 7th from the right end." },
-      { id: 5, step: 4, concept: "Total Calculation", explanation: "Total = (Left Rank + Right Rank) - 1 for a single person.", text: "Calculate the total number of persons in the row." }
+      { id: 1, step: 0, concept: "Find the Ratio", explanation: "Total = 15. Ratio of Girls to Boys is 2:1.", text: "Calculate the exact number of boys and girls in the class." },
+      { id: 2, step: 1, concept: "The Top Group", explanation: "Rank 6 means there are exactly 5 students ahead of him.", text: "Build the line and place Rahul at his exact rank." },
+      { id: 3, step: 2, concept: "Breakdown Ahead", explanation: "Out of 5 students ahead, 4 are girls. So 1 must be a boy.", text: "Identify the composition of the group ahead of Rahul." },
+      { id: 4, step: 3, concept: "Remaining Boys", explanation: "Total Boys (5) - Boys Ahead (1) - Rahul (1) = Boys After.", text: "Calculate how many boys are left to be placed after Rahul." },
+      { id: 5, step: 4, concept: "Verification", explanation: "Count the board to ensure it equals 10 Girls and 5 Boys.", text: "Verify the entire row matches the problem's criteria." }
     ],
     teachingSteps: [
       { 
         id: "step-1",
-        selectionPrompt: "Step 1: First Anchor. Anil is 3rd from the left end. Let's start building our line from the Left. How many slots do we initially need to place him?",
-        options: ["2 slots", "3 slots", "4 slots"],
-        correct: 1,
+        selectionPrompt: "Step 1: Find the Breakdown. The class has 15 students total. The problem says 'girls are twice that of boys' (a 2:1 ratio). How many Girls and Boys are exactly in this class?",
+        options: ["10 Girls, 5 Boys", "5 Girls, 10 Boys", "8 Girls, 7 Boys"],
+        correct: 0,
         feedback: [
-          "2 slots would make him 2nd from the left.",
-          "Correct! To place someone 3rd from the left, we need exactly 3 slots starting from the left edge.",
-          "4 slots goes one step too far right now."
+          "Correct! 15 divided by 3 parts is 5. So, Boys = 5. Girls = 5 x 2 = 10.",
+          "That would mean boys are twice that of girls!",
+          "That is not a 2:1 ratio."
         ],
-        why: "To establish a 3rd position from the Left, we must build a prefix of exactly 3 slots.",
-        instruction: "Click '+ Add Slot' to create 3 slots. Drag Anil to the 3rd slot (Slot 3).",
-        targetAction: [
-            { itemId: 'Anil', slot: 2 }
-        ],
-        maxSlots: 3
+        why: "We now know our absolute boundaries: we only have exactly 5 Boys and 10 Girls to place on the board.",
+        instruction: "No board action required yet. We just solved the math! Click 'Read Above to Proceed'.",
+        validationType: 'none',
+        maxSlots: 0
       },
       { 
         id: "step-2",
-        selectionPrompt: "Step 2: Finding Gopal. Gopal is 4th from Anil towards the right. If Anil is at Slot 3, what is Gopal's exact rank from the Left?",
-        options: ["4th", "6th", "7th"],
-        correct: 2,
+        selectionPrompt: "Step 2: Placing Rahul. Rahul is 6th from the Top. Let's build the line starting from the Top! How many slots do we initially need to place Rahul at rank 6?",
+        options: ["5 slots", "6 slots", "7 slots"],
+        correct: 1,
         feedback: [
-          "That would be 1st to the right of Anil.",
-          "That would be 3rd to the right of Anil.",
-          "Perfect! Anil is at 3. Gopal is 4 places to his right. 3 + 4 = 7th from the Left!"
+          "5 slots would make him 5th from the top.",
+          "Perfect! We need 6 slots. The first 5 slots represent the students ahead of him, and the 6th slot is for Rahul.",
+          "7 slots goes one step too far right now."
         ],
-        why: "Relative positions extending from the same anchor simply add up: 3 + 4 = 7.",
-        instruction: "Click '+ Add Slot' 4 more times (Total 7). Place Gopal in Slot 7.",
-        targetAction: [
-            { itemId: 'Anil', slot: 2 },
-            { itemId: 'Gopal', slot: 6 }
-        ],
-        maxSlots: 7
+        why: "Rank 6 means exactly 5 students are positioned ahead of the anchor.",
+        instruction: "Click '+ Add Slot' exactly 6 times. Drag Rahul to Slot 6.",
+        validationType: 'custom',
+        maxSlots: 6
       },
       { 
         id: "step-3",
-        selectionPrompt: "Step 3: Finding Vikas. The clue says Gopal is 2nd from Vikas towards the right. This means Vikas is 2 places to the LEFT of Gopal. Where does Vikas sit?",
-        options: ["Slot 5", "Slot 6", "Slot 9"],
-        correct: 0,
+        selectionPrompt: "Step 3: Who is ahead? The problem states there are '4 girls ahead of Rahul'. Since there are 5 total slots ahead of him (Slots 1-5), how many BOYS must be ahead of him?",
+        options: ["0 Boys", "1 Boy", "2 Boys"],
+        correct: 1,
         feedback: [
-          "Correct! If Gopal is at Slot 7, counting 2 places back to the left puts Vikas exactly at Slot 5.",
-          "That would be 1 place to the left.",
-          "That would mean Vikas is to the right of Gopal!"
+          "If there are 0 boys, who is sitting in the 5th empty slot?",
+          "Correct! 5 total ahead - 4 girls = exactly 1 boy ahead of Rahul.",
+          "That would mean there are 6 people ahead of him!"
         ],
-        why: "Reversing a relative direction: 'Gopal is right of Vikas' means 'Vikas is left of Gopal'.",
-        instruction: "Drag Vikas from the palette and place him in Slot 5. No new slots needed!",
-        targetAction: [
-            { itemId: 'Anil', slot: 2 },
-            { itemId: 'Vikas', slot: 4 },
-            { itemId: 'Gopal', slot: 6 }
-        ],
-        maxSlots: 7
+        why: "Simple deduction: Total Ahead (5) minus Girls Ahead (4) equals Boys Ahead (1).",
+        instruction: "Drag 4 'Girl's and 1 'Boy' into slots 1 through 5 (in any order).",
+        validationType: 'custom',
+        maxSlots: 6
       },
       { 
         id: "step-4",
-        selectionPrompt: "Step 4: The Right Anchor. Vikas is 7th from the Right end. We know Gopal is 2 places to his right. So what is Gopal's rank from the Right end?",
-        options: ["5th from Right", "7th from Right", "9th from Right"],
-        correct: 0,
+        selectionPrompt: "Step 4: Boys After Rahul. Let's answer the final question! We know there are 5 Boys TOTAL in the class. We see 1 Boy ahead of Rahul, and Rahul himself is a Boy. How many Boys are placed AFTER Rahul?",
+        options: ["2 Boys", "3 Boys", "4 Boys"],
+        correct: 1,
         feedback: [
-          "Exactly! Moving closer to the right end DECREASES the rank number. 7 - 2 = 5th from the Right!",
-          "That is Vikas's rank.",
-          "That would mean Gopal is further away from the right end."
+          "Count again: 1 (ahead) + 1 (Rahul) + 2 = 4 Boys total. We need 5!",
+          "Exactly! 5 Total Boys - 1 Boy ahead - 1 (Rahul) = 3 Boys left to place after him.",
+          "That would equal 6 Total Boys in the class."
         ],
-        why: "As you move 'towards the right end', your rank from that end gets smaller. 7 - 2 = 5.",
-        instruction: "If Gopal is 5th from Right, there must be 4 slots behind him. Click '+ Add Slot' 4 times!",
-        targetAction: [
-            { itemId: 'Anil', slot: 2 },
-            { itemId: 'Vikas', slot: 4 },
-            { itemId: 'Gopal', slot: 6 }
-        ],
-        maxSlots: 11
+        why: "Total Boys (5) = Boys Ahead (1) + Rahul (1) + Boys After (3).",
+        instruction: "Logic verified! Click 'Read Above to Proceed' to finish building the class.",
+        validationType: 'custom',
+        maxSlots: 6
       },
       { 
         id: "step-5",
-        selectionPrompt: "Step 5: Total Calculation. We now know everything about Gopal's seat! He is 7th from the Left and 5th from the Right. Using the formula (Left + Right - 1), what is the Total?",
-        options: ["11", "12", "13"],
+        selectionPrompt: "Step 5: Final Verification. We know there are 3 Boys after Rahul. Since the total class is 15, we must add 9 more slots to the bottom. To verify our math, complete the class!",
+        options: ["Build the rest of the class", "Skip this step"],
         correct: 0,
         feedback: [
-          "Perfect! Total = 7 (Left) + 5 (Right) - 1 = 11. Our visual 11-slot row perfectly proves our mathematical calculation!",
-          "You forgot to subtract 1 for the double-counted seat.",
-          "Check your math: 7 + 5 - 1."
+          "Let's build it! Add 9 slots, then place 3 Boys and 6 Girls into the bottom section.",
+          "We must always verify our logic visually!"
         ],
-        why: "To find Total, take ONE specific seat (Gopal) where you know both ranks, add them, and subtract 1.",
-        instruction: "Proof Complete! Fill all empty slots with 'Students' to finish the lesson.",
-        targetAction: [
-            { itemId: 'Student', slot: 0 }, { itemId: 'Student', slot: 1 }, 
-            { itemId: 'Anil', slot: 2 },
-            { itemId: 'Student', slot: 3 }, 
-            { itemId: 'Vikas', slot: 4 },
-            { itemId: 'Student', slot: 5 }, 
-            { itemId: 'Gopal', slot: 6 },
-            { itemId: 'Student', slot: 7 }, { itemId: 'Student', slot: 8 }, { itemId: 'Student', slot: 9 }, { itemId: 'Student', slot: 10 }
-        ],
-        maxSlots: 11
+        why: "The visual proof validates our mathematical deductions step by step.",
+        instruction: "Click '+ Add Slot' to make 15 total slots. Drag 3 'Boy's and 6 'Girl's into slots 7-15.",
+        validationType: 'custom',
+        maxSlots: 15
       }
     ],
     postQuiz: [
       { 
-        q: "If Person X is 12th from Right, and Person Y is 4th to the right of X. What is Y's rank from the Right?", 
-        options: ["8th from Right", "16th from Right", "12th from Right"], 
+        q: "In a class of 30 where girls are twice boys, how many boys are there?", 
+        options: ["10 Boys", "15 Boys", "20 Boys"], 
         correct: 0, 
-        explanation: "Moving closer to the Right end DECREASES your Right rank. 12 - 4 = 8th from Right."
+        explanation: "Ratio 2:1 means 3 parts. 30 / 3 = 10. So 10 Boys and 20 Girls."
       },
       { 
-        q: "If A is 10th from Left, B is 5th to the right of A, and C is 2nd to the left of B. What is C's rank from the Left?", 
-        options: ["13th", "15th", "17th"], 
+        q: "If Person X (a boy) is 10th from the top, and 6 girls are ahead of him, how many boys are ahead of him?", 
+        options: ["3 Boys", "4 Boys", "5 Boys"], 
         correct: 0, 
-        explanation: "10 (A) + 5 (B) - 2 (C) = 13th from the Left."
+        explanation: "10th from top = 9 people ahead. 9 total - 6 girls = 3 boys ahead."
       }
     ]
   },
   practice: {
-    question: "Alice is 5th from the Left. Bob is 9th from the Right. Charlie is 5th from Alice towards the right and 3rd from Bob towards the right end. Build this scenario and calculate the total.",
+    question: "In a class of 12 students, girls are twice that of boys. Sam (a boy) ranks 7th from the Top. If 5 girls are ahead of Sam, build the scenario to find out how many boys are after him.",
     clues: [
-      { id: 1, step: 0, concept: "Charlie from Left", explanation: "Alice=5th L. Charlie=5th right of Alice. 5+5 = 10th Left.", text: "Calculate Charlie's rank from the Left end." },
-      { id: 2, step: 0, concept: "Charlie from Right", explanation: "Bob=9th R. Charlie=3rd right of Bob. 9-3 = 6th Right.", text: "Calculate Charlie's rank from the Right end." },
-      { id: 3, step: 0, concept: "Total Calculation", explanation: "Charlie = 10L + 6R - 1 = 15 Total.", text: "Determine the Total queue length using Charlie." },
-      { id: 4, step: 0, concept: "Build the Line", explanation: "A=Slot 5, B=Slot 7, C=Slot 10.", text: "Place Alice, Bob, and Charlie in their exact absolute positions." }
+      { id: 1, step: 0, concept: "Total Breakdown", explanation: "12 total = 8 Girls and 4 Boys.", text: "Calculate the exact number of Boys and Girls." },
+      { id: 2, step: 0, concept: "Ahead of Sam", explanation: "Sam is 7th, so 6 people are ahead. 5 are Girls, so 1 is a Boy.", text: "Deduce the group composition ahead of Sam." },
+      { id: 3, step: 0, concept: "Boys After", explanation: "Total Boys (4) - Ahead (1) - Sam (1) = 2 Boys after.", text: "Calculate how many boys remain." },
+      { id: 4, step: 0, concept: "Build the Line", explanation: "Place Sam 7th. Put 5 Girls & 1 Boy ahead of him. Fill the rest.", text: "Construct the exact visual representation!" }
     ],
     quiz: [
       { 
-        q: "What is Charlie's exact rank from the Left end?", 
-        options: ["9th", "10th", "11th"], 
+        q: "How many Boys and Girls are in this 12-student class?", 
+        options: ["6 Girls, 6 Boys", "8 Girls, 4 Boys", "4 Girls, 8 Boys"], 
         correct: 1, 
-        explanation: "Alice is 5th. Charlie is 5 places to her right. 5 + 5 = 10th from Left.",
-        simulation: { slots: 15, persons: [{ id: 'Alice', slot: 4 }, { id: 'Charlie', slot: 9 }] }
+        explanation: "The ratio is 2:1. 12 divided by 3 parts is 4. So 4 Boys and 8 Girls."
       },
       { 
-        q: "What is Charlie's exact rank from the Right end?", 
-        options: ["6th", "9th", "12th"], 
-        correct: 0, 
-        explanation: "Bob is 9th from Right. Charlie is 3 places closer to the right end. 9 - 3 = 6th from Right.",
-        simulation: { slots: 15, persons: [{ id: 'Bob', slot: 6 }, { id: 'Charlie', slot: 9 }] }
+        q: "Since Sam is 7th from Top, how many students are strictly ahead of him?", 
+        options: ["5 students", "6 students", "7 students"], 
+        correct: 1, 
+        explanation: "Rank 7 means there are exactly 6 people positioned before him."
       },
       { 
-        q: "What is the total number of students in the class?", 
-        options: ["14", "15", "16"], 
+        q: "If 5 girls are ahead of Sam, how many boys are ahead of him?", 
+        options: ["0 Boys", "1 Boy", "2 Boys"], 
         correct: 1, 
-        explanation: "Using Charlie's seat: 10 (Left) + 6 (Right) - 1 = 15 Total.",
-        simulation: { slots: 15, persons: [{ id: 'Alice', slot: 4 }, { id: 'Charlie', slot: 9 }, { id: 'Bob', slot: 6 }] }
+        explanation: "6 total ahead - 5 girls = 1 Boy."
       },
       { 
-        q: "What is Bob's exact position counting from the Left end?", 
-        options: ["6th", "7th", "8th"], 
+        q: "How many boys are ranked AFTER Sam?", 
+        options: ["1 Boy", "2 Boys", "3 Boys"], 
         correct: 1, 
-        explanation: "Charlie is 10th from Left. Bob is 3 places to the left of Charlie. 10 - 3 = 7th from Left.",
-        simulation: { slots: 15, persons: [{ id: 'Bob', slot: 6 }, { id: 'Charlie', slot: 9 }] } 
+        explanation: "Total Boys (4) - Boys Ahead (1) - Sam (1) = 2 Boys left to place after him."
       }
     ]
   }
 };
 
-function LabContent() {
+export default function LabContent() {
   const navigate = useNavigate();
   const [appMode, setAppMode] = useState('concept');
   const [conceptPhase, setConceptPhase] = useState('selecting'); 
@@ -264,17 +235,24 @@ function LabContent() {
     const row = trayItems;
     
     if (appMode === 'practice' && !quizMode) {
-        // Practice target: 15 slots. Alice 5th (idx 4). Bob 7th (idx 6). Charlie 10th (idx 9).
-        const hasAlice = row[4] === 'Alice'; 
-        const hasBob = row[6] === 'Bob';
-        const hasCharlie = row[9] === 'Charlie';
-        let studentsFilled = true;
-        for (let i = 0; i < 15; i++) {
-            if (i !== 4 && i !== 6 && i !== 9 && row[i] !== 'Student') {
-                studentsFilled = false;
+        // Practice target: 12 slots. Sam 7th (idx 6). 
+        // Ahead (idx 0-5): 5 Girls, 1 Boy.
+        // Behind (idx 7-11): 3 Girls, 2 Boys.
+        if (traySlotCount === 12 && row[6] === 'Sam') {
+            const topGroup = row.slice(0, 6);
+            const bottomGroup = row.slice(7, 12);
+            
+            const topGirls = topGroup.filter(x => x === 'Girl').length;
+            const topBoys = topGroup.filter(x => x === 'Boy').length;
+            const bottomGirls = bottomGroup.filter(x => x === 'Girl').length;
+            const bottomBoys = bottomGroup.filter(x => x === 'Boy').length;
+
+            if (topGirls === 5 && topBoys === 1 && bottomBoys === 2 && bottomGirls === 3) {
+                setStepStatus('correct');
+                return;
             }
         }
-        setStepStatus((traySlotCount === 15 && hasAlice && hasBob && hasCharlie && studentsFilled) ? 'correct' : 'idle');
+        setStepStatus('idle');
         return;
     }
 
@@ -285,38 +263,39 @@ function LabContent() {
             return;
         }
         
-        let isMatch = true;
-        if (stepData.targetAction && stepData.targetAction.length > 0) {
-             isMatch = stepData.targetAction.every(ta => row[ta.slot] === ta.itemId);
-        } else if (stepData.targetAction && stepData.targetAction.length === 0) {
-             isMatch = true;
+        let isMatch = false;
+        const countMatch = traySlotCount === stepData.maxSlots;
+
+        // Custom Flexible Validation Logic for Concept Mode
+        if (activeStep === 0) {
+            isMatch = true; // Math only step
+        } else if (activeStep === 1) {
+            isMatch = row[5] === 'Rahul';
+        } else if (activeStep === 2) {
+            const topGroup = row.slice(0, 5);
+            const topGirls = topGroup.filter(x => x === 'Girl').length;
+            const topBoys = topGroup.filter(x => x === 'Boy').length;
+            isMatch = row[5] === 'Rahul' && topGirls === 4 && topBoys === 1;
+        } else if (activeStep === 3) {
+            const topGroup = row.slice(0, 5);
+            const topGirls = topGroup.filter(x => x === 'Girl').length;
+            const topBoys = topGroup.filter(x => x === 'Boy').length;
+            isMatch = row[5] === 'Rahul' && topGirls === 4 && topBoys === 1; // Same as step 2, just math verification
+        } else if (activeStep === 4) {
+            const topGroup = row.slice(0, 5);
+            const bottomGroup = row.slice(6, 15);
+            
+            const topGirls = topGroup.filter(x => x === 'Girl').length;
+            const topBoys = topGroup.filter(x => x === 'Boy').length;
+            const bottomGirls = bottomGroup.filter(x => x === 'Girl').length;
+            const bottomBoys = bottomGroup.filter(x => x === 'Boy').length;
+
+            isMatch = row[5] === 'Rahul' && topGirls === 4 && topBoys === 1 && bottomBoys === 3 && bottomGirls === 6;
         }
 
-        const countMatch = traySlotCount === stepData.maxSlots;
         setStepStatus((isMatch && countMatch) ? 'correct' : 'idle');
     }
   }, [trayItems, traySlotCount, activeStep, appMode, quizMode]);
-
-  // Quiz Simulation effect 
-  useEffect(() => {
-      if (quizMode && currentQuizSet[quizStep]?.simulation) {
-          const sim = currentQuizSet[quizStep].simulation;
-          setTraySlotCount(sim.slots);
-          const newItems = new Array(40).fill(null);
-          
-          for (let i=0; i<sim.slots; i++) newItems[i] = 'Student';
-
-          if (sim.persons) {
-              sim.persons.forEach(p => newItems[p.slot] = p.id);
-          }
-          if (sim.fillBetween) {
-              for (let i = sim.fillBetween[0]; i <= sim.fillBetween[1]; i++) {
-                  newItems[i] = 'Student'; 
-              }
-          }
-          setTrayItems(newItems);
-      }
-  }, [quizMode, quizStep, currentQuizSet]);
 
   function handleReset(overrideMode = appMode) {
     setTraySlotCount(0);
@@ -342,12 +321,8 @@ function LabContent() {
   function handleAddSlot() {
     const limit = appMode === 'concept' ? LOGIC_DATA.concept.teachingSteps[activeStep]?.maxSlots : 40;
     
-    if (limit === 0 && appMode === 'concept') {
-        setFeedback({ 
-            type: 'error', 
-            msg: "Wait!", 
-            reason: "We need to answer the logic question before we build the line."
-        });
+    if (appMode === 'concept' && feedback.type !== 'success') {
+        setActionError("Please answer the logic question above before building the line.");
         return;
     }
 
@@ -369,6 +344,7 @@ function LabContent() {
       setActionError("");
     } else {
       setFeedback({ type: 'error', msg: "Try Again", reason: String(fbReason) });
+      setActionError("");
     }
   }
 
@@ -401,16 +377,20 @@ function LabContent() {
   function validatePractice() {
     if (stepStatus === 'correct') { 
         setQuizMode(true);
-        setFeedback({ type: 'success', msg: "Construction Verified!", reason: "You accurately mapped the complex relative directions!" });
+        setFeedback({ type: 'success', msg: "Construction Verified!", reason: "You accurately mapped the ratio and groups!" });
     } else {
-      setFeedback({ type: 'error', msg: "Arrangement Error", reason: "Create 15 slots. Alice = Slot 5. Bob = Slot 7. Charlie = Slot 10. Fill the rest with Students." });
+      setFeedback({ type: 'error', msg: "Arrangement Error", reason: "Create 12 slots. Place Sam 7th. Put 5 Girls and 1 Boy ahead of him. Put 2 Boys and 3 Girls after him." });
     }
   }
 
   function handleDragEnd(event, info, itemId, sourceIndex) {
     if (quizMode || lessonFinished) return;
-    
     if (sourceIndex !== null && sourceIndex !== undefined) return;
+
+    if (appMode === 'concept' && feedback.type !== 'success') {
+        setActionError("Please answer the logic question above before placing characters.");
+        return;
+    }
 
     const dragX = info.point.x;
     const dragY = info.point.y;
@@ -428,23 +408,23 @@ function LabContent() {
     
     if (targetSlotIdx !== -1 && targetSlotIdx < traySlotCount) {
       const newItems = [...trayItems];
-      if (itemId !== 'Student') {
+      // Only unseat named characters
+      if (itemId !== 'Boy' && itemId !== 'Girl') {
           const oldIdx = newItems.indexOf(itemId);
           if (oldIdx !== -1) newItems[oldIdx] = null;
       }
-      if (newItems[targetSlotIdx] === null || newItems[targetSlotIdx] === 'Student' || itemId !== 'Student') {
-          newItems[targetSlotIdx] = itemId;
-          setTrayItems(newItems);
-          setActionError("");
-      }
+      
+      newItems[targetSlotIdx] = itemId;
+      setTrayItems(newItems);
+      setActionError("");
     }
   }
 
   const showSlots = traySlotCount > 0;
   
   const activePeopleList = appMode === 'concept' 
-    ? ALL_PEOPLE.filter(p => ['Anil', 'Vikas', 'Gopal', 'Student'].includes(p.id))
-    : ALL_PEOPLE.filter(p => ['Alice', 'Bob', 'Charlie', 'Student'].includes(p.id));
+    ? ALL_PEOPLE.filter(p => ['Rahul', 'Boy', 'Girl'].includes(p.id))
+    : ALL_PEOPLE.filter(p => ['Sam', 'Boy', 'Girl'].includes(p.id));
 
   const isQuizPassed = feedback.type === 'success';
   const isBoardValid = stepStatus === 'correct';
@@ -453,7 +433,7 @@ function LabContent() {
     <div className="min-h-screen w-full bg-[#e6dccb] flex flex-col select-none font-sans text-[14px]" ref={containerRef}>
       <div className="absolute inset-0 opacity-[0.1] pointer-events-none fixed bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" />
 
-      <HeaderSection onBack={() => navigate(-1)} title={appMode === 'concept' ? "Relative Directions Lab" : "Multi-Anchor Lab"} appMode={appMode} setAppMode={handleSetMode} onReset={() => handleReset(appMode)} />
+      <HeaderSection onBack={() => navigate(-1)} title={appMode === 'concept' ? "Distribution Logic Lab" : "Ratio Calculation Lab"} appMode={appMode} setAppMode={handleSetMode} onReset={() => handleReset(appMode)} />
 
       <main className="flex-1 flex flex-col items-center gap-4 p-2 sm:p-4 w-full max-w-7xl mx-auto relative z-10 overflow-hidden">
         
@@ -469,12 +449,12 @@ function LabContent() {
                 {/* Horizontal Scrolling Row */}
                 <div className="relative bg-[#3e2723] pt-10 pb-6 rounded-[1.5rem] border-2 border-yellow-500/30 shadow-inner flex flex-col items-center justify-center min-h-[160px] overflow-hidden">
                   <div className="absolute top-2 w-full flex justify-between px-6 pointer-events-none">
-                    <span className="text-yellow-400 font-black uppercase text-[10px] flex items-center gap-1"><ArrowLeftCircle size={14}/> Left End (1)</span>
-                    <span className="text-yellow-400 font-black uppercase text-[10px] flex items-center gap-1">Right End ({traySlotCount || 'N'}) <ArrowRightCircle size={14}/></span>
+                    <span className="text-yellow-400 font-black uppercase text-[10px] flex items-center gap-1"><ArrowDownCircle size={14}/> Top End (Rank 1)</span>
+                    <span className="text-yellow-400 font-black uppercase text-[10px] flex items-center gap-1">Bottom End (Rank {traySlotCount || 'N'}) <ArrowUpCircle size={14}/></span>
                   </div>
                   
                   {/* Forced Single Line with Horizontal Scroll */}
-                  <div className="w-full flex flex-nowrap justify-start lg:justify-center items-center gap-1 sm:gap-2 px-4 py-4 transition-all overflow-x-auto custom-scrollbar">
+                  <div className="w-full flex flex-nowrap justify-start items-center gap-1 sm:gap-2 px-4 py-4 transition-all overflow-x-auto custom-scrollbar">
                     
                     {showSlots && Array.from({ length: traySlotCount }).map((_, i) => {
                       const itemId = trayItems[i];
@@ -482,7 +462,7 @@ function LabContent() {
 
                       return (
                         <div key={i} className="flex flex-col items-center gap-1 flex-shrink-0">
-                          <div data-slot-idx={i} className={`w-10 h-10 sm:w-[3.25rem] sm:h-[3.25rem] lg:w-16 lg:h-16 rounded-xl border-2 flex items-center justify-center relative transition-all ${person ? 'bg-white border-white scale-105 shadow-lg' : 'border-dashed border-white/20 bg-black/20'}`}>
+                          <div data-slot-idx={i} className={`w-10 h-10 sm:w-[3.25rem] sm:h-[3.25rem] lg:w-14 lg:h-14 rounded-xl border-2 flex items-center justify-center relative transition-all ${person ? 'bg-white border-white scale-105 shadow-lg' : 'border-dashed border-white/20 bg-black/20'}`}>
                             {person && (
                               <div className={`w-full h-full rounded-[0.5rem] bg-gradient-to-br ${person.color} flex flex-col items-center justify-center text-white shadow-inner p-1 animate-in zoom-in-50`}>
                                 <person.icon size={16} className="lg:scale-125" />
@@ -499,7 +479,7 @@ function LabContent() {
                     })}
 
                     {!quizMode && !lessonFinished && (
-                        <button onClick={() => handleAddSlot()} className="w-10 h-10 sm:w-[3.25rem] sm:h-[3.25rem] lg:w-16 lg:h-16 flex-shrink-0 rounded-xl border-2 border-dashed border-yellow-500/40 bg-yellow-500/5 flex flex-col items-center justify-center text-yellow-500/60 hover:text-yellow-400 hover:border-yellow-400 hover:bg-yellow-500/10 transition-all active:scale-95 shadow-md">
+                        <button onClick={() => handleAddSlot()} className="w-10 h-10 sm:w-[3.25rem] sm:h-[3.25rem] lg:w-14 lg:h-14 flex-shrink-0 rounded-xl border-2 border-dashed border-yellow-500/40 bg-yellow-500/5 flex flex-col items-center justify-center text-yellow-500/60 hover:text-yellow-400 hover:border-yellow-400 hover:bg-yellow-500/10 transition-all active:scale-95 shadow-md">
                             <PlusCircle size={24} strokeWidth={2.5} className="lg:scale-125" />
                             <span className="text-[8px] font-black uppercase mt-1 tracking-tighter">Add Slot</span>
                         </button>
@@ -520,7 +500,7 @@ function LabContent() {
                        return (
                         <div key={`repo-${person.id}`} className="relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 flex-shrink-0 flex items-center justify-center border-2 border-white/5 rounded-xl bg-black/20 shadow-inner">
                             <div className="absolute inset-0 opacity-20 scale-75 flex items-center justify-center pointer-events-none">
-                                <person.icon size={18} className="text-white lg:scale-125" />
+                                <person.icon size={24} className="text-white lg:scale-125" />
                             </div>
                             <motion.div 
                               drag={!quizMode && !lessonFinished} 
@@ -649,7 +629,7 @@ function LabContent() {
                           <motion.div key="finished" className="flex flex-col items-center justify-center h-full text-center gap-4 min-h-[250px]">
                              <Trophy size={60} className="text-yellow-400 animate-bounce" />
                              <h3 className="text-white text-[18px] font-black uppercase tracking-widest">Laboratory Mastered!</h3>
-                             <p className="text-white/60 text-[14px] tracking-tight leading-snug px-6">You've mastered multi-character chains and total calculations!</p>
+                             <p className="text-white/60 text-[14px] tracking-tight leading-snug px-6">You've mastered distribution ratios and rank combinations!</p>
                              <div className="flex flex-col gap-3 w-full max-w-sm mt-4 px-6">
                                 <button onClick={() => handleReset(appMode)} className="bg-amber-600 text-white py-3 rounded-full font-black uppercase shadow-xl tracking-widest text-[12px]">Retry Module</button>
                                 {appMode === 'concept' ? (
@@ -677,97 +657,67 @@ function LabContent() {
                             
                             <p className="text-white font-bold text-[16px] leading-tight tracking-tight px-2">{LOGIC_DATA.concept.teachingSteps[activeStep]?.selectionPrompt}</p>
                             
-                            {stepStatus !== 'correct' ? (
-                                <>
-                                    <div className="flex flex-wrap gap-2 justify-center py-3">
-                                      {LOGIC_DATA.concept.teachingSteps[activeStep]?.options?.map((opt, i) => {
-                                          const isSelected = conceptSelectedOption === i;
-                                          const isCorrect = isSelected && isQuizPassed;
-                                          const isWrong = isSelected && feedback.type === 'error';
-                                          
-                                          let btnClass = "bg-black/40 border border-white/10 text-white hover:bg-black/60 hover:scale-105 active:scale-95";
-                                          if (isCorrect) btnClass = "bg-green-600 border-green-400 text-white shadow-lg scale-105";
-                                          else if (isWrong) btnClass = "bg-red-600 border-red-400 text-white shadow-lg";
-                                          else if (isQuizPassed) btnClass = "bg-black/20 border-transparent text-white/30 opacity-50 cursor-not-allowed";
+                            <div className="flex flex-wrap gap-2 justify-center py-3">
+                              {LOGIC_DATA.concept.teachingSteps[activeStep]?.options?.map((opt, i) => {
+                                  const isSelected = conceptSelectedOption === i;
+                                  const isCorrect = isSelected && isQuizPassed;
+                                  const isWrong = isSelected && feedback.type === 'error';
+                                  
+                                  let btnClass = "bg-black/40 border border-white/10 text-white hover:bg-black/60 hover:scale-105 active:scale-95";
+                                  if (isCorrect) btnClass = "bg-green-600 border-green-400 text-white shadow-lg scale-105";
+                                  else if (isWrong) btnClass = "bg-red-600 border-red-400 text-white shadow-lg";
+                                  else if (isQuizPassed) btnClass = "bg-black/20 border-transparent text-white/30 opacity-50 cursor-not-allowed";
 
-                                          return (
-                                            <button 
-                                                key={i} 
-                                                disabled={isQuizPassed}
-                                                onClick={() => handleSelectionQuiz(i)} 
-                                                className={`px-5 py-3 rounded-xl font-black uppercase text-[12px] transition-all shadow-md border ${btnClass}`}
-                                            >
-                                                {opt}
-                                            </button>
-                                          );
-                                      })}
-                                    </div>
+                                  return (
+                                    <button 
+                                        key={i} 
+                                        disabled={isQuizPassed}
+                                        onClick={() => handleSelectionQuiz(i)} 
+                                        className={`px-5 py-3 rounded-xl font-black uppercase text-[12px] transition-all shadow-md border ${btnClass}`}
+                                    >
+                                        {opt}
+                                    </button>
+                                  );
+                              })}
+                            </div>
+                            
+                            {!isQuizPassed && feedback.type === 'error' && <p className="text-rose-400 text-[13px] font-bold italic animate-pulse text-center leading-tight">"{feedback.reason}"</p>}
+                            
+                            {isQuizPassed && (
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-3 mt-2">
                                     
-                                    {!isQuizPassed && feedback.type === 'error' && <p className="text-rose-400 text-[13px] font-bold italic animate-pulse text-center leading-tight">"{feedback.reason}"</p>}
-                                    
-                                    {isQuizPassed && (
-                                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-3 mt-2">
-                                            
-                                            <div className="flex flex-col rounded-xl overflow-hidden border-2 border-green-500/50 shadow-lg">
-                                                <div className="bg-green-500/10 px-4 py-3 border-b border-green-500/20">
-                                                    <p className="text-green-400 text-[13px] font-medium leading-tight">
-                                                        <strong className="uppercase tracking-widest text-[10px] block mb-1 text-green-500">Logic Confirmed</strong>
-                                                        "{feedback.reason}"
-                                                    </p>
+                                    <div className="flex flex-col rounded-xl overflow-hidden border-2 border-green-500/50 shadow-lg">
+                                        <div className="bg-green-500/10 px-4 py-3 border-b border-green-500/20">
+                                            <p className="text-green-400 text-[13px] font-medium leading-tight">
+                                                <strong className="uppercase tracking-widest text-[10px] block mb-1 text-green-500">Logic Confirmed</strong>
+                                                "{feedback.reason}"
+                                            </p>
+                                        </div>
+                                        {LOGIC_DATA.concept.teachingSteps[activeStep]?.instruction && (
+                                            <div className="bg-yellow-400/10 p-4 flex gap-3 items-start">
+                                                <MousePointer2 size={24} className="text-yellow-400 shrink-0 mt-0.5" />
+                                                <div className="flex flex-col">
+                                                    <span className="text-yellow-400 font-black uppercase text-[10px] tracking-widest mb-1">Required Action</span>
+                                                    <span className="text-white text-[14px] font-bold tracking-tight leading-snug">
+                                                        {LOGIC_DATA.concept.teachingSteps[activeStep]?.instruction}
+                                                    </span>
                                                 </div>
-                                                {LOGIC_DATA.concept.teachingSteps[activeStep]?.instruction && (
-                                                    <div className="bg-yellow-400/10 p-4 flex gap-3 items-start">
-                                                        <MousePointer2 size={24} className="text-yellow-400 shrink-0 mt-0.5" />
-                                                        <div className="flex flex-col">
-                                                            <span className="text-yellow-400 font-black uppercase text-[10px] tracking-widest mb-1">Required Action</span>
-                                                            <span className="text-white text-[14px] font-bold tracking-tight leading-snug">
-                                                                {LOGIC_DATA.concept.teachingSteps[activeStep]?.instruction}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                )}
                                             </div>
+                                        )}
+                                    </div>
 
-                                            {isBoardValid ? (
-                                                <button onClick={nextStep} className="w-full py-4 rounded-full font-black uppercase text-[14px] tracking-widest transition-all bg-green-600 text-white shadow-[0_0_20px_rgba(34,197,94,0.4)] border-2 border-green-400 hover:scale-105 active:scale-95 mt-2">
-                                                    {activeStep === LOGIC_DATA.concept.teachingSteps.length - 1 ? 'Finish Concept Mode' : 'Proceed to Next Step'}
-                                                </button>
-                                            ) : (
-                                                <button disabled={true} className="w-full py-4 rounded-full font-black uppercase text-[14px] tracking-widest transition-all mt-2 bg-white/5 text-white/30 cursor-not-allowed border-2 border-white/10">
-                                                    Complete Action in Construction Zone
-                                                </button>
-                                            )}
-                                            {actionError && <p className="text-rose-400 text-[13px] font-bold italic animate-pulse text-center leading-tight mt-1">"{actionError}"</p>}
-                                        </motion.div>
-                                    )}
-                                </>
-                            ) : (
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-4 mt-2 h-full">
-                                   
-                                   {/* Keep the options visible but disabled */}
-                                   <div className="flex flex-wrap gap-2 justify-center py-3">
-                                      {LOGIC_DATA.concept.teachingSteps[activeStep]?.options?.map((opt, i) => {
-                                          const isCorrect = conceptSelectedOption === i;
-                                          let btnClass = isCorrect ? "bg-green-600 border-green-400 text-white shadow-lg scale-105" : "bg-black/20 border-transparent text-white/30 opacity-50 cursor-not-allowed";
-                                          return (
-                                            <button key={i} disabled={true} className={`px-5 py-3 rounded-xl font-black uppercase text-[12px] transition-all shadow-md border ${btnClass}`}>
-                                                {opt}
+                                    {isBoardValid ? (
+                                        <button onClick={nextStep} className="w-full py-4 rounded-full font-black uppercase text-[14px] tracking-widest transition-all bg-green-600 text-white shadow-[0_0_20px_rgba(34,197,94,0.4)] border-2 border-green-400 hover:scale-105 active:scale-95 mt-2">
+                                            {activeStep === LOGIC_DATA.concept.teachingSteps.length - 1 ? 'Finish Concept Mode' : 'Proceed to Next Step'}
+                                        </button>
+                                    ) : (
+                                        <div className="flex flex-col gap-1 mt-2">
+                                            <button disabled={true} className="w-full py-4 rounded-full font-black uppercase text-[14px] tracking-widest transition-all bg-white/5 text-white/30 cursor-not-allowed border-2 border-white/10">
+                                                {LOGIC_DATA.concept.teachingSteps[activeStep]?.maxSlots > 0 ? "Complete Action in Construction Zone" : "Read Above to Proceed"}
                                             </button>
-                                          );
-                                      })}
-                                   </div>
-
-                                   <div className="bg-green-400/10 border border-green-400/30 p-4 rounded-xl flex items-start gap-3 mt-auto">
-                                       <CheckCircleIcon />
-                                       <div>
-                                           <p className="text-green-400 font-black text-[12px] uppercase tracking-widest mb-1">Step Completed</p>
-                                           <p className="text-white text-[14px] font-medium leading-snug">"{LOGIC_DATA.concept.teachingSteps[activeStep]?.why}"</p>
-                                       </div>
-                                   </div>
-                                   
-                                   <button onClick={nextStep} className={`w-full py-4 rounded-full font-black uppercase text-[14px] tracking-widest transition-all bg-green-600 text-white shadow-[0_0_20px_rgba(34,197,94,0.4)] border-2 border-green-400 hover:scale-105 active:scale-95`}>
-                                       {activeStep === LOGIC_DATA.concept.teachingSteps.length - 1 ? 'Finish Concept Mode' : 'Proceed to Next Step'}
-                                   </button>
+                                            {actionError && <p className="text-rose-400 text-[13px] font-bold italic animate-pulse text-center leading-tight mt-1">"{actionError}"</p>}
+                                        </div>
+                                    )}
                                 </motion.div>
                             )}
                           </motion.div>
@@ -778,7 +728,7 @@ function LabContent() {
                              <div className="bg-green-400/20 p-6 rounded-xl border border-green-400/50 shadow-lg">
                                 <p className="text-white font-bold text-[16px] uppercase tracking-widest">All Rules Proved!</p>
                                 <p className="text-white text-[14px] mt-2 tracking-tight leading-tight">
-                                    You've successfully mapped the complex relative directions to find the exact total. Time for the final reasoning quiz!
+                                    You've successfully mapped the complex distribution ratios and found the exact relative groups! Time for the final quiz!
                                 </p>
                              </div>
                              <button onClick={() => setQuizMode(true)} className={`w-full py-4 rounded-full font-black uppercase shadow-xl transition-all text-[14px] bg-green-600 text-white hover:scale-105 tracking-widest`}>
@@ -792,7 +742,7 @@ function LabContent() {
                                  <div className="bg-green-400/20 p-6 rounded-2xl border border-green-400/50 shadow-lg w-full max-w-lg">
                                     <p className="text-white font-bold text-[16px] uppercase tracking-widest">Independent Construction</p>
                                     <p className="text-white text-[14px] mt-2 tracking-tight leading-tight">
-                                        Read the Logic Problem on the left. Construct the ORIGINAL scenario (before any swapping happens) using the Add buttons and the palette!
+                                        Read the Logic Problem on the left. Construct the ORIGINAL scenario using the Add buttons and the palette!
                                     </p>
                                  </div>
                                  <button onClick={validatePractice} disabled={stepStatus !== 'correct'} className={`w-full max-w-lg py-4 rounded-full font-black uppercase shadow-xl transition-all text-[14px] ${stepStatus === 'correct' ? 'bg-green-600 text-white hover:scale-105 tracking-widest shadow-[0_0_20px_rgba(34,197,94,0.4)]' : 'bg-white/5 text-white/20 cursor-not-allowed border-2 border-white/10' }`}>
@@ -827,4 +777,4 @@ function CheckCircleIcon() {
     )
 }
 
-export default function App() { return ( <Router> <LabContent /> </Router> ); }
+// export default function App() { return ( <Router> <LabContent /> </Router> ); }

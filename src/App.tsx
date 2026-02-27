@@ -163,7 +163,20 @@ from
 import {
   ORAscendingDescendingRouter,
   ORAscendingDescendingWeightRouter,
-  ORAscendingDescendingFollowInstrRouter
+  ORAscendingDescendingFollowInstrRouter,
+  ORAscendingHeightTallShortRouter,
+  ORAscendingDescendingComplexRouter,
+  ORAscendingDescendingMultiScenarioNoFixRouter,
+  ORAscendingDescendingClubbingInstructionsRouter,
+  ORNumberOfPersonsRouter,
+  ORNumberOfPersonsShiftingRouter,
+  ORNumberOfPersonIfBothLeftRightRouter,
+  ORNOPRelativePositionForTwoUsersRouter,
+  ORNOPPeopleWithDiffSideRouter,
+  ORNOPMultiPeopleRouter,
+  ORNOPPeopleInterchangePosRouter,
+  ORNOPWhoAnchorRouter,
+  ORNOPClassRatioRouter
 }
 from 
 "./x-tars/courses/Learn/LogicalReasoning/OrderAndRanking/OrderAndRankingRouterWrapper"
@@ -366,7 +379,20 @@ export default function App() {
               <Route path="/learn/logicalReasoning/orderRanking/ORAscendingDescending/" element={<ORAscendingDescendingRouter />} />
               <Route path="/learn/logicalReasoning/orderRanking/ORAscendingDescendingWeight/" element={<ORAscendingDescendingWeightRouter />} />
               <Route path="/learn/logicalReasoning/orderRanking/ORAscendingDescendingInstruction/" element={<ORAscendingDescendingFollowInstrRouter />} />
-              
+              <Route path="/learn/logicalReasoning/orderRanking/ORHeightTallShort" element={<ORAscendingHeightTallShortRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORComplexInstructions" element={<ORAscendingDescendingComplexRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORNoFixPosition" element={<ORAscendingDescendingMultiScenarioNoFixRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORUseMultipleInstruction" element={<ORAscendingDescendingClubbingInstructionsRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORNumberOfPersonsIntro" element={<ORNumberOfPersonsRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORNumberOfPersonsShifting" element={<ORNumberOfPersonsShiftingRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORNOPBothLeftRight" element={<ORNumberOfPersonIfBothLeftRightRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORNOPRelativePos" element={<ORNOPRelativePositionForTwoUsersRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORNOPMultiPeopleDiffSides" element={<ORNOPPeopleWithDiffSideRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORNOPMultiPeople" element={<ORNOPMultiPeopleRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORNOPPeopleInterchangePos" element={<ORNOPPeopleInterchangePosRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORNOPMultiAnchor" element={<ORNOPWhoAnchorRouter />} />
+              <Route path="/learn/logicalReasoning/orderRanking/ORNOPClassRatio" element={<ORNOPClassRatioRouter />} />
+
               
               
             
