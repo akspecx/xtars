@@ -236,7 +236,7 @@ const describeArc = (x, y, radius, startAngle, endAngle) => {
 };
 
 
-function LabContent() {
+export default function LabContent() {
   const navigate = useNavigate();
   const [appMode, setAppMode] = useState('concept');
   const [conceptPhase, setConceptPhase] = useState('selecting'); 
@@ -901,4 +901,4 @@ function CheckCircleIcon() {
     )
 }
 
-export default function App() { return ( <Router> <LabContent /> </Router> ); }
+// export default function App() { return ( <Router> <LabContent /> </Router> ); }

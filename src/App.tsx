@@ -141,7 +141,8 @@ import {
 
 import{LinearArrangementMainRouter,
   BloodRelationsMainRouter,
-  OrderAndRankingMainRouter
+  OrderAndRankingMainRouter,
+  ClockMainRouter
 
 }
 from "./x-tars/courses/Learn/LogicalReasoning/LogicalReasoningRouterWrapper"
@@ -181,6 +182,21 @@ import {
 from 
 "./x-tars/courses/Learn/LogicalReasoning/OrderAndRanking/OrderAndRankingRouterWrapper"
 
+import 
+{ClockIntroductionRouter,
+  ClockHourHandRotationRouter,
+  HMHandRotationRouter,
+  AngleBetweenHMHandRouter,
+  ReflexAngleRouter,
+  HMHandOverlapRouter,
+  HMHandAt90Router,
+  HMHandStraightLineRouter,
+  HMHandOverlapAgainRouter,
+  HMHandErrorRouter,
+  HMHandCertainAnglesInDayRouter,
+  HMHandErrorRecoveryRouter
+}
+from "./x-tars/courses/Learn/LogicalReasoning/Clock/ClockRouterWrapper"
 
 
 
@@ -263,7 +279,8 @@ from "./x-tars/courses/Learn/LearnModuleWrapper"
 
 import 
 {
-  BarChartMainRouter
+  BarChartMainRouter,
+  LineChartMainRouter
 }
 from "./x-tars/courses/Learn/DataInterpretation/DIRouterWrapper"
 
@@ -286,6 +303,16 @@ import
   AdvancedBarChartTradeTwoRouter
 }
 from "./x-tars/courses/Learn/DataInterpretation/BarChart/BarChartRouterWrapper"
+
+import 
+{
+  LineChartIntroRouter,
+  LineChartCreateRouter,
+  LineChartDiffSmallRouter
+  
+}
+from "./x-tars/courses/Learn/DataInterpretation/LineChart/LineChartRouterWrapper"
+
 
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -393,9 +420,20 @@ export default function App() {
               <Route path="/learn/logicalReasoning/orderRanking/ORNOPMultiAnchor" element={<ORNOPWhoAnchorRouter />} />
               <Route path="/learn/logicalReasoning/orderRanking/ORNOPClassRatio" element={<ORNOPClassRatioRouter />} />
 
-              
-              
-            
+              <Route path="/learn/logicalreasoning/clock" element={<ClockMainRouter />} />
+              <Route path="/learn/logicalReasoning/clock/introduction" element={<ClockIntroductionRouter />} />
+              <Route path="/learn/logicalReasoning/clock/hourhandRotation" element={<ClockHourHandRotationRouter />} />
+              <Route path="/learn/logicalReasoning/clock/hmHandRotation" element={<HMHandRotationRouter />} />
+              <Route path="/learn/logicalReasoning/clock/anglebetweenHMHand" element={<AngleBetweenHMHandRouter />} />
+              <Route path="/learn/logicalReasoning/clock/reflexAngle" element={<ReflexAngleRouter />} />
+              <Route path="/learn/logicalReasoning/clock/hmHandOverlap" element={<HMHandOverlapRouter />} />
+              <Route path="/learn/logicalReasoning/clock/hmHandAt90" element={<HMHandAt90Router />} />
+              <Route path="/learn/logicalReasoning/clock/hmHandStraightLine" element={<HMHandStraightLineRouter />} />
+              <Route path="/learn/logicalReasoning/clock/hmHandOverlapAgain" element={<HMHandOverlapAgainRouter />} />
+              <Route path="/learn/logicalReasoning/clock/hmHandError" element={<HMHandErrorRouter />} />
+              <Route path="/learn/logicalReasoning/clock/hmHandCertainAnglesInDay" element={<HMHandCertainAnglesInDayRouter />} />
+              <Route path="/learn/logicalReasoning/clock/hmHandErrorRecovery" element={<HMHandErrorRecoveryRouter />} />
+
               <Route path="/learn/dataInterpretation" element={<DataInterpretationMainRouter />} />
               <Route path="/learn/dataInterpretation/barChart" element={<BarChartMainRouter />} />
               <Route path="/learn/dataInterpretation/barChart/introduction" element={<BarChartIntroRouter />} />
@@ -418,7 +456,13 @@ export default function App() {
               <Route path="/learn/dataInterpretation/barChart/tradeBarChart" element={<AdvancedBarChartTradeTwoRouter />} />
 
               
-              
+               <Route path="/learn/dataInterpretation/lineChart" element={<LineChartMainRouter />} />
+               <Route path="/learn/dataInterpretation/lineChart/introduction" element={<LineChartIntroRouter />} />
+                <Route path="/learn/dataInterpretation/lineChart/create" element={<LineChartCreateRouter />} />
+                <Route path="/learn/dataInterpretation/lineChart/diffSmall" element={<LineChartDiffSmallRouter />} />
+                
+
+               
 
               {/* Games */}
               <Route path="/games" element={<GamesHome />} />

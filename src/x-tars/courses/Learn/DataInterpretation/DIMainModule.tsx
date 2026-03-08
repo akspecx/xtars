@@ -16,8 +16,8 @@ import NumberGameCard from "../../CommonUtility/CardsUtility"
 const USER_NAME = "Prabhat"; 
 
 const LEARN_SUB_MODULES = [
-   { id: "barGraph", title: "Bar Chart", subtitle: "Let's learn the linear arrangement", icon: "📊", gradient: "from-indigo-500 to-purple-500", path: "/learn/dataInterpretation/barChart"}
-//    { id: "logicalReasoning", title: "Logical Reasoning✅", subtitle: "Can we solve the arrangements?", icon: "👥🔄↔️", gradient: "from-indigo-500 to-purple-500", path: "/learn/logicalreasoning" }
+   { id: "barGraph", title: "Bar Chart", subtitle: "Let's learn the bar chart", icon: "📊", gradient: "from-indigo-500 to-purple-500", path: "/learn/dataInterpretation/barChart"},
+   { id: "lineChart", title: "Line Chart", subtitle: "Let's get into the line chart?", icon: "📈", gradient: "from-indigo-500 to-purple-500", path: "/learn/dataInterpretation/lineChart" }
 //    { id: "identification", title: "The Sacred Game ✅", subtitle: "Can you offer flowers correctly?", icon: "🛕", gradient: "from-indigo-500 to-purple-500", path: "/puzzles/sacredGame" }
 //   // { id: "counting", title: "Count On Your Body", subtitle: "Learn numbers with body-part examples", icon: "🤗", gradient: "from-rose-500 to-amber-500", path: "/puzzles/counting", type: 'numeric' },
 //   // { id: "tracing", title: "Trace the Numbers ✅", subtitle: "Practice drawing numbers with dotted guides", icon: "✍️", gradient: "from-sky-500 to-blue-500", path: "/puzzles/tracing", type: 'numeric' },

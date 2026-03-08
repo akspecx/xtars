@@ -8,14 +8,14 @@ import {
   BookOpen,
   HelpCircle,
   Zap,
-  ArrowUpRight,
   Compass,
   Info,
   MousePointer2,
   Eye,
   FileText,
-  Clock,
-  ArrowLeft
+  TrendingUp,
+  ArrowLeft,
+  Table as TableIcon
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
 
@@ -56,141 +56,192 @@ function HeaderSection({ onBack, title, appMode, setAppMode, onReset }) {
 const LOGIC_DATA = {
   concept: {
     coreDefinition: {
-        title: "Concept: Right Angles in a Day",
-        text: "The hands of a clock are at right angles (90°) twice every hour.\n\n• Expected in 12 hours: 24 times.\n• EXCEPTIONS: At exactly 3:00 and 9:00, the right angle is shared between the preceding and succeeding hours.\n• So, we subtract 2. There are 22 right angles every 12 hours.\n• In a 24-hour day: 22 × 2 = 44 times."
+        title: "Concept: The Line Chart",
+        text: "Things constantly change over time! A Line Chart connects data points over time to clearly visualize these changes.\n\n• The horizontal (bottom) axis tracks categories or time.\n• The vertical (side) axis tracks the measured value."
     },
-    question: "How many times are the hands of a clock at right angle in a day?",
+    question: "Let's learn how to build and read a Line Chart by tracking a student's height from 6th grade to 10th grade!",
     clues: [
-      { id: 1, step: 0, concept: "Hourly Count", explanation: "In most hours, the minute hand is 15 minutes behind the hour hand, and later 15 minutes ahead of it, creating 2 right angles.", text: "Determine how many right angles occur in a standard hour." },
-      { id: 2, step: 1, concept: "The Exceptions", explanation: "Between 2:00 and 4:00 there are only 3 right angles (not 4) because exactly 3:00 is shared. The same happens between 8:00 and 10:00 with 9:00.", text: "Identify the boundary times that reduce the count." },
-      { id: 3, step: 2, concept: "12-Hour Total", explanation: "Instead of 24, we subtract the 2 overlap exceptions (3:00 and 9:00), leaving 22 right angles in 12 hours.", text: "Calculate the total for half a day." },
-      { id: 4, step: 3, concept: "24-Hour Total", explanation: "Simply double the 12-hour count to find the total for a full 24-hour day.", text: "Calculate the grand total." }
+      { id: 1, step: 0, concept: "Daily Changes", explanation: "Temperature fluctuates throughout the day, rising in the morning and dropping at night.", text: "Realize that temperature is not constant." },
+      { id: 2, step: 1, concept: "Performance Variance", explanation: "Test marks change because your performance varies. We need a way to track this variance.", text: "Realize that test marks are not constant." },
+      { id: 3, step: 2, concept: "Continuous Growth", explanation: "Plants grow over time, meaning their height is a variable that constantly increases.", text: "Realize that plant height is not constant." },
+      { id: 4, step: 3, concept: "The First Point", explanation: "We have our first data point: 60 cm in 6th grade. We plot this value vertically aligned with 6th grade.", text: "Plot the starting value." },
+      { id: 5, step: 4, concept: "Connecting Dots", explanation: "By 8th grade, he is 80 cm. We plot the new point and draw a line connecting them.", text: "See how connecting points reveals the direction of change." },
+      { id: 6, step: 5, concept: "Extending the Line", explanation: "By 10th grade, he is 100 cm. We plot the final point and extend the line to see the complete growth journey.", text: "Plot the final point to complete the data set." },
+      { id: 7, step: 6, concept: "Reading Data", explanation: "Look where the dot aligns horizontally to find the grade, and vertically to find the exact height in cm.", text: "Extract values directly from the chart." },
+      { id: 8, step: 7, concept: "Tracking Progress", explanation: "By checking different points, we can see exactly what the value was at any given moment in time.", text: "Read another specific data point." }
     ],
     teachingSteps: [
       { 
         id: "step-1",
-        selectionPrompt: "Step 1: Hourly Frequency. In one complete hour, how many times do the minute and hour hands form a 90° right angle?",
-        options: ["1 time", "2 times", "4 times"],
+        selectionPrompt: "Step 1: Temperature. Think about the world around you. Does the temperature stay exactly the same all day long?",
+        options: ["Yes, it's always the same.", "No, it changes from morning to night."],
         correct: 1,
-        feedback: [
-          "They overlap 1 time, but they form a right angle more often.",
-          "Correct! They form a 90° angle once when the minute hand is behind, and once when it is ahead.",
-          "That's too many for a single hour."
-        ],
-        why: "In a standard hour, the minute hand passes the hour hand once, hitting a 90° angle on approach and departure.",
-        instruction: "Logic Confirmed. Proceed to the next step.",
+        feedback: ["Not quite! A morning is much cooler than the afternoon.", "Exactly! The temperature goes up and down throughout the day."],
+        why: "Temperature is a variable that constantly changes over time.",
+        instruction: "Logic Confirmed. Proceed to the next question.",
         requiredActionState: 'none'
       },
       { 
         id: "step-2",
-        selectionPrompt: "Step 2: The Exceptions. If they form 2 right angles per hour, we'd expect 24 right angles in 12 hours. However, two specific hours 'share' a right angle exactly on the hour mark. Which times are these?",
-        options: ["12:00 and 6:00", "3:00 and 9:00", "1:00 and 7:00"],
+        selectionPrompt: "Step 2: Test Marks. What about your test marks? Do you score exactly the same on every single test you take?",
+        options: ["Yes, my marks never change.", "No, my marks go up and down depending on the test."],
         correct: 1,
-        feedback: [
-          "12:00 is an overlap exception, and 6:00 is a straight line exception.",
-          "Exactly! At precisely 3:00 and 9:00, the hands form a perfect 90° angle, meaning the intervals around them only have 3 right angles instead of 4.",
-          "These times don't form 90° angles on the hour."
-        ],
-        why: "3:00 and 9:00 are perfect 90° alignments, eliminating the 'second' right angle for those specific hour blocks.",
-        instruction: "Click 'Show 3:00 Exception' to visualize the first shared angle.",
-        requiredActionState: 'show_three_oclock'
+        feedback: ["That would be highly unusual!", "Correct! Your performance varies from test to test."],
+        why: "Test scores are another example of data that changes over sequential events.",
+        instruction: "Logic Confirmed. Proceed to the next question.",
+        requiredActionState: 'none'
       },
       { 
         id: "step-3",
-        selectionPrompt: "Step 3: 12-Hour Count. Because exactly 3:00 and 9:00 are shared, we lose 2 right angles from our expected 24. How many times are they at a right angle in a 12-hour period?",
-        options: ["20 times", "22 times", "24 times"],
-        correct: 1,
-        feedback: [
-          "We only subtract 2 exceptions.",
-          "Correct! 24 expected - 2 exceptions = 22 times every 12 hours.",
-          "Remember to subtract the 2 exceptions!"
-        ],
-        why: "12 hours × 2 per hour = 24. Minus 2 exceptions = 22.",
-        instruction: "Click 'Show 9:00 Exception' to visualize the second shared angle.",
-        requiredActionState: 'show_nine_oclock'
+        selectionPrompt: "Step 3: Plant Height. Does a plant's height stay the same every week?",
+        options: ["No, it grows taller over time.", "Yes, it never changes size."],
+        correct: 0,
+        feedback: ["Exactly! As weeks pass, the plant's height increases.", "Only if it's an artificial plant!"],
+        why: "Growth is a continuous change over a period of time.",
+        instruction: "Logic Confirmed. Let's see how we visualize this kind of data.",
+        requiredActionState: 'none'
       },
       { 
         id: "step-4",
-        selectionPrompt: "Step 4: The Full Day. If the hands form 22 right angles in 12 hours, how many times do they form a right angle in a full 24-hour day?",
-        options: ["44 times", "46 times", "48 times"],
-        correct: 0,
-        feedback: [
-          "Exactly! 22 × 2 = 44 times. The hands of a clock are at right angles 44 times a day!",
-          "That would be true if there was only 1 exception per 12 hours.",
-          "That assumes 24 right angles per 12 hours with no exceptions."
-        ],
-        why: "22 right angles per 12 hours × 2 cycles per day = 44 right angles total.",
-        instruction: "Click 'Reveal Answer' to finalize the concept!",
-        requiredActionState: 'reveal_final_answer'
-      }
-    ],
-    postQuiz: [
-      { 
-        q: "How many times do the hands of a clock OVERLAP (0°) in a full day?", 
-        options: ["22 times", "24 times", "44 times"], 
-        correct: 0, 
-        explanation: "They overlap 1 time per hour, with 1 exception at 12:00. So 11 times in 12 hours, which is 22 times a day."
+        noQuiz: true,
+        selectionPrompt: "Step 4: Building the Chart. Let's see how we visually track data! We will map the height of a student in 6th, 8th, and 10th grade. First, let's assume his height in 6th grade is 60 cm.",
+        instruction: "Click 'View Chart' to plot the first point for the 6th grade.",
+        requiredActionState: 'plot_6',
+        buttonText: 'View Chart',
+        buttonStyle: 'bg-indigo-600 text-white',
+        why: "A single data point perfectly maps the category (6th grade) to the value (60 cm)."
       },
       { 
-        q: "How many times are the hands of a clock in a STRAIGHT LINE (180°) in a full day?", 
-        options: ["22 times", "24 times", "44 times"], 
-        correct: 0, 
-        explanation: "They form a straight line 1 time per hour, with 1 exception at 6:00. So 11 times in 12 hours, which is 22 times a day."
+        id: "step-5",
+        noQuiz: true,
+        selectionPrompt: "Step 5: Expanding the Chart. When he is in 8th grade, let's say his height has increased to 80 cm.",
+        instruction: "Click 'Extend Chart' to draw the 8th grade data.",
+        requiredActionState: 'plot_8',
+        buttonText: 'Extend Chart',
+        buttonStyle: 'bg-emerald-600 text-white',
+        why: "Connecting sequential points with a line reveals the visual trend."
+      },
+      { 
+        id: "step-6",
+        noQuiz: true,
+        selectionPrompt: "Step 6: Completing the Chart. Finally, by 10th grade, his height reaches 100 cm.",
+        instruction: "Click 'Complete Chart' to finish the data mapping.",
+        requiredActionState: 'plot_10',
+        buttonText: 'Complete Chart',
+        buttonStyle: 'bg-rose-600 text-white',
+        why: "As the values continue to increase, the line continues to stretch upwards."
+      },
+      { 
+        id: "step-7",
+        selectionPrompt: "What is the height of the user in class 8th?",
+        options: ["60 cm", "80 cm", "100 cm"],
+        correct: 1,
+        feedback: [
+          "Incorrect! That was his height in the 6th grade.",
+          "Exactly! If you find '8th' on the bottom and go up to the dot, it perfectly aligns with 80 cm.",
+          "Incorrect! That was his height in the 10th grade."
+        ],
+        why: "A data point perfectly intersects its horizontal category and its vertical value.",
+        instruction: "Logic Confirmed. Proceed to the final step.",
+        requiredActionState: 'none',
+        inspection: { type: 'guess_y', xIndex: 1, yVals: [60, 80, 100] } // 8th grade is index 1
+      },
+      { 
+        id: "step-8",
+        selectionPrompt: "What was his height in the 10th class?",
+        options: ["60 cm", "80 cm", "100 cm"],
+        correct: 2,
+        feedback: [
+          "Incorrect! Follow the tracking lines up from 10th grade.",
+          "Incorrect! That was his height in the 8th grade.",
+          "Perfect! The dot above 10th grade aligns directly with 100 cm on the vertical axis."
+        ],
+        why: "Chart reading relies on finding the exact intersection of the axes for any given dot.",
+        instruction: "Chart reading mastered! You are ready for the practice scenarios.",
+        requiredActionState: 'none',
+        inspection: { type: 'guess_y', xIndex: 2, yVals: [60, 80, 100] } // 10th grade is index 2
       }
-    ]
+    ],
+    postQuiz: []
   },
   practice: {
     coreDefinition: {
-        title: "Concept: Alignments in a Day",
-        text: "Special clock alignments don't perfectly multiply by 24 because of shared hour marks!\n\n• Overlaps (0°): 22 times a day (Exception: 12:00).\n• Straight Lines (180°): 22 times a day (Exception: 6:00).\n• Right Angles (90°): 44 times a day (Exceptions: 3:00 & 9:00)."
+        title: "Concept: Reading Line Charts",
+        text: "Line charts tell a story visually.\n\n• Look where the dot aligns horizontally to find the Time/Category.\n• Look where the dot aligns vertically to find the measured Value."
     },
     practiceQuestions: [
       { 
-        timeStr: "Right Angles (24 Hrs)",
-        q: "How many times are the hands of a clock at right angle in a day?",
-        options: ["22 times", "24 times", "44 times"], correct: 2, 
-        correctText: "44 TIMES",
-        explanation: "Right angles happen twice an hour. 24 times expected in 12 hrs, minus exceptions at 3:00 and 9:00 = 22 times. Double it for 24 hours: 44 times."
+        scenario: "temperature",
+        chartData: {
+            xLabels: ["8 AM", "11 AM", "2 PM", "5 PM", "8 PM"],
+            values: [15, 25, 30, 20, 10],
+            yMin: 0, yMax: 40, yTickCount: 5,
+            xLabelTitle: "Time of Day", yLabelTitle: "Temp (°C)"
+        },
+        q: "Looking at the Temperature chart, at what exact time was the temperature 20°C?",
+        options: ["11 AM", "2 PM", "5 PM"], correct: 2, 
+        correctText: "20°C AT 5 PM",
+        explanation: "The dot aligned horizontally with 20°C drops straight down to 5 PM.",
+        inspection: { type: 'guess_x', yVal: 20, xIndices: [1, 2, 3] } // 11AM is 1, 2PM is 2, 5PM is 3
       },
       { 
-        timeStr: "Overlaps (24 Hrs)",
-        q: "How many times do the hands of a clock coincide (overlap) in a single day?",
-        options: ["22 times", "24 times", "44 times"], correct: 0, 
-        correctText: "22 TIMES",
-        explanation: "Overlaps occur once an hour. But between 11:00 and 1:00, they only overlap once (at 12:00 exactly). 11 times in 12 hrs, so 22 times a day."
+        scenario: "marks",
+        chartData: {
+            xLabels: ["Test 1", "Test 2", "Test 3", "Test 4", "Test 5"],
+            values: [70, 60, 85, 95, 95],
+            yMin: 40, yMax: 100, yTickCount: 4,
+            xLabelTitle: "Exams", yLabelTitle: "Marks"
+        },
+        q: "Analyze the Marks chart. What was the student's exact score on Test 3?",
+        options: ["60 marks", "85 marks", "95 marks"], correct: 1, 
+        correctText: "85 MARKS ON TEST 3",
+        explanation: "Following the vertical line up from Test 3, the dot aligns with 85 on the left.",
+        inspection: { type: 'guess_y', xIndex: 2, yVals: [60, 85, 95] } 
       },
       { 
-        timeStr: "Straight Lines (12 Hrs)",
-        q: "How many times are the hands in a straight line (180° apart) in 12 hours?",
-        options: ["11 times", "12 times", "22 times"], correct: 0, 
-        correctText: "11 TIMES",
-        explanation: "Straight lines happen once an hour. But between 5:00 and 7:00, they only align once (at exactly 6:00). So, 12 - 1 exception = 11 times."
+        scenario: "plant",
+        chartData: {
+            xLabels: ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"],
+            values: [5, 12, 18, 25, 30],
+            yMin: 0, yMax: 40, yTickCount: 5,
+            xLabelTitle: "Weeks", yLabelTitle: "Height (cm)"
+        },
+        q: "Look at the Plant Height chart. In which week was the plant exactly 25 cm tall?",
+        options: ["Week 3", "Week 4", "Week 5"], correct: 1, 
+        correctText: "25 CM AT WEEK 4",
+        explanation: "The dot resting exactly on the 25 cm line drops down to Week 4.",
+        inspection: { type: 'guess_x', yVal: 25, xIndices: [2, 3, 4] } 
       },
       { 
-        timeStr: "Right Angles (6 Hrs)",
-        q: "How many times do the hands form a right angle between 2:00 PM and 8:00 PM?",
-        options: ["10 times", "11 times", "12 times"], correct: 1, 
-        correctText: "11 TIMES",
-        explanation: "Total of 6 hours. Expected right angles = 6 × 2 = 12. However, this interval contains 3:00 (an exception), so we subtract 1. 12 - 1 = 11 times."
+        scenario: "temperature_drop",
+        chartData: {
+            xLabels: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5"],
+            values: [102, 101, 99, 98, 98],
+            yMin: 96, yMax: 104, yTickCount: 5,
+            xLabelTitle: "Days", yLabelTitle: "Fever (°F)"
+        },
+        q: "This chart tracks a patient's fever. What was the exact temperature reading on Day 2?",
+        options: ["102 °F", "101 °F", "99 °F"], correct: 1, 
+        correctText: "101°F ON DAY 2",
+        explanation: "Following the line up from Day 2 shows the point rests on the 101°F mark.",
+        inspection: { type: 'guess_y', xIndex: 1, yVals: [102, 101, 99] } 
       },
       { 
-        timeStr: "Straight Lines (6 Hrs)",
-        q: "How many times do the hands form a straight line between 4:00 PM and 10:00 PM?",
-        options: ["5 times", "6 times", "7 times"], correct: 0, 
-        correctText: "5 TIMES",
-        explanation: "Total of 6 hours. Expected straight lines = 6. This interval contains the 6:00 exception (shared between 5-6 and 6-7). So we subtract 1. 6 - 1 = 5 times."
+        scenario: "sales",
+        chartData: {
+            xLabels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+            values: [10, 30, 20, 40, 50],
+            yMin: 0, yMax: 60, yTickCount: 4,
+            xLabelTitle: "Days", yLabelTitle: "Sales"
+        },
+        q: "Look at the Lemonade Sales chart. On which day were exactly 40 lemonades sold?",
+        options: ["Tuesday", "Wednesday", "Thursday"], correct: 2, 
+        correctText: "40 SALES ON THURSDAY",
+        explanation: "The point resting exactly on the 40 sales line maps straight down to Thursday.",
+        inspection: { type: 'guess_x', yVal: 40, xIndices: [1, 2, 3] } // Tue=1, Wed=2, Thu=3
       }
     ]
   }
-};
-
-// --- Math Helpers for SVG Clock ---
-const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
-  const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
-  return {
-    x: centerX + (radius * Math.cos(angleInRadians)),
-    y: centerY + (radius * Math.sin(angleInRadians))
-  };
 };
 
 export default function LabContent() {
@@ -204,9 +255,8 @@ export default function LabContent() {
   const [actionError, setActionError] = useState("");
   const [activeConceptInfo, setActiveConceptInfo] = useState(null);
   
-  // Clock Interaction State
-  // idle (12:00) -> show_three_oclock -> show_nine_oclock -> reveal_final_answer
-  const [clockState, setClockState] = useState('idle'); 
+  // Chart Interaction State
+  const [chartState, setChartState] = useState('idle'); 
 
   const [quizMode, setQuizMode] = useState(false);
   const [quizStep, setQuizStep] = useState(0);
@@ -216,10 +266,16 @@ export default function LabContent() {
   const [lessonFinished, setLessonFinished] = useState(false);
   const [showFinishModal, setShowFinishModal] = useState(false);
   const [shuffledIndices, setShuffledIndices] = useState([0, 1, 2]);
+  
+  // State to track which option the user just clicked, so we can draw guidelines
+  const [lastClickedOrigIdx, setLastClickedOrigIdx] = useState(null);
 
   const containerRef = useRef(null);
 
   const currentScenData = appMode === 'concept' ? LOGIC_DATA.concept : LOGIC_DATA.practice;
+  const currentStepData = quizMode ? null : (LOGIC_DATA.concept.teachingSteps[activeStep] || {});
+  const isNoQuiz = currentStepData?.noQuiz || false;
+
   const currentQuizSet = appMode === 'concept' ? LOGIC_DATA.concept.postQuiz : LOGIC_DATA.practice.practiceQuestions;
 
   // Dynamically shuffle options whenever the question changes
@@ -253,7 +309,7 @@ export default function LabContent() {
     setFeedback({ type: null, msg: "", reason: "" });
     setActionError("");
     setActiveConceptInfo(null);
-    setClockState('idle');
+    setChartState('idle');
     setConceptPhase('selecting');
     setQuizStep(0);
     setQuizSelection(null);
@@ -261,6 +317,7 @@ export default function LabContent() {
     setShowExplanationForIncorrect(false);
     setLessonFinished(false);
     setShowFinishModal(false);
+    setLastClickedOrigIdx(null);
     if (overrideMode === 'practice') {
         setQuizMode(true);
     } else {
@@ -273,19 +330,22 @@ export default function LabContent() {
     handleReset(mode);
   }
 
-  const handleClockButton = (action) => {
+  const handleChartButton = (action) => {
     if (appMode === 'practice' || quizMode || lessonFinished) return;
     
-    if (activeStep !== 0 && feedback.type !== 'success') {
-        setActionError("Please answer the logic question before interacting with the clock.");
+    if (feedback.type !== 'success' && !isNoQuiz) {
+        setActionError("Please answer the logic question before interacting with the chart.");
         return;
     }
-    const expectedAction = LOGIC_DATA.concept.teachingSteps[activeStep]?.requiredActionState;
+    const expectedAction = currentStepData?.requiredActionState;
     if (!expectedAction || expectedAction === 'none') return;
     
     if (action === expectedAction) {
-        setClockState(action);
+        setChartState(action);
         setActionError("");
+        if (isNoQuiz) {
+            setFeedback({ type: 'success', msg: "Chart Updated", reason: "Chart successfully extended." });
+        }
     } else {
         setActionError("That is not the correct action for this step.");
     }
@@ -295,6 +355,8 @@ export default function LabContent() {
     const step = currentScenData.teachingSteps[activeStep];
     if (!step || !step.feedback) return;
     setConceptSelectedOption(idx);
+    setLastClickedOrigIdx(idx);
+    
     const fbReason = step.feedback[idx];
     if (idx === step.correct) {
       setFeedback({ type: 'success', msg: "Logic Applied!", reason: String(fbReason) });
@@ -307,8 +369,9 @@ export default function LabContent() {
 
   function handleQuizSelection(idx) {
     setQuizSelection(idx);
+    setLastClickedOrigIdx(idx);
     setQuizFeedbackMode(true);
-    setShowExplanationForIncorrect(false); // reset explanation view on new selection
+    setShowExplanationForIncorrect(false); 
   }
 
   function prevStep() {
@@ -319,9 +382,10 @@ export default function LabContent() {
       setFeedback({ type: null, msg: "", reason: "" });
       setActionError("");
       setActiveConceptInfo(null);
+      setLastClickedOrigIdx(null);
       
-      const stepToState = ['idle', 'idle', 'show_three_oclock', 'show_nine_oclock'];
-      setClockState(stepToState[newStep] || 'idle');
+      const stepToState = ['idle', 'idle', 'idle', 'idle', 'plot_6', 'plot_8', 'plot_10', 'plot_10'];
+      setChartState(stepToState[newStep] || 'idle');
     }
   }
 
@@ -331,176 +395,301 @@ export default function LabContent() {
       setConceptSelectedOption(null);
       setFeedback({ type: null, msg: "", reason: "" });
       setActionError("");
+      setLastClickedOrigIdx(null);
     } else {
       setConceptPhase('finalCheck');
     }
   }
 
   const isQuizPassed = feedback.type === 'success';
-  const expectedAction = LOGIC_DATA.concept.teachingSteps[activeStep]?.requiredActionState;
-  const isBoardValid = appMode === 'concept' ? (!expectedAction || expectedAction === 'none' || clockState === expectedAction) : false;
+  const expectedAction = currentStepData?.requiredActionState;
+  const isBoardValid = appMode === 'concept' ? (!expectedAction || expectedAction === 'none' || chartState === expectedAction) : false;
 
-  // Explanation logic for Practice Mode / Post Quiz
   const isCorrectAnswer = quizFeedbackMode && quizSelection === currentQuizSet[quizStep]?.correct;
   const shouldShowExplanation = isCorrectAnswer || showExplanationForIncorrect;
 
-  // Determine rotations and arcs
-  let minuteRotation = 0;
-  let hourRotation = 0;
-  let topTag = "";
-  let finalAngleText = "";
-  let showMinute = true;
-  let showHour = true;
+  // ==========================================
+  // CHART RENDERING LOGIC
+  // ==========================================
+  
+  const chartWidth = 340;
+  const chartHeight = 240;
+  const padLeft = 45;
+  const padBottom = 30;
+  const padTop = 20;
+  const padRight = 20;
+  
+  const drawWidth = chartWidth - padLeft - padRight;
+  const drawHeight = chartHeight - padTop - padBottom;
+  
+  const originX = padLeft;
+  const originY = chartHeight - padBottom;
 
+  let yMin = 0;
+  let yMax = 140;
+  let yTickCount = 6;
+  let xLabels = [];
+  let rawValues = [];
+  let yLabelTitle = "";
+  let xLabelTitle = "";
+  
+  // Concept Logic Config
   if (appMode === 'concept') {
-      if (clockState === 'idle') {
-          minuteRotation = 0; // At 12
-          hourRotation = 0; // At 12
-          topTag = "STANDARD CLOCK";
-      }
-      if (clockState === 'show_three_oclock') {
-          minuteRotation = 0; // 12
-          hourRotation = 90; // 3
-          topTag = "1ST EXCEPTION";
-          finalAngleText = "SHARED AT 3:00";
-      }
-      if (clockState === 'show_nine_oclock') {
-          minuteRotation = 0; // 12
-          hourRotation = 270; // 9
-          topTag = "2ND EXCEPTION";
-          finalAngleText = "SHARED AT 9:00";
-      }
-      if (clockState === 'reveal_final_answer') {
-          minuteRotation = 0; 
-          hourRotation = 0; 
-          topTag = "FULL DAY COUNT";
-          finalAngleText = "44 TIMES A DAY!";
-      }
+      yMin = 40;
+      yMax = 120;
+      yTickCount = 5; // Dynamically forms: 40, 60, 80, 100, 120
+      xLabels = ["6th", "8th", "10th"];
+      rawValues = [60, 80, 100];
+      yLabelTitle = "Height (cm)";
+      xLabelTitle = "School Grade";
   } else if (appMode === 'practice') {
-      // Default to 12:00 for the duration of the practice drills
-      minuteRotation = 0;
-      hourRotation = 0;
-      topTag = "PRACTICE MODE";
-      
-      if (isCorrectAnswer) {
-          const currentQ = LOGIC_DATA.practice.practiceQuestions[quizStep];
-          finalAngleText = currentQ?.correctText || "CORRECT!";
+      const pData = currentQuizSet[quizStep]?.chartData;
+      if (pData) {
+          yMin = pData.yMin;
+          yMax = pData.yMax;
+          yTickCount = pData.yTickCount || 5;
+          xLabels = pData.xLabels;
+          rawValues = pData.values;
+          yLabelTitle = pData.yLabelTitle;
+          xLabelTitle = pData.xLabelTitle;
       }
   }
 
-  // Animation settings
-  const isAnimating = (appMode === 'concept' && clockState !== 'idle') || 
-                      (appMode === 'practice' && isCorrectAnswer);
-  
-  const transitionSpec = isAnimating 
-      ? { type: "tween", duration: 0.8, ease: "easeInOut" } 
-      : { duration: 0 };
+  // Calculate coordinates
+  // Use (idx + 1) and (length + 1) to distribute points evenly WITHOUT touching the Y-axis
+  const allPoints = rawValues.map((val, idx) => {
+      const x = originX + ((idx + 1) * (drawWidth / (xLabels.length + 1)));
+      const yRatio = val !== null ? (val - yMin) / (yMax - yMin) : null;
+      const y = val !== null ? originY - (yRatio * drawHeight) : null;
+      return { x, y, val, label: xLabels[idx], idx };
+  });
+
+  // Filter visible points based on state
+  let visiblePoints = [];
+  let showAxes = false;
+  let showTable = false;
+
+  let showRow1 = false;
+  let showRow2 = false;
+  let showRow3 = false;
+
+  if (appMode === 'concept') {
+      if (chartState !== 'idle') {
+          showAxes = true;
+          showTable = true;
+      }
+      
+      // Cascading logic for chart elements
+      if (['plot_6', 'plot_8', 'plot_10'].includes(chartState)) {
+          showRow1 = true;
+          visiblePoints.push(allPoints[0]); // 6th Grade
+      }
+      if (['plot_8', 'plot_10'].includes(chartState)) {
+          showRow2 = true;
+          visiblePoints.push(allPoints[1]); // 8th Grade
+      }
+      if (['plot_10'].includes(chartState)) {
+          showRow3 = true;
+          visiblePoints.push(allPoints[2]); // 10th Grade
+      }
+
+  } else {
+      showAxes = true;
+      visiblePoints = allPoints.filter(p => p.val !== null);
+  }
+
+  const pathD = visiblePoints.length > 0 ? `M ${visiblePoints.map(p => `${p.x} ${p.y}`).join(' L ')}` : "";
+
+  // Dynamic Dotted Guidelines Logic based on User Guess
+  let guideLines = null;
+  if (lastClickedOrigIdx !== null && (chartState === 'plot_10' || appMode === 'practice')) {
+      const stepData = quizMode ? currentQuizSet[quizStep] : LOGIC_DATA.concept.teachingSteps[activeStep];
+      const inspection = stepData?.inspection;
+      
+      if (inspection) {
+          let targetXIndex, targetYVal;
+          
+          if (inspection.type === 'guess_y') {
+              targetXIndex = inspection.xIndex;
+              targetYVal = inspection.yVals[lastClickedOrigIdx];
+          } else if (inspection.type === 'guess_x') {
+              targetXIndex = inspection.xIndices[lastClickedOrigIdx];
+              targetYVal = inspection.yVal;
+          }
+
+          if (targetXIndex !== undefined && targetYVal !== undefined) {
+              const isCorrect = lastClickedOrigIdx === stepData.correct;
+              const xCoord = originX + ((targetXIndex + 1) * (drawWidth / (xLabels.length + 1)));
+              const yRatio = (targetYVal - yMin) / (yMax - yMin);
+              const yCoord = originY - (yRatio * drawHeight);
+              
+              guideLines = { x: xCoord, y: yCoord, color: isCorrect ? '#22c55e' : '#ef4444' };
+          }
+      }
+  }
+
+  let topTag = appMode === 'concept' ? "DATA TRACKING" : "PRACTICE SCENARIO";
+  if (appMode === 'practice' && isCorrectAnswer) {
+      topTag = currentQuizSet[quizStep]?.correctText || "CORRECT!";
+  }
 
   return (
     <div className="min-h-screen w-full bg-[#e6dccb] flex flex-col select-none font-sans text-[14px]" ref={containerRef}>
       <div className="absolute inset-0 opacity-[0.1] pointer-events-none fixed bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" />
 
-      <HeaderSection onBack={() => navigate(-1)} title={appMode === 'concept' ? "Right Angles Lab" : "Clock Frequency Drills"} appMode={appMode} setAppMode={handleSetMode} onReset={() => handleReset(appMode)} />
+      <HeaderSection onBack={() => navigate(-1)} title={appMode === 'concept' ? "Line Chart Lab" : "Data Analysis Drills"} appMode={appMode} setAppMode={handleSetMode} onReset={() => handleReset(appMode)} />
 
       <main className="flex-1 flex flex-col items-center gap-6 sm:gap-8 lg:gap-10 p-3 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto relative z-10 overflow-hidden">
         
-        {/* Div 1: Clock Construction & Visualization */}
+        {/* Div 1: Chart Construction & Visualization */}
         <div className="w-full flex-1 flex flex-col gap-3 min-h-[400px] lg:min-h-[450px]">
-          <motion.div className="w-full h-full bg-[#2a1a16] p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border-2 sm:border-4 border-black shadow-2xl flex flex-col justify-between items-center">
+          <motion.div className="w-full h-full bg-[#2a1a16] p-4 sm:p-6 lg:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border-2 sm:border-4 border-black shadow-2xl flex flex-col justify-between items-center">
             
             <div className="w-full flex flex-col items-center gap-3 h-full">
-                <div className="flex items-center justify-center gap-2 opacity-40 text-[13px] sm:text-[15px] font-black uppercase tracking-widest leading-none mb-2 text-white">
-                    {appMode === 'practice' && <><span className="text-yellow-500 mr-2 bg-yellow-500/20 px-3 py-1 rounded-md">{LOGIC_DATA.practice.practiceQuestions[quizStep]?.timeStr}</span></>}
-                    {quizMode ? <><Eye size={16} /> Question Simulation</> : <><Clock size={16} /> Construction Zone</>}
+                <div className="flex items-center justify-center gap-2 opacity-40 text-[13px] sm:text-[15px] font-black uppercase tracking-widest leading-none mb-1 text-white">
+                    {quizMode ? <><Eye size={16} /> Chart Interpreter</> : <><TrendingUp size={16} /> Construction Zone</>}
                 </div>
 
-                <div className="bg-white/10 px-4 py-1.5 rounded-full text-white/80 font-black uppercase tracking-widest text-[11px] sm:text-[12px] mb-1">
+                <div className="bg-white/10 px-4 py-1.5 rounded-full text-white/80 font-black uppercase tracking-widest text-[11px] sm:text-[12px] mb-3">
                     {topTag}
                 </div>
                 
-                {/* SVG Clock Area */}
-                <div className="relative bg-[#3e2723] rounded-full border-[8px] border-yellow-500/30 shadow-[inset_0_20px_50px_rgba(0,0,0,0.5),_0_10px_30px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center w-[250px] h-[250px] sm:w-[320px] sm:h-[320px]">
-                  
-                  <svg viewBox="0 0 300 300" className="w-full h-full drop-shadow-2xl">
-                      {/* Inner Clock Face */}
-                      <circle cx="150" cy="150" r="140" fill="#3e2723" />
-                      
-                      {/* Tick Marks */}
-                      {Array.from({length: 60}).map((_, i) => {
-                          const isHour = i % 5 === 0;
-                          const posStart = polarToCartesian(150, 150, isHour ? 135 : 138, i * 6);
-                          const posEnd = polarToCartesian(150, 150, 140, i * 6);
-                          return <line key={i} x1={posStart.x} y1={posStart.y} x2={posEnd.x} y2={posEnd.y} stroke="white" strokeWidth={isHour ? 3 : 1} opacity={isHour ? 0.6 : 0.2} />;
-                      })}
+                {/* Horizontal Layout for Chart and Table in Concept Mode */}
+                <div className="flex flex-col lg:flex-row w-full gap-4 items-center justify-center">
+                    
+                    {/* The HTML Data Table (Only in Concept Mode) */}
+                    {appMode === 'concept' && showAxes && (
+                        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="bg-[#3e2723] border-[3px] border-yellow-500/30 rounded-xl overflow-hidden shadow-lg min-w-[160px]">
+                            <div className="bg-yellow-500/20 px-3 py-2 flex items-center justify-center gap-2 border-b border-yellow-500/30">
+                                <TableIcon size={14} className="text-yellow-400"/>
+                                <span className="text-yellow-400 font-black text-[11px] uppercase tracking-wider">Data Log</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <div className="grid grid-cols-2 bg-black/40 text-white/50 text-[10px] font-black uppercase tracking-wider px-2 py-1.5">
+                                    <span className="text-center">Grade</span>
+                                    <span className="text-center">Height</span>
+                                </div>
+                                {/* Row 1 */}
+                                {showRow1 && (
+                                    <div className="grid grid-cols-2 text-white text-[13px] font-bold px-2 py-2 border-t border-white/5">
+                                        <span className="text-center text-indigo-300">6th</span>
+                                        <span className="text-center">60 cm</span>
+                                    </div>
+                                )}
+                                {/* Row 2 */}
+                                {showRow2 && (
+                                    <div className="grid grid-cols-2 text-white text-[13px] font-bold px-2 py-2 border-t border-white/5">
+                                        <span className="text-center text-emerald-300">8th</span>
+                                        <span className="text-center">80 cm</span>
+                                    </div>
+                                )}
+                                {/* Row 3 */}
+                                {showRow3 && (
+                                    <div className="grid grid-cols-2 text-white text-[13px] font-bold px-2 py-2 border-t border-white/5">
+                                        <span className="text-center text-rose-300">10th</span>
+                                        <span className="text-center">100 cm</span>
+                                    </div>
+                                )}
+                                {/* Empty State Padding */}
+                                {visiblePoints.length === 0 && (
+                                    <div className="text-center text-white/20 italic text-[11px] py-4">Waiting for data...</div>
+                                )}
+                            </div>
+                        </motion.div>
+                    )}
+                    
+                    {appMode === 'concept' && !showAxes && (
+                         <div className="flex flex-col items-center justify-center opacity-30 gap-4 h-[240px]">
+                              <TrendingUp size={64} className="text-white" />
+                              <span className="text-white font-black tracking-widest uppercase">Awaiting Data</span>
+                         </div>
+                    )}
 
-                      {/* Non-Clickable Numbers (No interaction needed for this module) */}
-                      {Array.from({length: 12}).map((_, i) => {
-                          const num = i + 1;
-                          const pos = polarToCartesian(150, 150, 120, num * 30);
-                          return (
-                              <g key={`num-${num}`}>
-                                  <circle cx={pos.x} cy={pos.y} r="16" fill="#2a1a16" stroke="#a88a6d" strokeWidth="2" />
-                                  <text x={pos.x} y={pos.y} fill="white" fontSize="16" fontWeight="bold" textAnchor="middle" dominantBaseline="central">{num}</text>
-                              </g>
-                          );
-                      })}
+                    {/* SVG Chart Area */}
+                    {(showAxes || appMode === 'practice') && (
+                        <div className={`relative bg-[#3e2723] rounded-2xl border-[4px] border-yellow-500/30 shadow-inner flex flex-col items-center justify-center w-full max-w-[450px] transition-all duration-500`}>
+                          <svg viewBox="0 0 340 240" className="w-full h-full drop-shadow-md">
+                              
+                              {/* Grid Lines (Faint) */}
+                              {showAxes && Array.from({length: yTickCount}).map((_, i) => {
+                                  const y = originY - (i * (drawHeight / (yTickCount - 1)));
+                                  return <line key={`grid-${i}`} x1={originX} y1={y} x2={chartWidth - padRight} y2={y} stroke="white" strokeWidth="1" opacity="0.1" />;
+                              })}
 
-                      {/* Hands - Animated cleanly around the central axis using SVG transforms */}
-                      <g style={{ filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.5))" }}>
-                          
-                          {/* Minute Hand */}
-                          {showMinute && (
-                              <motion.g
-                                initial={{ rotate: minuteRotation }}
-                                animate={{ rotate: minuteRotation }}
-                                transition={transitionSpec}
-                                style={{ transformOrigin: "50% 50%" }}
-                              >
-                                  {/* Invisible bounding box enforcer ensures 50% 50% origin is exactly the center */}
-                                  <circle cx="150" cy="150" r="140" fill="transparent" />
-                                  <line x1="150" y1="150" x2="150" y2="50" stroke="#f8fafc" strokeWidth="4" strokeLinecap="round" opacity="0.8" />
-                              </motion.g>
-                          )}
+                              {/* Axes */}
+                              {showAxes && (
+                                  <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                      {/* X Axis */}
+                                      <line x1={originX} y1={originY} x2={chartWidth - padRight + 10} y2={originY} stroke="#a88a6d" strokeWidth="3" strokeLinecap="round" />
+                                      {/* Y Axis */}
+                                      <line x1={originX} y1={originY} x2={originX} y2={padTop - 10} stroke="#a88a6d" strokeWidth="3" strokeLinecap="round" />
+                                      
+                                      {/* Y Labels */}
+                                      {Array.from({length: yTickCount}).map((_, i) => {
+                                          const val = yMin + i * ((yMax - yMin)/(yTickCount - 1));
+                                          const y = originY - (i * (drawHeight / (yTickCount - 1)));
+                                          return <text key={`yl-${i}`} x={originX - 8} y={y} fill="#a88a6d" fontSize="10" fontWeight="bold" textAnchor="end" dominantBaseline="central">{val}</text>;
+                                      })}
 
-                          {/* Hour Hand (Dynamic) */}
-                          {showHour && (
-                              <motion.g
-                                initial={{ rotate: hourRotation }}
-                                animate={{ rotate: hourRotation }}
-                                transition={transitionSpec}
-                                style={{ transformOrigin: "50% 50%" }}
-                              >
-                                  {/* Invisible bounding box enforcer ensures 50% 50% origin is exactly the center */}
-                                  <circle cx="150" cy="150" r="140" fill="transparent" />
-                                  <line x1="150" y1="150" x2="150" y2="70" stroke="#fbbf24" strokeWidth="6" strokeLinecap="round" />
-                              </motion.g>
-                          )}
-                          
-                          {/* Center Pin */}
-                          <circle cx="150" cy="150" r="6" fill="#ef4444" />
-                      </g>
+                                      {/* X Labels */}
+                                      {allPoints.map((p, i) => (
+                                          <text key={`xl-${i}`} x={p.x} y={originY + 16} fill="#a88a6d" fontSize="10" fontWeight="bold" textAnchor="middle">{p.label}</text>
+                                      ))}
 
-                      {/* Final Text */}
-                      {clockState !== 'idle' && appMode === 'concept' && (
-                          <text x="150" y="200" fill="#4ade80" fontSize="16" fontWeight="black" textAnchor="middle" style={{ filter: "drop-shadow(1px 2px 2px rgba(0,0,0,0.8))" }}>{finalAngleText}</text>
-                      )}
-                      {appMode === 'practice' && isCorrectAnswer && (
-                          <text x="150" y="200" fill="#4ade80" fontSize="20" fontWeight="black" textAnchor="middle" style={{ filter: "drop-shadow(1px 2px 2px rgba(0,0,0,0.8))" }}>{finalAngleText}</text>
-                      )}
-                  </svg>
+                                      {/* Axis Titles */}
+                                      <text x={originX + drawWidth/2} y={chartHeight - 5} fill="white" fontSize="11" fontWeight="bold" textAnchor="middle" opacity="0.6" tracking="wider">{xLabelTitle.toUpperCase()}</text>
+                                      <text x={12} y={originY - drawHeight/2} fill="white" fontSize="11" fontWeight="bold" textAnchor="middle" transform={`rotate(-90 12 ${originY - drawHeight/2})`} opacity="0.6" tracking="wider">{yLabelTitle.toUpperCase()}</text>
+                                  </motion.g>
+                              )}
+
+                              {/* Interactive Dotted Guidelines */}
+                              {guideLines && (
+                                  <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                      {/* Horizontal Line */}
+                                      <line x1={originX} y1={guideLines.y} x2={guideLines.x} y2={guideLines.y} stroke={guideLines.color} strokeWidth="2.5" strokeDasharray="6 6" />
+                                      {/* Vertical Line */}
+                                      <line x1={guideLines.x} y1={originY} x2={guideLines.x} y2={guideLines.y} stroke={guideLines.color} strokeWidth="2.5" strokeDasharray="6 6" />
+                                      {/* Intersection Point */}
+                                      <circle cx={guideLines.x} cy={guideLines.y} r="8" fill={guideLines.color} style={{ filter: "drop-shadow(0px 2px 4px rgba(0,0,0,0.8))" }} />
+                                  </motion.g>
+                              )}
+
+                              {/* The Line */}
+                              {visiblePoints.length > 1 && (
+                                  <motion.path 
+                                      initial={{ pathLength: 0 }}
+                                      animate={{ pathLength: 1 }}
+                                      transition={{ duration: 1.2, ease: "easeInOut" }}
+                                      d={pathD} 
+                                      fill="none" 
+                                      stroke="#fbbf24" 
+                                      strokeWidth="4" 
+                                      strokeLinecap="round" 
+                                      strokeLinejoin="round" 
+                                      style={{ filter: "drop-shadow(0px 4px 4px rgba(0,0,0,0.5))" }}
+                                  />
+                              )}
+
+                              {/* Points */}
+                              {visiblePoints.map((p, i) => (
+                                  <motion.g key={`p-${i}`} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>
+                                      <circle cx={p.x} cy={p.y} r="5" fill="#f8fafc" stroke="#3e2723" strokeWidth="2" style={{ filter: "drop-shadow(0px 2px 2px rgba(0,0,0,0.5))" }} />
+                                      <text x={p.x} y={p.y - 10} fill="#f8fafc" fontSize="11" fontWeight="bold" textAnchor="middle">{p.val}</text>
+                                  </motion.g>
+                              ))}
+
+                          </svg>
+                        </div>
+                    )}
                 </div>
 
-                {/* Contextual Action Buttons for Clock Steps */}
-                {!quizMode && !lessonFinished && appMode === 'concept' && (
+                {/* Contextual Action Buttons for Chart Steps */}
+                {!quizMode && !lessonFinished && appMode === 'concept' && (isQuizPassed || isNoQuiz) && (
                     <div className="flex gap-3 mt-4 flex-wrap justify-center animate-in fade-in zoom-in duration-300">
-                        {activeStep === 1 && isQuizPassed && (
-                            <button onClick={() => handleClockButton('show_three_oclock')} className="px-6 py-2 rounded-full bg-indigo-600 text-white font-black uppercase text-[12px] shadow-lg hover:scale-105 active:scale-95 transition-all">Show 3:00 Exception</button>
-                        )}
-                        {activeStep === 2 && isQuizPassed && (
-                            <button onClick={() => handleClockButton('show_nine_oclock')} className="px-6 py-2 rounded-full bg-indigo-600 text-white font-black uppercase text-[12px] shadow-lg hover:scale-105 active:scale-95 transition-all">Show 9:00 Exception</button>
-                        )}
-                        {activeStep === 3 && isQuizPassed && (
-                            <button onClick={() => handleClockButton('reveal_final_answer')} className="px-6 py-2 rounded-full bg-emerald-600 text-white font-black uppercase text-[12px] shadow-lg hover:scale-105 active:scale-95 transition-all">Reveal Answer</button>
+                        {expectedAction !== 'none' && !isBoardValid && (
+                            <button onClick={() => handleChartButton(expectedAction)} className={`px-6 py-2 rounded-full font-black uppercase text-[12px] shadow-lg hover:scale-105 active:scale-95 transition-all ${currentStepData.buttonStyle}`}>
+                                {currentStepData.buttonText}
+                            </button>
                         )}
                     </div>
                 )}
@@ -524,7 +713,7 @@ export default function LabContent() {
                     </div>
                     <div className="flex flex-col gap-1">
                         <span className="text-yellow-400 font-black uppercase text-[12px] sm:text-[13px] tracking-widest leading-none mb-1">
-                            {quizMode ? currentScenData.coreDefinition.title : "The Logic Problem"}
+                            {quizMode ? currentScenData.coreDefinition.title : "The Scenario"}
                         </span>
                         <p className="text-[14px] sm:text-[16px] font-medium leading-relaxed tracking-tight text-white/90 whitespace-pre-line">
                             {quizMode ? currentScenData.coreDefinition.text : LOGIC_DATA.concept.question}
@@ -630,9 +819,9 @@ export default function LabContent() {
 
                                 {quizFeedbackMode && quizSelection !== currentQuizSet[quizStep].correct && (
                                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-3 mt-auto">
-                                        <p className="text-rose-400 text-[14px] font-bold italic animate-pulse text-center leading-tight">"Incorrect. Check your math!"</p>
+                                        <p className="text-rose-400 text-[14px] font-bold italic animate-pulse text-center leading-tight">"Incorrect. Check the chart again!"</p>
                                         <div className="flex flex-col sm:flex-row gap-3">
-                                            <button onClick={() => { setQuizFeedbackMode(false); setQuizSelection(null); setShowExplanationForIncorrect(false); }} className="flex-1 py-3.5 rounded-full font-black uppercase text-[13px] sm:text-[14px] tracking-widest transition-all bg-rose-600 text-white shadow-[0_0_20px_rgba(225,29,72,0.4)] border-2 border-rose-400 hover:scale-105 active:scale-95">
+                                            <button onClick={() => { setQuizFeedbackMode(false); setQuizSelection(null); setShowExplanationForIncorrect(false); setLastClickedOrigIdx(null); }} className="flex-1 py-3.5 rounded-full font-black uppercase text-[13px] sm:text-[14px] tracking-widest transition-all bg-rose-600 text-white shadow-[0_0_20px_rgba(225,29,72,0.4)] border-2 border-rose-400 hover:scale-105 active:scale-95">
                                                 Try Again
                                             </button>
                                             {!showExplanationForIncorrect && (
@@ -661,6 +850,7 @@ export default function LabContent() {
                                                 setQuizSelection(null); 
                                                 setQuizFeedbackMode(false); 
                                                 setShowExplanationForIncorrect(false);
+                                                setLastClickedOrigIdx(null);
                                             } else { 
                                                 setLessonFinished(true); 
                                                 setShowFinishModal(true);
@@ -698,14 +888,14 @@ export default function LabContent() {
                                {activeStep > 0 && <button onClick={prevStep} className="text-yellow-400 hover:scale-110 active:scale-95 transition-transform bg-white/5 p-1.5 rounded-lg"><ArrowLeft size={18}/></button>}
                             </div>
                             
-                            <p className="text-white font-bold text-[16px] sm:text-[18px] leading-snug tracking-tight px-2">{LOGIC_DATA.concept.teachingSteps[activeStep]?.selectionPrompt}</p>
+                            <p className="text-white font-bold text-[16px] sm:text-[18px] leading-snug tracking-tight px-2">{currentStepData?.selectionPrompt}</p>
                             
-                            {/* We always render MCQ block unless the clock action is strictly not met. But wait, we render MCQ first! */}
-                            {(!isQuizPassed) ? (
+                            {/* We always render MCQ block unless the chart action is strictly not met. */}
+                            {(!isQuizPassed && !isNoQuiz) ? (
                                 <>
                                     <div className="flex flex-wrap gap-2.5 sm:gap-3 justify-center py-4">
                                       {shuffledIndices.map((origIdx) => {
-                                          const opt = LOGIC_DATA.concept.teachingSteps[activeStep]?.options?.[origIdx];
+                                          const opt = currentStepData?.options?.[origIdx];
                                           if (!opt) return null;
                                           
                                           const isSelected = conceptSelectedOption === origIdx;
@@ -731,19 +921,21 @@ export default function LabContent() {
                                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-4 mt-3">
                                     
                                     <div className="flex flex-col rounded-xl overflow-hidden border-[2px] border-green-500/50 shadow-xl">
-                                        <div className="bg-green-500/10 px-5 py-4 border-b border-green-500/20">
-                                            <p className="text-green-400 text-[14px] sm:text-[15px] font-medium leading-relaxed">
-                                                <strong className="uppercase tracking-widest text-[11px] block mb-1.5 text-green-500">Logic Confirmed</strong>
-                                                "{feedback.reason}"
-                                            </p>
-                                        </div>
-                                        {LOGIC_DATA.concept.teachingSteps[activeStep]?.instruction && !isBoardValid && expectedAction !== 'none' && (
+                                        {(!isNoQuiz) && (
+                                            <div className="bg-green-500/10 px-5 py-4 border-b border-green-500/20">
+                                                <p className="text-green-400 text-[14px] sm:text-[15px] font-medium leading-relaxed">
+                                                    <strong className="uppercase tracking-widest text-[11px] block mb-1.5 text-green-500">Logic Confirmed</strong>
+                                                    "{feedback.reason}"
+                                                </p>
+                                            </div>
+                                        )}
+                                        {currentStepData?.instruction && !isBoardValid && expectedAction !== 'none' && (
                                             <div className="bg-yellow-400/10 p-5 flex gap-4 items-start">
                                                 <MousePointer2 size={26} className="text-yellow-400 shrink-0 mt-0.5" />
                                                 <div className="flex flex-col">
                                                     <span className="text-yellow-400 font-black uppercase text-[11px] tracking-widest mb-1.5">Required Action</span>
                                                     <span className="text-white text-[15px] font-bold tracking-tight leading-snug">
-                                                        {LOGIC_DATA.concept.teachingSteps[activeStep]?.instruction}
+                                                        {currentStepData.instruction}
                                                     </span>
                                                 </div>
                                             </div>
@@ -754,7 +946,7 @@ export default function LabContent() {
                                                 <div className="flex flex-col">
                                                     <span className="text-green-400 font-black uppercase text-[11px] tracking-widest mb-1.5">Step Completed</span>
                                                     <span className="text-white text-[15px] font-medium leading-relaxed">
-                                                        "{LOGIC_DATA.concept.teachingSteps[activeStep]?.why}"
+                                                        "{currentStepData.why}"
                                                     </span>
                                                 </div>
                                             </div>
@@ -767,9 +959,15 @@ export default function LabContent() {
                                         </button>
                                     ) : (
                                         <div className="flex flex-col gap-2 mt-3">
-                                            <button disabled={true} className="w-full py-4 sm:py-5 rounded-full font-black uppercase text-[14px] sm:text-[15px] tracking-widest transition-all bg-white/5 text-white/30 cursor-not-allowed border-2 border-white/10">
-                                                Complete Action on the Clock
-                                            </button>
+                                            {expectedAction === 'none' ? (
+                                                <button onClick={nextStep} className="w-full py-4 sm:py-5 rounded-full font-black uppercase text-[14px] sm:text-[15px] tracking-widest transition-all bg-green-600 text-white shadow-[0_0_20px_rgba(34,197,94,0.4)] border-2 border-green-400 hover:scale-105 active:scale-95">
+                                                    Proceed to Next Step
+                                                </button>
+                                            ) : (
+                                                <button disabled={true} className="w-full py-4 sm:py-5 rounded-full font-black uppercase text-[14px] sm:text-[15px] tracking-widest transition-all bg-white/5 text-white/30 cursor-not-allowed border-2 border-white/10">
+                                                    Complete Action on the Chart
+                                                </button>
+                                            )}
                                             {actionError && <p className="text-rose-400 text-[14px] font-bold italic animate-pulse text-center leading-tight mt-1.5">"{actionError}"</p>}
                                         </div>
                                     )}
@@ -781,13 +979,13 @@ export default function LabContent() {
                         {conceptPhase === 'finalCheck' && appMode === 'concept' && !quizMode && !lessonFinished && (
                           <motion.div key="check" className="flex flex-col items-center justify-center h-full text-center gap-5 min-h-[250px]">
                              <div className="bg-green-400/20 p-6 sm:p-8 rounded-2xl border border-green-400/50 shadow-xl">
-                                <p className="text-white font-bold text-[18px] uppercase tracking-widest">Clock Logic Mastered!</p>
+                                <p className="text-white font-bold text-[18px] uppercase tracking-widest">Chart Mastered!</p>
                                 <p className="text-white/90 text-[15px] mt-3 tracking-tight leading-relaxed">
-                                    You've successfully solved the right angle frequency logic. Time for the final quiz!
+                                    You've successfully built a Line Chart and analyzed the data trend. Time to practice!
                                 </p>
                              </div>
-                             <button onClick={() => setQuizMode(true)} className={`w-full py-4 sm:py-5 rounded-full font-black uppercase shadow-xl transition-all text-[15px] bg-green-600 text-white hover:scale-105 tracking-widest`}>
-                                Start Reasoning Quiz
+                             <button onClick={() => { setLessonFinished(true); setShowFinishModal(true); }} className={`w-full py-4 sm:py-5 rounded-full font-black uppercase shadow-xl transition-all text-[15px] bg-green-600 text-white hover:scale-105 tracking-widest`}>
+                                Complete Concept
                              </button>
                           </motion.div>
                         )}
@@ -824,8 +1022,8 @@ export default function LabContent() {
                       </h2>
                       <p className="text-white/80 text-sm sm:text-base font-medium px-4">
                           {appMode === 'concept' 
-                              ? "You've successfully solved the daily clock alignments." 
-                              : "You have successfully answered the frequency drills."}
+                              ? "You've successfully mapped out the line chart fundamentals." 
+                              : "You have successfully answered the data analysis drills."}
                       </p>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-3 w-full mt-4">
