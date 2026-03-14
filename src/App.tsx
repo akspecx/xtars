@@ -308,8 +308,11 @@ import
 {
   LineChartIntroRouter,
   LineChartCreateRouter,
-  LineChartDiffSmallRouter
-  
+  LineChartDiffSmallRouter,
+  LineChartAnomaliesRouter,
+  LineChartRatioRouter,
+  LineChartPercentageRouter,
+  LineChartAverageRouter
 }
 from "./x-tars/courses/Learn/DataInterpretation/LineChart/LineChartRouterWrapper"
 
@@ -460,9 +463,14 @@ export default function App() {
                <Route path="/learn/dataInterpretation/lineChart/introduction" element={<LineChartIntroRouter />} />
                 <Route path="/learn/dataInterpretation/lineChart/create" element={<LineChartCreateRouter />} />
                 <Route path="/learn/dataInterpretation/lineChart/diffSmall" element={<LineChartDiffSmallRouter />} />
+                <Route path="/learn/dataInterpretation/lineChart/anomaliesLineChart" element={<LineChartAnomaliesRouter />} />
+                <Route path="/learn/dataInterpretation/lineChart/ratioLineChart" element={<LineChartRatioRouter />} />
+                <Route path="/learn/dataInterpretation/lineChart/percentageLineChart" element={<LineChartPercentageRouter />} />
+                <Route path="/learn/dataInterpretation/lineChart/averageLineChart" element={<LineChartAverageRouter />} />
                 
 
-               
+              
+      
 
               {/* Games */}
               <Route path="/games" element={<GamesHome />} />

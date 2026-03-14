@@ -30,55 +30,27 @@ const HIERARCHY_DATA = [
     subModules: [
       { id: 'LC_1', title: 'What is Line Chart?', desc: 'To go through the introduction.', icon: '🔢', path: '/learn/dataInterpretation/lineChart/introduction' },
       { id: 'LC_2', title: 'Let us create the Line chart', desc: 'Create the Line Chart', icon: '🔗', path: '/learn/dataInterpretation/lineChart/create' },
-      { id: 'LC_3', title: 'Difference in the values?', desc: 'Find the difference between line points', icon: '🔗', path: '/learn/dataInterpretation/lineChart/diffSmall' }
-      // { id: 'BC_4', title: 'Identify anomalies in bar', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/dataInterpretation/barChart/anomaliesInBar' },
-      // { id: 'BC_5', title: 'Let us create Bar Chart?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/dataInterpretation/barChart/createBarChart' },
-      // { id: 'BC_6', title: 'What if there is bar chart for two class?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/dataInterpretation/barChart/twoClassBarChart' }
-    
+      { id: 'LC_3', title: 'Difference in the values?', desc: 'Find the difference between line points', icon: '🔗', path: '/learn/dataInterpretation/lineChart/diffSmall' },
+      { id: 'LC_4', title: 'Find the anomalies in line chart?', desc: 'Find the anomalies in line chart', icon: '🔗', path: '/learn/dataInterpretation/lineChart/anomaliesLineChart' }     
     ]
   },
-  // {
-  //   id: "barChartDouble",
-  //   title: "Let's get into double bar chart",
-  //   subtitle: "Understanding the double bar chart",
-  //   icon: "⚖️",
-  //   gradient: "from-indigo-500 to-purple-500",
-  //   path: "/learn/dataInterpretation/barChart",
-  //   subModules: [
-  //     { id: 'BC_7', title: 'What!! Double bar chart?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/dataInterpretation/barChart/doubleBarChart' },
-  //     { id: 'BC_8', title: 'Analysis of double bar chart', desc: 'cumulative double bar chart analysis.', icon: '🔗', path: '/learn/dataInterpretation/barChart/doubleBCCumulative' },
-  //     { id: 'BC_9', title: 'Oops there are some missing bars!', desc: 'missing bars in double bar chart', icon: '🔗', path: '/learn/dataInterpretation/barChart/doubleBCMissingBars' },
-  //     { id: 'BC_10', title: 'A bit of in-depth analysis', desc: 'in depth analysis of double bar chart', icon: '🔗', path: '/learn/dataInterpretation/barChart/doubleBCComplexAnalysis' }    
-  //   ]
-  // },  
-  // {
-  //   id: "barChartComputation",
-  //   title: "Let's get into double bar chart computation",
-  //   subtitle: "Understanding the double bar chart computations",
-  //   icon: "⚖️",
-  //   gradient: "from-indigo-500 to-purple-500",
-  //   path: "/learn/dataInterpretation/barChart",
-  //   subModules: [
-  //     { id: 'BC_11', title: 'Let us find out minimum and average', desc: 'To go through the computations of minimum and avg.', icon: '🔢', path: '/learn/dataInterpretation/barChart/doubleBCMinAvg' },
-  //     { id: 'BC_12', title: 'Ratio and Percantage in Bar chart', desc: 'cumulative double bar chart analysis.', icon: '🔗', path: '/learn/dataInterpretation/barChart/doubleBCRatioPercent' },
-  //     { id: 'BC_13', title: 'Let us find out profit and loss', desc: 'Profit and Loss in double bar chart', icon: '🔗', path: '/learn/dataInterpretation/barChart/doubleBCProfitLoss' },
-  //     // { id: 'BC_10', title: 'A bit of in-depth analysis', desc: 'in depth analysis of double bar chart', icon: '🔗', path: '/learn/dataInterpretation/barChart/doubleBCComplexAnalysis' }    
-  //   ]
-  // }, 
-  // {
-  //   id: "barChartAdvanced",
-  //   title: "Let's get into advanced bar chart",
-  //   subtitle: "Understanding the different bar chart",
-  //   icon: "⚖️",
-  //   gradient: "from-indigo-500 to-purple-500",
-  //   path: "/learn/dataInterpretation/barChart",
-  //   subModules: [
-  //     { id: 'BC_14', title: 'Stacked bar chart', desc: 'To go through the stacked bar chart', icon: '🔢', path: '/learn/dataInterpretation/barChart/stackedBarChart' },
-  //     { id: 'BC_15', title: 'Trade bar chart', desc: 'trade bar chart', icon: '🔗', path: '/learn/dataInterpretation/barChart/tradeBarChart' },
-  //     // { id: 'BC_13', title: 'Let us find out profit and loss', desc: 'Profit and Loss in double bar chart', icon: '🔗', path: '/learn/dataInterpretation/barChart/doubleBCProfitLoss' },
-  //     // { id: 'BC_10', title: 'A bit of in-depth analysis', desc: 'in depth analysis of double bar chart', icon: '🔗', path: '/learn/dataInterpretation/barChart/doubleBCComplexAnalysis' }    
-  //   ]
-  // },     
+
+   {
+    id: "lineChartfeatures",
+    title: "Line chart features",
+    subtitle: "Understanding the features in line chart",
+    icon: "⚖️",
+    gradient: "from-indigo-500 to-purple-500",
+    path: "/learn/dataInterpretation/lineChart",
+   
+    subModules: [
+      { id: 'LC_5', title: 'Understanding ratio in line chart', desc: 'Find the value if ratio given in line chart', icon: '🔗', path: '/learn/dataInterpretation/lineChart/ratioLineChart' },
+      { id: 'LC_6', title: 'Understanding percentage in line chart', desc: 'Find the value if percentage given in line chart', icon: '🔗', path: '/learn/dataInterpretation/lineChart/percentageLineChart' },
+      { id: 'LC_7', title: 'Understanding average in line chart', desc: 'Find the value if average given in line chart', icon: '🔗', path: '/learn/dataInterpretation/lineChart/averageLineChart' }
+      
+    ]
+  },
+    
 
   
 ];
