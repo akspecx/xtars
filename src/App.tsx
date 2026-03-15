@@ -242,8 +242,8 @@ from "./x-tars/courses/Puzzles/PuzzlesWrapper";
 
 
 import {
-  AlgebraicExpressionRouter
-  
+  AlgebraicExpressionRouter,
+  PercentageRouter 
 }
 from "./x-tars/courses/Learn/maths/MathsRouterWrapper"
 
@@ -267,6 +267,20 @@ import {
 }
 from "./x-tars/courses/Learn/maths/AlgebraicExpression/AlgebraRouterWrapper"
 
+import {
+  PercentageIntroRouter,
+  PercentageCalculationRouter,
+  PercentageFractionRouter,
+  PercentageFindPercRouter,
+  PercentagePercGameRouter,
+  PercentagePercFromTotalRouter,
+  PercentagePercKnownGenericRouter,
+  PercentagePercValueGodlenFormulaRouter,
+  PercentagePercIncreasedByRouter,
+  PercentagePercDecreasedByRouter,
+  PercentagePercIncreasedDecreasedRouter
+}
+from "./x-tars/courses/Learn/maths/Percentage/PercentageRouterWrapper"
 
 
 import {
@@ -357,7 +371,18 @@ export default function App() {
               <Route path="/learn/mathematics/algebra/WarModeAEIntermediate" element={<WarModeAEIntermediateRouter />} />
              
              
-              
+              <Route path="/learn/mathematics/percentage" element={<PercentageRouter />} />
+              <Route path="/learn/mathematics/percentage/introduction" element={<PercentageIntroRouter />} /> 
+              <Route path="/learn/mathematics/percentage/calculation" element={<PercentageCalculationRouter />} /> 
+              <Route path="/learn/mathematics/percentage/fractionPerc" element={<PercentageFractionRouter />} /> 
+              <Route path="/learn/mathematics/percentage/FindPerc" element={<PercentageFindPercRouter />} /> 
+              <Route path="/learn/mathematics/percentage/PercGame" element={<PercentagePercGameRouter />} /> 
+              <Route path="/learn/mathematics/percentage/PercFromTotal" element={<PercentagePercFromTotalRouter />} /> 
+              <Route path="/learn/mathematics/percentage/PercKnownGeneric" element={<PercentagePercKnownGenericRouter />} /> 
+              <Route path="/learn/mathematics/percentage/PercValueGodlenFormula" element={<PercentagePercValueGodlenFormulaRouter />} /> 
+              <Route path="/learn/mathematics/percentage/PercIncreasedBy" element={<PercentagePercIncreasedByRouter />} /> 
+              <Route path="/learn/mathematics/percentage/PercDecreasedBy" element={<PercentagePercDecreasedByRouter />} /> 
+              <Route path="/learn/mathematics/percentage/PercIncreasedDecreased" element={<PercentagePercIncreasedDecreasedRouter />} />       
 
 
               <Route path="/learn/logicalreasoning" element={<LogicalReasoningMainRouter />} />

@@ -16,7 +16,7 @@ import {
   FastForward,
   CheckCircle2,
   Target,
-  TrendingUp
+  TrendingDown
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
 
@@ -56,129 +56,136 @@ function HeaderSection({ onBack, title, appMode, setAppMode, onReset }) {
 
 const LOGIC_DATA = {
   concept: {
-    question: "How do we calculate an 'Increased By' percentage?",
+    question: "How do we calculate a 'Decreased By' percentage?",
     teachingSteps: [
       { 
         id: "step-1",
-        title: "Finding the Increase Value",
-        explanation: "Step 1: Find the value of the percent.\nImagine you have ₹100 today, and it will increase by 10% next year. First, we must figure out exactly what that 10% is in rupees.",
-        selectionPrompt: "What is 10% of ₹100?",
-        options: ["₹10", "₹90", "₹110"],
+        title: "Finding the Decrease Value",
+        explanation: "Step 1: Find the value of the percent.\nImagine you have ₹400 today, and it will decrease by 20% next year. First, we must figure out exactly what that 20% is in rupees.",
+        selectionPrompt: "What is 20% of ₹400?",
+        options: ["₹80", "₹320", "₹480"],
         correct: 0,
         feedback: [
-          "Exactly! 10% out of 100 is just 10.",
-          "That would be 90%.",
-          "That is the final total, not just the 10% piece!"
+          "Exactly! 20% out of 400 is 80.",
+          "That would be the final amount, not just the 20% piece!",
+          "That would be if it increased!"
         ],
-        why: "To find 10% of 100, we calculate (10/100) * 100 = 10."
+        why: "To find 20% of 400, we calculate (20/100) * 400 = 80."
       },
       { 
         id: "step-2",
-        title: "The Meaning of Increase",
-        explanation: "Step 2: Understanding 'Increase'.\nNow we know the increase amount is ₹10. The word 'increase' means your original money is growing larger.",
-        selectionPrompt: "What do you do with this ₹10?",
-        options: ["Subtract it from ₹100", "Add it to ₹100", "Multiply it by ₹100"],
+        title: "The Meaning of Decrease",
+        explanation: "Step 2: Understanding 'Decrease'.\nNow we know the decrease amount is ₹80. The word 'decrease' means your original money is shrinking or losing value.",
+        selectionPrompt: "What do you do with this ₹80?",
+        options: ["Add it to ₹400", "Subtract it from ₹400", "Multiply it by ₹400"],
         correct: 1,
         feedback: [
-          "Subtracting would mean your money 'decreased'.",
-          "Yes! 'Increase' always means we ADD to our original amount.",
-          "Multiplying would give us an incredibly huge, incorrect number!"
+          "Adding would mean your money 'increased'.",
+          "Yes! 'Decrease' always means we SUBTRACT from our original amount.",
+          "Multiplying would give us an incorrectly huge number!"
         ],
-        why: "Increase = Addition. We must add the growth value back to the starting value."
+        why: "Decrease = Subtraction. We must subtract the lost value from the starting value."
       },
       { 
         id: "step-3",
         title: "The Final Total",
-        explanation: "Step 3: Calculating the New Amount.\nSince the money is increasing, we take the Original Amount (₹100) and ADD the Increase Amount (₹10).",
+        explanation: "Step 3: Calculating the New Amount.\nSince the money is decreasing, we take the Original Amount (₹400) and SUBTRACT the Decrease Amount (₹80).",
         selectionPrompt: "What is the new total amount you will get next year?",
-        options: ["₹110", "₹90", "₹1000"],
-        correct: 0,
+        options: ["₹480", "₹320", "₹80"],
+        correct: 1,
         feedback: [
-          "Perfect! 100 + 10 = 110.",
-          "This would be a decrease.",
-          "Your math is way off here!"
+          "This would be an increase.",
+          "Perfect! 400 - 80 = 320.",
+          "That is just the decrease amount!"
         ],
-        why: "₹100 (Original) + ₹10 (Increase) = ₹110."
+        why: "₹400 (Original) - ₹80 (Decrease) = ₹320."
       },
       { 
         id: "step-4",
         title: "The General Rule",
-        explanation: "Step 4: The Golden Formula.\nNotice the pattern! We started with our Original amount, calculated a percentage of it, and then added them together.",
-        selectionPrompt: "Which general formula works for ANY 'increased by' problem?",
-        options: ["Original + Increase", "Original × Percent", "Increase - Original"],
-        correct: 0,
+        explanation: "Step 4: The Golden Formula.\nNotice the pattern! We started with our Original amount, calculated a percentage of it, and then subtracted them.",
+        selectionPrompt: "Which general formula works for ANY 'decreased by' problem?",
+        options: ["Original + Decrease", "Original × Percent", "Original - Decrease"],
+        correct: 2,
         feedback: [
-          "Exactly! You always add the calculated increase to your starting amount.",
-          "That only gives you the increase amount, not the final total.",
-          "That would give you a negative number!"
+          "That is the formula for an increase.",
+          "That only gives you the decrease amount, not the final total.",
+          "Exactly! You always subtract the calculated decrease from your starting amount."
         ],
-        why: "New Value = Original Amount + Increase Amount."
+        why: "New Value = Original Amount - Decrease Amount."
       },
       { 
         id: "step-5",
         title: "Test the Formula",
-        explanation: "Step 5: Apply it to a new number.\nLet's test our rule: What is 50 increased by 20%?\n\nHint: First find 20% of 50. Then add that to the original 50.",
+        explanation: "Step 5: Apply it to a new number.\nLet's test our rule: What is 80 decreased by 25%?\n\nHint: First find 25% (a quarter) of 80. Then subtract that from the original 80.",
         selectionPrompt: "Calculate the final value:",
-        options: ["60", "70", "10"],
+        options: ["60", "100", "20"],
         correct: 0,
         feedback: [
-          "Yes! 20% of 50 is 10. And 50 + 10 = 60.",
-          "You added 20 instead of 20%!",
-          "10 is just the increase amount. You forgot to add it back to 50!"
+          "Yes! 25% of 80 is 20. And 80 - 20 = 60.",
+          "You added 20 instead of subtracting!",
+          "20 is just the decrease amount. You forgot to subtract it from 80!"
         ],
-        why: "Original (50) + Increase (10) = 60."
+        why: "Original (80) - Decrease (20) = 60."
       }
     ],
     clues: [
-      { id: 1, step: 0, concept: "Step 1: Find the %", explanation: "First, calculate what the percentage value is in real numbers.", text: "Calculate the Increase" },
-      { id: 2, step: 1, concept: "Increase = Add", explanation: "The word 'increase' tells us to use Addition (+).", text: "Increase means +" },
-      { id: 3, step: 2, concept: "Step 2: Combine", explanation: "Add the increase value to your starting value to get the final answer.", text: "Original + Increase" },
-      { id: 4, step: 3, concept: "Consistency", explanation: "This 2-step process works for every single 'increased by' problem.", text: "Works Every Time" }
+      { id: 1, step: 0, concept: "Step 1: Find the %", explanation: "First, calculate what the percentage value is in real numbers.", text: "Calculate the Decrease" },
+      { id: 2, step: 1, concept: "Decrease = Subtract", explanation: "The word 'decrease' tells us to use Subtraction (-).", text: "Decrease means -" },
+      { id: 3, step: 2, concept: "Step 2: Combine", explanation: "Subtract the decrease value from your starting value to get the final answer.", text: "Original - Decrease" },
+      { id: 4, step: 3, concept: "Consistency", explanation: "This 2-step process works for every single 'decreased by' problem.", text: "Works Every Time" }
     ]
   },
   practice: {
-    question: "Apply the 'Original + Increase' rule to solve these puzzles!",
+    question: "Apply the 'Original - Decrease' rule to solve these puzzles!",
     quiz: [
       { 
-        q: "A toy costs ₹200. Its price is increased by 10%. What is the new price?", 
-        options: ["₹220", "₹210", "₹20"], 
-        correct: 0, 
-        explanation: "First find 10% of 200, which is 20. Then add it to the original price: 200 + 20 = 220.",
-        breakdown: { logic: "10% of 200 = 20", calculation: "Original (200) + Increase (20)", jump: "₹220" }
+        q: "A toy costs ₹200. Its price is decreased by 10% on sale. What is the new price?", 
+        options: ["₹220", "₹180", "₹20"], 
+        correct: 1, 
+        explanation: "First find 10% of 200, which is 20. Then subtract it from the original price: 200 - 20 = 180.",
+        breakdown: { logic: "10% of 200 = 20", calculation: "Original (200) - Decrease (20)", jump: "₹180" }
       },
       { 
-        q: "Your game score was 50 points. It increased by 20%. What is your new score?", 
-        options: ["60 Points", "70 Points", "10 Points"], 
+        q: "Your phone battery was at 50%. It decreased by 20% of its current charge. What is your new battery percentage?", 
+        options: ["40%", "10%", "60%"], 
         correct: 0, 
-        explanation: "20% of 50 is 10 points. Add that to the original score: 50 + 10 = 60.",
-        breakdown: { logic: "20% of 50 = 10", calculation: "Original (50) + Increase (10)", jump: "60 Points" }
+        explanation: "20% of 50 is 10. Subtract that from the original battery level: 50 - 10 = 40.",
+        breakdown: { logic: "20% of 50 = 10", calculation: "Original (50) - Decrease (10)", jump: "40%" }
       },
       { 
-        q: "A plant was 100 cm tall. It grew (increased) by 25%. How tall is it now?", 
-        options: ["125 cm", "25 cm", "150 cm"], 
-        correct: 0, 
-        explanation: "25% of 100 is 25. Add the growth to the original height: 100 + 25 = 125.",
-        breakdown: { logic: "25% of 100 = 25", calculation: "Original (100) + Increase (25)", jump: "125 cm" }
+        q: "If an initial value was 50 and now it is 30, what is the PERCENTAGE decrease?", 
+        options: ["20%", "40%", "30%"], 
+        correct: 1, 
+        explanation: "First, find the decrease amount: 50 - 30 = 20. To find the percentage, divide the decrease by the original amount and multiply by 100: (20 ÷ 50) × 100 = 40%.",
+        breakdown: { logic: "Decrease amount = 20", calculation: "(20 ÷ 50) × 100", jump: "40%" }
       },
       { 
-        q: "House rent is ₹500. Next month it increases by 10%. What is the new rent?", 
-        options: ["₹550", "₹510", "₹600"], 
+        q: "A block of ice weighed 100 kg. It melted (decreased) by 25%. How much does it weigh now?", 
+        options: ["75 kg", "125 kg", "25 kg"], 
         correct: 0, 
-        explanation: "10% of 500 is 50. Add it to the original rent: 500 + 50 = 550.",
-        breakdown: { logic: "10% of 500 = 50", calculation: "Original (500) + Increase (50)", jump: "₹550" }
+        explanation: "25% of 100 is 25. Subtract the melted amount from the original weight: 100 - 25 = 75.",
+        breakdown: { logic: "25% of 100 = 25", calculation: "Original (100) - Decrease (25)", jump: "75 kg" }
       },
       { 
-        q: "A baker made 40 cakes yesterday. Today he increased production by 50%. How many cakes did he make today?", 
-        options: ["60 Cakes", "20 Cakes", "90 Cakes"], 
+        q: "House rent is ₹500. Next month it decreases by 10%. What is the new rent?", 
+        options: ["₹550", "₹450", "₹50"], 
+        correct: 1, 
+        explanation: "10% of 500 is 50. Subtract it from the original rent: 500 - 50 = 450.",
+        breakdown: { logic: "10% of 500 = 50", calculation: "Original (500) - Decrease (50)", jump: "₹450" }
+      },
+      { 
+        q: "A baker made 40 cakes yesterday. Today production decreased by 50%. How many cakes did he make today?", 
+        options: ["20 Cakes", "60 Cakes", "80 Cakes"], 
         correct: 0, 
-        explanation: "50% (which means exactly half) of 40 is 20. Add the extra 20 cakes to the original 40: 40 + 20 = 60.",
-        breakdown: { logic: "50% of 40 = 20", calculation: "Original (40) + Increase (20)", jump: "60 Cakes" }
+        explanation: "50% (which means exactly half) of 40 is 20. Subtract the lost 20 cakes from the original 40: 40 - 20 = 20.",
+        breakdown: { logic: "50% of 40 = 20", calculation: "Original (40) - Decrease (20)", jump: "20 Cakes" }
       }
     ]
   }
 };
 
-export function LabContent() {
+export default function LabContent() {
   const navigate = useNavigate();
   const [appMode, setAppMode] = useState('concept');
   const [activeStep, setActiveStep] = useState(0);
@@ -295,31 +302,31 @@ export function LabContent() {
 
               {activeStep === 0 && (
                   <div className="flex items-center gap-4 sm:gap-6 text-3xl sm:text-5xl font-black text-white mt-6">
-                      <span className="text-emerald-400">10% of 100</span>
+                      <span className="text-emerald-400">20% of 400</span>
                       <span className="text-white/50">=</span>
-                      <span className="text-yellow-400">?</span>
+                      <span className="text-rose-400">?</span>
                   </div>
               )}
               {activeStep === 1 && (
                   <div className="flex items-center gap-3 sm:gap-5 text-2xl sm:text-4xl font-black text-white mt-6">
                       <div className="flex flex-col items-center bg-black/40 p-4 rounded-xl border border-white/10">
                           <span className="text-white/50 text-xs sm:text-sm uppercase tracking-widest mb-1">Original</span>
-                          <span className="text-emerald-400">100</span>
+                          <span className="text-emerald-400">400</span>
                       </div>
                       <span className="text-white/50">?</span>
                       <div className="flex flex-col items-center bg-black/40 p-4 rounded-xl border border-white/10">
-                          <span className="text-yellow-400/50 text-xs sm:text-sm uppercase tracking-widest mb-1">Increase</span>
-                          <span className="text-yellow-400">10</span>
+                          <span className="text-rose-400/50 text-xs sm:text-sm uppercase tracking-widest mb-1">Decrease</span>
+                          <span className="text-rose-400">80</span>
                       </div>
                   </div>
               )}
               {activeStep === 2 && (
                   <div className="flex items-center gap-4 sm:gap-6 text-3xl sm:text-6xl font-black text-white mt-6">
-                      <span className="text-emerald-400">100</span>
-                      <span className="text-white/80">+</span>
-                      <span className="text-yellow-400">10</span>
+                      <span className="text-emerald-400">400</span>
+                      <span className="text-white/80">-</span>
+                      <span className="text-rose-400">80</span>
                       <span className="text-white/50">=</span>
-                      <span className="text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">110</span>
+                      <span className="text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">320</span>
                   </div>
               )}
               {activeStep === 3 && (
@@ -328,22 +335,22 @@ export function LabContent() {
                       <span className="text-white/50">=</span>
                       <div className="flex items-center gap-3">
                           <span className="text-emerald-400 bg-emerald-900/40 px-3 py-1 rounded-lg">Original</span>
-                          <span className="text-white/80">+</span>
-                          <span className="text-yellow-400 bg-yellow-900/40 px-3 py-1 rounded-lg">Increase</span>
+                          <span className="text-white/80">-</span>
+                          <span className="text-rose-400 bg-rose-900/40 px-3 py-1 rounded-lg">Decrease</span>
                       </div>
                   </div>
               )}
               {activeStep === 4 && (
                   <div className="flex flex-col items-center gap-4 mt-6">
                       <div className="flex items-center gap-3 sm:gap-5 text-2xl sm:text-5xl font-black text-white">
-                          <span className="text-emerald-400">50</span>
-                          <span className="text-white/80">+</span>
-                          <span className="text-yellow-400">(20% of 50)</span>
+                          <span className="text-emerald-400">80</span>
+                          <span className="text-white/80">-</span>
+                          <span className="text-rose-400">(25% of 80)</span>
                       </div>
                       <div className="flex items-center gap-3 sm:gap-5 text-3xl sm:text-5xl font-black text-white opacity-50">
-                          <span className="text-emerald-400">50</span>
-                          <span className="text-white/80">+</span>
-                          <span className="text-yellow-400">10</span>
+                          <span className="text-emerald-400">80</span>
+                          <span className="text-white/80">-</span>
+                          <span className="text-rose-400">20</span>
                           <span className="text-white/50">=</span>
                           <span className="text-white">60</span>
                       </div>
@@ -358,7 +365,7 @@ export function LabContent() {
       <div className="absolute inset-0 opacity-[0.1] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" />
 
       {/* HEADER */}
-      <HeaderSection onBack={() => navigate(-1)} title={appMode === 'concept' ? "Percentage Increase Lab" : "Percentage Simulator"} appMode={appMode} setAppMode={handleSetMode} onReset={handleReset} />
+      <HeaderSection onBack={() => navigate(-1)} title={appMode === 'concept' ? "Percentage Decrease Lab" : "Percentage Simulator"} appMode={appMode} setAppMode={handleSetMode} onReset={handleReset} />
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 w-full max-w-7xl mx-auto flex flex-col gap-3 p-2 sm:p-4 relative z-10 overflow-hidden min-h-0">
@@ -369,7 +376,7 @@ export function LabContent() {
                 <div className="flex-[1.2] lg:flex-[1.4] w-full bg-[#110c0b] rounded-[1.5rem] sm:rounded-[2rem] border-2 sm:border-4 border-black shadow-2xl relative flex flex-col items-center justify-center overflow-hidden min-h-[160px] sm:min-h-[200px]">
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 0)', backgroundSize: '30px 30px' }} />
                     <div className="absolute top-3 left-3 sm:top-5 sm:left-5 flex items-center justify-center gap-2 opacity-50 text-[10px] sm:text-[12px] font-black uppercase tracking-widest leading-none text-white z-20">
-                        <TrendingUp size={14} /> Digital Math Board
+                        <TrendingDown size={14} /> Digital Math Board
                     </div>
                     {/* HTML Math Rendering Area */}
                     <div className="relative w-full h-full flex flex-col items-center justify-center p-4 sm:p-8 z-10">
@@ -389,10 +396,10 @@ export function LabContent() {
                             {activeStep >= 3 && (
                                 <div className="bg-emerald-900/20 border-2 border-emerald-500/30 p-3 sm:p-4 rounded-xl flex flex-col items-center text-center shadow-inner shrink-0">
                                     <span className="text-emerald-300 font-black uppercase text-[9px] sm:text-[10px] tracking-widest mb-1.5 flex items-center gap-1">
-                                        <TrendingUp size={12} /> The General Formula
+                                        <TrendingDown size={12} /> The General Formula
                                     </span>
                                     <span className="text-white font-mono text-[12px] sm:text-[14px] font-black tracking-wider">
-                                        New = Original + Increase
+                                        New = Original - Decrease
                                     </span>
                                 </div>
                             )}
@@ -623,8 +630,8 @@ export function LabContent() {
                       </h2>
                       <p className="text-[#e6dccb] text-sm sm:text-base font-medium px-4">
                           {appMode === 'concept' 
-                              ? "You've successfully learned how to calculate percentage increases!" 
-                              : "You solved the Increase challenges flawlessly!"}
+                              ? "You've successfully learned how to calculate percentage decreases!" 
+                              : "You solved the Decrease challenges flawlessly!"}
                       </p>
                   </div>
                   
@@ -657,4 +664,4 @@ export function LabContent() {
   );
 }
 
-export default function App() { return ( <Router> <LabContent /> </Router> ); }
+// export default function App() { return ( <Router> <LabContent /> </Router> ); }

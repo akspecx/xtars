@@ -165,7 +165,7 @@ const LOGIC_DATA = {
   }
 };
 
-export function LabContent() {
+export default function LabContent() {
   const navigate = useNavigate();
   const [appMode, setAppMode] = useState('concept');
   const [activeStep, setActiveStep] = useState(0);
@@ -821,4 +821,4 @@ export function LabContent() {
   );
 }
 
-export default function App() { return ( <Router> <LabContent /> </Router> ); }
+// export default function App() { return ( <Router> <LabContent /> </Router> ); }

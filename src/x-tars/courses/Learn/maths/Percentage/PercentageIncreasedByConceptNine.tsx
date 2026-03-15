@@ -16,8 +16,7 @@ import {
   FastForward,
   CheckCircle2,
   Target,
-  TrendingDown,
-  Layers
+  TrendingUp
 } from 'lucide-react';
 import { HashRouter as Router, useNavigate } from 'react-router-dom';
 
@@ -57,129 +56,129 @@ function HeaderSection({ onBack, title, appMode, setAppMode, onReset }) {
 
 const LOGIC_DATA = {
   concept: {
-    question: "What is the fundamental meaning of a Percentage?",
+    question: "How do we calculate an 'Increased By' percentage?",
     teachingSteps: [
       { 
         id: "step-1",
-        title: "The Meaning of Percent",
-        explanation: "Step 1: Decode the word.\nThe word 'Cent' means 100. So, 'Percent' literally means 'out of every 100'.\n\nIf someone says you get 25%, it means if there are 100 items, you get exactly 25.",
-        selectionPrompt: "Based on this, what does 25% mean?",
-        options: ["25 out of 100", "100 out of 25", "25 added to 100"],
+        title: "Finding the Increase Value",
+        explanation: "Step 1: Find the value of the percent.\nImagine you have ₹100 today, and it will increase by 10% next year. First, we must figure out exactly what that 10% is in rupees.",
+        selectionPrompt: "What is 10% of ₹100?",
+        options: ["₹10", "₹90", "₹110"],
         correct: 0,
         feedback: [
-          "Exactly! 25% simply means 25 out of every 100.",
-          "You have the numbers backwards!",
-          "Percent means a portion out of 100, not addition."
+          "Exactly! 10% out of 100 is just 10.",
+          "That would be 90%.",
+          "That is the final total, not just the 10% piece!"
         ],
-        why: "25% literally translates to getting 25 items from a total pool of 100 items."
+        why: "To find 10% of 100, we calculate (10/100) * 100 = 10."
       },
       { 
         id: "step-2",
-        title: "Out of Just One",
-        explanation: "Step 2: The 'Out of 1' Rule.\nIf you get 25 out of 100, how much do you get out of just 1 single item? To find out, we divide by 100.",
-        selectionPrompt: "How do we write the fraction you get out of 1 item?",
-        options: ["100 ÷ 25", "25 ÷ 100", "25 × 1"],
+        title: "The Meaning of Increase",
+        explanation: "Step 2: Understanding 'Increase'.\nNow we know the increase amount is ₹10. The word 'increase' means your original money is growing larger.",
+        selectionPrompt: "What do you do with this ₹10?",
+        options: ["Subtract it from ₹100", "Add it to ₹100", "Multiply it by ₹100"],
         correct: 1,
         feedback: [
-          "The 100 must be on the bottom (the total pool).",
-          "Yes! Out of 1 single item, you get a fraction: 25/100.",
-          "That doesn't divide it down to a single unit's share."
+          "Subtracting would mean your money 'decreased'.",
+          "Yes! 'Increase' always means we ADD to our original amount.",
+          "Multiplying would give us an incredibly huge, incorrect number!"
         ],
-        why: "If 100 items yield 25, then 1 item yields 25 ÷ 100. This is the unitary method!"
+        why: "Increase = Addition. We must add the growth value back to the starting value."
       },
       { 
         id: "step-3",
-        title: "Scaling to Any Number",
-        explanation: "Step 3: Scaling Up.\nNow we know that for every 1 item, your share is the fraction (25/100).\n\nWhat if the total quantity is 8 instead of 1?",
-        selectionPrompt: "If out of 1 you get (25/100), how do you find what you get out of 8?",
-        options: ["Add 8", "Divide by 8", "Multiply by 8"],
-        correct: 2,
+        title: "The Final Total",
+        explanation: "Step 3: Calculating the New Amount.\nSince the money is increasing, we take the Original Amount (₹100) and ADD the Increase Amount (₹10).",
+        selectionPrompt: "What is the new total amount you will get next year?",
+        options: ["₹110", "₹90", "₹1000"],
+        correct: 0,
         feedback: [
-          "Adding won't scale the fraction properly.",
-          "Dividing would make your share even smaller!",
-          "Exactly! You multiply the 'out of 1' fraction by 8."
+          "Perfect! 100 + 10 = 110.",
+          "This would be a decrease.",
+          "Your math is way off here!"
         ],
-        why: "If 1 unit gives you 25/100, then 8 units will give you 8 times that amount."
+        why: "₹100 (Original) + ₹10 (Increase) = ₹110."
       },
       { 
         id: "step-4",
-        title: "Solving the Equation",
-        explanation: "Step 4: The Final Calculation.\nYou've built the equation! To find 25% of 8, you calculate: (25/100) × 8.\n\nHint: 25/100 simplifies to 1/4. What is a quarter of 8?",
-        selectionPrompt: "Solve the equation: (25 ÷ 100) × 8",
-        options: ["It equals 2", "It equals 4", "It equals 25"],
+        title: "The General Rule",
+        explanation: "Step 4: The Golden Formula.\nNotice the pattern! We started with our Original amount, calculated a percentage of it, and then added them together.",
+        selectionPrompt: "Which general formula works for ANY 'increased by' problem?",
+        options: ["Original + Increase", "Original × Percent", "Increase - Original"],
         correct: 0,
         feedback: [
-          "Perfect! 8 divided by 4 is exactly 2.",
-          "Check your math again: 8 / 4.",
-          "25 is the percentage, not the final answer!"
+          "Exactly! You always add the calculated increase to your starting amount.",
+          "That only gives you the increase amount, not the final total.",
+          "That would give you a negative number!"
         ],
-        why: "By breaking it down to 'out of 1', we easily calculated that 25% of 8 is 2."
+        why: "New Value = Original Amount + Increase Amount."
       },
       { 
         id: "step-5",
-        title: "The Universal Formula",
-        explanation: "Step 5: The General Rule.\nNotice what we just did. To find ANY percentage of a number:\n\n1. Find what it is out of 1: (Percent / 100)\n2. Multiply by your target number.",
-        selectionPrompt: "What is the universal formula for finding P% of N?",
-        options: ["(100 ÷ P) × N", "(P × 100) + N", "(P ÷ 100) × N"],
-        correct: 2,
+        title: "Test the Formula",
+        explanation: "Step 5: Apply it to a new number.\nLet's test our rule: What is 50 increased by 20%?\n\nHint: First find 20% of 50. Then add that to the original 50.",
+        selectionPrompt: "Calculate the final value:",
+        options: ["60", "70", "10"],
+        correct: 0,
         feedback: [
-          "The Percent goes on top!",
-          "We use division and multiplication, not addition.",
-          "Yes! This formula works perfectly for every percentage problem."
+          "Yes! 20% of 50 is 10. And 50 + 10 = 60.",
+          "You added 20 instead of 20%!",
+          "10 is just the increase amount. You forgot to add it back to 50!"
         ],
-        why: "P% of N is always (P ÷ 100) × N."
+        why: "Original (50) + Increase (10) = 60."
       }
     ],
     clues: [
-      { id: 1, step: 0, concept: "Per-Cent", explanation: "Percent literally means 'out of 100'.", text: "25% = 25 out of 100" },
-      { id: 2, step: 1, concept: "Out of 1", explanation: "Divide by 100 to find what the share is out of a single 1 unit.", text: "Out of 1 = 25/100" },
-      { id: 3, step: 2, concept: "Scale Up", explanation: "Multiply that fraction by your total target quantity.", text: "Multiply by Total" },
-      { id: 4, step: 3, concept: "The Universal Rule", explanation: "Value = (Percent ÷ 100) × Target Number.", text: "(P/100) × N" }
+      { id: 1, step: 0, concept: "Step 1: Find the %", explanation: "First, calculate what the percentage value is in real numbers.", text: "Calculate the Increase" },
+      { id: 2, step: 1, concept: "Increase = Add", explanation: "The word 'increase' tells us to use Addition (+).", text: "Increase means +" },
+      { id: 3, step: 2, concept: "Step 2: Combine", explanation: "Add the increase value to your starting value to get the final answer.", text: "Original + Increase" },
+      { id: 4, step: 3, concept: "Consistency", explanation: "This 2-step process works for every single 'increased by' problem.", text: "Works Every Time" }
     ]
   },
   practice: {
-    question: "Apply the fundamental 'Out of 1' logic to solve these puzzles!",
+    question: "Apply the 'Original + Increase' rule to solve these puzzles!",
     quiz: [
       { 
-        q: "If 40% means '40 out of 100', what fraction represents the portion you get out of exactly 1 unit?", 
-        options: ["40 ÷ 100", "100 ÷ 40", "40 × 100"], 
+        q: "A toy costs ₹200. Its price is increased by 10%. What is the new price?", 
+        options: ["₹220", "₹210", "₹20"], 
         correct: 0, 
-        explanation: "To find the value out of 1, you divide the percentage by 100. So, it is 40/100.",
-        breakdown: { logic: "40 out of 100", calculation: "Divide by 100", jump: "40 ÷ 100" }
+        explanation: "First find 10% of 200, which is 20. Then add it to the original price: 200 + 20 = 220.",
+        breakdown: { logic: "10% of 200 = 20", calculation: "Original (200) + Increase (20)", jump: "₹220" }
       },
       { 
-        q: "You know 40% means (40/100) out of 1 single item. How would you calculate the share out of a total of 50 items?", 
-        options: ["(40 ÷ 100) + 50", "(40 ÷ 100) × 50", "40 × 50"], 
-        correct: 1, 
-        explanation: "If 1 item gives you 40/100, then 50 items give you 50 times that amount: (40/100) * 50.",
-        breakdown: { logic: "Share for 1 = 40/100", calculation: "Multiply by 50 items", jump: "(40 ÷ 100) × 50" }
+        q: "Your game score was 50 points. It increased by 20%. What is your new score?", 
+        options: ["60 Points", "70 Points", "10 Points"], 
+        correct: 0, 
+        explanation: "20% of 50 is 10 points. Add that to the original score: 50 + 10 = 60.",
+        breakdown: { logic: "20% of 50 = 10", calculation: "Original (50) + Increase (10)", jump: "60 Points" }
       },
       { 
-        q: "Solve it: What is the exact value of 40% of 50?", 
-        options: ["20", "40", "200"], 
+        q: "A plant was 100 cm tall. It grew (increased) by 25%. How tall is it now?", 
+        options: ["125 cm", "25 cm", "150 cm"], 
         correct: 0, 
-        explanation: "(40/100) * 50. Simplify 40/100 to 4/10. Then 4/10 * 50 = 20.",
-        breakdown: { logic: "(40 ÷ 100) × 50", calculation: "(4 ÷ 10) × 50", jump: "20" }
+        explanation: "25% of 100 is 25. Add the growth to the original height: 100 + 25 = 125.",
+        breakdown: { logic: "25% of 100 = 25", calculation: "Original (100) + Increase (25)", jump: "125 cm" }
       },
       { 
-        q: "If 5% means 5 out of 100, how do you write the equation to find 5% of 200?", 
-        options: ["(5 ÷ 100) × 200", "5 × 200", "(100 ÷ 5) × 200"], 
+        q: "House rent is ₹500. Next month it increases by 10%. What is the new rent?", 
+        options: ["₹550", "₹510", "₹600"], 
         correct: 0, 
-        explanation: "Find the value out of 1 (5/100), then multiply by the total (200).",
-        breakdown: { logic: "Out of 1 = 5/100", calculation: "Multiply by 200", jump: "(5 ÷ 100) × 200" }
+        explanation: "10% of 500 is 50. Add it to the original rent: 500 + 50 = 550.",
+        breakdown: { logic: "10% of 500 = 50", calculation: "Original (500) + Increase (50)", jump: "₹550" }
       },
       { 
-        q: "What is the final value of 5% of 200?", 
-        options: ["10", "100", "20"], 
+        q: "A baker made 40 cakes yesterday. Today he increased production by 50%. How many cakes did he make today?", 
+        options: ["60 Cakes", "20 Cakes", "90 Cakes"], 
         correct: 0, 
-        explanation: "(5/100) * 200. The 200 divided by 100 is 2. So, 5 * 2 = 10.",
-        breakdown: { logic: "(5 ÷ 100) × 200", calculation: "5 × 2", jump: "10" }
+        explanation: "50% (which means exactly half) of 40 is 20. Add the extra 20 cakes to the original 40: 40 + 20 = 60.",
+        breakdown: { logic: "50% of 40 = 20", calculation: "Original (40) + Increase (20)", jump: "60 Cakes" }
       }
     ]
   }
 };
 
-export function LabContent() {
+export default function LabContent() {
   const navigate = useNavigate();
   const [appMode, setAppMode] = useState('concept');
   const [activeStep, setActiveStep] = useState(0);
@@ -285,15 +284,6 @@ export function LabContent() {
 
   // --- HTML Digital Math Board ---
   const MathBoard = () => {
-      if (appMode === 'practice') {
-          return (
-              <div className="flex flex-col items-center text-center gap-4 animate-pulse">
-                  <Calculator size={64} className="text-[#3e2723]/30" />
-                  <span className="text-[#3e2723]/50 font-black uppercase tracking-widest text-sm">Calculate the value</span>
-              </div>
-          );
-      }
-
       // Concept Mode Dynamic Equations building up to the formula
       return (
           <div className="flex flex-col items-center justify-center w-full h-full relative">
@@ -304,57 +294,59 @@ export function LabContent() {
               </div>
 
               {activeStep === 0 && (
-                  <div className="flex flex-col items-center gap-3 mt-6">
-                      <span className="text-yellow-400 text-4xl sm:text-6xl font-black">25%</span>
-                      <span className="text-white/50 text-xl sm:text-3xl">=</span>
-                      <span className="text-emerald-400 text-3xl sm:text-5xl font-black drop-shadow-md">25 out of 100</span>
+                  <div className="flex items-center gap-4 sm:gap-6 text-3xl sm:text-5xl font-black text-white mt-6">
+                      <span className="text-emerald-400">10% of 100</span>
+                      <span className="text-white/50">=</span>
+                      <span className="text-yellow-400">?</span>
                   </div>
               )}
               {activeStep === 1 && (
-                  <div className="flex flex-col items-center gap-3 mt-6">
-                      <span className="text-white text-2xl sm:text-4xl font-black tracking-wider">Out of 1</span>
-                      <span className="text-white/50 text-xl sm:text-2xl">=</span>
-                      <div className="flex flex-col items-center">
-                          <span className="text-emerald-400 border-b-4 sm:border-b-8 border-white/30 pb-1 sm:pb-2 px-3 sm:px-6 text-4xl sm:text-6xl font-black drop-shadow-md">25</span>
-                          <span className="text-sky-400 pt-1 sm:pt-2 px-3 sm:px-6 text-4xl sm:text-6xl font-black drop-shadow-md">100</span>
+                  <div className="flex items-center gap-3 sm:gap-5 text-2xl sm:text-4xl font-black text-white mt-6">
+                      <div className="flex flex-col items-center bg-black/40 p-4 rounded-xl border border-white/10">
+                          <span className="text-white/50 text-xs sm:text-sm uppercase tracking-widest mb-1">Original</span>
+                          <span className="text-emerald-400">100</span>
+                      </div>
+                      <span className="text-white/50">?</span>
+                      <div className="flex flex-col items-center bg-black/40 p-4 rounded-xl border border-white/10">
+                          <span className="text-yellow-400/50 text-xs sm:text-sm uppercase tracking-widest mb-1">Increase</span>
+                          <span className="text-yellow-400">10</span>
                       </div>
                   </div>
               )}
               {activeStep === 2 && (
-                  <div className="flex items-center gap-4 sm:gap-8 mt-6">
-                      <span className="text-white text-3xl sm:text-5xl font-black text-center leading-none">
-                          Out of<br/><span className="text-yellow-400">8</span> =
-                      </span>
-                      <div className="flex flex-col items-center">
-                          <span className="text-emerald-400 border-b-4 sm:border-b-8 border-white/30 pb-1 sm:pb-2 px-3 sm:px-5 text-4xl sm:text-6xl font-black drop-shadow-md">25</span>
-                          <span className="text-sky-400 pt-1 sm:pt-2 px-3 sm:px-5 text-4xl sm:text-6xl font-black drop-shadow-md">100</span>
-                      </div>
-                      <span className="text-white/50 text-3xl sm:text-5xl">×</span>
-                      <span className="text-yellow-400 text-4xl sm:text-7xl font-black">8</span>
+                  <div className="flex items-center gap-4 sm:gap-6 text-3xl sm:text-6xl font-black text-white mt-6">
+                      <span className="text-emerald-400">100</span>
+                      <span className="text-white/80">+</span>
+                      <span className="text-yellow-400">10</span>
+                      <span className="text-white/50">=</span>
+                      <span className="text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">110</span>
                   </div>
               )}
               {activeStep === 3 && (
-                  <div className="flex items-center gap-3 sm:gap-6 mt-6">
-                      <div className="flex flex-col items-center opacity-50">
-                          <span className="text-emerald-400 border-b-2 sm:border-b-4 border-white/30 pb-1 px-2 text-2xl sm:text-4xl font-black">25</span>
-                          <span className="text-sky-400 pt-1 px-2 text-2xl sm:text-4xl font-black">100</span>
+                  <div className="flex items-center gap-3 sm:gap-5 text-xl sm:text-4xl font-black text-white mt-6">
+                      <span className="text-white">New Value</span>
+                      <span className="text-white/50">=</span>
+                      <div className="flex items-center gap-3">
+                          <span className="text-emerald-400 bg-emerald-900/40 px-3 py-1 rounded-lg">Original</span>
+                          <span className="text-white/80">+</span>
+                          <span className="text-yellow-400 bg-yellow-900/40 px-3 py-1 rounded-lg">Increase</span>
                       </div>
-                      <span className="text-white/50 text-xl sm:text-3xl">×</span>
-                      <span className="text-yellow-400 text-2xl sm:text-4xl font-black opacity-50">8</span>
-                      <span className="text-white/50 text-3xl sm:text-5xl">=</span>
-                      <span className="text-emerald-400 drop-shadow-[0_0_20px_rgba(52,211,153,0.6)] text-6xl sm:text-8xl font-black">2</span>
                   </div>
               )}
               {activeStep === 4 && (
-                  <div className="flex items-center gap-3 sm:gap-6 mt-6">
-                      <span className="text-yellow-400 text-3xl sm:text-5xl font-black tracking-tight">P% of N</span>
-                      <span className="text-white/50 text-3xl sm:text-5xl">=</span>
-                      <div className="flex flex-col items-center">
-                          <span className="text-emerald-400 border-b-4 sm:border-b-8 border-white/30 pb-1 sm:pb-2 px-3 sm:px-5 text-3xl sm:text-5xl font-black drop-shadow-md">P</span>
-                          <span className="text-sky-400 pt-1 sm:pt-2 px-3 sm:px-5 text-3xl sm:text-5xl font-black drop-shadow-md">100</span>
+                  <div className="flex flex-col items-center gap-4 mt-6">
+                      <div className="flex items-center gap-3 sm:gap-5 text-2xl sm:text-5xl font-black text-white">
+                          <span className="text-emerald-400">50</span>
+                          <span className="text-white/80">+</span>
+                          <span className="text-yellow-400">(20% of 50)</span>
                       </div>
-                      <span className="text-white/50 text-3xl sm:text-5xl">×</span>
-                      <span className="text-white text-4xl sm:text-6xl font-black">N</span>
+                      <div className="flex items-center gap-3 sm:gap-5 text-3xl sm:text-5xl font-black text-white opacity-50">
+                          <span className="text-emerald-400">50</span>
+                          <span className="text-white/80">+</span>
+                          <span className="text-yellow-400">10</span>
+                          <span className="text-white/50">=</span>
+                          <span className="text-white">60</span>
+                      </div>
                   </div>
               )}
           </div>
@@ -366,7 +358,7 @@ export function LabContent() {
       <div className="absolute inset-0 opacity-[0.1] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" />
 
       {/* HEADER */}
-      <HeaderSection onBack={() => navigate(-1)} title={appMode === 'concept' ? "Percentage Foundation Lab" : "Percentage Simulator"} appMode={appMode} setAppMode={handleSetMode} onReset={handleReset} />
+      <HeaderSection onBack={() => navigate(-1)} title={appMode === 'concept' ? "Percentage Increase Lab" : "Percentage Simulator"} appMode={appMode} setAppMode={handleSetMode} onReset={handleReset} />
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 w-full max-w-7xl mx-auto flex flex-col gap-3 p-2 sm:p-4 relative z-10 overflow-hidden min-h-0">
@@ -377,7 +369,7 @@ export function LabContent() {
                 <div className="flex-[1.2] lg:flex-[1.4] w-full bg-[#110c0b] rounded-[1.5rem] sm:rounded-[2rem] border-2 sm:border-4 border-black shadow-2xl relative flex flex-col items-center justify-center overflow-hidden min-h-[160px] sm:min-h-[200px]">
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 0)', backgroundSize: '30px 30px' }} />
                     <div className="absolute top-3 left-3 sm:top-5 sm:left-5 flex items-center justify-center gap-2 opacity-50 text-[10px] sm:text-[12px] font-black uppercase tracking-widest leading-none text-white z-20">
-                        <Layers size={14} /> Digital Math Board
+                        <TrendingUp size={14} /> Digital Math Board
                     </div>
                     {/* HTML Math Rendering Area */}
                     <div className="relative w-full h-full flex flex-col items-center justify-center p-4 sm:p-8 z-10">
@@ -393,6 +385,18 @@ export function LabContent() {
                         
                         {/* Left Column: Concept Summary */}
                         <div className="flex flex-col gap-3 h-full min-h-0">
+                            {/* PERSISTENT GENERAL FORMULA (Always visible if activeStep >= 3) */}
+                            {activeStep >= 3 && (
+                                <div className="bg-emerald-900/20 border-2 border-emerald-500/30 p-3 sm:p-4 rounded-xl flex flex-col items-center text-center shadow-inner shrink-0">
+                                    <span className="text-emerald-300 font-black uppercase text-[9px] sm:text-[10px] tracking-widest mb-1.5 flex items-center gap-1">
+                                        <TrendingUp size={12} /> The General Formula
+                                    </span>
+                                    <span className="text-white font-mono text-[12px] sm:text-[14px] font-black tracking-wider">
+                                        New = Original + Increase
+                                    </span>
+                                </div>
+                            )}
+
                             {/* Concept Summary Text (Clues) */}
                             <div className="flex-1 flex flex-col bg-[#2a1a16]/95 rounded-2xl border-2 border-black/50 shadow-lg overflow-y-auto custom-scrollbar p-3 sm:p-4">
                                 <div className="flex items-center gap-2 opacity-50 mb-2 border-b border-white/10 pb-2 shrink-0">
@@ -569,11 +573,11 @@ export function LabContent() {
                                 </h4>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-white mb-4 shrink-0">
                                     <div className="bg-black/40 p-4 rounded-xl border border-white/5 shadow-inner">
-                                        <span className="text-white/50 text-[10px] uppercase tracking-wider block mb-1 flex items-center gap-1.5"><DivideSquare size={14}/> Find the 1 Unit Share</span>
+                                        <span className="text-white/50 text-[10px] uppercase tracking-wider block mb-1 flex items-center gap-1.5"><Percent size={14}/> Find The Percent</span>
                                         <span className="font-mono font-bold text-[12px] sm:text-[15px]">{currentQuizSet[quizStep].breakdown.logic}</span>
                                     </div>
                                     <div className="bg-black/40 p-4 rounded-xl border border-blue-500/30 shadow-inner">
-                                        <span className="text-blue-300 text-[10px] uppercase tracking-wider block mb-1 flex items-center gap-1.5"><Calculator size={14}/> Scale Up</span>
+                                        <span className="text-blue-300 text-[10px] uppercase tracking-wider block mb-1 flex items-center gap-1.5"><Calculator size={14}/> Apply Formula</span>
                                         <span className="font-mono font-bold text-[12px] sm:text-[15px] text-blue-400">{currentQuizSet[quizStep].breakdown.calculation}</span>
                                     </div>
                                     <div className="bg-black/40 p-4 rounded-xl border border-emerald-500/30 shadow-inner sm:col-span-2">
@@ -619,8 +623,8 @@ export function LabContent() {
                       </h2>
                       <p className="text-[#e6dccb] text-sm sm:text-base font-medium px-4">
                           {appMode === 'concept' 
-                              ? "You've successfully learned the fundamental meaning of percentage!" 
-                              : "You solved the foundation percentage challenges flawlessly!"}
+                              ? "You've successfully learned how to calculate percentage increases!" 
+                              : "You solved the Increase challenges flawlessly!"}
                       </p>
                   </div>
                   
@@ -653,4 +657,4 @@ export function LabContent() {
   );
 }
 
-export default function App() { return ( <Router> <LabContent /> </Router> ); }
+// export default function App() { return ( <Router> <LabContent /> </Router> ); }
