@@ -364,7 +364,7 @@ export default function App() {
                         </div>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto max-h-[350px] sm:max-h-[450px] pr-2 no-scrollbar mb-8">
+                    <div className="flex-1 overflow-y-auto max-h-[350px] sm:max-h-[450px] pr-2 mb-8">
                         <div className="grid grid-cols-5 sm:grid-cols-8 gap-3 sm:gap-5">
                             {testingLog.map(item => (
                                 <div key={item.weight} className={`aspect-square rounded-xl sm:rounded-2xl flex items-center justify-center text-xs sm:text-2xl font-black transition-all duration-500 ${
@@ -502,11 +502,6 @@ export default function App() {
          )}
        </AnimatePresence>
 
-       {/* GLOBAL STYLE FIXES */}
-       <style dangerouslySetInnerHTML={{ __html: `
-         .no-scrollbar::-webkit-scrollbar { display: none; }
-         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-       ` }} />
    </div>
  );
 }

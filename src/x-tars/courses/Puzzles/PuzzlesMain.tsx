@@ -76,8 +76,8 @@ const BalanceScaleMission = () => {
               <ChevronLeft size={24} />
             </motion.button>
             <div className="text-center">
-              <span className="text-[11px] font-black uppercase opacity-60 tracking-[0.5em] mb-2 block">Neural Link Calibration</span>
-              <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none text-[#3e2723]">Scale Mission</h2>
+              <span className="text-[11px] font-bold opacity-60 tracking-[0.05em] mb-2 block">Neural Link Calibration</span>
+              <h2 className="text-3xl sm:text-5xl font-bold tracking-[0.05em] leading-none text-[#3e2723]">Scale Mission</h2>
             </div>
             <button 
               onClick={() => setShowLogic(!showLogic)} 
@@ -109,13 +109,13 @@ const BalanceScaleMission = () => {
           </div>
 
           <div className="flex flex-col items-center gap-6 w-full max-w-md">
-            <p className="text-sm font-black uppercase text-[#8d6e63] tracking-[0.2em] text-center italic">Determine individual unit weight</p>
+            <p className="text-sm font-normal text-[#5C4033] text-center italic">Determine individual unit weight</p>
             <div className="flex w-full gap-4">
               <input 
                 type="number" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="---"
                 className={`flex-1 bg-white border-2 rounded-[1.5rem] px-6 py-4 text-3xl font-black text-center focus:outline-none transition-all shadow-inner ${isCorrect === true ? 'border-emerald-500 text-emerald-600 shadow-xl' : isCorrect === false ? 'border-rose-500 animate-shake' : 'border-[#c4a484]/30 text-[#3e2723]'}`}
               />
-              <motion.button whileTap={{ scale: 0.95 }} onClick={handleCheck} className="bg-[#3e2723] text-white px-10 rounded-[1.5rem] font-black uppercase text-xs tracking-widest shadow-[0_6px_0_#000] active:translate-y-1 active:shadow-none transition-all">Validate</motion.button>
+              <motion.button whileTap={{ scale: 0.95 }} onClick={handleCheck} className="bg-[#3e2723] text-white px-10 rounded-[1.5rem] font-bold text-xs tracking-[0.05em] shadow-[0_6px_0_#000] active:translate-y-1 active:shadow-none transition-all">Validate</motion.button>
             </div>
           </div>
         </div>
@@ -126,7 +126,7 @@ const BalanceScaleMission = () => {
         {showLogic && (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="bg-[#3e2723] text-white p-10 rounded-[3.5rem] shadow-2xl relative overflow-hidden border-b-8 border-black">
              <div className="absolute top-0 right-0 p-8 opacity-5 rotate-12"><BrainCircuit size={160} /></div>
-             <div className="flex items-center gap-4 mb-10"><Info className="text-amber-400" /><h3 className="text-xl font-black uppercase tracking-widest leading-none">Neural Logic Feed</h3></div>
+             <div className="flex items-center gap-4 mb-10"><Info className="text-amber-400" /><h3 className="text-xl font-bold tracking-[0.05em] leading-none">Neural Logic Feed</h3></div>
              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {[
                   { label: "Balance Equality", formula: "Weight Left = Weight Right", desc: "Total weight on right scale = Total weight of left scale as it is balanced scale." },
@@ -134,8 +134,8 @@ const BalanceScaleMission = () => {
                   { label: "Division Logic", formula: "$$Weight = 500g \\div 5$$", desc: "Therefore, the weight of one apple equals the total weight divided by the number of apples." }
                 ].map((item, idx) => (
                   <div key={idx} className="bg-white/5 p-7 rounded-[2.5rem] border border-white/10 group hover:bg-white/10 transition-colors">
-                    <span className="text-[10px] font-black uppercase text-amber-400 mb-2 block tracking-widest leading-none">Phase 0{idx + 1}</span>
-                    <h4 className="text-sm font-black uppercase mb-1">{String(item.label)}</h4>
+                    <span className="text-[10px] font-bold text-amber-400 mb-2 block tracking-[0.05em] leading-none">Phase 0{idx + 1}</span>
+                    <h4 className="text-sm font-bold mb-1">{String(item.label)}</h4>
                     <div className="text-lg font-black text-white mb-4 leading-tight">{String(item.formula)}</div>
                     <p className="text-[11px] font-medium opacity-60 leading-relaxed italic group-hover:opacity-100 transition-opacity">"{String(item.desc)}"</p>
                   </div>
@@ -182,21 +182,27 @@ export default function PuzzlesSubModules() {
             <motion.div key="hub" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col gap-10 pb-24">
               
               {/* Header Plank Tile */}
-              <div className="bg-[#faf9f6] p-10 sm:p-16 rounded-[4rem] border-2 border-[#c4a484]/30 shadow-[10px_10px_0px_#a88a6d,15px_15px_40px_rgba(0,0,0,0.05)] relative overflow-hidden group">
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-10">
+              <div className="bg-[#faf9f6] p-5 sm:p-8 rounded-[3.5rem] border-2 border-[#c4a484]/30 shadow-[8px_8px_0px_#a88a6d,12px_12px_30px_rgba(0,0,0,0.05)] relative overflow-hidden group h-[25vh] max-h-[220px]">
+                <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
                    <div className="text-center md:text-left max-w-2xl text-[#3e2723]">
-                      <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
-                         <div className="p-3 bg-[#3e2723] rounded-2xl text-white shadow-xl"><Target size={24} /></div>
-                         <h2 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter leading-none">{String(dynamicGreeting)}</h2>
+                      <div className="flex items-center justify-center md:justify-start gap-3 mb-3">
+                         <div className="p-2.5 bg-[#3e2723] rounded-2xl text-white shadow-xl"><Target size={20} /></div>
+                         <h2 className="text-2xl sm:text-3xl font-black tracking-[0.05em] leading-tight">{String(dynamicGreeting)}</h2>
                       </div>
-                      <p className="text-sm sm:text-lg font-bold uppercase tracking-[0.4em] leading-relaxed opacity-60">
-                        Operational intelligence required. Select a cognitive module to initiate calibration.
+                      <p className="text-xs sm:text-sm font-bold tracking-[0.02em] leading-relaxed opacity-60">
+                        Ready to learn something new? Pick a subject below to get started.
                       </p>
                    </div>
-                   <div className="flex items-center gap-6 shrink-0 bg-[#3e2723] p-8 rounded-[3rem] text-white shadow-2xl border-b-8 border-black">
+                   <div className="flex items-center gap-4 shrink-0 bg-[#3e2723] p-6 rounded-[2.5rem] text-white shadow-2xl border-b-8 border-black">
+                      <div className="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 shadow-xl border-2 border-white relative z-10">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.3"/>
+                          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" strokeDasharray="62.8" strokeDashoffset="18.84" strokeLinecap="round"/>
+                        </svg>
+                      </div>
                       <div className="text-center">
-                        <span className="text-[11px] font-black uppercase block mb-2 tracking-widest opacity-40">Active Links</span>
-                        <span className="text-5xl font-black tabular-nums">{String(PUZZLES_SUB_MODULES.length)}</span>
+                        <span className="text-[10px] font-bold block mb-1 tracking-[0.05em] opacity-40">Courses in Progress</span>
+                        <span className="text-4xl font-black tabular-nums">{String(PUZZLES_SUB_MODULES.length)}</span>
                       </div>
                    </div>
                 </div>
@@ -220,17 +226,17 @@ export default function PuzzlesSubModules() {
         </AnimatePresence>
 
         {!puzzleId && (
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-20 bg-[#3e2723]/5 backdrop-blur-sm p-12 sm:p-20 rounded-[5rem] border-4 border-dashed border-[#c4a484]/40 flex flex-col items-center text-center relative overflow-hidden z-10 group">
-            <Lightbulb className="text-[#c4a484] opacity-50 mb-12 w-20 h-20 group-hover:scale-110 transition-transform duration-1000" />
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-12 bg-[#3e2723]/5 backdrop-blur-sm p-6 sm:p-8 rounded-[3rem] border-2 border-dashed border-[#c4a484]/30 flex flex-col items-center text-center relative overflow-hidden z-10 group">
+            <Lightbulb className="text-[#c4a484] opacity-50 mb-6 w-14 h-14 group-hover:scale-110 transition-transform duration-1000" />
             <AnimatePresence mode="wait">
-              <motion.div key={quoteIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-5xl px-6">
-                 <p className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-[#3e2723] leading-tight mb-10 italic drop-shadow-sm">"{String(MOTIVATIONAL_QUOTES[quoteIndex].text)}"</p>
-                 <div className="flex items-center justify-center gap-5 text-[#c4a484]">
-                    <div className="w-20 h-[2px] bg-current opacity-30" />
-                    <span className="text-xs sm:text-base font-black uppercase tracking-[0.8em]">
+              <motion.div key={quoteIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-4xl px-4">
+                 <p className="text-lg sm:text-xl font-bold tracking-[0.04em] text-[#3e2723] leading-tight mb-4 italic drop-shadow-sm">"{String(MOTIVATIONAL_QUOTES[quoteIndex].text)}"</p>
+                 <div className="flex items-center justify-center gap-3 text-[#c4a484]">
+                    <div className="w-12 h-[1.5px] bg-current opacity-30" />
+                    <span className="text-xs font-bold tracking-[0.03em]">
                        — {String(MOTIVATIONAL_QUOTES[quoteIndex].author)}
                     </span>
-                    <div className="w-20 h-[2px] bg-current opacity-30" />
+                    <div className="w-12 h-[1.5px] bg-current opacity-30" />
                  </div>
               </motion.div>
             </AnimatePresence>
@@ -239,8 +245,6 @@ export default function PuzzlesSubModules() {
       </div>
 
       <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
         .animate-shake { animation: shake 0.2s ease-in-out 0s 2; }
       `}</style>

@@ -391,7 +391,7 @@ export default function AlgebraActionReactionLab() {
 
           {appMode === 'teach' ? (
             <div className="w-full flex flex-col gap-6">
-                <div className="flex justify-center gap-2 sm:gap-4 overflow-x-auto no-scrollbar pb-2">
+                <div className="flex justify-center gap-2 sm:gap-4 overflow-x-auto pb-2">
                     {TEACHING_STEPS.map((step, idx) => (
                       <button key={step.id} onClick={() => setTeachIndex(idx)}
                         className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-black uppercase text-[10px] sm:text-xs transition-all border-b-4 

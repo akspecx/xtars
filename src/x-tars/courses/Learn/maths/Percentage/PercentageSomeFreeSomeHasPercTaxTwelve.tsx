@@ -529,7 +529,7 @@ export function LabContent() {
             </>
         ) : (
             /* PRACTICE MODE LAYOUT: No Visualizer, Question Top, Explanation Bottom */
-            <div className="w-full h-full flex flex-col gap-3 sm:gap-4 overflow-y-auto no-scrollbar pb-2">
+            <div className="w-full h-full flex flex-col gap-3 sm:gap-4 overflow-y-auto pb-2">
                 
                 {/* TOP: QUESTION, OPTIONS & ACTIONS */}
                 <div className="bg-[#110c0b] rounded-[2rem] border-4 border-black shadow-2xl p-6 sm:p-10 flex flex-col items-center justify-center text-center shrink-0 relative min-h-[300px]">

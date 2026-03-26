@@ -182,18 +182,18 @@ export default function PuzzlesSubModules() {
             <motion.div key="hub" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col gap-10 pb-24">
               
               {/* Header Plank Tile */}
-              <div className="bg-[#faf9f6] p-10 sm:p-16 rounded-[4rem] border-2 border-[#c4a484]/30 shadow-[10px_10px_0px_#a88a6d,15px_15px_40px_rgba(0,0,0,0.05)] relative overflow-hidden group">
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-10">
+              <div className="bg-[#faf9f6] p-5 sm:p-8 rounded-[3.5rem] border-2 border-[#c4a484]/30 shadow-[8px_8px_0px_#a88a6d,12px_12px_30px_rgba(0,0,0,0.05)] relative overflow-hidden group">
+                <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
                    <div className="text-center md:text-left max-w-2xl text-[#3e2723]">
-                      <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
-                         <div className="p-3 bg-[#3e2723] rounded-2xl text-white shadow-xl"><Target size={24} /></div>
-                         <h2 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter leading-none">{String(dynamicGreeting)}</h2>
+                      <div className="flex items-center justify-center md:justify-start gap-3 mb-3">
+                         <div className="p-2.5 bg-[#3e2723] rounded-2xl text-white shadow-xl"><Target size={20} /></div>
+                         <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">{String(dynamicGreeting)}</h2>
                       </div>
-                      <p className="text-sm sm:text-lg font-bold uppercase tracking-[0.4em] leading-relaxed opacity-60">
-                        Operational intelligence required. Select a cognitive module to initiate calibration.
+                      <p className="text-xs sm:text-sm font-bold tracking-[0.05em] leading-relaxed opacity-60">
+                        Develop logical reasoning and analytical thinking. Pick a module to practice!
                       </p>
                    </div>
-                   <div className="flex items-center gap-6 shrink-0 bg-[#3e2723] p-8 rounded-[3rem] text-white shadow-2xl border-b-8 border-black">
+                   <div className="flex items-center gap-4 shrink-0 bg-[#3e2723] p-6 rounded-[2.5rem] text-white shadow-2xl border-b-8 border-black">
                       <div className="text-center">
                         <span className="text-[11px] font-black uppercase block mb-2 tracking-widest opacity-40">Active Links</span>
                         <span className="text-5xl font-black tabular-nums">{String(LEARN_SUB_MODULES.length)}</span>
@@ -220,17 +220,17 @@ export default function PuzzlesSubModules() {
         </AnimatePresence>
 
         {!puzzleId && (
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-20 bg-[#3e2723]/5 backdrop-blur-sm p-12 sm:p-20 rounded-[5rem] border-4 border-dashed border-[#c4a484]/40 flex flex-col items-center text-center relative overflow-hidden z-10 group">
-            <Lightbulb className="text-[#c4a484] opacity-50 mb-12 w-20 h-20 group-hover:scale-110 transition-transform duration-1000" />
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-12 bg-[#3e2723]/5 backdrop-blur-sm p-6 sm:p-8 rounded-[3rem] border-2 border-dashed border-[#c4a484]/30 flex flex-col items-center text-center relative overflow-hidden z-10 group">
+            <Lightbulb className="text-[#c4a484] opacity-50 mb-6 w-14 h-14 group-hover:scale-110 transition-transform duration-1000" />
             <AnimatePresence mode="wait">
-              <motion.div key={quoteIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-5xl px-6">
-                 <p className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-[#3e2723] leading-tight mb-10 italic drop-shadow-sm">"{String(MOTIVATIONAL_QUOTES[quoteIndex].text)}"</p>
-                 <div className="flex items-center justify-center gap-5 text-[#c4a484]">
-                    <div className="w-20 h-[2px] bg-current opacity-30" />
-                    <span className="text-xs sm:text-base font-black uppercase tracking-[0.8em]">
+              <motion.div key={quoteIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-4xl px-4">
+                 <p className="text-lg sm:text-xl font-bold tracking-[0.04em] text-[#3e2723] leading-tight mb-4 italic drop-shadow-sm">"{String(MOTIVATIONAL_QUOTES[quoteIndex].text)}"</p>
+                 <div className="flex items-center justify-center gap-3 text-[#c4a484]">
+                    <div className="w-12 h-[1.5px] bg-current opacity-30" />
+                    <span className="text-xs font-bold tracking-[0.03em]">
                        — {String(MOTIVATIONAL_QUOTES[quoteIndex].author)}
                     </span>
-                    <div className="w-20 h-[2px] bg-current opacity-30" />
+                    <div className="w-12 h-[1.5px] bg-current opacity-30" />
                  </div>
               </motion.div>
             </AnimatePresence>

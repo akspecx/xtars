@@ -351,7 +351,7 @@ export default function App() {
                   <h2 className="text-3xl sm:text-6xl font-black uppercase tracking-tighter text-[#3e2723]">Lab Manual</h2>
               </div>
 
-              <div className="space-y-4 sm:space-y-6 max-h-[55vh] overflow-y-auto no-scrollbar pr-3">
+              <div className="space-y-4 sm:space-y-6 max-h-[55vh] overflow-y-auto pr-3">
                 {[
                   { text: "Tap tiles to select fragments of the metric mass.", icon: <MousePointer2 className="text-blue-500"/> },
                   { text: "Selected numbers in each axis must sum exactly to the target value shown.", icon: <Target className="text-amber-500"/> },

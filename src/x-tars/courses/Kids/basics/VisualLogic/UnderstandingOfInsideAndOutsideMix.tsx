@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  RefreshCcw, CheckCircle2, 
+  CheckCircle2, 
   Hand, Play, MousePointer2, 
-  Timer, ChevronRight, Shuffle, 
-  XCircle, Volume2, VolumeX,
-  Trophy, Award, PackageSearch, Star, LogOut
+  Timer, ChevronRight, Shuffle, Volume2, VolumeX,
+  Trophy, PackageSearch, Star, LogOut
 } from 'lucide-react';
+import { recordCompletion } from '../../../../courses/CommonUtility/useModuleProgress';
 
 // --- Scenarios: Container and Object pairings ---
 const SCENARIOS = [
@@ -30,23 +30,24 @@ const SCENARIOS = [
 ];
 
 export default function App() {
-  const [mode, setMode] = useState(forcedMode || 'practice'); 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const forcedMode = location.state?.initialMode as 'practice' | 'kid' | null;
+
+  const [mode, setMode] = useState<'practice' | 'kid'>(forcedMode || 'kid'); 
   const [scenarioIdx, setScenarioIdx] = useState(0);
-  const [insideSide, setInsideSide] = useState('left'); // Physical position of the "Inside" state
-  const [targetType, setTargetType] = useState('inside'); // Challenge: 'inside' or 'outside'
+  const [insideSide, setInsideSide] = useState('left');
+  const [targetType, setTargetType] = useState('inside');
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [selectedSide, setSelectedSide] = useState(null);
-  const [autoNextTimer, setAutoNextTimer] = useState(null);
+  const [selectedSide, setSelectedSide] = useState<string | null>(null);
+  const [autoNextTimer, setAutoNextTimer] = useState<number | null>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
-  const [virtualHandPos, setVirtualHandPos] = useState(null);
+  const [virtualHandPos, setVirtualHandPos] = useState<{ x: number; y: number } | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const [journeyFinished, setJourneyFinished] = useState(false);
   const [score, setScore] = useState(0);
-  
-  const location = useLocation();
-  const navigate = useNavigate();
-  const forcedMode = location.state?.initialMode;
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const games = [
     'understandingofsamepictures',
@@ -58,8 +59,8 @@ export default function App() {
     'understandingofsmall',
     'understandingofoutside'
   ];
-  const sideRefs = useRef({ left: null, right: null });
-  const audioCtxRef = useRef(null);
+  const sideRefs = useRef<{ left: HTMLButtonElement | null; right: HTMLButtonElement | null }>({ left: null, right: null });
+  const audioCtxRef = useRef<AudioContext | null>(null);
   const tutorialActiveRef = useRef(false);
 
   const currentScenario = SCENARIOS[scenarioIdx];
@@ -67,7 +68,7 @@ export default function App() {
   const playThud = useCallback((frequency = 150) => {
     if (isMuted) return;
     try {
-      if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      if (!audioCtxRef.current) audioCtxRef.current = new AudioContext();
       const osc = audioCtxRef.current.createOscillator();
       const gain = audioCtxRef.current.createGain();
       osc.type = 'sine';
@@ -81,7 +82,7 @@ export default function App() {
     } catch (e) {}
   }, [isMuted]);
 
-  const speak = useCallback((text) => {
+  const speak = useCallback((text: string) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
@@ -91,7 +92,7 @@ export default function App() {
     }
   }, []);
 
-  const resetLevel = useCallback((idx, isSequential = false) => {
+  const resetLevel = useCallback((idx: number, isSequential = false) => {
     setScenarioIdx(idx);
     
     // Randomize Physical Position
@@ -123,7 +124,7 @@ export default function App() {
     }
   }, [scenarioIdx, resetLevel, mode]);
 
-  const handleSelect = useCallback((side, isTutorial = false) => {
+  const handleSelect = useCallback((side: string, isTutorial = false) => {
     if (!isTutorial && isAutoPlaying) return;
     if (isAnswered && isCorrect) return;
 
@@ -137,7 +138,7 @@ export default function App() {
 
     if (isWinnerSide) {
       setIsCorrect(true);
-      setScore(s => s + 1);
+      setScore(s => { const ns = s + 1; recordCompletion('inside-outside-mix', 16, ns); return ns; });
       playThud(440); 
       speak(`Perfect! You found the one ${targetType}!`);
       
@@ -150,10 +151,12 @@ export default function App() {
               const nextGame = games[currentIndex + 1];
               setTimeout(() => navigate(`/xtars/games/visuallogic/${nextGame}`, { state: { initialMode: 'kid' } }), 3000);
             } else {
+              
               setTimeout(() => setJourneyFinished(true), 1200);
             }
           } else {
-            setTimeout(() => setJourneyFinished(true), 1200);
+            
+              setTimeout(() => setJourneyFinished(true), 1200);
           }
         } else {
             setAutoNextTimer(10);
@@ -164,7 +167,7 @@ export default function App() {
     } else {
       setIsCorrect(false);
       playThud(100); 
-      speak(`Oh! That one is ${targetType === 'inside' ? 'outside' : 'inside'}. Find the one ${targetType}!`);
+      speak("Oops, try again! We can find it!");
       if (!isTutorial) {
         setTimeout(() => {
           setIsAnswered(false);
@@ -174,8 +177,8 @@ export default function App() {
     }
   }, [insideSide, targetType, isAnswered, isCorrect, isAutoPlaying, mode, playThud, currentScenario.name, speak]);
 
-  const moveHandToSide = useCallback((side) => {
-    return new Promise(resolve => {
+  const moveHandToSide = useCallback((side: 'left' | 'right') => {
+    return new Promise<void>(resolve => {
       const el = sideRefs.current[side];
       if (!el) return resolve();
       const rect = el.getBoundingClientRect();
@@ -193,8 +196,8 @@ export default function App() {
     await new Promise(r => setTimeout(r, 1800));
     
     // Determine winning side based on target type
-    const winningSide = targetType === 'inside' ? insideSide : (insideSide === 'left' ? 'right' : 'left');
-    const losingSide = winningSide === 'left' ? 'right' : 'left';
+    const winningSide: 'left' | 'right' = targetType === 'inside' ? insideSide as 'left' | 'right' : (insideSide === 'left' ? 'right' : 'left');
+    const losingSide: 'left' | 'right' = winningSide === 'left' ? 'right' : 'left';
     
     await moveHandToSide(losingSide);
     handleSelect(losingSide, true); 
@@ -213,7 +216,7 @@ export default function App() {
 
   useEffect(() => {
     if (mode === 'kid' && !isCorrect && !tutorialActiveRef.current && !journeyFinished) {
-        const timer = setTimeout(() => startKidModeTutorial(), 2000);
+        const timer = setTimeout(() => startKidModeTutorial(), 5500);
         return () => clearTimeout(timer);
     }
   }, [scenarioIdx, mode, isCorrect, startKidModeTutorial, journeyFinished]);
@@ -221,89 +224,110 @@ export default function App() {
   useEffect(() => {
     if (autoNextTimer !== null && autoNextTimer > 0) {
       timerIntervalRef.current = setInterval(() => {
-        setAutoNextTimer(prev => (prev > 0 ? prev - 1 : 0));
+        setAutoNextTimer(prev => (prev !== null && prev > 0 ? prev - 1 : 0));
       }, 1000);
     } else if (autoNextTimer === 0) {
       handleNextSequential();
     }
-    return () => clearInterval(timerIntervalRef.current);
+    return () => { if (timerIntervalRef.current) clearInterval(timerIntervalRef.current); };
   }, [autoNextTimer, handleNextSequential]);
 
   useEffect(() => { resetLevel(0); }, []);
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] p-4 md:p-8 font-sans select-none flex flex-col items-center text-[#7A5C3E]">
+    <div className="w-full h-full min-h-[calc(100vh-70px)] flex-grow bg-[#FDFBF7] p-1 sm:p-2 pt-1 sm:pt-2 md:pt-2 font-sans select-none flex flex-col items-center justify-start text-[#7A5C3E] overflow-x-hidden relative gap-2 sm:gap-4">
       
       {/* Dynamic Header */}
-      <div className="w-full max-w-6xl flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 sm:w-20 sm:h-20 bg-[#D9B99B] rounded-3xl shadow-[0_8px_0_#B8977E] flex items-center justify-center text-white border-2 border-[#EADAC4]">
+      <div className="w-full max-w-4xl flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 flex-none">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#D9B99B] rounded-xl sm:rounded-2xl shadow-[0_3px_0_#B8977E] flex items-center justify-center text-white border-2 border-[#EADAC4]">
               <motion.div 
                 key={targetType}
                 initial={{ scale: 0.5 }} 
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring' }}
               >
-                {targetType === 'inside' ? <PackageSearch size={40} strokeWidth={3} className="drop-shadow-md"/> : <LogOut size={40} strokeWidth={3} className="drop-shadow-md"/>}
+                {targetType === 'inside' ? <PackageSearch strokeWidth={3} className="drop-shadow-md w-5 h-5 sm:w-6 sm:h-6"/> : <LogOut strokeWidth={3} className="drop-shadow-md w-5 h-5 sm:w-6 sm:h-6"/>}
               </motion.div>
           </div>
           <div className="text-left">
-            <h1 className="text-3xl sm:text-5xl font-black text-[#5D4037] tracking-tighter leading-none uppercase">
+            <h1 className="text-lg sm:text-2xl font-black text-[#5D4037] tracking-tighter leading-none uppercase">
               Inside & Outside
             </h1>
-            <div className="flex items-center gap-2 mt-1">
-               <p className="text-[12px] font-bold text-[#A68B7C] uppercase tracking-[0.2em]">Visual Logic Adventure</p>
+            <div className="flex items-center gap-2 mt-1 hidden sm:flex">
+               <p className="text-[10px] font-bold text-[#A68B7C] uppercase tracking-[0.1em]">Visual Logic Adventure</p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-            <div className="bg-[#F3E5D5] p-2 rounded-3xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-4 mt-2 sm:mt-0">
+            <div className="group relative bg-[#F3E5D5] p-1 sm:p-2 rounded-xl sm:rounded-2xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-1 sm:gap-2">
+                <div className="absolute top-full mt-2 right-0 w-52 sm:w-60 bg-white p-3 rounded-xl shadow-xl border-2 border-[#EADAC4] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-[100]">
+                    <p className="text-[10px] sm:text-xs font-medium text-[#7A5C3E] leading-snug text-left">
+                        <span className="font-black text-sm">🧸 Kid Mode:</span><br/>Guidance with virtual hand.<br/>
+                        <span className="font-black text-sm mt-1 block">🖐️ Practice:</span><br/>Free play exploration.
+                    </p>
+                </div>
                 <button 
-                    onClick={() => { if (!forcedMode) { setMode('kid'); setScore(0); resetLevel(0); } }}
-                    disabled={!!forcedMode}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-lg scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'} ${forcedMode ? 'opacity-50' : ''}`}
+                    onClick={() => { setMode('kid'); setScore(0); resetLevel(0); }}
+                    
+                    className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'} ${forcedMode ? 'opacity-50' : ''}`}
                 >
-                    <Play size={16} fill={mode === 'kid' ? 'white' : 'none'} />
-                    KID MODE
+                    <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
+                        <Play size={14} fill={mode === 'kid' ? 'white' : 'none'} className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">KID</span>
+                    </div>
                 </button>
                 <button 
-                    onClick={() => { if (!forcedMode) { setMode('practice'); setScore(0); resetLevel(scenarioIdx); } }}
-                    disabled={!!forcedMode}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-lg scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'} ${forcedMode ? 'opacity-50' : ''}`}
+                    onClick={() => { setMode('practice'); setScore(0); resetLevel(scenarioIdx); }}
+                    
+                    className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'} ${forcedMode ? 'opacity-50' : ''}`}
                 >
-                    <MousePointer2 size={16} />
-                    PRACTICE
+                    <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
+                        <MousePointer2 size={14} className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">PRACTICE</span>
+                    </div>
                 </button>
             </div>
             
-            <button onClick={() => setIsMuted(!isMuted)} className="p-4 bg-white rounded-2xl shadow-md border-b-4 border-[#E0E0E0] text-[#A68B7C] hover:bg-gray-50 active:translate-y-1 transition-all">
-                {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+            <button onClick={() => setIsMuted(!isMuted)} className="min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] flex items-center justify-center p-2 sm:p-3 bg-white rounded-xl sm:rounded-2xl shadow-sm border-b-2 sm:border-b-4 border-[#E0E0E0] text-[#A68B7C] hover:bg-gray-50 active:translate-y-1 transition-all">
+                {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
         </div>
       </div>
 
       {/* TOY STAGE */}
-      <div className="w-full max-w-6xl bg-[#EADAC4] rounded-[4rem] sm:rounded-[6rem] p-8 sm:p-16 shadow-[0_25px_0_#B8977E,0_40px_80px_rgba(184,151,126,0.25)] border-[12px] border-[#D9B99B] relative flex flex-col items-center justify-center min-h-[600px] lg:min-h-[750px]">
+      <div className="w-full max-w-4xl flex-1 min-h-0 bg-[#EADAC4] rounded-[1.5rem] sm:rounded-[2.5rem] p-3 sm:p-6 shadow-[0_6px_0_#B8977E,0_10px_20px_rgba(184,151,126,0.25)] border-[4px] sm:border-[6px] border-[#D9B99B] relative flex flex-col items-center justify-center mt-6 sm:mt-8 mb-4">
         
         {/* Dynamic Instruction Banner */}
-        <div className="absolute top-[-40px] z-20">
+        <div className="absolute top-0 transform -translate-y-1/2 z-20">
             <motion.div 
                 key={`${scenarioIdx}-${targetType}`}
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="bg-white px-12 py-5 sm:px-24 sm:py-8 rounded-full shadow-xl border-b-8 border-[#F0F0F0] flex items-center gap-4"
+                className="bg-white px-6 py-2 sm:px-10 sm:py-4 rounded-full shadow-md border-b-[3px] sm:border-b-[4px] border-[#F0F0F0] flex items-center gap-2 sm:gap-4"
             >
-                <Star className="text-yellow-400 fill-yellow-400" size={32} />
-                <h2 className="text-3xl sm:text-6xl font-black text-[#7A5C3E] uppercase tracking-tighter">
+                <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />
+                <h2 className="text-lg sm:text-2xl font-black text-[#7A5C3E] uppercase tracking-tighter">
                   FIND {targetType}
                 </h2>
-                <Star className="text-yellow-400 fill-yellow-400" size={32} />
+                <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />
             </motion.div>
         </div>
 
+        {/* Progress Tracker */}
+        <div className="absolute top-4 sm:top-5 left-4 sm:left-6 z-20 flex items-center gap-1 sm:gap-1.5">
+            {SCENARIOS.map((_, i) => (
+                <div key={i} className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${i === scenarioIdx ? 'bg-[#7A5C3E] scale-125' : i < scenarioIdx ? 'bg-[#4CAF50]' : 'bg-[#D9B99B] border border-[#a68b7c]/20 bg-opacity-30'}`} />
+            ))}
+        </div>
+        <div className="absolute top-3 sm:top-4 right-4 sm:right-6 z-20 flex items-center gap-1.5 sm:gap-2 bg-white/70 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border-2 sm:border-[3px] border-[#D9B99B] shadow-md backdrop-blur-sm">
+            <Star className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 fill-yellow-400 drop-shadow-[0_2px_4px_rgba(234,179,8,0.5)]" />
+            <span className="text-lg sm:text-2xl font-black text-[#7A5C3E]">{score}</span>
+        </div>
+
         {/* Comparison Grid */}
-        <div className="w-full grid grid-cols-2 gap-10 sm:gap-24 max-w-5xl relative px-4 mt-12">
+        <div className="w-full grid grid-cols-2 gap-6 sm:gap-12 relative px-4 z-10 pb-4 mt-8 sm:mt-10">
             {['left', 'right'].map((side) => {
                 const isInsideSlot = side === insideSide;
                 const isSelected = selectedSide === side;
@@ -312,28 +336,28 @@ export default function App() {
                 return (
                     <motion.button
                         key={`${scenarioIdx}-${side}`}
-                        ref={el => sideRefs.current[side] = el}
-                        onClick={() => handleSelect(side)}
-                        whileHover={!isAnswered ? { scale: 1.02 } : {}}
-                        className={`relative aspect-[4/5] sm:aspect-square bg-[#FFFBF2] rounded-[4rem] sm:rounded-[5.5rem] shadow-[inset_0_10px_20px_rgba(0,0,0,0.02),0_20px_40px_rgba(0,0,0,0.1)] border-b-[16px] sm:border-b-[24px] flex items-center justify-center transition-all duration-500 overflow-hidden ${
+                        ref={el => { sideRefs.current[side as 'left' | 'right'] = el; }}
+                        onClick={() => { if (mode !== 'kid') handleSelect(side); }}
+                        whileHover={!isAnswered && mode !== 'kid' ? { scale: 1.02 } : {}}
+                        className={`relative aspect-[4/5] sm:aspect-[4/3] w-full bg-[#FFFBF2] rounded-[1.5rem] sm:rounded-[2.5rem] shadow-[inset_0_4px_8px_rgba(0,0,0,0.02),0_8px_16px_rgba(0,0,0,0.08)] border-b-[6px] sm:border-b-[10px] flex items-center justify-center transition-all duration-500 overflow-hidden ${
                             isSelected 
-                                ? (isCorrect && isCorrectChoice ? 'border-[#4CAF50] bg-[#F1FCEF]' : 'border-[#FF5252] animate-shake')
+                                ? (isCorrect && isCorrectChoice ? 'border-[#4CAF50] bg-[#F1FCEF]' : 'border-[#FFB74D] animate-wobble')
                                 : isAnswered ? 'opacity-40 border-[#EEE0CB]' : 'border-[#D9B99B] hover:border-[#B8977E]'
                         }`}
                     >
-                        <div className="relative w-full h-full flex items-center justify-center">
-                            {/* Area Indicator (dashed line helps kids see the 'inside' zone) */}
-                            <div className={`absolute w-[85%] h-[85%] border-4 border-dashed rounded-[3rem] transition-colors duration-500 ${isInsideSlot ? 'border-[#D9B99B]' : 'border-transparent'}`} />
+                        <div className="relative w-full h-full flex items-center justify-center perspective-[1000px]">
+                            {/* Area Indicator */}
+                            <div className={`absolute w-[80%] h-[75%] sm:h-[80%] border-4 border-dashed rounded-[1rem] transition-colors duration-500 ${isInsideSlot ? 'border-[#D9B99B]' : 'border-transparent'}`} />
 
                             <div className="relative w-full h-full flex items-center justify-center">
                                 {/* The Container */}
                                 <motion.div
                                     animate={{ 
                                       scale: 1.1,
-                                      x: isInsideSlot ? 0 : -60,
+                                      x: isInsideSlot ? "0%" : "-15%",
                                       opacity: 1
                                     }}
-                                    className="text-[10rem] sm:text-[14rem] lg:text-[18rem] drop-shadow-xl z-10"
+                                    className="text-[clamp(5rem,min(22vh,26vw),14rem)] drop-shadow-xl z-10 flex items-center justify-center"
                                 >
                                     {currentScenario.container}
                                 </motion.div>
@@ -343,19 +367,19 @@ export default function App() {
                                     initial={{ scale: 0 }}
                                     animate={{ 
                                       scale: isInsideSlot ? 0.6 : 0.9, 
-                                      x: isInsideSlot ? 0 : 80,         
-                                      y: isInsideSlot ? 30 : 0,        
+                                      x: isInsideSlot ? "0%" : "30%",         
+                                      y: isInsideSlot ? "15%" : "0%",        
                                       filter: isInsideSlot ? 'brightness(0.95) saturate(1.1)' : 'brightness(1)',
                                     }}
                                     transition={{ type: 'spring', damping: 15, stiffness: 100, delay: 0.1 }}
-                                    className="absolute text-[8rem] sm:text-[11rem] lg:text-[14rem] z-20 drop-shadow-lg"
+                                    className="absolute text-[clamp(5rem,min(22vh,26vw),14rem)] z-20 drop-shadow-lg flex items-center justify-center"
                                 >
                                     {currentScenario.object}
                                 </motion.div>
                                 
                                 {/* Visual Hint Overlay */}
                                 {isInsideSlot && (
-                                  <div className="absolute inset-0 bg-[#7A5C3E]/5 rounded-[4rem] pointer-events-none z-15" />
+                                  <div className="absolute inset-4 bg-[#7A5C3E]/5 rounded-[1.5rem] pointer-events-none z-[15]" />
                                 )}
                             </div>
                         </div>
@@ -364,16 +388,16 @@ export default function App() {
                         <AnimatePresence>
                             {isSelected && (
                                 <motion.div 
-                                    initial={{ scale: 0, y: 30 }} animate={{ scale: 1.5, y: -80 }} exit={{ scale: 0 }}
+                                    initial={{ scale: 0, y: 30 }} animate={{ scale: 1.2, y: -40 }} exit={{ scale: 0 }}
                                     className="absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none"
                                 >
                                     {isCorrect && isCorrectChoice ? (
-                                        <div className="bg-[#4CAF50] p-5 sm:p-8 rounded-full shadow-2xl border-[8px] border-white">
-                                            <CheckCircle2 className="text-white w-12 h-12 sm:w-24 sm:h-24" />
+                                        <div className="bg-[#4CAF50] p-2 sm:p-4 rounded-full shadow-2xl border-[4px] sm:border-[8px] border-white">
+                                            <CheckCircle2 className="text-white w-6 h-6 sm:w-8 sm:h-8" />
                                         </div>
                                     ) : (
-                                        <div className="bg-[#FF5252] p-5 sm:p-8 rounded-full shadow-2xl border-[8px] border-white">
-                                            <XCircle className="text-white w-12 h-12 sm:w-24 sm:h-24" />
+                                        <div className="bg-[#FFB74D] p-2 sm:p-4 rounded-full shadow-2xl border-[4px] sm:border-[8px] border-white flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16">
+                                            <span className="text-white font-black text-2xl sm:text-4xl leading-none">?</span>
                                         </div>
                                     )}
                                 </motion.div>
@@ -389,23 +413,23 @@ export default function App() {
             {journeyFinished && (
                 <motion.div 
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    className="absolute inset-0 z-[100] bg-white/80 backdrop-blur-md flex flex-col items-center justify-center p-12 text-center"
+                    className="absolute inset-0 z-[100] bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-8 text-center rounded-[1rem] sm:rounded-[2rem] overflow-hidden"
                 >
                     <motion.div 
-                      className="bg-[#FFFBF2] p-16 sm:p-24 rounded-[5rem] border-b-[24px] border-[#D9B99B] shadow-[0_50px_100px_rgba(0,0,0,0.1)]"
+                      className="bg-[#FFFBF2] p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] border-b-[8px] sm:border-b-[12px] border-[#D9B99B] shadow-[0_20px_40px_rgba(0,0,0,0.1)] w-full max-w-2xl"
                       initial={{ scale: 0.5, rotate: -10 }}
                       animate={{ scale: 1, rotate: 0 }}
                     >
-                        <Trophy size={180} className="text-[#FFC107] mb-10 animate-bounce drop-shadow-[0_10px_20px_rgba(255,193,7,0.3)] mx-auto" />
-                        <h2 className="text-6xl sm:text-9xl font-black text-[#7A5C3E] tracking-tighter uppercase leading-none">
+                        <Trophy className="text-[#FFC107] mb-4 sm:mb-6 animate-bounce drop-shadow-[0_10px_20px_rgba(255,193,7,0.3)] mx-auto w-16 sm:w-20 h-auto" />
+                        <h2 className="text-3xl sm:text-5xl font-black text-[#7A5C3E] tracking-tighter uppercase leading-none">
                           YOU DID IT!
                         </h2>
-                        <p className="text-[#A68B7C] font-black uppercase tracking-[0.4em] mt-8 mb-16 text-xl sm:text-4xl">
+                        <p className="text-[#A68B7C] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] mt-2 sm:mt-4 mb-6 sm:mb-8 text-xs sm:text-sm">
                           INSIDE & OUTSIDE EXPERT!
                         </p>
                         <button 
                             onClick={() => { setMode(forcedMode || 'kid'); setScore(0); resetLevel(0); }}
-                            className="bg-[#4CAF50] text-white px-24 py-8 rounded-[3.5rem] font-black text-4xl sm:text-6xl shadow-[0_15px_0_#388E3C] active:translate-y-2 active:shadow-none transition-all"
+                            className="bg-[#4CAF50] text-white px-8 py-3 sm:px-10 sm:py-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-xl sm:text-2xl shadow-[0_6px_0_#388E3C] active:translate-y-1 active:shadow-none transition-all"
                         >
                             PLAY AGAIN
                         </button>
@@ -416,36 +440,44 @@ export default function App() {
       </div>
 
       {/* FOOTER */}
-      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center mt-12 pb-24 px-4">
-          <button 
-            onClick={handleNextSequential}
-            disabled={mode === 'kid' && scenarioIdx === SCENARIOS.length - 1}
-            className={`group relative flex items-center justify-between w-full p-8 sm:p-12 rounded-[3.5rem] font-black text-2xl sm:text-5xl transition-all active:translate-y-2 shadow-[0_12px_0_rgba(0,0,0,0.1)] border-b-8 ${
-              autoNextTimer !== null ? 'bg-[#4CAF50] text-white border-[#388E3C]' : 'bg-[#D9B99B] hover:bg-[#B8977E] text-white border-[#B8977E] disabled:opacity-50 disabled:shadow-none'
-            }`}
-          >
-            <div className="flex items-center gap-8">
-              <div className="bg-white/20 p-5 sm:p-7 rounded-3xl">
-                 <ChevronRight size={48} strokeWidth={4} />
-              </div>
-              <div className="text-left leading-none">
-                <div className="uppercase tracking-tighter">Next One</div>
-                {autoNextTimer !== null && <div className="text-sm font-bold opacity-60 mt-1 tracking-widest uppercase text-white">Wait for it...</div>}
-              </div>
+      <div className="w-full max-w-3xl flex flex-col md:flex-row gap-3 sm:gap-4 items-center flex-none">
+        {/* Next One Button */}
+        <button
+          onClick={handleNextSequential}
+          disabled={mode === 'kid' && scenarioIdx === SCENARIOS.length - 1}
+          className={`flex items-center justify-center gap-2 sm:gap-3 w-full h-14 sm:h-16 rounded-[1.2rem] sm:rounded-[1.5rem] font-black text-base sm:text-lg transition-all active:translate-y-1 active:shadow-none shadow-[0_4px_0_rgba(0,0,0,0.1)] border-b-[4px] sm:border-b-[6px] ${
+            autoNextTimer !== null ? 'bg-[#4CAF50] text-white border-[#388E3C]' : 'bg-[#D9B99B] hover:bg-[#B8977E] text-white border-[#B8977E] disabled:opacity-50 disabled:shadow-none'
+          }`}
+        >
+          <div className="flex items-center justify-center gap-2 sm:gap-3">
+            <ChevronRight strokeWidth={4} className="w-6 h-6 sm:w-8 sm:h-8" />
+            <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
+                <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">GO TO</span>
+                <span className="uppercase tracking-tighter leading-none mt-0.5">NEXT</span>
             </div>
+          </div>
 
-            {autoNextTimer !== null && (
-              <div className="bg-black/10 px-10 py-6 rounded-full flex items-center gap-4">
-                  <Timer className="animate-spin text-white" size={32} />
-                  <span className="text-4xl text-white font-mono">{autoNextTimer}</span>
-              </div>
-            )}
-          </button>
+          {autoNextTimer !== null && (
+            <div className="bg-black/10 px-2 py-1 rounded-full flex items-center gap-1 sm:gap-2 ml-2">
+              <Timer className="animate-spin text-white w-4 h-4" />
+              <span className="text-sm sm:text-base text-white font-mono">{autoNextTimer}</span>
+            </div>
+          )}
+        </button>
 
-          <button onClick={() => resetLevel(Math.floor(Math.random() * SCENARIOS.length))} className="flex items-center justify-center gap-8 w-full bg-[#B8977E] hover:bg-[#A68B7C] text-white p-8 sm:p-12 rounded-[3.5rem] font-black text-2xl sm:text-5xl transition-all active:translate-y-2 shadow-[0_12px_0_rgba(0,0,0,0.1)] border-b-8 border-[#A68B7C]">
-            <Shuffle size={48} strokeWidth={3} />
-            <span className="uppercase tracking-tighter">Shuffle</span>
-          </button>
+        {/* Shuffle Button */}
+        <button 
+          onClick={() => resetLevel(Math.floor(Math.random() * SCENARIOS.length))} 
+          className="flex items-center justify-center gap-2 sm:gap-3 w-full h-14 sm:h-16 bg-[#D9B99B] hover:bg-[#B8977E] text-white rounded-[1.2rem] sm:rounded-[1.5rem] font-black text-base sm:text-lg transition-all active:translate-y-1 active:shadow-none shadow-[0_4px_0_rgba(0,0,0,0.1)] border-b-[4px] sm:border-b-[6px] border-[#B8977E]"
+        >
+          <div className="flex items-center justify-center gap-2 sm:gap-3">
+          <Shuffle strokeWidth={4} className="w-6 h-6 sm:w-8 sm:h-8" />
+          <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
+              <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">MIX</span>
+              <span className="uppercase tracking-tighter leading-none mt-0.5">SHUFFLE</span>
+          </div>
+        </div>
+        </button>
       </div>
 
       {/* TUTORIAL HAND */}
@@ -460,25 +492,16 @@ export default function App() {
                 style={{ position: 'fixed' }}
             >
                 <div className="relative">
-                    <Hand className="text-[#7A5C3E] w-24 h-24 sm:w-48 sm:h-48 drop-shadow-2xl" fill="#FFFBF2" />
-                    <motion.div animate={{ scale: [1, 2.5, 1], opacity: [0.3, 0, 0.3] }} transition={{ repeat: Infinity, duration: 1.5 }} className="absolute inset-0 bg-yellow-300 rounded-full blur-[60px] -z-10" />
+                    <Hand className="text-[#7A5C3E] w-20 h-20 sm:w-32 sm:h-32 drop-shadow-2xl" fill="#FFFBF2" />
+                    <motion.div animate={{ scale: [1, 2, 1], opacity: [0.3, 0, 0.3] }} transition={{ repeat: Infinity, duration: 1.5 }} className="absolute inset-0 bg-yellow-300 rounded-full blur-[40px] -z-10" />
                 </div>
             </motion.div>
         )}
       </AnimatePresence>
 
       <style>{`
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            15%, 45%, 75% { transform: translateX(-15px); }
-            30%, 60%, 90% { transform: translateX(15px); }
-        }
-        .animate-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-        
-        button:active {
-          box-shadow: none !important;
-          transform: translateY(8px);
-        }
+        @keyframes wobble { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
+        .animate-wobble { animation: wobble 0.5s ease-in-out; }
       `}</style>
     </div>
   );

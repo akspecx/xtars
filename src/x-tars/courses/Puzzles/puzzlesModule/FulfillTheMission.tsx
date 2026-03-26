@@ -368,7 +368,7 @@ export default function App() {
                   <h2 className="text-xl sm:text-4xl font-black uppercase tracking-tighter text-[#3e2723]">Mission Briefing</h2>
               </div>
 
-              <div className="space-y-3 sm:space-y-5 max-h-[50vh] overflow-y-auto no-scrollbar pr-2">
+              <div className="space-y-3 sm:space-y-5 max-h-[50vh] overflow-y-auto pr-2">
                 {[
                   { text: `Your objective is to reach equilibrium across two specific targets: Total ${puzzle.targetItemName} and Total ${puzzle.targetProductionName}.`, icon: "🎯" },
                   { text: `Target 1: Adjust the counts so that the total number of items is exactly ${puzzle.targetVal}.`, icon: "📦" },
@@ -416,8 +416,6 @@ export default function App() {
       </AnimatePresence>
 
       <style>{`
-       .no-scrollbar::-webkit-scrollbar { display: none; }
-       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
        input[type=number] { -moz-appearance: textfield; }
       `}</style>

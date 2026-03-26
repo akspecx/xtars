@@ -28,15 +28,12 @@ type NavItem = {
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
-const navItems: NavItem[] = [
-
+const contentItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
     path: "/",
-    // subItems: [{ name: "CourseProgress", path: "/", pro: false }],
   },
-
   {
     icon: <BookOpenIcon />,
     name: "Learn",
@@ -52,43 +49,19 @@ const navItems: NavItem[] = [
     name: "Brain Games",
     path: "/puzzles",
   },
-
   {
     icon: <ChatBubbleBottomCenterIcon />,
     name: "Feedback",
     path: "/feedback",
   },
+];
 
-  
-  // {
-  //   icon: <CalenderIcon />,
-  //   name: "Calendar",
-  //   path: "/calendar",
-  // },
+const accountItems: NavItem[] = [
   {
     icon: <UserCircleIcon />,
     name: "User Profile",
     path: "/profile",
   },
-  // {
-  //   name: "Forms",
-  //   icon: <ListIcon />,
-  //   subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  // },
-  // {
-  //   name: "Tables",
-  //   icon: <TableIcon />,
-  //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  // },
-  // {
-  //   name: "Pages",
-  //   icon: <PageIcon />,
-  //   subItems: [
-  //     { name: "Blank Page", path: "/blank", pro: false },
-  //     { name: "404 Error", path: "/error-404", pro: false },
-  //   ],
-  // },
-
   {
     icon: <PlugInIcon />,
     name: "Authentication",
@@ -151,14 +124,14 @@ const AppSidebar: React.FC = () => {
 
   useEffect(() => {
     let submenuMatched = false;
-    ["main", "others"].forEach((menuType) => {
-      const items = menuType === "main" ? navItems : othersItems;
+    ["content", "account", "others"].forEach((menuType) => {
+      const items = menuType === "content" ? contentItems : menuType === "account" ? accountItems : othersItems;
       items.forEach((nav, index) => {
         if (nav.subItems) {
           nav.subItems.forEach((subItem) => {
             if (isActive(subItem.path)) {
               setOpenSubmenu({
-                type: menuType as "main" | "others",
+                type: menuType as "content" | "account" | "others",
                 index,
               });
               submenuMatched = true;
@@ -185,7 +158,7 @@ const AppSidebar: React.FC = () => {
     }
   }, [openSubmenu]);
 
-  const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
+  const handleSubmenuToggle = (index: number, menuType: "content" | "account" | "others") => {
     setOpenSubmenu((prevOpenSubmenu) => {
       if (
         prevOpenSubmenu &&
@@ -198,7 +171,7 @@ const AppSidebar: React.FC = () => {
     });
   };
 
-  const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
+  const renderMenuItems = (items: NavItem[], menuType: "content" | "account" | "others") => (
     <ul className="flex flex-col gap-4">
       {items.map((nav, index) => (
         <li key={nav.name}>
@@ -206,7 +179,7 @@ const AppSidebar: React.FC = () => {
             <button
               onClick={() => handleSubmenuToggle(index, menuType)}
               className={`menu-item group ${openSubmenu?.type === menuType && openSubmenu?.index === index
-                  ? "menu-item-active"
+                  ? "menu-item-active border-l-4 border-[#D4A574]"
                   : "menu-item-inactive"
                 } cursor-pointer ${!isExpanded && !isHovered
                   ? "lg:justify-center"
@@ -238,7 +211,7 @@ const AppSidebar: React.FC = () => {
             nav.path && (
               <Link
                 to={nav.path}
-                className={`menu-item group ${isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
+                className={`menu-item group ${isActive(nav.path) ? "menu-item-active border-l-4 border-[#D4A574]" : "menu-item-inactive"
                   }`}
               >
                 <span
@@ -361,8 +334,8 @@ const AppSidebar: React.FC = () => {
           )}
         </Link>
       </div>
-      <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
-        <nav className="mb-6">
+      <div className="flex flex-col overflow-y-auto duration-300 ease-linear">
+        <nav role="navigation" aria-label="Primary sidebar navigation" className="mb-6">
           <div className="flex flex-col gap-4">
             <div>
               <h2
@@ -377,7 +350,22 @@ const AppSidebar: React.FC = () => {
                   <HorizontaLDots className="size-6" />
                 )}
               </h2>
-              {renderMenuItems(navItems, "main")}
+              {renderMenuItems(contentItems, "content")}
+            </div>
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+              <h2
+                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
+                    ? "lg:justify-center"
+                    : "justify-start"
+                  }`}
+              >
+                {isExpanded || isHovered || isMobileOpen ? (
+                  "Account"
+                ) : (
+                  <HorizontaLDots />
+                )}
+              </h2>
+              {renderMenuItems(accountItems, "account")}
             </div>
             <div className="">
               <h2

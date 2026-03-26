@@ -8,6 +8,7 @@ import {
   XCircle, Volume2, VolumeX,
   Trophy, Award, Ban, Star, ShoppingBag
 } from 'lucide-react';
+import { recordCompletion } from '../../../../courses/CommonUtility/useModuleProgress';
 
 // --- Scenarios: Container and Object pairings ---
 const SCENARIOS = [
@@ -37,7 +38,7 @@ export default function App() {
     'understandingofoutside'
   ];
   
-  const [mode, setMode] = useState<'practice' | 'kid'>(forcedMode || 'practice'); 
+  const [mode, setMode] = useState<'practice' | 'kid'>(forcedMode || 'kid'); 
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const [emptySide, setEmptySide] = useState('left'); 
   const [isAnswered, setIsAnswered] = useState(false);
@@ -121,7 +122,7 @@ export default function App() {
 
     if (isWinnerSide) {
       setIsCorrect(true);
-      setScore(s => s + 1);
+      setScore(s => { const ns = s + 1; recordCompletion('empty', 8, ns); return ns; });
       playThud(440); 
       speak(`Correct! The ${currentScenario.name} is empty!`);
       
@@ -129,9 +130,11 @@ export default function App() {
         if (scenarioIdx === SCENARIOS.length - 1) {
           if (forcedMode === 'kid') {
             // Not in sequential games, show modal
-            setTimeout(() => setJourneyFinished(true), 1200);
+            
+              setTimeout(() => setJourneyFinished(true), 1200);
           } else {
-            setTimeout(() => setJourneyFinished(true), 1200);
+            
+              setTimeout(() => setJourneyFinished(true), 1200);
           }
         } else {
             setAutoNextTimer(10);
@@ -142,7 +145,7 @@ export default function App() {
     } else {
       setIsCorrect(false);
       playThud(100); 
-      speak(`That one is full. Look for the empty one!`);
+      speak("Oops, try again! We can find it!");
       if (!isTutorial) {
         setTimeout(() => {
           setIsAnswered(false);
@@ -190,7 +193,7 @@ export default function App() {
 
   useEffect(() => {
     if (mode === 'kid' && !isCorrect && !tutorialActiveRef.current && !journeyFinished) {
-        const timer = setTimeout(() => startKidModeTutorial(), 2000);
+        const timer = setTimeout(() => startKidModeTutorial(), 5500);
         return () => clearTimeout(timer);
     }
   }, [scenarioIdx, mode, isCorrect, startKidModeTutorial, journeyFinished]);
@@ -209,73 +212,94 @@ export default function App() {
   useEffect(() => { resetLevel(0); }, []);
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] p-4 md:p-8 font-sans select-none flex flex-col items-center text-[#7A5C3E]">
+    <div className="w-full h-full min-h-[calc(100vh-70px)] flex-grow bg-[#FDFBF7] p-1 sm:p-2 pt-1 sm:pt-2 md:pt-2 font-sans select-none flex flex-col items-center justify-start text-[#7A5C3E] overflow-x-hidden relative gap-2 sm:gap-4">
       
       {/* Light Wooden Header */}
-      <div className="w-full max-w-6xl flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 sm:w-20 sm:h-20 bg-[#D9B99B] rounded-3xl shadow-[0_8px_0_#B8977E] flex items-center justify-center text-white border-2 border-[#EADAC4]">
+      <div className="w-full max-w-4xl flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 flex-none">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#D9B99B] rounded-xl sm:rounded-2xl shadow-[0_3px_0_#B8977E] flex items-center justify-center text-white border-2 border-[#EADAC4]">
               <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ repeat: Infinity, duration: 4 }}>
-                <Ban size={40} strokeWidth={3} className="text-white drop-shadow-md" />
+                <Ban strokeWidth={3} className="text-white drop-shadow-md w-5 h-5 sm:w-6 sm:h-6" />
               </motion.div>
           </div>
           <div className="text-left">
-            <h1 className="text-3xl sm:text-5xl font-black text-[#5D4037] tracking-tighter leading-none uppercase">
+            <h1 className="text-lg sm:text-2xl font-black text-[#5D4037] tracking-tighter leading-none uppercase">
               Finding Empty
             </h1>
-            <div className="flex items-center gap-2 mt-1">
-               <p className="text-[12px] font-bold text-[#A68B7C] uppercase tracking-[0.2em]">Visual Logic Discovery</p>
+            <div className="flex items-center gap-2 mt-1 hidden sm:flex">
+               <p className="text-[10px] font-bold text-[#A68B7C] uppercase tracking-[0.1em]">Visual Logic Discovery</p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-            <div className="bg-[#F3E5D5] p-2 rounded-3xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-4 mt-2 sm:mt-0">
+            <div className="group relative bg-[#F3E5D5] p-1 sm:p-2 rounded-xl sm:rounded-2xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-1 sm:gap-2">
+                <div className="absolute top-full mt-2 right-0 w-52 sm:w-60 bg-white p-3 rounded-xl shadow-xl border-2 border-[#EADAC4] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-[100]">
+                    <p className="text-[10px] sm:text-xs font-medium text-[#7A5C3E] leading-snug text-left">
+                        <span className="font-black text-sm">🧸 Kid Mode:</span><br/>Guidance with virtual hand.<br/>
+                        <span className="font-black text-sm mt-1 block">🖐️ Practice:</span><br/>Free play exploration.
+                    </p>
+                </div>
                 <button 
-                    onClick={() => { if (!forcedMode) { setMode('kid'); setScore(0); resetLevel(0); } }}
-                    disabled={!!forcedMode}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-lg scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'} ${forcedMode ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    onClick={() => { setMode('kid'); setScore(0); resetLevel(0); }}
+                    
+                    className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
                 >
-                    <Play size={16} fill={mode === 'kid' ? 'white' : 'none'} />
-                    KID MODE
+                    <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
+                        <Play fill={mode === 'kid' ? 'white' : 'none'} className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">KID</span>
+                    </div>
                 </button>
                 <button 
-                    onClick={() => { if (!forcedMode) { setMode('practice'); setScore(0); resetLevel(scenarioIdx); } }}
-                    disabled={!!forcedMode}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-lg scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'} ${forcedMode ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    onClick={() => { setMode('practice'); setScore(0); resetLevel(scenarioIdx); }}
+                    
+                    className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
                 >
-                    <MousePointer2 size={16} />
-                    PRACTICE
+                    <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
+                        <MousePointer2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">PRACTICE</span>
+                    </div>
                 </button>
             </div>
             
-            <button onClick={() => setIsMuted(!isMuted)} className="p-4 bg-white rounded-2xl shadow-md border-b-4 border-[#E0E0E0] text-[#A68B7C] hover:bg-gray-50 active:translate-y-1 transition-all">
-                {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+            <button onClick={() => setIsMuted(!isMuted)} className="min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] flex items-center justify-center p-2 sm:p-3 bg-white rounded-xl sm:rounded-2xl shadow-sm border-b-2 sm:border-b-4 border-[#E0E0E0] text-[#A68B7C] hover:bg-gray-50 active:translate-y-1 transition-all">
+                {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
         </div>
       </div>
 
-      {/* TOY STAGE */}
-      <div className="w-full max-w-6xl bg-[#EADAC4] rounded-[4rem] sm:rounded-[6rem] p-8 sm:p-16 shadow-[0_25px_0_#B8977E,0_40px_80px_rgba(184,151,126,0.25)] border-[12px] border-[#D9B99B] relative flex flex-col items-center justify-center min-h-[600px] lg:min-h-[750px]">
+      {/* LIGHT OAK TOY STAGE */}
+      <div className="w-full max-w-5xl flex-1 min-h-0 bg-[#EADAC4] rounded-[1.5rem] sm:rounded-[2.5rem] p-3 sm:p-4 shadow-[0_6px_0_#B8977E,0_10px_20px_rgba(184,151,126,0.25)] border-[4px] sm:border-[6px] border-[#D9B99B] relative flex flex-col items-center justify-center mt-5 sm:mt-6 mb-2">
         
         {/* Floating Instruction Banner */}
-        <div className="absolute top-[-40px] z-20">
+        <div className="absolute top-0 transform -translate-y-1/2 z-20">
             <motion.div 
                 key={scenarioIdx}
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="bg-white px-12 py-5 sm:px-24 sm:py-8 rounded-full shadow-xl border-b-8 border-[#F0F0F0] flex items-center gap-4"
+                className="bg-white px-4 py-2 sm:px-8 sm:py-3 rounded-full shadow-md border-b-[3px] sm:border-b-[4px] border-[#F0F0F0] flex items-center gap-2 sm:gap-4"
             >
-                <Star className="text-yellow-400 fill-yellow-400" size={32} />
-                <h2 className="text-3xl sm:text-6xl font-black text-[#7A5C3E] uppercase tracking-tighter">
+                <Star className="text-yellow-400 fill-yellow-400 w-4 h-4 sm:w-5 sm:h-5" />
+                <h2 className="text-base sm:text-lg font-black text-[#7A5C3E] uppercase tracking-tighter">
                   FIND EMPTY
                 </h2>
-                <Star className="text-yellow-400 fill-yellow-400" size={32} />
+                <Star className="text-yellow-400 fill-yellow-400 w-4 h-4 sm:w-5 sm:h-5" />
             </motion.div>
         </div>
 
+        {/* Progress Tracker */}
+        <div className="absolute top-4 sm:top-5 left-4 sm:left-6 z-20 flex items-center gap-1 sm:gap-1.5">
+            {SCENARIOS.map((_, i) => (
+                <div key={i} className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${i === scenarioIdx ? 'bg-[#7A5C3E] scale-125' : i < scenarioIdx ? 'bg-[#4CAF50]' : 'bg-[#D9B99B] border border-[#a68b7c]/20 bg-opacity-30'}`} />
+            ))}
+        </div>
+        <div className="absolute top-3 sm:top-4 right-4 sm:right-6 z-20 flex items-center gap-1.5 sm:gap-2 bg-white/70 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border-2 sm:border-[3px] border-[#D9B99B] shadow-md backdrop-blur-sm">
+            <Star className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 fill-yellow-400 drop-shadow-[0_2px_4px_rgba(234,179,8,0.5)]" />
+            <span className="text-lg sm:text-2xl font-black text-[#7A5C3E]">{score}</span>
+        </div>
+
         {/* Comparison Grid */}
-        <div className="w-full grid grid-cols-2 gap-10 sm:gap-24 max-w-5xl relative px-4 mt-12">
+        <div className="w-full flex-1 min-h-0 flex justify-center items-stretch gap-4 sm:gap-12 relative px-2 z-10 pb-2 mt-4 sm:mt-6">
             {['left', 'right'].map((side) => {
                 const isEmptySlot = side === emptySide;
                 const isSelected = selectedSide === side;
@@ -284,49 +308,49 @@ export default function App() {
                     <motion.button
                         key={`${scenarioIdx}-${side}`}
                         ref={el => sideRefs.current[side] = el}
-                        onClick={() => handleSelect(side)}
-                        whileHover={!isAnswered ? { scale: 1.02 } : {}}
-                        className={`relative aspect-[4/5] sm:aspect-square bg-[#FFFBF2] rounded-[4rem] sm:rounded-[5.5rem] shadow-[inset_0_10px_20px_rgba(0,0,0,0.02),0_20px_40px_rgba(0,0,0,0.1)] border-b-[16px] sm:border-b-[24px] flex items-center justify-center transition-all duration-500 overflow-hidden ${
+                        onClick={() => { if (mode !== 'kid') handleSelect(side); }}
+                        whileHover={!isAnswered && mode !== 'kid' ? { scale: 1.02 } : {}}
+                        className={`relative flex-1 max-w-[340px] w-full h-full bg-[#FFFBF2] rounded-[1.2rem] sm:rounded-[2.5rem] shadow-[inset_0_4px_8px_rgba(0,0,0,0.02),0_8px_16px_rgba(0,0,0,0.08)] border-b-[4px] sm:border-b-[8px] flex flex-col items-center justify-center transition-all duration-500 overflow-hidden ${
                             isSelected 
-                                ? (isCorrect && isEmptySlot ? 'border-[#4CAF50] bg-[#F1FCEF]' : 'border-[#FF5252] animate-shake')
+                                ? (isCorrect && isEmptySlot ? 'border-[#4CAF50] bg-[#F1FCEF]' : 'border-[#FFB74D] animate-wobble')
                                 : isAnswered ? 'opacity-40 border-[#EEE0CB]' : 'border-[#D9B99B] hover:border-[#B8977E]'
                         }`}
                     >
                         {/* Content Container */}
-                        <div className="relative w-full h-full flex items-center justify-center">
+                        <div className="relative w-full h-full flex items-center justify-center perspective-[1000px]">
                             
                             {/* The Container (Always visible) */}
                             <motion.div
                                 animate={{ scale: 1.1 }}
-                                className="text-[10rem] sm:text-[14rem] lg:text-[18rem] drop-shadow-xl z-10"
+                                className="text-[clamp(5rem,min(22vh,26vw),14rem)] drop-shadow-xl z-10 leading-none flex items-center justify-center"
                             >
                                 {currentScenario.container}
                             </motion.div>
 
                             {/* The Content (Visible only if FULL) */}
                             {!isEmptySlot && (
-                                <div className="absolute inset-0 flex items-center justify-center z-20">
-                                    {/* Item 1 - Center */}
+                                <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+                                    {/* Item 1 - Center top */}
                                     <motion.div
-                                        initial={{ scale: 0, y: -50 }}
-                                        animate={{ scale: 0.5, y: 10 }}
-                                        className="absolute text-[8rem] sm:text-[11rem] drop-shadow-lg"
+                                        initial={{ scale: 0, y: "-50%" }}
+                                        animate={{ scale: 0.5, y: "10%" }}
+                                        className="absolute text-[clamp(5rem,min(22vh,26vw),14rem)] drop-shadow-md leading-none"
                                     >
                                         {currentScenario.object}
                                     </motion.div>
                                     {/* Item 2 - Left offset */}
                                     <motion.div
-                                        initial={{ scale: 0, x: -50 }}
-                                        animate={{ scale: 0.4, x: -50, y: 30, rotate: -15 }}
-                                        className="absolute text-[8rem] sm:text-[11rem] drop-shadow-lg"
+                                        initial={{ scale: 0, x: "-50%" }}
+                                        animate={{ scale: 0.4, x: "-40%", y: "20%", rotate: -15 }}
+                                        className="absolute text-[clamp(5rem,min(22vh,26vw),14rem)] drop-shadow-md leading-none"
                                     >
                                         {currentScenario.object}
                                     </motion.div>
                                     {/* Item 3 - Right offset */}
                                     <motion.div
-                                        initial={{ scale: 0, x: 50 }}
-                                        animate={{ scale: 0.4, x: 50, y: 30, rotate: 15 }}
-                                        className="absolute text-[8rem] sm:text-[11rem] drop-shadow-lg"
+                                        initial={{ scale: 0, x: "50%" }}
+                                        animate={{ scale: 0.4, x: "40%", y: "20%", rotate: 15 }}
+                                        className="absolute text-[clamp(5rem,min(22vh,26vw),14rem)] drop-shadow-md leading-none"
                                     >
                                         {currentScenario.object}
                                     </motion.div>
@@ -334,20 +358,20 @@ export default function App() {
                             )}
                         </div>
 
-                        {/* Status Feedback */}
+                        {/* Status Feedback Icons */}
                         <AnimatePresence>
                             {isSelected && (
                                 <motion.div 
-                                    initial={{ scale: 0, y: 30 }} animate={{ scale: 1.5, y: -80 }} exit={{ scale: 0 }}
+                                    initial={{ scale: 0, y: 30 }} animate={{ scale: 1.2, y: -40 }} exit={{ scale: 0 }}
                                     className="absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none"
                                 >
                                     {isCorrect && isEmptySlot ? (
-                                        <div className="bg-[#4CAF50] p-5 sm:p-8 rounded-full shadow-2xl border-[8px] border-white">
-                                            <CheckCircle2 className="text-white w-12 h-12 sm:w-24 sm:h-24" />
+                                        <div className="bg-[#4CAF50] p-3 sm:p-5 rounded-full shadow-2xl border-[4px] sm:border-[8px] border-white">
+                                            <CheckCircle2 className="text-white w-6 h-6 sm:w-10 sm:h-10" />
                                         </div>
                                     ) : (
-                                        <div className="bg-[#FF5252] p-5 sm:p-8 rounded-full shadow-2xl border-[8px] border-white">
-                                            <XCircle className="text-white w-12 h-12 sm:w-24 sm:h-24" />
+                                        <div className="bg-[#FFB74D] p-2 sm:p-4 rounded-full shadow-2xl border-[4px] sm:border-[8px] border-white flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16">
+                                            <span className="text-white font-black text-2xl sm:text-4xl leading-none">?</span>
                                         </div>
                                     )}
                                 </motion.div>
@@ -363,23 +387,23 @@ export default function App() {
             {journeyFinished && (
                 <motion.div 
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    className="absolute inset-0 z-[100] bg-white/80 backdrop-blur-md flex flex-col items-center justify-center p-12 text-center"
+                    className="absolute inset-0 z-[100] bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-8 text-center rounded-[1rem] sm:rounded-[2rem] overflow-hidden"
                 >
                     <motion.div 
-                      className="bg-[#FFFBF2] p-16 sm:p-24 rounded-[5rem] border-b-[24px] border-[#D9B99B] shadow-[0_50px_100px_rgba(0,0,0,0.1)]"
+                      className="bg-[#FFFBF2] p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] border-b-[8px] sm:border-b-[12px] border-[#D9B99B] shadow-[0_20px_40px_rgba(0,0,0,0.1)] w-full max-w-2xl"
                       initial={{ scale: 0.5, rotate: -10 }}
                       animate={{ scale: 1, rotate: 0 }}
                     >
-                        <Trophy size={180} className="text-[#FFC107] mb-10 animate-bounce drop-shadow-[0_10px_20px_rgba(255,193,7,0.3)] mx-auto" />
-                        <h2 className="text-6xl sm:text-9xl font-black text-[#7A5C3E] tracking-tighter uppercase leading-none">
+                        <Trophy className="text-[#FFC107] mb-4 sm:mb-6 animate-bounce drop-shadow-[0_10px_20px_rgba(255,193,7,0.3)] mx-auto w-16 sm:w-20 h-auto" />
+                        <h2 className="text-3xl sm:text-5xl font-black text-[#7A5C3E] tracking-tighter uppercase leading-none">
                           YOU DID IT!
                         </h2>
-                        <p className="text-[#A68B7C] font-black uppercase tracking-[0.4em] mt-8 mb-16 text-xl sm:text-4xl">
+                        <p className="text-[#A68B7C] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] mt-2 sm:mt-4 mb-6 sm:mb-8 text-xs sm:text-sm">
                           YOU FOUND ALL THE EMPTY ONES!
                         </p>
                         <button 
                             onClick={() => { setMode(forcedMode || 'kid'); setScore(0); resetLevel(0); }}
-                            className="bg-[#4CAF50] text-white px-24 py-8 rounded-[3.5rem] font-black text-4xl sm:text-6xl shadow-[0_15px_0_#388E3C] active:translate-y-2 active:shadow-none transition-all"
+                            className="bg-[#4CAF50] text-white px-8 py-3 sm:px-10 sm:py-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-xl sm:text-2xl shadow-[0_6px_0_#388E3C] active:translate-y-1 active:shadow-none transition-all"
                         >
                             PLAY AGAIN
                         </button>
@@ -390,36 +414,43 @@ export default function App() {
       </div>
 
       {/* FOOTER */}
-      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center mt-12 pb-24 px-4">
-          <button 
-            onClick={handleNextSequential}
-            disabled={mode === 'kid' && scenarioIdx === SCENARIOS.length - 1}
-            className={`group relative flex items-center justify-between w-full p-8 sm:p-12 rounded-[3.5rem] font-black text-2xl sm:text-5xl transition-all active:translate-y-2 shadow-[0_12px_0_rgba(0,0,0,0.1)] border-b-8 ${
-              autoNextTimer !== null ? 'bg-[#4CAF50] text-white border-[#388E3C]' : 'bg-[#D9B99B] hover:bg-[#B8977E] text-white border-[#B8977E] disabled:opacity-50 disabled:shadow-none'
+      <div className="w-full max-w-4xl flex flex-col md:flex-row gap-3 sm:gap-4 items-center flex-none mt-2">
+        {/* Next One Button */}
+        <button
+          onClick={handleNextSequential}
+          disabled={mode === 'kid' && scenarioIdx === SCENARIOS.length - 1}
+          className={`group relative flex items-center justify-center gap-2 sm:gap-3 w-full h-14 sm:h-16 rounded-[1.2rem] sm:rounded-[1.5rem] font-black text-base sm:text-lg transition-all active:translate-y-1 active:shadow-none shadow-[0_4px_0_rgba(0,0,0,0.1)] border-b-[4px] sm:border-b-[6px] ${autoNextTimer !== null ? 'bg-[#4CAF50] text-white border-[#388E3C]' : 'bg-[#D9B99B] hover:bg-[#B8977E] text-white border-[#B8977E] disabled:opacity-50 disabled:shadow-none'
             }`}
-          >
-            <div className="flex items-center gap-8">
-              <div className="bg-white/20 p-5 sm:p-7 rounded-3xl">
-                 <ChevronRight size={48} strokeWidth={4} />
-              </div>
-              <div className="text-left leading-none">
-                <div className="uppercase tracking-tighter">Next One</div>
-                {autoNextTimer !== null && <div className="text-sm font-bold opacity-60 mt-1 tracking-widest uppercase text-white">Wait for it...</div>}
-              </div>
+        >
+          <div className="flex items-center justify-center gap-2 sm:gap-3">
+            <ChevronRight strokeWidth={4} className="w-6 h-6 sm:w-8 sm:h-8" />
+            <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
+                <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">GO TO</span>
+                <span className="uppercase tracking-tighter leading-none mt-0.5">NEXT</span>
             </div>
+          </div>
 
-            {autoNextTimer !== null && (
-              <div className="bg-black/10 px-10 py-6 rounded-full flex items-center gap-4">
-                  <Timer className="animate-spin text-white" size={32} />
-                  <span className="text-4xl text-white font-mono">{autoNextTimer}</span>
-              </div>
-            )}
-          </button>
+          {autoNextTimer !== null && (
+            <div className="bg-black/10 px-2 py-1 rounded-full flex items-center gap-1 sm:gap-2 ml-2">
+              <Timer className="animate-spin text-white w-4 h-4" />
+              <span className="text-sm sm:text-base text-white font-mono">{autoNextTimer}</span>
+            </div>
+          )}
+        </button>
 
-          <button onClick={() => resetLevel(Math.floor(Math.random() * SCENARIOS.length))} className="flex items-center justify-center gap-8 w-full bg-[#B8977E] hover:bg-[#A68B7C] text-white p-8 sm:p-12 rounded-[3.5rem] font-black text-2xl sm:text-5xl transition-all active:translate-y-2 shadow-[0_12px_0_rgba(0,0,0,0.1)] border-b-8 border-[#A68B7C]">
-            <Shuffle size={48} strokeWidth={3} />
-            <span className="uppercase tracking-tighter">Shuffle</span>
-          </button>
+        {/* Shuffle Button */}
+        <button 
+          onClick={() => resetLevel(Math.floor(Math.random() * SCENARIOS.length))} 
+          className="flex items-center justify-center gap-2 sm:gap-3 w-full h-14 sm:h-16 bg-[#D9B99B] hover:bg-[#B8977E] text-white rounded-[1.2rem] sm:rounded-[1.5rem] font-black text-base sm:text-lg transition-all active:translate-y-1 active:shadow-none shadow-[0_4px_0_rgba(0,0,0,0.1)] border-b-[4px] sm:border-b-[6px] border-[#B8977E]"
+        >
+          <div className="flex items-center justify-center gap-2 sm:gap-3">
+          <Shuffle strokeWidth={4} className="w-6 h-6 sm:w-8 sm:h-8" />
+          <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
+              <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">MIX</span>
+              <span className="uppercase tracking-tighter leading-none mt-0.5">SHUFFLE</span>
+          </div>
+        </div>
+        </button>
       </div>
 
       {/* TUTORIAL HAND */}
@@ -434,25 +465,16 @@ export default function App() {
                 style={{ position: 'fixed' }}
             >
                 <div className="relative">
-                    <Hand className="text-[#7A5C3E] w-24 h-24 sm:w-48 sm:h-48 drop-shadow-2xl" fill="#FFFBF2" />
-                    <motion.div animate={{ scale: [1, 2.5, 1], opacity: [0.3, 0, 0.3] }} transition={{ repeat: Infinity, duration: 1.5 }} className="absolute inset-0 bg-yellow-300 rounded-full blur-[60px] -z-10" />
+                    <Hand className="text-[#7A5C3E] w-20 h-20 sm:w-32 sm:h-32 drop-shadow-2xl" fill="#FFFBF2" />
+                    <motion.div animate={{ scale: [1, 2, 1], opacity: [0.3, 0, 0.3] }} transition={{ repeat: Infinity, duration: 1.5 }} className="absolute inset-0 bg-yellow-300 rounded-full blur-[40px] -z-10" />
                 </div>
             </motion.div>
         )}
       </AnimatePresence>
 
       <style>{`
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            15%, 45%, 75% { transform: translateX(-15px); }
-            30%, 60%, 90% { transform: translateX(15px); }
-        }
-        .animate-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-        
-        button:active {
-          box-shadow: none !important;
-          transform: translateY(8px);
-        }
+        @keyframes wobble { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
+        .animate-wobble { animation: wobble 0.5s ease-in-out; }
       `}</style>
     </div>
   );

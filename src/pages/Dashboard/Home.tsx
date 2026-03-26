@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const GAMES_PER_LEVEL = 5;
-const USER_NAME = "Alexander"; 
+const USER_NAME = "Prabhat"; 
 
 // --- DUMMY DATA ---
 const RECENT_MODULES = [
@@ -130,7 +130,7 @@ const CognitiveMetricCircles = memo(({ pace, accuracy, logic }) => {
         style={{ originX: "50%", originY: "50%", rotate: -90, filter: `drop-shadow(0px 0px 8px ${color}44)` }}
       />
       <text x={center + radius + strokeWidth + 5} y={center + 3} fontSize="8" fontWeight="900" fill={color} 
-        className="uppercase opacity-0 group-hover:opacity-100 transition-opacity"
+        className="opacity-0 group-hover:opacity-100 transition-opacity"
       >
         {label}
       </text>
@@ -147,15 +147,15 @@ const CognitiveMetricCircles = memo(({ pace, accuracy, logic }) => {
         <CircleRing radius={85} value={accuracy} color="#10b981" label="Accuracy" />
         <CircleRing radius={65} value={pace} color="#4f46e5" label="Pace" />
         <CircleRing radius={45} value={logic} color="#f59e0b" label="Logic" />
-        <text x={center} y={center - 8} textAnchor="middle" fontSize="10" fontWeight="900" fill="#8d6e63" className="uppercase tracking-[0.2em] opacity-40 text-[8px]">Mastery</text>
+        <text x={center} y={center - 8} textAnchor="middle" fontSize="10" fontWeight="700" fill="#8d6e63" className="tracking-[0.05em] opacity-40 text-[8px]">Mastery</text>
         <text x={center} y={center + 18} textAnchor="middle" fontSize="28" fontStyle="italic" fontWeight="900" fill="#3e2723" className="tabular-nums">
           {Math.round((pace + accuracy + logic) / 3)}%
         </text>
       </svg>
       <div className="flex gap-4 mt-8 border-t border-black/5 pt-4">
-         <div className="flex flex-col items-center"><div className="w-4 h-1 rounded-full bg-[#10b981]" /><span className="text-[7px] font-black uppercase opacity-40 mt-1">Accuracy</span></div>
-         <div className="flex flex-col items-center"><div className="w-4 h-1 rounded-full bg-[#4f46e5]" /><span className="text-[7px] font-black uppercase opacity-40 mt-1">Pace</span></div>
-         <div className="flex flex-col items-center"><div className="w-4 h-1 rounded-full bg-[#f59e0b]" /><span className="text-[7px] font-black uppercase opacity-40 mt-1">Logic</span></div>
+         <div className="flex flex-col items-center"><div className="w-4 h-1 rounded-full bg-[#10b981]" /><span className="text-[7px] font-bold opacity-40 mt-1">Accuracy</span></div>
+         <div className="flex flex-col items-center"><div className="w-4 h-1 rounded-full bg-[#4f46e5]" /><span className="text-[7px] font-bold opacity-40 mt-1">Pace</span></div>
+         <div className="flex flex-col items-center"><div className="w-4 h-1 rounded-full bg-[#f59e0b]" /><span className="text-[7px] font-bold opacity-40 mt-1">Logic</span></div>
       </div>
     </motion.div>
   );
@@ -164,7 +164,7 @@ const CognitiveMetricCircles = memo(({ pace, accuracy, logic }) => {
 const PeerStandingGauge = memo(({ percentile }) => (
   <div className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-[#3e2723] to-[#1a0f0d] rounded-[3rem] text-white shadow-2xl relative overflow-hidden h-full border-b-[10px] border-black group">
     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 group-hover:scale-110 transition-transform duration-1000" />
-    <span className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40 mb-4 z-10">Global Peer Calibration</span>
+    <span className="text-[9px] font-bold tracking-[0.05em] opacity-40 mb-4 z-10">Global Peer Calibration</span>
     <div className="relative z-10">
       <svg width="140" height="80" viewBox="0 0 100 50">
         <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="12" strokeLinecap="round" />
@@ -180,7 +180,7 @@ const PeerStandingGauge = memo(({ percentile }) => (
     </div>
     <div className="mt-6 flex items-center gap-2 bg-white/5 px-4 py-2 rounded-2xl border border-white/10 z-10 hover:bg-white/10 transition-colors cursor-default">
        <Globe size={12} className="text-amber-400 animate-pulse" />
-       <span className="text-[9px] font-black uppercase tracking-widest text-amber-200">World Rank: #482</span>
+       <span className="text-[9px] font-bold tracking-[0.05em] text-amber-200">World Rank: #482</span>
     </div>
   </div>
 ));
@@ -193,7 +193,7 @@ const StatCard = memo(({ title, value, sub, icon: Icon, trend, color = "text-[#3
     <div className="absolute -top-4 -right-4 opacity-[0.03] group-hover:opacity-10 transition-all duration-700">
       {Icon && <Icon size={120} />}
     </div>
-    <span className="text-[9px] font-black uppercase text-[#8d6e63] tracking-[0.2em]">{title}</span>
+    <span className="text-[9px] font-bold text-[#8d6e63] tracking-[0.05em]">{title}</span>
     <div className="flex items-baseline gap-2">
       <span className={`text-3xl font-black ${color} tracking-tighter tabular-nums`}>{value}</span>
       {trend !== undefined && (
@@ -202,7 +202,7 @@ const StatCard = memo(({ title, value, sub, icon: Icon, trend, color = "text-[#3
         </span>
       )}
     </div>
-    <span className="text-[9px] font-bold text-[#a88a6d] uppercase opacity-60">{sub}</span>
+      <span className="text-[9px] font-normal text-[#5C4033] opacity-60">{sub}</span>
   </motion.div>
 ));
 
@@ -223,7 +223,7 @@ const DonutChart = memo(({ data }) => {
       </svg>
       <div className="absolute text-center flex flex-col">
          <span className="text-lg font-black text-[#3e2723] leading-none">88%</span>
-         <span className="text-[7px] font-black uppercase opacity-40">Mobile</span>
+         <span className="text-[7px] font-bold opacity-40">Mobile</span>
       </div>
     </div>
   );
@@ -340,14 +340,14 @@ export default function App() {
             {view === 'dashboard' ? <LayoutDashboard size={26} /> : <Gamepad2 size={26} />}
           </div>
           <div>
-            <h1 className="text-2xl font-black uppercase tracking-tighter leading-none text-[#3e2723]">Station Alpha</h1>
+            <h1 className="text-2xl font-bold tracking-[0.05em] leading-none text-[#3e2723]">Station Alpha</h1>
             <div className="flex items-center gap-3 mt-1.5">
               <button 
                 onClick={() => { setRole(role === 'user' ? 'admin' : 'user'); setView('dashboard'); }}
                 className="bg-white border border-[#c4a484]/20 px-4 py-1.5 rounded-xl flex items-center gap-2 shadow-inner transition-all hover:bg-emerald-50 active:scale-95"
               >
                 <ShieldCheck size={14} className={role === 'admin' ? 'text-indigo-600' : 'text-emerald-600'} />
-                <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[#3e2723]">{role === 'user' ? 'Student Interface' : 'Admin Console'}</span>
+                <span className="text-[10px] font-bold tracking-[0.05em] text-[#3e2723]">{role === 'user' ? 'Student Interface' : 'Admin Console'}</span>
                 <ChevronDown size={12} className="opacity-40" />
               </button>
             </div>
@@ -356,13 +356,13 @@ export default function App() {
 
         <div className="flex items-center gap-6">
           <div className="hidden md:flex flex-col items-end">
-            <span className="text-[9px] font-black uppercase opacity-30 tracking-[0.2em]">Session Runtime</span>
+            <span className="text-[9px] font-bold opacity-30 tracking-[0.05em]">Session Runtime</span>
             <span className="text-xl font-mono font-black tabular-nums tracking-tighter text-[#3e2723] drop-shadow-sm">{formatTime(time)}</span>
           </div>
           <motion.button 
             whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={() => setView(view === 'game' ? 'dashboard' : 'game')}
-            className="flex items-center gap-3 bg-[#8d6e63] text-white px-8 py-3.5 rounded-[1.5rem] shadow-[0_6px_0_#3e2723] border border-white/20 font-black uppercase text-xs tracking-widest transition-all"
+            className="flex items-center gap-3 bg-[#8d6e63] text-white px-8 py-3.5 rounded-[1.5rem] shadow-[0_6px_0_#3e2723] border border-white/20 font-bold text-xs tracking-[0.05em] transition-all"
           >
             {view === 'dashboard' ? <Play size={20} className="fill-current text-amber-300" /> : <LayoutDashboard size={20} />}
             {view === 'dashboard' ? 'Launch Lab' : 'Exit Sector'}
@@ -371,7 +371,7 @@ export default function App() {
       </div>
 
       {/* DASHBOARD CONTENT SCROLL AREA */}
-      <div className="flex-1 w-full max-w-7xl overflow-y-auto no-scrollbar p-6 bg-[#e6dccb] relative shadow-inner">
+      <div className="flex-1 w-full max-w-7xl overflow-y-auto p-6 bg-[#e6dccb] relative shadow-inner">
         <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} />
         
         <AnimatePresence mode="wait">
@@ -384,22 +384,26 @@ export default function App() {
                   {/* 1. PERSONAL MESSAGE PANEL */}
                   <motion.div 
                     initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-                    className="lg:col-span-12 bg-[#faf9f6] p-10 rounded-[3.5rem] border border-[#c4a484]/20 shadow-[10px_10px_0px_rgba(0,0,0,0.015)] flex flex-col md:flex-row justify-between items-center gap-6 overflow-hidden relative group"
+                    className="lg:col-span-12 bg-[#faf9f6] p-6 sm:p-8 md:p-10 rounded-[3.5rem] border border-[#c4a484]/20 shadow-[10px_10px_0px_rgba(0,0,0,0.015)] flex flex-col md:flex-row justify-between items-center gap-6 overflow-visible relative group min-h-[220px]"
                   >
                     <div className="absolute top-0 right-0 p-10 opacity-[0.04] -rotate-12 group-hover:scale-110 transition-transform duration-1000"><BrainCircuit size={180} /></div>
                     <div className="relative z-10 text-center md:text-left">
-                       <h2 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter text-[#3e2723] mb-1">{dynamicGreeting}</h2>
-                       <p className="text-sm font-bold text-[#8d6e63] uppercase tracking-[0.5em] flex items-center justify-center md:justify-start gap-3">
-                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse inline-block shadow-[0_0_12px_#10b981]" />
-                          Neural Link Stable • Station Alpha Active
+                       <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-[-0.02em] text-[#3e2723] mb-2 leading-tight max-w-xl break-words">{dynamicGreeting}</h2>
+                       <p className="text-xs sm:text-sm md:text-base font-semibold text-[#5C4033] dark:text-[#3e2723] tracking-[0.01em] text-center md:text-left max-w-2xl">
+                          Ready to learn something new? Pick a subject below to get started.
                        </p>
                     </div>
                     <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-6 bg-[#fdf8f1] px-10 py-6 rounded-[3rem] border border-[#c4a484]/30 shadow-inner relative overflow-hidden group/rank">
                        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/5 to-transparent translate-x-[-100%] group-hover/rank:translate-x-[100%] transition-transform duration-1000" />
-                       <div className="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 shadow-xl border-2 border-white relative z-10"><Star fill="currentColor" size={28} /></div>
+                       <div className="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 shadow-xl border-2 border-white relative z-10">
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.3"/>
+                           <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" strokeDasharray="62.8" strokeDashoffset="18.84" strokeLinecap="round"/>
+                         </svg>
+                       </div>
                        <div className="flex flex-col relative z-10">
-                          <span className="text-2xl font-black text-[#3e2723] leading-none">Gold Elite</span>
-                          <span className="text-[10px] font-black uppercase opacity-40 tracking-widest mt-1">Growth Matrix V.4</span>
+                          <span className="text-2xl font-black text-[#3e2723] leading-none">3 Courses in Progress</span>
+                          <span className="text-[10px] font-bold opacity-40 tracking-[0.05em] mt-1">Keep Learning</span>
                        </div>
                     </motion.div>
                   </motion.div>
@@ -410,9 +414,9 @@ export default function App() {
                      <div className="flex justify-between items-center mb-8 relative z-10">
                         <div className="flex items-center gap-3">
                            <div className="p-3 bg-rose-50 rounded-2xl border border-rose-100 shadow-sm"><Flame className="text-rose-500" size={24} /></div>
-                           <h3 className="text-sm font-black uppercase text-[#3e2723] tracking-widest">Stability Pulse</h3>
+                           <h3 className="text-sm font-bold text-[#3e2723] tracking-[0.05em]">Stability Pulse</h3>
                         </div>
-                        <motion.span animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }} className="text-[10px] font-black bg-[#3e2723] text-white px-4 py-1.5 rounded-full tracking-widest uppercase shadow-lg">STREAK: 5D</motion.span>
+                        <motion.span animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }} className="text-[10px] font-bold bg-[#3e2723] text-white px-4 py-1.5 rounded-full tracking-[0.05em] shadow-lg">Streak: 5D</motion.span>
                      </div>
                      <div className="grid grid-cols-7 gap-2 mb-10 px-1 relative z-10">
                         {['M','T','W','T','F','S','S'].map((day, i) => (
@@ -428,7 +432,7 @@ export default function App() {
                      <div className="bg-[#fdf8f1] p-6 rounded-[2rem] border border-[#c4a484]/20 relative z-10 shadow-inner overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/[0.03] to-transparent" />
                         <div className="flex justify-between items-end mb-3 relative z-10">
-                           <p className="text-[10px] font-black uppercase text-[#8d6e63] tracking-widest">Neural Retention</p>
+                           <p className="text-[10px] font-bold text-[#8d6e63] tracking-[0.05em]">Neural Retention</p>
                            <span className="text-xs font-black text-[#3e2723]">82%</span>
                         </div>
                         <div className="h-2 w-full bg-black/[0.03] rounded-full overflow-hidden relative z-10">
@@ -443,19 +447,19 @@ export default function App() {
                        <div className="flex items-center gap-4">
                           <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-100 shadow-sm"><Activity className="text-emerald-600 animate-pulse" /></div>
                           <div>
-                             <h2 className="text-2xl font-black uppercase tracking-tighter text-[#3e2723]">Brain Load Dynamics</h2>
-                             <p className="text-[10px] font-bold text-[#8d6e63] uppercase tracking-[0.2em]">Live Cognitive Complexity Mapping</p>
+                             <h2 className="text-2xl font-bold tracking-[0.05em] text-[#3e2723]">Brain Load Dynamics</h2>
+                             <p className="text-[10px] font-normal text-[#5C4033] tracking-[0.02em]">Live Cognitive Complexity Mapping</p>
                           </div>
                        </div>
                        <motion.div 
                          whileHover={{ scale: 1.05 }}
-                         className="bg-emerald-50 text-emerald-700 px-5 py-2.5 rounded-2xl border border-emerald-100 text-[10px] font-black tracking-[0.1em] shadow-sm uppercase cursor-default"
+                         className="bg-emerald-50 text-emerald-700 px-5 py-2.5 rounded-2xl border border-emerald-100 text-[10px] font-bold tracking-[0.05em] shadow-sm cursor-default"
                        >
                          +22% SYNC RATE
                        </motion.div>
                     </div>
                     <CustomAreaChart data={[20, 35, 25, 65, 40, 85, 55, 75, 60, 95]} />
-                    <div className="flex justify-between mt-6 text-[10px] font-black uppercase opacity-20 px-8 tracking-[0.6em]"><span>BOOT</span><span>PROCESSING</span><span>OPTIMAL</span></div>
+                    <div className="flex justify-between mt-6 text-[10px] font-bold opacity-20 px-8 tracking-[0.05em]"><span>Boot</span><span>Processing</span><span>Optimal</span></div>
                   </motion.div>
 
                   {/* 3. ACTIVE MISSION DECK & COGNITIVE EXCELLENCE */}
@@ -465,20 +469,20 @@ export default function App() {
                         <div className="flex items-center justify-between mb-10">
                            <div className="flex items-center gap-4 text-[#3e2723]">
                               <div className="p-3 bg-indigo-50 rounded-2xl border border-indigo-100 shadow-sm"><Rocket className="text-indigo-600 animate-bounce" size={24} /></div>
-                              <h3 className="text-xl font-black uppercase tracking-widest leading-none">Active Mission Deck</h3>
+                              <h3 className="text-xl font-bold tracking-[0.05em] leading-none">Active Mission Deck</h3>
                            </div>
                            <span className="text-[10px] font-black text-indigo-600 px-5 py-2 bg-white border border-indigo-100 rounded-full tracking-widest shadow-inner">3 RESUMABLE</span>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-8">
                            {RECENT_MODULES.map(m => (
                              <motion.div 
                                key={m.id} whileHover={{ y: -10 }}
-                               className="p-8 bg-[#fdf8f1] rounded-[3rem] border border-[#c4a484]/20 shadow-sm relative overflow-hidden group cursor-pointer"
+                               className="p-8 bg-[#fdf8f1] rounded-[3rem] border border-[#c4a484]/20 shadow-sm relative overflow-hidden group cursor-pointer min-h-[240px]"
                              >
                                 <AuroraBackground />
                                 <span className="text-5xl block mb-4 drop-shadow-2xl relative z-10 group-hover:rotate-12 transition-transform">{m.icon}</span>
-                                <h4 className="text-xs font-black text-[#3e2723] uppercase tracking-tighter truncate relative z-10">{m.title}</h4>
-                                <p className="text-[9px] font-bold text-[#a88a6d] mt-1 mb-8 uppercase opacity-60 tracking-widest relative z-10">{m.lastDate}</p>
+                                <h4 className="text-xs font-bold text-[#3e2723] tracking-[0.05em] truncate relative z-10">{m.title}</h4>
+                                <p className="text-[9px] font-normal text-[#5C4033] mt-1 mb-8 opacity-60 relative z-10">{m.lastDate}</p>
                                 <div className="flex items-center gap-3 mb-4 relative z-10">
                                    <div className="flex-1 h-1.5 bg-black/5 rounded-full overflow-hidden shadow-inner">
                                       <motion.div initial={{ width: 0 }} animate={{ width: `${m.progress}%` }} transition={{ duration: 1.5 }} className="h-full bg-indigo-500 rounded-full" />
@@ -496,24 +500,24 @@ export default function App() {
                            <div className="flex items-center gap-4">
                               <div className="p-3 bg-amber-50 rounded-2xl border border-amber-100"><Sparkle className="text-amber-600 animate-pulse" size={24} /></div>
                               <div>
-                                 <h3 className="text-xl font-black uppercase tracking-widest text-[#3e2723] leading-none">Discovery Hub</h3>
-                                 <p className="text-[10px] font-bold text-[#8d6e63] uppercase tracking-widest mt-1">Recommended for students of your age group</p>
+                                 <h3 className="text-xl font-bold tracking-[0.05em] text-[#3e2723] leading-none">Discovery Hub</h3>
+                                 <p className="text-[10px] font-normal text-[#5C4033] tracking-[0.02em] mt-1">Recommended for students of your age group</p>
                               </div>
                            </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-8">
                            {PEER_RECOMMENDATIONS.map(item => (
                              <motion.div 
                                key={item.id} whileHover={{ y: -10 }}
-                               className="p-8 bg-white rounded-[3rem] border border-[#c4a484]/20 shadow-sm relative overflow-hidden group cursor-pointer"
+                               className="p-8 bg-white rounded-[3rem] border border-[#c4a484]/20 shadow-sm relative overflow-hidden group cursor-pointer min-h-[260px]"
                              >
                                 <ScanningPulse />
                                 <span className="text-5xl block mb-4 relative z-10 group-hover:scale-110 transition-transform">{item.icon}</span>
-                                <span className="text-[9px] font-black bg-indigo-600 text-white px-3 py-1 rounded-full mb-3 inline-block uppercase tracking-widest relative z-10">{item.tag}</span>
-                                <h4 className="text-xs font-black text-[#3e2723] uppercase tracking-tighter truncate mb-6 relative z-10">{item.title}</h4>
+                                <span className="text-[9px] font-bold bg-indigo-600 text-white px-3 py-1 rounded-full mb-3 inline-block tracking-[0.05em] relative z-10">{item.tag}</span>
+                                <h4 className="text-xs font-bold text-[#3e2723] tracking-[0.05em] truncate mb-6 relative z-10">{item.title}</h4>
                                 <div className="flex flex-col gap-2 relative z-10">
                                    <div className="flex justify-between items-center px-1">
-                                      <span className="text-[9px] font-black uppercase opacity-30">Global Adoption</span>
+                                      <span className="text-[9px] font-bold opacity-30">Global Adoption</span>
                                       <span className="text-[10px] font-black text-emerald-600">{item.popularity}%</span>
                                    </div>
                                    <div className="h-1.5 bg-black/5 rounded-full overflow-hidden shadow-inner">
@@ -530,7 +534,7 @@ export default function App() {
                   <div className="lg:col-span-4 flex flex-col gap-8">
                      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.5 }} className="bg-[#faf9f6] p-10 rounded-[3.5rem] border border-[#c4a484]/20 shadow-[8px_8px_0px_rgba(0,0,0,0.02)] flex flex-col items-center flex-1 justify-center relative group">
                         <div className="absolute top-6 left-6 opacity-[0.05] group-hover:rotate-45 transition-transform duration-1000"><BookOpen size={48} /></div>
-                        <h3 className="text-xs font-black uppercase tracking-[0.5em] text-[#8d6e63] mb-12 text-center opacity-60">Neural Profile Matrix</h3>
+                        <h3 className="text-xs font-bold tracking-[0.05em] text-[#8d6e63] mb-12 text-center opacity-60">Neural Profile Matrix</h3>
                         <CognitiveMetricCircles pace={92} accuracy={88} logic={75} />
                         <div className="mt-12 bg-white/40 backdrop-blur-md p-6 rounded-[2rem] border border-black/[0.03] shadow-inner relative overflow-hidden group/text">
                            <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500/20" />
@@ -549,18 +553,18 @@ export default function App() {
                         <div className="flex gap-2 mb-8">
                            {[1,2,3,4,5].map(s => <Star key={s} size={22} className="fill-amber-400 text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" />)}
                         </div>
-                        <h3 className="text-4xl font-black uppercase mb-8 tracking-tighter drop-shadow-md">Global Audit Performance</h3>
+                        <h3 className="text-4xl font-bold mb-8 tracking-[0.05em] drop-shadow-md">Global Audit Performance</h3>
                         <div className="bg-black/20 backdrop-blur-md p-10 rounded-[3rem] border border-white/10 shadow-2xl relative group/card overflow-hidden">
                            <div className="absolute -left-2 top-12 w-4 h-12 bg-amber-400 rounded-full shadow-[0_0_20px_rgba(251,191,36,0.8)]" />
                            <p className="italic text-xl font-medium leading-relaxed opacity-95 tracking-tight text-white/90 relative z-10">"The skeuomorphic integration within Station Alpha has accelerated Alexander's cognitive mapping to elite levels."</p>
                            <div className="mt-8 flex items-center gap-4 relative z-10">
-                              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-amber-400 opacity-60">STATION AUDIT LOG: EXCELLENT</p>
+                              <p className="text-[10px] font-normal tracking-[0.02em] text-amber-400 opacity-60">Station Audit Log: Excellent</p>
                            </div>
                         </div>
                      </div>
                      <div className="flex items-center gap-12 mt-10 relative z-10">
-                        <div className="flex items-center gap-3"><Heart className="text-rose-400 fill-current" size={18} /><span className="text-sm font-black uppercase tracking-widest text-white/80">12.5k Lab Sessions</span></div>
-                        <div className="flex items-center gap-3"><Award className="text-amber-400" size={18} /><span className="text-sm font-black uppercase tracking-widest text-white/80">Audit Score: 4.98</span></div>
+                        <div className="flex items-center gap-3"><Heart className="text-rose-400 fill-current" size={18} /><span className="text-sm font-bold tracking-[0.05em] text-white/80">12.5k Lab Sessions</span></div>
+                        <div className="flex items-center gap-3"><Award className="text-amber-400" size={18} /><span className="text-sm font-bold tracking-[0.05em] text-white/80">Audit Score: 4.98</span></div>
                      </div>
                   </motion.div>
 
@@ -568,9 +572,9 @@ export default function App() {
                      <div className="flex items-center justify-between mb-12 relative z-10">
                         <div className="flex items-center gap-4">
                            <div className="p-3 bg-[#3e2723] text-white rounded-2xl shadow-xl"><Trophy size={20} /></div>
-                           <h3 className="text-sm font-black uppercase tracking-widest text-[#3e2723]">Honor Cabinet</h3>
+                           <h3 className="text-sm font-bold tracking-[0.05em] text-[#3e2723]">Honor Cabinet</h3>
                         </div>
-                        <span className="text-[10px] font-black opacity-30 tracking-[0.3em] uppercase">3 / 5 Earned</span>
+                        <span className="text-[10px] font-bold opacity-30 tracking-[0.05em]">3 / 5 Earned</span>
                      </div>
                      <div className="grid grid-cols-4 gap-8 px-2 relative z-10">
                         {BADGES.slice(0,4).map((b) => (
@@ -701,7 +705,7 @@ export default function App() {
             </motion.div>
           ) : (
             /* --- INNOVATIVE POP-IT GAME VIEW --- */
-            <motion.div key="game" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="relative z-10 w-full h-full flex flex-col items-center justify-center pt-5 sm:pt-10 pb-20 overflow-y-auto no-scrollbar">
+            <motion.div key="game" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="relative z-10 w-full h-full flex flex-col items-center justify-center pt-5 sm:pt-10 pb-20 overflow-y-auto">
                 <div className="mb-10 text-center px-4">
                   <motion.div key={`${levelIdx}-${gameIdx}`} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-[#3e2723] text-white px-10 py-5 rounded-[2.5rem] shadow-2xl border-b-[10px] border-black/40 inline-flex items-center gap-6 relative overflow-hidden">
                     <Zap className="text-yellow-400 w-10 h-10 fill-current animate-pulse relative z-10" />
@@ -755,8 +759,6 @@ export default function App() {
       )}
 
       <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .grid-cols-24 { grid-template-columns: repeat(24, minmax(0, 1fr)); }
         .perspective-1000 { perspective: 1000px; }
       `}</style>

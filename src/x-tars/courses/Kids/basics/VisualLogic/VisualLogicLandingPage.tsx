@@ -1,271 +1,159 @@
-import React, { useState, useEffect, memo, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  HashRouter as Router, 
-  Routes, 
-  Route, 
-  useNavigate, 
-  useParams 
-} from 'react-router-dom';
-import {
-  ChevronRight, BrainCircuit, Lightbulb, 
-  ChevronLeft, Info, Calculator, Target, Star, Rocket
-} from 'lucide-react';
-import NumberGameCard from "../../../CommonUtility/CardsUtility"
-
-
-const USER_NAME = "Prabhat"; 
+import React, { useMemo, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { Smile } from 'lucide-react';
+import { getProgress, recordVisit, ModuleProgress } from '../../../CommonUtility/useModuleProgress';
+import { StarRow, MasteryBadge, NewBadge, ParentTooltip } from '../../../CommonUtility/ProgressBadge';
 
 const visualLogicData = [
-  // Size
-  { id: "big", title: "Big", subtitle: "Find the big one", icon: "🐘", path: "/games/visuallogic/big", category: "size" },
-  { id: "small", title: "Small", subtitle: "Find the small one", icon: "🐜", path: "/games/visuallogic/small", category: "size" },
-  { id: "big-small-mix", title: "Big & Small", subtitle: "Mixed size fun", icon: "⚖️", path: "/games/visuallogic/big-small-mix", category: "size" },
-  { id: "tall", title: "Tall", subtitle: "Who is taller?", icon: "🦒", path: "/games/visuallogic/tall", category: "size" },
-  { id: "short", title: "Short", subtitle: "Who is shorter?", icon: "🌵", path: "/games/visuallogic/short", category: "size" },
-  { id: "tall-short", title: "Tall & Short", subtitle: "Height challenge", icon: "📏", path: "/games/visuallogic/tall-short", category: "size" },
-
-  // Position
-  { id: "above", title: "Above", subtitle: "What is up there?", icon: "☁️", path: "/games/visuallogic/above", category: "position" },
-  { id: "below", title: "Below", subtitle: "What is down there?", icon: "🍄", path: "/games/visuallogic/below", category: "position" },
-  { id: "above-below-mix", title: "Above & Below", subtitle: "Up and down fun", icon: "↕️", path: "/games/visuallogic/above-below-mix", category: "position" },
-  { id: "inside", title: "Inside", subtitle: "In the box", icon: "🧸", path: "/games/visuallogic/inside", category: "position" },
-  { id: "outside", title: "Outside", subtitle: "Out of the box", icon: "🌳", path: "/games/visuallogic/outside", category: "position" },
-  { id: "inside-outside-mix", title: "In & Out", subtitle: "Where is it?", icon: "📦", path: "/games/visuallogic/inside-outside-mix", category: "position" },
-
-  // Quantity
-  { id: "full", title: "Full", subtitle: "All filled up", icon: "🧺", path: "/games/visuallogic/full", category: "quantity" },
-  { id: "empty", title: "Empty", subtitle: "Nothing inside", icon: "🥣", path: "/games/visuallogic/empty", category: "quantity" },
-  { id: "full-empty", title: "Full & Empty", subtitle: "Mixed volume fun", icon: "🥛", path: "/games/visuallogic/full-empty", category: "quantity" },
-
-  // Logic
-  { id: "same", title: "Same", subtitle: "Match the pictures", icon: "👯", path: "/games/visuallogic/same", category: "logic" },
-  { id: "different", title: "Different", subtitle: "Spot the odd one", icon: "🤔", path: "/games/visuallogic/different", category: "logic" },
+  { id: "big",               title: "Big",          subtitle: "Find the big one",      icon: "🐘", path: "/games/visuallogic/big",               category: "size",     totalScenarios: 8 },
+  { id: "small",             title: "Small",        subtitle: "Find the small one",    icon: "🐜", path: "/games/visuallogic/small",             category: "size",     totalScenarios: 8 },
+  { id: "big-small-mix",    title: "Big & Small",  subtitle: "Mixed size fun",        icon: "⚖️", path: "/games/visuallogic/big-small-mix",    category: "size",     totalScenarios: 16 },
+  { id: "tall",              title: "Tall",         subtitle: "Who is taller?",        icon: "🦒", path: "/games/visuallogic/tall",              category: "size",     totalScenarios: 8 },
+  { id: "short",             title: "Short",        subtitle: "Who is shorter?",       icon: "🌵", path: "/games/visuallogic/short",             category: "size",     totalScenarios: 8 },
+  { id: "tall-short",       title: "Tall & Short", subtitle: "Height challenge",      icon: "📏", path: "/games/visuallogic/tall-short",       category: "size",     totalScenarios: 16 },
+  { id: "above",             title: "Above",        subtitle: "What is up there?",     icon: "☁️", path: "/games/visuallogic/above",             category: "position", totalScenarios: 8 },
+  { id: "below",             title: "Below",        subtitle: "What is down there?",   icon: "🍄", path: "/games/visuallogic/below",             category: "position", totalScenarios: 8 },
+  { id: "above-below-mix",  title: "Above & Below",subtitle: "Up and down fun",       icon: "↕️", path: "/games/visuallogic/above-below-mix",  category: "position", totalScenarios: 16 },
+  { id: "inside",            title: "Inside",       subtitle: "In the box",            icon: "🧸", path: "/games/visuallogic/inside",            category: "position", totalScenarios: 8 },
+  { id: "outside",           title: "Outside",      subtitle: "Out of the box",        icon: "🌳", path: "/games/visuallogic/outside",           category: "position", totalScenarios: 8 },
+  { id: "inside-outside-mix",title: "In & Out",    subtitle: "Where is it?",          icon: "📦", path: "/games/visuallogic/inside-outside-mix",category: "position", totalScenarios: 16 },
+  { id: "full",              title: "Full",         subtitle: "All filled up",         icon: "🧺", path: "/games/visuallogic/full",              category: "quantity", totalScenarios: 8 },
+  { id: "empty",             title: "Empty",        subtitle: "Nothing inside",        icon: "🥣", path: "/games/visuallogic/empty",             category: "quantity", totalScenarios: 8 },
+  { id: "full-empty",       title: "Full & Empty", subtitle: "Mixed volume fun",      icon: "🥛", path: "/games/visuallogic/full-empty",       category: "quantity", totalScenarios: 16 },
+  { id: "same",              title: "Same",         subtitle: "Match the pictures",    icon: "👯", path: "/games/visuallogic/same",              category: "logic",    totalScenarios: 8 },
+  { id: "different",         title: "Different",    subtitle: "Spot the odd one",      icon: "🤔", path: "/games/visuallogic/different",         category: "logic",    totalScenarios: 8 },
 ];
 
+const categoryColors: Record<string, { bg: string; border: string; badge: string; glow: string }> = {
+  size:     { bg: "bg-amber-50",   border: "border-amber-200",   badge: "bg-amber-100 text-amber-700",   glow: "ring-amber-300" },
+  position: { bg: "bg-sky-50",     border: "border-sky-200",     badge: "bg-sky-100 text-sky-700",       glow: "ring-sky-300" },
+  quantity: { bg: "bg-emerald-50", border: "border-emerald-200", badge: "bg-emerald-100 text-emerald-700",glow: "ring-emerald-300" },
+  logic:    { bg: "bg-violet-50",  border: "border-violet-200",  badge: "bg-violet-100 text-violet-700", glow: "ring-violet-300" },
+};
 
-
-const MOTIVATIONAL_QUOTES = [
-  { text: "The roots of education are bitter, but the fruit is sweet.", author: "Aristotle" },
-  { text: "Education is what remains after one has forgotten what one has learned in school.", author: "Albert Einstein" },
-  { text: "Intelligence plus character - that is the goal of true education.", author: "Martin Luther King Jr." }
-];
-
-// --- KINETIC THEMATIC BACKGROUNDS ---
-
-
-const AuroraBackground = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.05]">
-    <motion.div 
-      animate={{ scale: [1, 1.1, 1], rotate: [0, 45, 0], x: [-10, 10, -10] }}
-      transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-      className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] bg-[radial-gradient(circle_at_center,_#ffffff_0%,_transparent_60%)] blur-[40px]"
-    />
+const CartoonWatermarks = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.07] z-0 select-none">
+    <motion.div animate={{ y: [0, -20, 0], rotate: [-10, -5, -10] }} transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }} className="absolute top-[3%] left-[4%] text-[10vw]">🐘</motion.div>
+    <motion.div animate={{ y: [0, 30, 0], rotate: [10, 15, 10] }} transition={{ repeat: Infinity, duration: 12, ease: "easeInOut" }} className="absolute bottom-[12%] right-[4%] text-[12vw]">🎈</motion.div>
+    <motion.div animate={{ y: [0, -15, 0], rotate: [20, 25, 20] }} transition={{ repeat: Infinity, duration: 10, ease: "easeInOut" }} className="absolute top-[18%] right-[8%] text-[7vw]">🧩</motion.div>
+    <motion.div animate={{ y: [0, 25, 0], rotate: [-15, -10, -15] }} transition={{ repeat: Infinity, duration: 9, ease: "easeInOut" }} className="absolute bottom-[8%] left-[8%] text-[9vw]">🚗</motion.div>
+    <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ repeat: Infinity, duration: 15, ease: "easeInOut" }} className="absolute top-[38%] left-[38%] text-[18vw] opacity-30 blur-[2px]">🧸</motion.div>
   </div>
 );
 
-
-// --- MISSION MODULE: BALANCE SCALE ---
-
-const BalanceScaleMission = () => {
-  const navigate = useNavigate();
-  const [showLogic, setShowLogic] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [isCorrect, setIsCorrect] = useState(null);
-
-  const itemCount = 5;
-  const totalWeight = 500;
-  const correctValue = totalWeight / itemCount;
-
-  const handleCheck = () => {
-    if (parseInt(inputValue) === correctValue) {
-      setIsCorrect(true);
-    } else {
-      setIsCorrect(false);
-      setTimeout(() => setIsCorrect(null), 1500);
-    }
-  };
-
-  return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full flex flex-col gap-6">
-      <div className="bg-[#faf9f6] p-8 sm:p-12 rounded-[4rem] border-2 border-[#c4a484]/20 shadow-[12px_12px_0px_#a88a6d] relative overflow-hidden">
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="w-full flex justify-between items-center mb-10 text-[#3e2723]">
-            <motion.button 
-              whileHover={{ x: -5 }} onClick={() => navigate(-1)}
-              className="w-14 h-14 bg-[#3e2723] rounded-2xl flex items-center justify-center text-white shadow-xl border-b-4 border-black"
-            >
-              <ChevronLeft size={24} />
-            </motion.button>
-            <div className="text-center">
-              <span className="text-[11px] font-black uppercase opacity-60 tracking-[0.5em] mb-2 block">Neural Link Calibration</span>
-              <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none text-[#3e2723]">Scale Mission</h2>
-            </div>
-            <button 
-              onClick={() => setShowLogic(!showLogic)} 
-              className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all shadow-xl border-b-4 ${showLogic ? 'bg-[#8d6e63] text-white border-[#3e2723]' : 'bg-[#3e2723] text-white border-black'}`}
-            >
-              <Calculator size={24} />
-            </button>
-          </div>
-
-          <div className="relative w-full max-w-2xl aspect-[2.2/1] bg-[#231714]/5 rounded-[3rem] p-8 border border-[#c4a484]/20 mb-10 flex items-center justify-center shadow-inner overflow-hidden">
-            <svg viewBox="0 0 400 200" className="w-full h-full drop-shadow-[0_20px_30px_rgba(0,0,0,0.15)]">
-              <rect x="180" y="165" width="40" height="15" rx="4" fill="#3e2723" />
-              <path d="M 200 160 L 200 60" stroke="#3e2723" strokeWidth="10" strokeLinecap="round" />
-              <motion.g animate={{ rotate: isCorrect ? 0 : [0, -1.2, 1.2, 0] }} transition={{ duration: 5, repeat: Infinity }}>
-                <line x1="80" y1="60" x2="320" y2="60" stroke="#5d4037" strokeWidth="8" strokeLinecap="round" />
-                <g transform="translate(80, 60)">
-                  <line x1="0" y1="0" x2="0" y2="50" stroke="#8d6e63" strokeWidth="2" />
-                  <path d="M -45 50 Q 0 85 45 50 Z" fill="#dfd7cc" stroke="#3e2723" strokeWidth="2" />
-                  <text x="0" y="42" textAnchor="middle" fontSize="26" className="pointer-events-none select-none">🍎🍎🍎🍎🍎</text>
-                </g>
-                <g transform="translate(320, 60)">
-                  <line x1="0" y1="0" x2="0" y2="50" stroke="#8d6e63" strokeWidth="2" />
-                  <path d="M -45 50 Q 0 85 45 50 Z" fill="#dfd7cc" stroke="#3e2723" strokeWidth="2" />
-                  <rect x="-25" y="15" width="50" height="35" rx="6" fill="#3e2723" />
-                  <text x="0" y="38" textAnchor="middle" fontSize="16" fontWeight="900" fill="white">{String(totalWeight)}g</text>
-                </g>
-              </motion.g>
-            </svg>
-          </div>
-
-          <div className="flex flex-col items-center gap-6 w-full max-w-md">
-            <p className="text-sm font-black uppercase text-[#8d6e63] tracking-[0.2em] text-center italic">Determine individual unit weight</p>
-            <div className="flex w-full gap-4">
-              <input 
-                type="number" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="---"
-                className={`flex-1 bg-white border-2 rounded-[1.5rem] px-6 py-4 text-3xl font-black text-center focus:outline-none transition-all shadow-inner ${isCorrect === true ? 'border-emerald-500 text-emerald-600 shadow-xl' : isCorrect === false ? 'border-rose-500 animate-shake' : 'border-[#c4a484]/30 text-[#3e2723]'}`}
-              />
-              <motion.button whileTap={{ scale: 0.95 }} onClick={handleCheck} className="bg-[#3e2723] text-white px-10 rounded-[1.5rem] font-black uppercase text-xs tracking-widest shadow-[0_6px_0_#000] active:translate-y-1 active:shadow-none transition-all">Validate</motion.button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Numerical Logic Feed with documentation strings */}
-      <AnimatePresence>
-        {showLogic && (
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="bg-[#3e2723] text-white p-10 rounded-[3.5rem] shadow-2xl relative overflow-hidden border-b-8 border-black">
-             <div className="absolute top-0 right-0 p-8 opacity-5 rotate-12"><BrainCircuit size={160} /></div>
-             <div className="flex items-center gap-4 mb-10"><Info className="text-amber-400" /><h3 className="text-xl font-black uppercase tracking-widest leading-none">Neural Logic Feed</h3></div>
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {[
-                  { label: "Balance Equality", formula: "Weight Left = Weight Right", desc: "Total weight on right scale = Total weight of left scale as it is balanced scale." },
-                  { label: "Multiplication Formula", formula: "$$5 \\times unit = 500g$$", desc: "Number of fruits multiplied by weight of one apple equals 500 grams." },
-                  { label: "Division Logic", formula: "$$Weight = 500g \\div 5$$", desc: "Therefore, the weight of one apple equals the total weight divided by the number of apples." }
-                ].map((item, idx) => (
-                  <div key={idx} className="bg-white/5 p-7 rounded-[2.5rem] border border-white/10 group hover:bg-white/10 transition-colors">
-                    <span className="text-[10px] font-black uppercase text-amber-400 mb-2 block tracking-widest leading-none">Phase 0{idx + 1}</span>
-                    <h4 className="text-sm font-black uppercase mb-1">{String(item.label)}</h4>
-                    <div className="text-lg font-black text-white mb-4 leading-tight">{String(item.formula)}</div>
-                    <p className="text-[11px] font-medium opacity-60 leading-relaxed italic group-hover:opacity-100 transition-opacity">"{String(item.desc)}"</p>
-                  </div>
-                ))}
-             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-};
-
-// --- PRIMARY HUB COMPONENT ---
-
 export default function VisualLogicLandingPage() {
   const navigate = useNavigate();
-  const { puzzleId } = useParams();
-  const [quoteIndex, setQuoteIndex] = useState(0);
+
+  const [progressMap, setProgressMap] = useState<Record<string, ModuleProgress>>({});
+
+  // Load progress for all modules on mount
+  useEffect(() => {
+    const map: Record<string, ModuleProgress> = {};
+    visualLogicData.forEach(g => {
+      map[g.id] = getProgress(g.id, g.totalScenarios);
+    });
+    setProgressMap(map);
+  }, []);
 
   const dynamicGreeting = useMemo(() => {
     const hour = new Date().getHours();
-    if (hour < 12) return `Rise and shine, ${USER_NAME}!`;
-    if (hour < 17) return `Good afternoon, ${USER_NAME}!`;
-    return `Good evening, ${USER_NAME}!`;
-  }, []);
-
-  useEffect(() => {
-    const qInterval = setInterval(() => setQuoteIndex(p => (p + 1) % MOTIVATIONAL_QUOTES.length), 10000);
-    return () => clearInterval(qInterval);
+    if (hour < 12) return "Good morning! ☀️";
+    if (hour < 17) return "Good afternoon! 🌼";
+    return "Good evening! 🌙";
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center bg-[#e6dccb] font-sans select-none relative shadow-inner min-h-screen">
-      {/* Wooden Pattern Overlay as requested */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} /> 
-      
-      {/* Soft Ambient Light layer */}
-      <AuroraBackground />
+    <div className="w-full flex flex-col items-center bg-[#FDFBF7] font-sans select-none relative pb-10 overflow-hidden min-h-full">
+      <CartoonWatermarks />
 
-      <div className="w-full max-w-7xl p-6 sm:p-10 relative z-10">
-        <AnimatePresence mode="wait">
-          {!puzzleId ? (
-            /* HUB VIEW */
-            <motion.div key="hub" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col gap-10 pb-24">
-              
-              {/* Header Plank Tile */}
-              <div className="bg-[#faf9f6] p-10 sm:p-16 rounded-[4rem] border-2 border-[#c4a484]/30 shadow-[10px_10px_0px_#a88a6d,15px_15px_40px_rgba(0,0,0,0.05)] relative overflow-hidden group">
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-10">
-                   <div className="text-center md:text-left max-w-2xl text-[#3e2723]">
-                      <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
-                         <div className="p-3 bg-[#3e2723] rounded-2xl text-white shadow-xl"><Target size={24} /></div>
-                         <h2 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter leading-none">{String(dynamicGreeting)}</h2>
-                      </div>
-                      <p className="text-sm sm:text-lg font-bold uppercase tracking-[0.4em] leading-relaxed opacity-60">
-                        Operational intelligence required. Select a cognitive module to initiate calibration.
-                      </p>
-                   </div>
-                   <div className="flex items-center gap-6 shrink-0 bg-[#3e2723] p-8 rounded-[3rem] text-white shadow-2xl border-b-8 border-black">
-                      <div className="text-center">
-                        <span className="text-[11px] font-black uppercase block mb-2 tracking-widest opacity-40">Active Links</span>
-                        <span className="text-5xl font-black tabular-nums">{String(visualLogicData.length)}</span>
-                      </div>
-                   </div>
-                </div>
-              </div>
+      <div className="w-full max-w-7xl px-4 sm:px-6 pt-3 sm:pt-4 relative z-10 flex flex-col gap-4 sm:gap-6">
 
-              {/* Game Tiles Grid using provided Full-Paths */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
-                 {visualLogicData.map((game) => (
-                   <NumberGameCard 
-                    key={String(game.id)} 
-                    {...game} 
-                    onClick={() => navigate(game.path)} 
-                   />
-                 ))}
-              </div>
-            </motion.div>
-          ) : (
-            /* MISSION VIEW (Placeholder logic for demonstration) */
-            <BalanceScaleMission key="game" />
-          )}
-        </AnimatePresence>
+        {/* Compact Welcome Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-between gap-4 bg-[#FFFBF2] px-4 sm:px-6 py-3 sm:py-4 rounded-2xl border-[3px] border-[#FFB74D] shadow-[0_6px_16px_rgba(255,183,77,0.15)] w-full"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-[#FFB74D] rounded-full text-white shadow-md shrink-0">
+              <Smile size={22} strokeWidth={3} />
+            </div>
+            <div>
+              <h2 className="text-lg sm:text-2xl font-black text-[#7A5C3E] tracking-tighter leading-tight">{dynamicGreeting}</h2>
+              <p className="text-xs sm:text-sm font-semibold text-[#A68B7C] leading-none mt-0.5">Pick a game and let's play!</p>
+            </div>
+          </div>
+          <div className="flex flex-col items-center bg-[#4CAF50] px-4 py-2 rounded-xl text-white shadow-[0_4px_0_#388E3C] border-2 border-white transform rotate-1 shrink-0">
+            <span className="text-[9px] font-black uppercase tracking-wider opacity-90">Games</span>
+            <span className="text-2xl font-black leading-none">{visualLogicData.length}</span>
+          </div>
+        </motion.div>
 
-        {!puzzleId && (
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-20 bg-[#3e2723]/5 backdrop-blur-sm p-12 sm:p-20 rounded-[5rem] border-4 border-dashed border-[#c4a484]/40 flex flex-col items-center text-center relative overflow-hidden z-10 group">
-            <Lightbulb className="text-[#c4a484] opacity-50 mb-12 w-20 h-20 group-hover:scale-110 transition-transform duration-1000" />
-            <AnimatePresence mode="wait">
-              <motion.div key={quoteIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-5xl px-6">
-                 <p className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-[#3e2723] leading-tight mb-10 italic drop-shadow-sm">"{String(MOTIVATIONAL_QUOTES[quoteIndex].text)}"</p>
-                 <div className="flex items-center justify-center gap-5 text-[#c4a484]">
-                    <div className="w-20 h-[2px] bg-current opacity-30" />
-                    <span className="text-xs sm:text-base font-black uppercase tracking-[0.8em]">
-                       — {String(MOTIVATIONAL_QUOTES[quoteIndex].author)}
-                    </span>
-                    <div className="w-20 h-[2px] bg-current opacity-30" />
-                 </div>
-              </motion.div>
-            </AnimatePresence>
-          </motion.div>
-        )}
+        {/* Game Grid */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
+        >
+          {visualLogicData.map((game, idx) => {
+            const colors = categoryColors[game.category];
+            const prog = progressMap[game.id];
+            const isNew = !prog || prog.visitCount === 0;
+            const isGold = prog?.masteryLevel === 3;
+
+            return (
+              <motion.button
+                key={game.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.03 }}
+                whileHover={{ y: -4, scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  // record the visit optimistically before navigating
+                  if (game.id) recordVisit(game.id, game.totalScenarios);
+                  navigate(game.path, { state: { initialMode: 'kid' } });
+                }}
+                className={`relative aspect-[4/3] flex flex-col items-center justify-center gap-1 sm:gap-1.5 rounded-2xl sm:rounded-3xl border-[3px] ${colors.bg} ${colors.border} shadow-[0_4px_0_rgba(0,0,0,0.08)] hover:shadow-[0_6px_0_rgba(0,0,0,0.12)] transition-all cursor-pointer group p-2 ${isGold ? `ring-2 ${colors.glow}` : ''} ${isNew ? 'opacity-90' : ''}`}
+              >
+                {/* Mastery crown badge — top left */}
+                {prog && <MasteryBadge level={prog.masteryLevel} />}
+
+                {/* NEW badge — top right, only if never visited */}
+                {isNew && <NewBadge />}
+
+                {/* Parent tooltip — hover only, desktop */}
+                {prog && <ParentTooltip progress={prog} />}
+
+                {/* Emoji */}
+                <motion.span
+                  className="text-5xl sm:text-6xl md:text-7xl leading-none drop-shadow-md"
+                  animate={{ rotate: [0, 3, -3, 0] }}
+                  transition={{ repeat: Infinity, duration: 4 + idx * 0.2, ease: "easeInOut" }}
+                >
+                  {game.icon}
+                </motion.span>
+
+                {/* Title */}
+                <span className="text-xs sm:text-sm font-black text-[#5D4037] tracking-tight leading-none text-center">
+                  {game.title}
+                </span>
+
+                {/* Star row — child-facing progress */}
+                {prog && prog.visitCount > 0 && <StarRow progress={prog} />}
+
+                {/* Category badge */}
+                <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full ${colors.badge}`}>
+                  {game.category}
+                </span>
+              </motion.button>
+            );
+          })}
+        </motion.div>
+
       </div>
-
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-        .animate-shake { animation: shake 0.2s ease-in-out 0s 2; }
-      `}</style>
     </div>
   );
 }

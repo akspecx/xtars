@@ -26,6 +26,7 @@ export default function UserDropdown() {
       <button
         onClick={toggleDropdown}
         className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400"
+        title="User Profile"
       >
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
           <img 

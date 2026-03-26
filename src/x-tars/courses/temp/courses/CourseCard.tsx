@@ -135,12 +135,14 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
           <div className="flex gap-2">
             <button
               onClick={scrollLeft}
+              aria-label="Scroll modules left"
               className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
             >
               <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
             </button>
             <button
               onClick={scrollRight}
+              aria-label="Scroll modules right"
               className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
             >
               <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300" />
@@ -150,14 +152,15 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         
         <div 
           ref={scrollContainerRef}
-          className="flex gap-6 overflow-x-auto scrollbar-hide pb-4"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          className="grid gap-6 auto-rows-fr grid-cols-[repeat(auto-fit,minmax(280px,1fr))] pb-4"
         >
           {course.modules.map((module) => (
-            <div 
-              key={module.id} 
-              className="flex-shrink-0 w-80 bg-gray-50 dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-all transform hover:-translate-y-1 border border-gray-200 dark:border-gray-700"
+            <button
+              key={module.id}
+              type="button"
               onClick={() => handleModuleClick(module)}
+              aria-label={`Open module ${module.title}`}
+              className="bg-gray-50 dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-all transform hover:-translate-y-1 border border-gray-200 dark:border-gray-700 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
             >
               <div className="h-32 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 relative overflow-hidden">
                 <img 
