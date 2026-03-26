@@ -10,12 +10,12 @@ import {
 
 
 
-             
-              // <Route path="" element={<LAFirstSecondLeftRightRouter />} />
-              // <Route path="/learn/logicalReasoning/LinearArrangement/NumberPeopleBetween" element={<LANoOfPeopleBetweenRouter />} />
-              // <Route path="/learn/logicalReasoning/LinearArrangement/PeopleSittingBetween" element={<LANumberOfPeopleSittingBetweenRouter />} />
-              // <Route path="/learn/logicalReasoning/LinearArrangement/extremeleftRight" element={<LAExtremeLeftRightRouter />} />
-              // <Route path="/learn/logicalReasoning/LinearArrangement/followInstructionLeft" element={<LAFollowInstructionIntroRouter />} /> */}
+
+// <Route path="" element={<LAFirstSecondLeftRightRouter />} />
+// <Route path="/learn/logicalReasoning/LinearArrangement/NumberPeopleBetween" element={<LANoOfPeopleBetweenRouter />} />
+// <Route path="/learn/logicalReasoning/LinearArrangement/PeopleSittingBetween" element={<LANumberOfPeopleSittingBetweenRouter />} />
+// <Route path="/learn/logicalReasoning/LinearArrangement/extremeleftRight" element={<LAExtremeLeftRightRouter />} />
+// <Route path="/learn/logicalReasoning/LinearArrangement/followInstructionLeft" element={<LAFollowInstructionIntroRouter />} /> */}
 
 
 const HIERARCHY_DATA = [
@@ -32,7 +32,7 @@ const HIERARCHY_DATA = [
       { id: 'LA_3', title: 'Who is to your left and right?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/leftRightWithDiffDirection' },
       { id: 'LA_4', title: 'Left and immediate left', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/immediateleftRight' },
       { id: 'LA_5', title: 'What about between?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/between' }
-    
+
     ]
   },
   {
@@ -45,7 +45,7 @@ const HIERARCHY_DATA = [
     subModules: [
       { id: 'LA_6', title: 'Who is second to the left?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/FirstSecondLeftRight' },
       { id: 'LA_7', title: 'Number of people between?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/PeopleSittingBetween' },
-      { id: 'LA_8', title: 'Sitting at extreme end?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/extremeleftRight' }  
+      { id: 'LA_8', title: 'Sitting at extreme end?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/extremeleftRight' }
     ]
   },
 
@@ -59,12 +59,12 @@ const HIERARCHY_DATA = [
     subModules: [
       { id: 'LA_6', title: 'Follow instructions?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/followInstructionLeft' },
       { id: 'LA_7', title: 'Follow Instruction for right', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrRight' },
-      { id: 'LA_8', title: 'Let us make people sit by following both left and right', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrBothLeftRight' } , 
+      { id: 'LA_8', title: 'Let us make people sit by following both left and right', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrBothLeftRight' },
       { id: 'LA_9', title: 'instruction says they are facing in different directions', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffDirection' },
       { id: 'LA_10', title: 'When extreme ends are also involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrExtremEnd' },
-      { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
-      { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
- 
+      { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' },
+      { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }
+
     ]
   },
   {
@@ -77,12 +77,12 @@ const HIERARCHY_DATA = [
     subModules: [
       { id: 'LA_22', title: 'How to choose Anchor?', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/ChooseAnchor' },
       { id: 'LA_23', title: 'Who is anchor from multiple instructions?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/anchorFromMultipleInstruction' },
-      { id: 'LA_24', title: 'Anchor Ok but what next?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/WhatAfterAnchor' } , 
+      { id: 'LA_24', title: 'Anchor Ok but what next?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/WhatAfterAnchor' },
       { id: 'LA_25', title: 'What if anchor instruction is not there?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/MultipleInstructionCreateAnchor' }
       // { id: 'LA_10', title: 'When extreme ends are also involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrExtremEnd' },
       // { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
       // { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
- 
+
     ]
   },
 
@@ -97,7 +97,7 @@ const HIERARCHY_DATA = [
     subModules: [
       { id: 'LA_13', title: 'We do not use images in actual world', desc: 'To go trhough the introduction.', icon: '🔢', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldIntro' },
       { id: 'LA_14', title: 'What If peole are facing north?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldNorth' },
-      { id: 'LA_15', title: 'And when they are facing south?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSouth' } , 
+      { id: 'LA_15', title: 'And when they are facing south?', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSouth' },
       { id: 'LA_16', title: 'What if no direction given in question', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/DirectionDoesnotMatter' },
       { id: 'LA_17', title: 'Oops they are sitting in parallel', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/ActualWorldSittingParallel' },
       { id: 'LA_18', title: 'If arrangement can lead to many cases', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/MultipleCaseIntro' },
@@ -106,20 +106,20 @@ const HIERARCHY_DATA = [
       { id: 'LA_21', title: 'When 3 dimensions are involved', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/3DArrangement' }
       // { id: 'LA_11', title: 'Different side intermediate', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/InstrDiffSideIntermediate' }  ,
       // { id: 'LA_12', title: 'Let us solve a bit complex ones', desc: 'Mapping complex relationships.', icon: '🔗', path: '/learn/logicalReasoning/LinearArrangement/Instrcomplex' }  
- 
-    ]
-  },      
 
-  
+    ]
+  },
+
+
 ];
 
 // ==========================================
 // 2. COMMON UTILITY ENGINE
 // ==========================================
 const CurriculumEngine = {
-  flatten: (data) => data.flatMap(mod => 
-    mod.subModules.map(sm => ({ 
-      ...sm, modId: mod.id, modTitle: mod.title, modGradient: mod.gradient, modPath: mod.path 
+  flatten: (data) => data.flatMap(mod =>
+    mod.subModules.map(sm => ({
+      ...sm, modId: mod.id, modTitle: mod.title, modGradient: mod.gradient, modPath: mod.path
     }))
   ),
   next: (currentId, flatPath) => {
@@ -151,8 +151,8 @@ const LabShell = ({ activeSub, isChallengeSolved, isDone, completions, onFinaliz
         </div>
       </div>
       <div className="hidden md:flex flex-col items-end relative z-10">
-         <div className="flex items-center gap-2 mb-1 text-[#8d6e63] font-black uppercase text-[10px] tracking-widest">Logic Node</div>
-         <span className="text-xl font-mono font-black bg-black/40 text-white px-5 py-2 rounded-xl border border-white/10 shadow-2xl">{activeSub.id.toUpperCase()}</span>
+        <div className="flex items-center gap-2 mb-1 text-[#8d6e63] font-black uppercase text-[10px] tracking-widest">Logic Node</div>
+        <span className="text-xl font-mono font-black bg-black/40 text-white px-5 py-2 rounded-xl border border-white/10 shadow-2xl">{activeSub.id.toUpperCase()}</span>
       </div>
     </header>
   );
@@ -163,10 +163,9 @@ const LabShell = ({ activeSub, isChallengeSolved, isDone, completions, onFinaliz
         whileHover={(isChallengeSolved || isDone) ? { scale: 1.05 } : {}} whileTap={(isChallengeSolved || isDone) ? { scale: 0.95 } : {}}
         disabled={!isChallengeSolved && !isDone}
         onClick={() => onFinalize(activeSub.id)}
-        className={`w-full py-6 rounded-[2.5rem] font-black uppercase tracking-[0.3em] text-sm shadow-2xl border-b-[10px] transition-all flex items-center justify-center gap-4 ${
-          isDone ? 'bg-amber-500 border-amber-800 text-white' : 
+        className={`w-full py-6 rounded-[2.5rem] font-black uppercase tracking-[0.3em] text-sm shadow-2xl border-b-[10px] transition-all flex items-center justify-center gap-4 ${isDone ? 'bg-amber-500 border-amber-800 text-white' :
           isChallengeSolved ? 'bg-emerald-600 border-emerald-900 text-white animate-bounce' : 'bg-gray-200 border-gray-400 text-gray-400 cursor-not-allowed'
-        }`}
+          }`}
       >
         {isDone ? 'Proceed to Next Node' : 'Finalize Calibration'}<ChevronRight size={22} strokeWidth={4} />
       </motion.button>
@@ -177,9 +176,9 @@ const LabShell = ({ activeSub, isChallengeSolved, isDone, completions, onFinaliz
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="h-full flex flex-col max-w-6xl mx-auto w-full">
       {renderHeader()}
-      <div className="flex-1 bg-[#faf9f6] rounded-b-[2.5rem] lg:rounded-b-[4rem] border-x-4 border-b-8 border-[#3e2723] flex flex-col items-center justify-start p-4 lg:p-10 shadow-2xl relative overflow-hidden">
+      <div className="flex-1 bg-[#faf9f6] rounded-b-[2.5rem] lg:rounded-b-[4rem] border-x-4 border-b-8 border-[#3e2723] flex flex-col items-center justify-start p-4 lg:p-10 shadow-2xl relative min-h-0">
         <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#3e2723 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-        <div className="flex-1 w-full overflow-y-auto no-scrollbar">{children}</div>
+        <div className="flex-1 w-full overflow-y-auto min-h-0">{children}</div>
         {renderFooter()}
       </div>
     </motion.div>
@@ -213,13 +212,13 @@ const ModuleCard = ({ mod, completions, onSubModuleClick }) => {
       </div>
       <div className="flex-1 flex flex-col bg-[#faf9f6]">
         <div onClick={() => setIsCollapsed(!isCollapsed)} className="flex items-center justify-between px-8 py-5 border-b border-[#c4a484]/20 bg-[#e6dccb]/20 cursor-pointer hover:bg-[#e6dccb]/30 transition-all group/header">
-           <div className="flex items-center gap-3">
-              <span className="text-[10px] font-black uppercase text-[#3e2723] tracking-[0.2em]">Modules</span>
-              <span className="text-[9px] font-bold text-[#8d6e63] px-2.5 py-1 bg-white border border-[#c4a484]/30 rounded-full shadow-sm">{modCompletions} / {mod.subModules.length}</span>
-           </div>
-           <div className="p-1.5 rounded-lg bg-[#3e2723] text-[#e6dccb] group-hover/header:bg-black transition-all">
-             {isCollapsed ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
-           </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] font-black uppercase text-[#3e2723] tracking-[0.2em]">Modules</span>
+            <span className="text-[9px] font-bold text-[#8d6e63] px-2.5 py-1 bg-white border border-[#c4a484]/30 rounded-full shadow-sm">{modCompletions} / {mod.subModules.length}</span>
+          </div>
+          <div className="p-1.5 rounded-lg bg-[#3e2723] text-[#e6dccb] group-hover/header:bg-black transition-all">
+            {isCollapsed ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
+          </div>
         </div>
         <AnimatePresence initial={false}>
           {!isCollapsed && (
@@ -256,7 +255,7 @@ export default function LabDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const [completions, setCompletions] = useState({});
-  const [challengeSolved, setChallengeSolved] = useState(false);
+  const [challengeSolved] = useState(false);
 
   const flatPath = useMemo(() => CurriculumEngine.flatten(HIERARCHY_DATA), []);
   const activeSub = useMemo(() => flatPath.find(sm => sm.path === location.pathname), [location.pathname, flatPath]);
@@ -285,8 +284,8 @@ export default function LabDashboard() {
           <h1 className="text-4xl lg:text-8xl font-black uppercase tracking-tighter text-[#3e2723] leading-none">Curriculum</h1>
         </div>
         <div className="hidden sm:flex flex-col items-end">
-           <span className="text-xs font-black uppercase text-[#8d6e63] tracking-[0.3em] mb-1">Global Mastery</span>
-           <span className="text-5xl lg:text-7xl font-black text-[#3e2723] tabular-nums leading-none">{progress}%</span>
+          <span className="text-xs font-black uppercase text-[#8d6e63] tracking-[0.3em] mb-1">Global Mastery</span>
+          <span className="text-5xl lg:text-7xl font-black text-[#3e2723] tabular-nums leading-none">{progress}%</span>
         </div>
       </header>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
@@ -298,31 +297,49 @@ export default function LabDashboard() {
   );
 
   const renderActiveLab = () => (
-    <div className="h-full w-full p-4 lg:p-10 overflow-hidden bg-[#e6dccb]">
-      <LabShell 
-        activeSub={activeSub} 
+    <div className="h-full w-full p-2 sm:p-4 lg:p-10 overflow-hidden bg-[#e6dccb] flex items-center justify-center">
+      <LabShell
+        activeSub={activeSub}
         isChallengeSolved={challengeSolved}
-        isDone={!!completions[activeSub?.id]} 
-        completions={completions} 
-        onFinalize={handleFinalize} 
+        isDone={!!completions[activeSub?.id]}
+        completions={completions}
+        onFinalize={handleFinalize}
         onBack={() => navigate('/')}
       >
-         {activeSub?.path === '/learn/mathematics/algebra/introduction' ? (
-           <WeightLabModule isDone={!!completions[activeSub.id]} setChallengeSolved={setChallengeSolved} completions={completions} />
-         ) : (
-           <div className="h-full flex flex-col items-center justify-center gap-8 opacity-20 grayscale mt-24">
-              <Settings size={120} className="animate-spin-slow" /><h4 className="text-3xl font-black uppercase tracking-[0.5em]">Node Initializing...</h4>
-           </div>
-         )}
+        <div className="h-full flex flex-col items-center justify-center gap-8 opacity-20 grayscale mt-24 px-4 text-center">
+          <Settings size={120} className="animate-spin-slow" />
+          <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-[0.5em]">Node Initializing...</h2>
+          <p className="text-xs sm:text-sm font-bold opacity-60 italic max-w-md">The Logical Matrix is calibrating the arrangement parameters for: {activeSub?.title}</p>
+        </div>
       </LabShell>
     </div>
   );
 
   return (
-    <div className="h-[100dvh] w-full bg-[#e6dccb] overflow-y-auto no-scrollbar relative font-sans text-[#3e2723]">
+    <div className="w-full bg-[#e6dccb] relative font-sans text-[#3e2723]">
       {renderBackground()}
       <AnimatePresence mode="wait">
-        {!activeSub ? renderModuleGrid() : renderActiveLab()}
+        {!activeSub ? (
+          <motion.div
+            key="dashboard"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="w-full"
+          >
+            {renderModuleGrid()}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="lab"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            className="fixed inset-0 lg:left-64 z-[100] bg-[#e6dccb] p-2 sm:p-4 lg:p-8"
+          >
+            {renderActiveLab()}
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );

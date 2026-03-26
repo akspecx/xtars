@@ -147,9 +147,9 @@ const LabShell = ({ activeSub, isChallengeSolved, isDone, completions, onFinaliz
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="h-full flex flex-col max-w-6xl mx-auto w-full">
       {renderHeader()}
-      <div className="flex-1 bg-[#faf9f6] rounded-b-[2.5rem] lg:rounded-b-[4rem] border-x-4 border-b-8 border-[#3e2723] flex flex-col items-center justify-start p-4 lg:p-10 shadow-2xl relative overflow-hidden">
+      <div className="flex-1 bg-[#faf9f6] rounded-b-[2.5rem] lg:rounded-b-[4rem] border-x-4 border-b-8 border-[#3e2723] flex flex-col items-center justify-start p-4 lg:p-10 shadow-2xl relative min-h-0">
         <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#3e2723 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-        <div className="flex-1 w-full overflow-y-auto no-scrollbar">{children}</div>
+        <div className="flex-1 w-full overflow-y-auto min-h-0">{children}</div>
         {renderFooter()}
       </div>
     </motion.div>
@@ -268,7 +268,7 @@ export default function LabDashboard() {
   );
 
   const renderActiveLab = () => (
-    <div className="h-full w-full p-4 lg:p-10 overflow-hidden bg-[#e6dccb]">
+    <div className="h-full w-full p-2 sm:p-4 lg:p-10 overflow-hidden bg-[#e6dccb] flex items-center justify-center">
       <LabShell 
         activeSub={activeSub} 
         isChallengeSolved={challengeSolved}
@@ -289,10 +289,30 @@ export default function LabDashboard() {
   );
 
   return (
-    <div className="h-[100dvh] w-full bg-[#e6dccb] overflow-y-auto no-scrollbar relative font-sans text-[#3e2723]">
+    <div className="w-full bg-[#e6dccb] relative font-sans text-[#3e2723]">
       {renderBackground()}
       <AnimatePresence mode="wait">
-        {!activeSub ? renderModuleGrid() : renderActiveLab()}
+        {!activeSub ? (
+          <motion.div
+            key="dashboard"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="w-full"
+          >
+            {renderModuleGrid()}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="lab"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            className="fixed inset-0 lg:left-64 z-[100] bg-[#e6dccb] p-2 sm:p-4 lg:p-8"
+          >
+            {renderActiveLab()}
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
