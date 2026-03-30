@@ -1,42 +1,42 @@
 import React from "react";
 import { useNavigate } from "react-router";
 // Age 3-4 modules
-import AlphabetGamesDragDrop from "./age3-4/AlphabetsDragDropMatching";
-import RandomBalloonAlphabetMapping from "./age3-4/RandomBalloonAlphabetMapping";
-import AlphabetCounting from "./age3-4/AlphabetCounting";
-import AlphabetStoryCards from "./age3-4/AlphabetStoryCards";
-import AlphabetFindTapScene from "./age3-4/AlphabetFindTapScene";
-import LetterHuntSafari from "./age3-4/LetterHuntSafari";
-import AlphabetDanceParty from "./age3-4/AlphabetDanceParty";
-import LetterSizeSorting from "./age3-4/LetterSizeSorting";
-import EnvironmentalPrintMatch from "./age3-4/EnvironmentalPrintMatch";
+const AlphabetGamesDragDrop = React.lazy(() => import("./age3-4/AlphabetsDragDropMatching"));
+const RandomBalloonAlphabetMapping = React.lazy(() => import("./age3-4/RandomBalloonAlphabetMapping"));
+const AlphabetCounting = React.lazy(() => import("./age3-4/AlphabetCounting"));
+const AlphabetStoryCards = React.lazy(() => import("./age3-4/AlphabetStoryCards"));
+const AlphabetFindTapScene = React.lazy(() => import("./age3-4/AlphabetFindTapScene"));
+const LetterHuntSafari = React.lazy(() => import("./age3-4/LetterHuntSafari"));
+const AlphabetDanceParty = React.lazy(() => import("./age3-4/AlphabetDanceParty"));
+const LetterSizeSorting = React.lazy(() => import("./age3-4/LetterSizeSorting"));
+const EnvironmentalPrintMatch = React.lazy(() => import("./age3-4/EnvironmentalPrintMatch"));
 
 // Age 4-5 modules
-import AlphabetSequenceMapping from "./age4-5/AlphabetSequenceMapping";
-import AlphabetFruitFlipGame from "./age4-5/FlipAlphabetFruitLearning";
-import AlphabetTracing from "./age4-5/AlphabetTracing";
-import AlphabetFillInTheBlanks from "./age4-5/AlphabetFillInTheBlanks";
-import AlphabetObjectMatching from "./age4-5/AlphabetObjectMatching";
-import AlphabetCaseMatching from "./age4-5/AlphabetCaseMatching";
-import AlphabetSorting from "./age4-5/AlphabetSorting";
-import AlphabetLetterPuzzle from "./age4-5/AlphabetLetterPuzzle";
-import AlphabetLetterPathMaze from "./age4-5/AlphabetLetterPathMaze";
-import AlphabetBeginningSoundPicker from "./age4-5/AlphabetBeginningSoundPicker";
-import CVCWordBuilder from "./age4-5/CVCWordBuilder";
-import WordFamilyHouses from "./age4-5/WordFamilyHouses";
-import AlphabetChef from "./age4-5/AlphabetChef";
-import SightWordStars from "./age4-5/SightWordStars";
-import PreWritingStrokes from "./age4-5/PreWritingStrokes";
+const AlphabetSequenceMapping = React.lazy(() => import("./age4-5/AlphabetSequenceMapping"));
+const AlphabetFruitFlipGame = React.lazy(() => import("./age4-5/FlipAlphabetFruitLearning"));
+const AlphabetTracing = React.lazy(() => import("./age4-5/AlphabetTracing"));
+const AlphabetFillInTheBlanks = React.lazy(() => import("./age4-5/AlphabetFillInTheBlanks"));
+const AlphabetObjectMatching = React.lazy(() => import("./age4-5/AlphabetObjectMatching"));
+const AlphabetCaseMatching = React.lazy(() => import("./age4-5/AlphabetCaseMatching"));
+const AlphabetSorting = React.lazy(() => import("./age4-5/AlphabetSorting"));
+const AlphabetLetterPuzzle = React.lazy(() => import("./age4-5/AlphabetLetterPuzzle"));
+const AlphabetLetterPathMaze = React.lazy(() => import("./age4-5/AlphabetLetterPathMaze"));
+const AlphabetBeginningSoundPicker = React.lazy(() => import("./age4-5/AlphabetBeginningSoundPicker"));
+const CVCWordBuilder = React.lazy(() => import("./age4-5/CVCWordBuilder"));
+const WordFamilyHouses = React.lazy(() => import("./age4-5/WordFamilyHouses"));
+const AlphabetChef = React.lazy(() => import("./age4-5/AlphabetChef"));
+const SightWordStars = React.lazy(() => import("./age4-5/SightWordStars"));
+const PreWritingStrokes = React.lazy(() => import("./age4-5/PreWritingStrokes"));
 
 // Age 5-6 modules
-import AlphabetDescending from "./age5-6/AlphabetDescending";
-import AlphabetRhyming from "./age5-6/AlphabetRhyming";
-import AlphabetNameBuilder from "./age5-6/AlphabetNameBuilder";
-import AlphabetUppercaseUsage from "./age5-6/AlphabetUppercaseUsage";
-import BlendingBridge from "./age5-6/BlendingBridge";
-import SentenceBuilder from "./age5-6/SentenceBuilder";
-import CompoundWordFactory from "./age5-6/CompoundWordFactory";
-import AlphabetGamesLandingPage from "./AlphabetGamesLandingPage";
+const AlphabetDescending = React.lazy(() => import("./age5-6/AlphabetDescending"));
+const AlphabetRhyming = React.lazy(() => import("./age5-6/AlphabetRhyming"));
+const AlphabetNameBuilder = React.lazy(() => import("./age5-6/AlphabetNameBuilder"));
+const AlphabetUppercaseUsage = React.lazy(() => import("./age5-6/AlphabetUppercaseUsage"));
+const BlendingBridge = React.lazy(() => import("./age5-6/BlendingBridge"));
+const SentenceBuilder = React.lazy(() => import("./age5-6/SentenceBuilder"));
+const CompoundWordFactory = React.lazy(() => import("./age5-6/CompoundWordFactory"));
+const AlphabetGamesLandingPage = React.lazy(() => import("./AlphabetGamesLandingPage"));
 
 // Wrapper for Alphabet Games Page (standalone route)
 export const AlphabetGamesPageWrapper: React.FC = () => {

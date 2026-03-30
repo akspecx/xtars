@@ -29,8 +29,13 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // DEV BYPASS: Hardcoded mock user to completely skip login for now
+  const [user, setUser] = useState<User | null>({
+    id: "dev-id",
+    name: "Dev User",
+    email: "dev@example.com",
+  });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const isAuthenticated = !!user;
@@ -45,12 +50,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     // Initialize Google Sign-In
     const initializeGoogleSignIn = async () => {
       try {
-        await new Promise((resolve) => {
+        await new Promise((resolve, reject) => {
           const script = document.createElement("script");
           script.src = "https://accounts.google.com/gsi/client";
           script.async = true;
           script.defer = true;
           script.onload = resolve;
+          script.onerror = () => reject(new Error("Failed to load Google Sign-In script"));
           document.head.appendChild(script);
         });
 
@@ -61,19 +67,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           cancel_on_tap_outside: true,
           use_fedcm_for_prompt: true, // Enable FedCM (newer API)
           itp_support: true, // Enable for Apple Intelligent Tracking Prevention
-          context: "signin", // Use "signin" or "signup" based on your context
-        });
-        
-        // Configure UI for the sign-in button (if you're using one-tap)
-        window.google?.accounts.id.configure({
-          prompt_parent_id: "g_id_onload", // ID of the div where one-tap UI will be displayed
         });
         
       } catch (error) {
         console.error("Failed to initialize Google Sign-In:", error);
       } finally {
         setIsLoading(false);
-        
       }
     };
 

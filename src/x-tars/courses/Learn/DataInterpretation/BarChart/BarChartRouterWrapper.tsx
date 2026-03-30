@@ -1,20 +1,20 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import BarChartIntro from "./BarChartIntro";
-import TheLargestAndSmallest from "./TheLargestAndSmallest";
-import IncreaseTheScaleTo2 from "./IncreaseTheScaleTo2";
-import FindingAnomaliesInBarChart from "./FindingAnomaliesInBarChart";
-import CreateBarChart from "./CreateBarChart";
-import  DoubleBarChartTwoClass from "./DoubleBarChartTwoClass";
-import DoubleBarComparisonIntro from "./DoubleBarComparisonIntro";
-import DoubleBCCumulativeDataAnalysis from "./DoubleBarChartCumulativeDataAnalysis";
-import DoubleBarChartMissingBars from "./DoubleBarChartMissingBars"
-import DoubleBCMoreComplexAnalysis from "./DoubleBarChartMoreComplexAnalysis";
-import DoubleBarChartComputationMinAvgOne from "./DoubleBarChartComputationMinAvgOne";
-import DoubleBCComputationRatioPercentageTwo from "./DoubleBarChartComputationRatioPercentageTwo";
-import DoubleBarChartProfitLossSeven from "./DoubleBarChartComputationProfitLossSeven";
-import AdvancedBarChartStackedOne from "./AdvancedBarChartStackedOne";
-import AdvancedBarChartTradeTwo from "./AdvancedBarChartTradeTwo";
+const BarChartIntro = React.lazy(() => import("./BarChartIntro"));
+const TheLargestAndSmallest = React.lazy(() => import("./TheLargestAndSmallest"));
+const IncreaseTheScaleTo2 = React.lazy(() => import("./IncreaseTheScaleTo2"));
+const FindingAnomaliesInBarChart = React.lazy(() => import("./FindingAnomaliesInBarChart"));
+const CreateBarChart = React.lazy(() => import("./CreateBarChart"));
+const DoubleBarChartTwoClass = React.lazy(() => import("./DoubleBarChartTwoClass"));
+const DoubleBarComparisonIntro = React.lazy(() => import("./DoubleBarComparisonIntro"));
+const DoubleBCCumulativeDataAnalysis = React.lazy(() => import("./DoubleBarChartCumulativeDataAnalysis"));
+const DoubleBarChartMissingBars = React.lazy(() => import("./DoubleBarChartMissingBars"));
+const DoubleBCMoreComplexAnalysis = React.lazy(() => import("./DoubleBarChartMoreComplexAnalysis"));
+const DoubleBarChartComputationMinAvgOne = React.lazy(() => import("./DoubleBarChartComputationMinAvgOne"));
+const DoubleBCComputationRatioPercentageTwo = React.lazy(() => import("./DoubleBarChartComputationRatioPercentageTwo"));
+const DoubleBarChartProfitLossSeven = React.lazy(() => import("./DoubleBarChartComputationProfitLossSeven"));
+const AdvancedBarChartStackedOne = React.lazy(() => import("./AdvancedBarChartStackedOne"));
+const AdvancedBarChartTradeTwo = React.lazy(() => import("./AdvancedBarChartTradeTwo"));
 // import LAActualWorldIntro from "./LAActualWorldIntro"
 // import LAActualWorldNorth from "./LAActualWorldFacingNorth"
 // import LAActualWorldSouth from "./LAActualWorldFacingSouth"

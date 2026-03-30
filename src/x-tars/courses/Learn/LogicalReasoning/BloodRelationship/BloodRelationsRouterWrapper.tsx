@@ -1,13 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import BRIntro from "./BRIntroductionOne";
-import BRAncilliary from "./BRAncilliaryRelationshipTwo";
-import BRFundamentals from "./BRSettingFundamentalsThree";
-import BRMoreRelationships from "./BRMoreRelationshipsFour";
-import BRWorkingWithInstruction from "./BRWorkingWithInstructionsFive";
-import  BRCodeIntro from "./BRCodeIntroOne";
-import BRCodedBuildingTree from "./BRCodedBuildingTheTreeTwo";
-import BRCodedDeduceRelationship from "./BRCodedDeduceRelationshipThree";
+const BRIntro = React.lazy(() => import("./BRIntroductionOne"));
+const BRAncilliary = React.lazy(() => import("./BRAncilliaryRelationshipTwo"));
+const BRFundamentals = React.lazy(() => import("./BRSettingFundamentalsThree"));
+const BRMoreRelationships = React.lazy(() => import("./BRMoreRelationshipsFour"));
+const BRWorkingWithInstruction = React.lazy(() => import("./BRWorkingWithInstructionsFive"));
+const BRCodeIntro = React.lazy(() => import("./BRCodeIntroOne"));
+const BRCodedBuildingTree = React.lazy(() => import("./BRCodedBuildingTheTreeTwo"));
+const BRCodedDeduceRelationship = React.lazy(() => import("./BRCodedDeduceRelationshipThree"));
 // import LAFollowInstructionIntro from "./LAFollowInstructionIntro"
 // import LAFollowInstructionRight from "./LAFollowInstructionRight";
 // import LAFollowInstructionLeftRightBoth from "./LAFollowInstructionLeftRightBoth";

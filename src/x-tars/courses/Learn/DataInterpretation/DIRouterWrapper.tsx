@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import BarChartMain from "./BarChart/BarChartMain"
-import LineChartMain from "./LineChart/LineChartMain"
+const BarChartMain = React.lazy(() => import("./BarChart/BarChartMain"));
+const LineChartMain = React.lazy(() => import("./LineChart/LineChartMain"));
 
 // To handle back from Maths page
  export const BarChartMainRouter: React.FC = () => {

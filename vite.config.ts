@@ -5,7 +5,7 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/xtars/', // 🔁 change this to your GitHub repo name
+  base: './', // Change this to './' for Capacitor/Mobile compatibility
   plugins: [
     react(),
     svgr({
@@ -21,6 +21,26 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+  },
+  build: {
+    modulePreload: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-charts': ['apexcharts', 'react-apexcharts'],
+          'vendor-calendar': [
+            '@fullcalendar/core',
+            '@fullcalendar/daygrid',
+            '@fullcalendar/interaction',
+            '@fullcalendar/list',
+            '@fullcalendar/react',
+            '@fullcalendar/timegrid'
+          ],
+          'vendor-maps': ['leaflet', 'react-leaflet', '@react-jvectormap/core', '@react-jvectormap/world'],
+          'vendor-ui': ['framer-motion', 'lucide-react', 'swiper']
+        }
+      }
+    }
   },
   server: {
     hmr: {

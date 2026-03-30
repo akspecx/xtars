@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">xtars</string>
+    <string name="title_activity_main">xtars</string>
+    <string name="package_name">com.xtars.app</string>
+    <string name="custom_url_scheme">com.xtars.app</string>
+</resources>

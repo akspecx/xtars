@@ -6,33 +6,74 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ModuleProgress, formatLastPlayed, formatTime } from './useModuleProgress';
 
-// --- Star Row ---
-interface StarRowProps {
+// --- Mastery Progress Indicator ---
+interface MasteryProgressProps {
   progress: ModuleProgress;
+  size?: number;
 }
 
-// Shows up to 5 stars filled proportionally to scenariosCompletedBest / totalScenarios
-export const StarRow: React.FC<StarRowProps> = ({ progress }) => {
-  const total = Math.min(progress.totalScenarios, 5);
-  const filled = Math.round((progress.scenariosCompletedBest / Math.max(progress.totalScenarios, 1)) * total);
+/**
+ * Replaces the ambiguous StarRow with a clear, visual indicator:
+ * - Circular progress ring for in-progress modules.
+ * - Green checkmark (✅) or Medal for completed modules.
+ * - Pulse effect for modules currently being played.
+ */
+export const MasteryProgress: React.FC<MasteryProgressProps> = ({ progress, size = 48 }) => {
+  const { scenariosCompletedBest, totalScenarios } = progress;
+  const isCompleted = scenariosCompletedBest >= totalScenarios;
+  const percentage = Math.round((scenariosCompletedBest / Math.max(totalScenarios, 1)) * 100);
+  
+  // Don't show anything if not started (unless size is used to show a placeholder)
+  if (scenariosCompletedBest === 0 && !isCompleted) return null;
+
+  const radius = (size - 8) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="flex items-center gap-1 justify-center my-0.5">
-      {Array.from({ length: total }).map((_, i) => (
-        <motion.span
-          key={i}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: i * 0.05, type: 'spring', stiffness: 300 }}
-          className={`text-xl leading-none drop-shadow-sm transition-all ${
-            i < filled 
-              ? 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]' 
-              : 'text-gray-200 opacity-60'
-          }`}
-        >
-          {i < filled ? '★' : '★'}
-        </motion.span>
-      ))}
+    <div className="flex flex-col items-center gap-1.5 mt-1 sm:mt-2">
+      <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+        {/* Background Track */}
+        <svg className="absolute inset-0 -rotate-90" width={size} height={size}>
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="transparent"
+            stroke="currentColor"
+            strokeWidth="4"
+            className="text-gray-100"
+          />
+          {/* Progress fill */}
+          <motion.circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="transparent"
+            stroke="currentColor"
+            strokeWidth="4"
+            strokeDasharray={circumference}
+            initial={{ strokeDashoffset: circumference }}
+            animate={{ strokeDashoffset: offset }}
+            transition={{ type: "spring", stiffness: 50, damping: 15 }}
+            className={isCompleted ? "text-emerald-500" : "text-amber-500"}
+          />
+        </svg>
+
+        {/* Center Content */}
+        <div className="flex items-center justify-center z-10 font-black text-[10px] text-[#5D4037]">
+          {isCompleted ? (
+            <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-xl">✅</motion.span>
+          ) : (
+             <span>{percentage}%</span>
+          )}
+        </div>
+      </div>
+      
+      {/* Label for Parents */}
+      <span className="text-[9px] font-black uppercase tracking-widest text-[#A68B7C] opacity-70">
+        {isCompleted ? "Mastered!" : "In Progress"}
+      </span>
     </div>
   );
 };

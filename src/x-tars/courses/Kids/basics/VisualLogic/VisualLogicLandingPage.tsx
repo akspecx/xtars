@@ -1,9 +1,9 @@
-import React, { useMemo, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useMemo, useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Smile } from 'lucide-react';
+import { Rocket } from 'lucide-react';
 import { getProgress, recordVisit, ModuleProgress } from '../../../CommonUtility/useModuleProgress';
-import { StarRow, MasteryBadge, NewBadge, ParentTooltip } from '../../../CommonUtility/ProgressBadge';
+import { MasteryProgress, MasteryBadge, NewBadge } from '../../../CommonUtility/ProgressBadge';
 
 const visualLogicData = [
   { id: "big",               title: "Big",          subtitle: "Find the big one",      icon: "🐘", path: "/games/visuallogic/big",               category: "size",     totalScenarios: 8 },
@@ -44,8 +44,8 @@ const CartoonWatermarks = () => (
 
 export default function VisualLogicLandingPage() {
   const navigate = useNavigate();
-
   const [progressMap, setProgressMap] = useState<Record<string, ModuleProgress>>({});
+  const [currentPage, setCurrentPage] = useState(0);
 
   // Load progress for all modules on mount
   useEffect(() => {
@@ -56,6 +56,17 @@ export default function VisualLogicLandingPage() {
     setProgressMap(map);
   }, []);
 
+  const itemsPerPage = 4;
+  const totalPages = Math.ceil(visualLogicData.length / itemsPerPage);
+
+  const nextPage = () => setCurrentPage((prev) => (prev + 1) % totalPages);
+  const prevPage = () => setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+
+  const currentItems = useMemo(() => {
+    const start = currentPage * itemsPerPage;
+    return visualLogicData.slice(start, start + itemsPerPage);
+  }, [currentPage]);
+
   const dynamicGreeting = useMemo(() => {
     const hour = new Date().getHours();
     if (hour < 12) return "Good morning! ☀️";
@@ -64,10 +75,10 @@ export default function VisualLogicLandingPage() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center bg-[#FDFBF7] font-sans select-none relative pb-10 overflow-hidden min-h-full">
+    <div className="w-full flex flex-col items-center bg-[#FDFBF7] font-sans select-none relative pb-10 overflow-hidden min-h-screen">
       <CartoonWatermarks />
 
-      <div className="w-full max-w-7xl px-4 sm:px-6 pt-3 sm:pt-4 relative z-10 flex flex-col gap-4 sm:gap-6">
+      <div className="w-full max-w-7xl px-4 sm:px-6 pt-3 sm:pt-4 relative z-10 flex flex-col gap-4 sm:gap-10">
 
         {/* Compact Welcome Header */}
         <motion.div
@@ -76,8 +87,10 @@ export default function VisualLogicLandingPage() {
           className="flex items-center justify-between gap-4 bg-[#FFFBF2] px-4 sm:px-6 py-3 sm:py-4 rounded-2xl border-[3px] border-[#FFB74D] shadow-[0_6px_16px_rgba(255,183,77,0.15)] w-full"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#FFB74D] rounded-full text-white shadow-md shrink-0">
-              <Smile size={22} strokeWidth={3} />
+            <div className="p-1.5 sm:p-2 bg-[#FF1744] rounded-full text-white shadow-md shrink-0 cursor-pointer" onClick={() => navigate('/games')}>
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                <Rocket size={20} strokeWidth={3} className="-rotate-45" />
+              </motion.div>
             </div>
             <div>
               <h2 className="text-lg sm:text-2xl font-black text-[#7A5C3E] tracking-tighter leading-tight">{dynamicGreeting}</h2>
@@ -85,73 +98,105 @@ export default function VisualLogicLandingPage() {
             </div>
           </div>
           <div className="flex flex-col items-center bg-[#4CAF50] px-4 py-2 rounded-xl text-white shadow-[0_4px_0_#388E3C] border-2 border-white transform rotate-1 shrink-0">
-            <span className="text-[9px] font-black uppercase tracking-wider opacity-90">Games</span>
-            <span className="text-2xl font-black leading-none">{visualLogicData.length}</span>
+             <span className="text-xl sm:text-2xl font-black leading-none">{currentPage + 1}/{totalPages}</span>
+             <span className="text-[8px] font-black uppercase tracking-wider opacity-90">Pages</span>
           </div>
         </motion.div>
 
-        {/* Game Grid */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.15 }}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
-        >
-          {visualLogicData.map((game, idx) => {
-            const colors = categoryColors[game.category];
-            const prog = progressMap[game.id];
-            const isNew = !prog || prog.visitCount === 0;
-            const isGold = prog?.masteryLevel === 3;
+        {/* Game Carousel Container */}
+        <div className="relative flex items-center justify-center gap-2 sm:gap-6 min-h-[400px]">
+          {/* Navigation - Left */}
+          <motion.button
+            whileHover={{ scale: 1.1, x: -5 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={prevPage}
+            className="hidden sm:flex absolute -left-4 lg:-left-12 z-20 w-16 h-16 bg-white rounded-full border-4 border-amber-400 items-center justify-center text-amber-500 shadow-xl"
+          >
+            <Rocket className="rotate-[-135deg]" size={32} strokeWidth={3} />
+          </motion.button>
 
-            return (
-              <motion.button
-                key={game.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.03 }}
-                whileHover={{ y: -4, scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => {
-                  // record the visit optimistically before navigating
-                  if (game.id) recordVisit(game.id, game.totalScenarios);
-                  navigate(game.path, { state: { initialMode: 'kid' } });
-                }}
-                className={`relative aspect-[4/3] flex flex-col items-center justify-center gap-1 sm:gap-1.5 rounded-2xl sm:rounded-3xl border-[3px] ${colors.bg} ${colors.border} shadow-[0_4px_0_rgba(0,0,0,0.08)] hover:shadow-[0_6px_0_rgba(0,0,0,0.12)] transition-all cursor-pointer group p-2 ${isGold ? `ring-2 ${colors.glow}` : ''} ${isNew ? 'opacity-90' : ''}`}
-              >
-                {/* Mastery crown badge — top left */}
-                {prog && <MasteryBadge level={prog.masteryLevel} />}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPage}
+              initial={{ opacity: 0, x: 50, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -50, scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="grid grid-cols-2 gap-4 sm:gap-8 w-full"
+            >
+              {currentItems.map((game, idx) => {
+                const colors = categoryColors[game.category];
+                const prog = progressMap[game.id];
+                const isNew = !prog || prog.visitCount === 0;
+                const isGold = prog?.masteryLevel === 3;
 
-                {/* NEW badge — top right, only if never visited */}
-                {isNew && <NewBadge />}
+                return (
+                  <motion.button
+                    key={game.id}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      if (game.id) recordVisit(game.id, game.totalScenarios);
+                      navigate(game.path, { state: { initialMode: 'kid' } });
+                    }}
+                    className={`relative aspect-[4/3] flex flex-col items-center justify-center gap-2 sm:gap-4 rounded-[2.5rem] border-[5px] ${colors.bg} ${colors.border} shadow-[0_12px_0_rgba(0,0,0,0.06)] hover:shadow-[0_16px_0_rgba(0,0,0,0.08)] transition-all cursor-pointer group p-4 sm:p-8 ${isGold ? `ring-4 ${colors.glow}` : ''}`}
+                  >
+                    {prog && <MasteryBadge level={prog.masteryLevel} />}
+                    {isNew && <NewBadge />}
+                    
+                    <motion.span
+                      className="text-7xl sm:text-8xl md:text-9xl leading-none drop-shadow-2xl"
+                      animate={{ rotate: [0, 5, -5, 0] }}
+                      transition={{ repeat: Infinity, duration: 3 + idx * 0.5, ease: "easeInOut" }}
+                    >
+                      {game.icon}
+                    </motion.span>
 
-                {/* Parent tooltip — hover only, desktop */}
-                {prog && <ParentTooltip progress={prog} />}
+                    <div className="text-center">
+                      <span className="text-xl sm:text-3xl font-black text-[#5D4037] tracking-tight uppercase leading-none block mb-1">
+                        {game.title}
+                      </span>
+                      <span className="text-[10px] sm:text-xs font-bold text-[#A68B7C] uppercase tracking-widest opacity-60">
+                         {game.category} Fun
+                      </span>
+                    </div>
 
-                {/* Emoji */}
-                <motion.span
-                  className="text-5xl sm:text-6xl md:text-7xl leading-none drop-shadow-md"
-                  animate={{ rotate: [0, 3, -3, 0] }}
-                  transition={{ repeat: Infinity, duration: 4 + idx * 0.2, ease: "easeInOut" }}
-                >
-                  {game.icon}
-                </motion.span>
+                    {prog && prog.visitCount > 0 && <MasteryProgress progress={prog} />}
+                  </motion.button>
+                );
+              })}
+            </motion.div>
+          </AnimatePresence>
 
-                {/* Title */}
-                <span className="text-xs sm:text-sm font-black text-[#5D4037] tracking-tight leading-none text-center">
-                  {game.title}
-                </span>
+          {/* Navigation - Right */}
+          <motion.button
+            whileHover={{ scale: 1.1, x: 5 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={nextPage}
+            className="hidden sm:flex absolute -right-4 lg:-right-12 z-20 w-16 h-16 bg-white rounded-full border-4 border-amber-400 items-center justify-center text-amber-500 shadow-xl"
+          >
+            <Rocket className="rotate-45" size={32} strokeWidth={3} />
+          </motion.button>
+        </div>
 
-                {/* Star row — child-facing progress */}
-                {prog && prog.visitCount > 0 && <StarRow progress={prog} />}
-
-                {/* Category badge */}
-                <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full ${colors.badge}`}>
-                  {game.category}
-                </span>
-              </motion.button>
-            );
-          })}
-        </motion.div>
+        {/* Page Indicators */}
+        <div className="flex justify-center gap-4 mt-4">
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <motion.button
+              key={i}
+              onClick={() => setCurrentPage(i)}
+              animate={{ 
+                scale: currentPage === i ? 1.5 : 1,
+                rotate: currentPage === i ? 180 : 0
+              }}
+              className={`w-6 h-6 rounded-lg rotate-45 border-2 transition-colors ${
+                currentPage === i 
+                  ? 'bg-amber-400 border-amber-500 shadow-lg' 
+                  : 'bg-white border-amber-200'
+              }`}
+            />
+          ))}
+        </div>
 
       </div>
     </div>

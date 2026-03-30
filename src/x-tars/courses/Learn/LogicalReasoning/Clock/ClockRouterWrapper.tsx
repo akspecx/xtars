@@ -1,17 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import ClockIntroduction from "./CHourMinuteHandAngleOne";
-import ClockHourHandRotation from "./CHourHandRotationTwo"
-import HMHandRotation from "./CHourHandMovementAtMinuteThree"
-import AngleBetweenHMHand from "./CAngleBetweenHourMinuteHandFour"
-import ReflexAngle from "./CHourMinuteReflexAngleFive"
-import HMHandOverlap from "./CWhenWillHourMinuteHandOverlapSix"
-import HMHandAt90 from "./CHourMinuteHandAtRightAngleSeven"
-import HMHandStraightLine from "./CHourMinuteHandStraightEight"
-import HMHandOverlapAgain from "./CHourMinuteHandOverlappingNine"
-import HMHandError from "./CHourMinuteHandErrorTen"
-import HMHandCertainAnglesInDay from "./CHourMinuteHandAngleInADayEleven"
-import HMHandErrorRecovery from "./CTimeDifferenceRecoveryTwelve"
+const ClockIntroduction = React.lazy(() => import("./CHourMinuteHandAngleOne"));
+const ClockHourHandRotation = React.lazy(() => import("./CHourHandRotationTwo"));
+const HMHandRotation = React.lazy(() => import("./CHourHandMovementAtMinuteThree"));
+const AngleBetweenHMHand = React.lazy(() => import("./CAngleBetweenHourMinuteHandFour"));
+const ReflexAngle = React.lazy(() => import("./CHourMinuteReflexAngleFive"));
+const HMHandOverlap = React.lazy(() => import("./CWhenWillHourMinuteHandOverlapSix"));
+const HMHandAt90 = React.lazy(() => import("./CHourMinuteHandAtRightAngleSeven"));
+const HMHandStraightLine = React.lazy(() => import("./CHourMinuteHandStraightEight"));
+const HMHandOverlapAgain = React.lazy(() => import("./CHourMinuteHandOverlappingNine"));
+const HMHandError = React.lazy(() => import("./CHourMinuteHandErrorTen"));
+const HMHandCertainAnglesInDay = React.lazy(() => import("./CHourMinuteHandAngleInADayEleven"));
+const HMHandErrorRecovery = React.lazy(() => import("./CTimeDifferenceRecoveryTwelve"));
 
 // To handle back from Maths page
 

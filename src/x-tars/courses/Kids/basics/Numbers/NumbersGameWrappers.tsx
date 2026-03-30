@@ -1,42 +1,42 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import TrainMovingArrangingNumbers from "./age4-5/TrainMovingArrangingNumbers";
-import FillInTheBlanksTrainModule from "./age4-5/FillInTheBlanksTrainModule";
-import DescendingOrder from "./age5-6/DescendingOrder";
-import NumberIdentification from "./age3-4/NumberIdentification";
-import NumberTracing from "./age4-5/NumberTracing";
-import NumberCounting from "./age3-4/NumberCounting";
-import NumbersIntroduction from "./age3-4/NumbersIntroduction"
-import NumberFocus from "./age3-4/NumberFocus"
+const TrainMovingArrangingNumbers = React.lazy(() => import("./age4-5/TrainMovingArrangingNumbers"));
+const FillInTheBlanksTrainModule = React.lazy(() => import("./age4-5/FillInTheBlanksTrainModule"));
+const DescendingOrder = React.lazy(() => import("./age5-6/DescendingOrder"));
+const NumberIdentification = React.lazy(() => import("./age3-4/NumberIdentification"));
+const NumberTracing = React.lazy(() => import("./age4-5/NumberTracing"));
+const NumberCounting = React.lazy(() => import("./age3-4/NumberCounting"));
+const NumbersIntroduction = React.lazy(() => import("./age3-4/NumbersIntroduction"));
+const NumberFocus = React.lazy(() => import("./age3-4/NumberFocus"));
 
 // Age-grouped Numbers games
-import DotDashRockets from "./age3-4/DotDashRockets";
-import LadybugSpotsMatch from "./age3-4/LadybugSpotsMatch";
-import MoreUnderstanding from "./age3-4/MoreUnderstanding";
-import LessUnderstanding from "./age3-4/LessUnderstanding"
-import CleanUpCount from "./age3-4/CleanUpCount";
-import ZeroTheHero from "./age3-4/ZeroTheHero";
-import PizzaPartySharing from "./age3-4/PizzaPartySharing";
-import CoinCollector from "./age3-4/CoinCollector";
-import UnderstandingEqual from "./age3-4/UnderstandingEqual";
+const DotDashRockets = React.lazy(() => import("./age3-4/DotDashRockets"));
+const LadybugSpotsMatch = React.lazy(() => import("./age3-4/LadybugSpotsMatch"));
+const MoreUnderstanding = React.lazy(() => import("./age3-4/MoreUnderstanding"));
+const LessUnderstanding = React.lazy(() => import("./age3-4/LessUnderstanding"));
+const CleanUpCount = React.lazy(() => import("./age3-4/CleanUpCount"));
+const ZeroTheHero = React.lazy(() => import("./age3-4/ZeroTheHero"));
+const PizzaPartySharing = React.lazy(() => import("./age3-4/PizzaPartySharing"));
+const CoinCollector = React.lazy(() => import("./age3-4/CoinCollector"));
+const UnderstandingEqual = React.lazy(() => import("./age3-4/UnderstandingEqual"));
 
-import NumberBridgeBuilder from "./age4-5/NumberBridgeBuilder";
-import PatternTrainCars from "./age4-5/PatternTrainCars";
-import SnackSharingParty from "./age4-5/SnackSharingParty";
-import OrdinalRaceTrack from "./age4-5/OrdinalRaceTrack";
-import ShapeNumberPuzzles from "./age4-5/ShapeNumberPuzzles";
-import ClockTowerTime from "./age4-5/ClockTowerTime";
-import NumberDetective from "./age4-5/NumberDetective";
+const NumberBridgeBuilder = React.lazy(() => import("./age4-5/NumberBridgeBuilder"));
+const PatternTrainCars = React.lazy(() => import("./age4-5/PatternTrainCars"));
+const SnackSharingParty = React.lazy(() => import("./age4-5/SnackSharingParty"));
+const OrdinalRaceTrack = React.lazy(() => import("./age4-5/OrdinalRaceTrack"));
+const ShapeNumberPuzzles = React.lazy(() => import("./age4-5/ShapeNumberPuzzles"));
+const ClockTowerTime = React.lazy(() => import("./age4-5/ClockTowerTime"));
+const NumberDetective = React.lazy(() => import("./age4-5/NumberDetective"));
 
-import TenFrameGarden from "./age5-6/TenFrameGarden";
-import AddTheAnimals from "./age5-6/AddTheAnimals";
-import NumberBondsBubbles from "./age5-6/NumberBondsBubbles";
-import JumpingFrogs from "./age5-6/JumpingFrogs";
-import FillTheBucket from "./age5-6/FillTheBucket";
-import SubtractTheSnacks from "./age5-6/SubtractTheSnacks";
-import MeasureTheMonsters from "./age5-6/MeasureTheMonsters";
-import NumberLineJumper from "./age5-6/NumberLineJumper";
-import NumbersGamesLandingPage from "./NumbersGamesLandingPage";
+const TenFrameGarden = React.lazy(() => import("./age5-6/TenFrameGarden"));
+const AddTheAnimals = React.lazy(() => import("./age5-6/AddTheAnimals"));
+const NumberBondsBubbles = React.lazy(() => import("./age5-6/NumberBondsBubbles"));
+const JumpingFrogs = React.lazy(() => import("./age5-6/JumpingFrogs"));
+const FillTheBucket = React.lazy(() => import("./age5-6/FillTheBucket"));
+const SubtractTheSnacks = React.lazy(() => import("./age5-6/SubtractTheSnacks"));
+const MeasureTheMonsters = React.lazy(() => import("./age5-6/MeasureTheMonsters"));
+const NumberLineJumper = React.lazy(() => import("./age5-6/NumberLineJumper"));
+const NumbersGamesLandingPage = React.lazy(() => import("./NumbersGamesLandingPage"));
 
 // Wrapper for Numbers Games Page (standalone route)
 export const NumbersGamesPageWrapper: React.FC = () => {

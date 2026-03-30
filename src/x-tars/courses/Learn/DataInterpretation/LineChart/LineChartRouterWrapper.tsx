@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import LineChartIntro from "./LineChartIntroOne";
-import LineChartCreate from "./LineChartCreateTwo";
-import LineChartDiffSmall from "./LineChartMinDiffThree";
-import LineChartAnomalies from "./LineChartAnomaliesFour";
-import LineChartRatio from "./LineChartUnderstandRatioFive";
-import LineChartPercentage from "./LineChartUnderstandingPercentageSix";
-import LineChartAverage from "./LineChartProfitAverageSeven";
+const LineChartIntro = React.lazy(() => import("./LineChartIntroOne"));
+const LineChartCreate = React.lazy(() => import("./LineChartCreateTwo"));
+const LineChartDiffSmall = React.lazy(() => import("./LineChartMinDiffThree"));
+const LineChartAnomalies = React.lazy(() => import("./LineChartAnomaliesFour"));
+const LineChartRatio = React.lazy(() => import("./LineChartUnderstandRatioFive"));
+const LineChartPercentage = React.lazy(() => import("./LineChartUnderstandingPercentageSix"));
+const LineChartAverage = React.lazy(() => import("./LineChartProfitAverageSeven"));
 
 
 export const LineChartIntroRouter: React.FC = () => {

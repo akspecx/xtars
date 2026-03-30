@@ -1,21 +1,21 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import ORAscendingDescending from "./ORAscendingDescendingOne";
-import ORAscendingDescendingWeight from "./ORAscendingDescendingWeightTwo";
-import ORAscendingDescendingFollowInstr from "./ORAscendingDescendingFollowInstrThree";
-import ORAscendingHeightTallShort from "./ORAscendingHeightTallShortFour";
-import ORAscendingDescendingComplex from "./ORAscendingDescendingComplexFive";
-import  ORAscendingDescendingMultiScenarioNoFix from "./ORAscendingDescendingMultiScenarioNoFixSix";
-import ORAscendingDescendingClubbingInstructions from "./ORAscendingDescendingClubbingInstructionsSeven";
-import ORNumberOfPersons from "./ORNumberOfPersonsOne";
-import ORNumberOfPersonsTwo from "./ORNumberOfPersonShiftingTwo";
-import ORNumberOfPersonIfBothLeftRight from "./ORNumberOfPersonIfBothLeftRightThree";
-import ORNOPRelativePositionForTwoUsers from "./ORNumberOfPersonsRelativePositionForTwoUsersFour";
-import ORNOPPeopleWithDiffSide from "./ORNumberOfPersonsTwoPeopleWithDifferentSideFive";
-import ORNOPMultiPeople from "./ORNumberOfPersonsMultiPeopleSix";
-import ORNOPPeopleInterchangePos from "./ORNumberOfPersonsPositionInterchangeSeven";
-import ORNOPWhoAnchor from "./ORNumberOfPersonsWhoAnchorEight";
-import ORNOPClassRatio from "./ORNumberOfPersonsRatioNine"
+const ORAscendingDescending = React.lazy(() => import("./ORAscendingDescendingOne"));
+const ORAscendingDescendingWeight = React.lazy(() => import("./ORAscendingDescendingWeightTwo"));
+const ORAscendingDescendingFollowInstr = React.lazy(() => import("./ORAscendingDescendingFollowInstrThree"));
+const ORAscendingHeightTallShort = React.lazy(() => import("./ORAscendingHeightTallShortFour"));
+const ORAscendingDescendingComplex = React.lazy(() => import("./ORAscendingDescendingComplexFive"));
+const ORAscendingDescendingMultiScenarioNoFix = React.lazy(() => import("./ORAscendingDescendingMultiScenarioNoFixSix"));
+const ORAscendingDescendingClubbingInstructions = React.lazy(() => import("./ORAscendingDescendingClubbingInstructionsSeven"));
+const ORNumberOfPersons = React.lazy(() => import("./ORNumberOfPersonsOne"));
+const ORNumberOfPersonsTwo = React.lazy(() => import("./ORNumberOfPersonShiftingTwo"));
+const ORNumberOfPersonIfBothLeftRight = React.lazy(() => import("./ORNumberOfPersonIfBothLeftRightThree"));
+const ORNOPRelativePositionForTwoUsers = React.lazy(() => import("./ORNumberOfPersonsRelativePositionForTwoUsersFour"));
+const ORNOPPeopleWithDiffSide = React.lazy(() => import("./ORNumberOfPersonsTwoPeopleWithDifferentSideFive"));
+const ORNOPMultiPeople = React.lazy(() => import("./ORNumberOfPersonsMultiPeopleSix"));
+const ORNOPPeopleInterchangePos = React.lazy(() => import("./ORNumberOfPersonsPositionInterchangeSeven"));
+const ORNOPWhoAnchor = React.lazy(() => import("./ORNumberOfPersonsWhoAnchorEight"));
+const ORNOPClassRatio = React.lazy(() => import("./ORNumberOfPersonsRatioNine"));
 // import LAActualWorldNorth from "./LAActualWorldFacingNorth"
 // import LAActualWorldSouth from "./LAActualWorldFacingSouth"
 // import LAActualWorldSittingParallel from "./LAActualWorldSittingInParallel"

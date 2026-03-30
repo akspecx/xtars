@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import LearnMainModule from "../LearnMainModule";
-import AlgebraMainModule from "../maths/AlgebraicExpression/AlgebraMainModule"
-import MathsMainModule from "./MathsMainModule"
-import PercentageMainModule from "./Percentage/PercentageMainModule"
+const LearnMainModule = React.lazy(() => import("../LearnMainModule"));
+const AlgebraMainModule = React.lazy(() => import("../maths/AlgebraicExpression/AlgebraMainModule"));
+const MathsMainModule = React.lazy(() => import("./MathsMainModule"));
+const PercentageMainModule = React.lazy(() => import("./Percentage/PercentageMainModule"));
 // import SacredGame from "./puzzlesModule/TheSacredGame"
 
 

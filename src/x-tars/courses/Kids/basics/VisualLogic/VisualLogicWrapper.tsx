@@ -1,23 +1,23 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import VisualLogicLandingPage from "./VisualLogicLandingPage";
-import UnderstandingofSamePictures from "./UnderstandingofSamePictures";
-import UnderstandingOfAbove from "./UnderstandingOfAbove";
-import UnderstandingOfBelow from "./UnderstandingOfBelow";
-import UnderstandingOfAboveAndBelow from "./UnderstandingOfAboveAndBelow";
-import UnderstandingOfTallAndShort from "./UnderstandingOfTallAndShort";
-import UnderstandingOfTall from "./UnderstandingOfTall";
-import UnderstandingOfShort from "./UnderstandingOfShort";
-import UnderstandingOfFullAndEmpty from "./UnderstandingOfFullAndEmpty";
-import UnderstandingOfFull from "./UnderstandingOfFull";
-import UnderstandingOfEmpty from "./UnderstandingOfEmpty";
-import UnderstandingOfDifferent from "./UnderstandingOfDifferent";
-import UnderstandingOfBig from "./UnderstandingOfBig";
-import UnderstandingofSmall from "./UnderstandingofSmall";
-import UnderstandingOfBigAndSmallMix from "./UnderstandingOfBigAndSmallMix";
-import UnderstandingOfInside from "./UnderstandingOfInside";
-import UnderstandingOfOutside from "./UnderstandingOfOutside";
-import UnderstandingOfInsideAndOutsideMix from "./UnderstandingOfInsideAndOutsideMix";
+const VisualLogicLandingPage = React.lazy(() => import("./VisualLogicLandingPage"));
+const UnderstandingofSamePictures = React.lazy(() => import("./UnderstandingofSamePictures"));
+const UnderstandingOfAbove = React.lazy(() => import("./UnderstandingOfAbove"));
+const UnderstandingOfBelow = React.lazy(() => import("./UnderstandingOfBelow"));
+const UnderstandingOfAboveAndBelow = React.lazy(() => import("./UnderstandingOfAboveAndBelow"));
+const UnderstandingOfTallAndShort = React.lazy(() => import("./UnderstandingOfTallAndShort"));
+const UnderstandingOfTall = React.lazy(() => import("./UnderstandingOfTall"));
+const UnderstandingOfShort = React.lazy(() => import("./UnderstandingOfShort"));
+const UnderstandingOfFullAndEmpty = React.lazy(() => import("./UnderstandingOfFullAndEmpty"));
+const UnderstandingOfFull = React.lazy(() => import("./UnderstandingOfFull"));
+const UnderstandingOfEmpty = React.lazy(() => import("./UnderstandingOfEmpty"));
+const UnderstandingOfDifferent = React.lazy(() => import("./UnderstandingOfDifferent"));
+const UnderstandingOfBig = React.lazy(() => import("./UnderstandingOfBig"));
+const UnderstandingofSmall = React.lazy(() => import("./UnderstandingofSmall"));
+const UnderstandingOfBigAndSmallMix = React.lazy(() => import("./UnderstandingOfBigAndSmallMix"));
+const UnderstandingOfInside = React.lazy(() => import("./UnderstandingOfInside"));
+const UnderstandingOfOutside = React.lazy(() => import("./UnderstandingOfOutside"));
+const UnderstandingOfInsideAndOutsideMix = React.lazy(() => import("./UnderstandingOfInsideAndOutsideMix"));
 
 // Wrapper for Visual Logic Games Page (standalone route)
 export const VisualLogicGamesPageWrapper: React.FC = () => {

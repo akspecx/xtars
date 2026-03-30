@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import LearnMainModule from "./LearnMainModule";
-import MathsMainModule from "./maths/MathsMainModule"
-import LogicalReasoningMainModule from "./LogicalReasoning/LogicalReasoningMainModule"
-import DataInterpretationMain from "./DataInterpretation/DIMainModule"
+const LearnMainModule = React.lazy(() => import("./LearnMainModule"));
+const MathsMainModule = React.lazy(() => import("./maths/MathsMainModule"));
+const LogicalReasoningMainModule = React.lazy(() => import("./LogicalReasoning/LogicalReasoningMainModule"));
+const DataInterpretationMain = React.lazy(() => import("./DataInterpretation/DIMainModule"));
 // Wrapper for Numbers Games Page (standalone route)
 
 export const LearnRouter: React.FC = () => {

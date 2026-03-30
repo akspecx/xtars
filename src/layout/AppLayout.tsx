@@ -1,88 +1,69 @@
+import React from 'react';
 import { SidebarProvider, useSidebar } from "../context/SidebarContext";
-import { Outlet } from "react-router";
+import { ModeProvider, useMode } from "../context/ModeContext";
+import { Outlet, useLocation } from "react-router"; 
 import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
+import ParentNav from "./ParentNav";
+import ChildNav from "./ChildNav";
 import AppSidebar from "./AppSidebar";
-
-import useBreadcrumbs from "use-react-router-breadcrumbs";
-import Match from "use-react-router-breadcrumbs";
-import { Link } from "react-router-dom";
-
-
-import { Params } from "react-router-dom";
-import CoursesRouter from "../x-tars/courses/Router";
-import CoursesHome from "../x-tars/courses/CourseHome";
-import Home from "../x-tars/courses/CourseHome";
-import Gameshome from "../x-tars/courses/GamesHome";
-
-interface MatchParams extends Params {
-  [key: string]: string | undefined;
-}
-
-interface Match {
-  params: MatchParams;
-  pathname: string;
-  // add other properties if needed
-}
-
-// export const routesConfig = [
-//   { path: "/", element: <Home />, breadcrumb: "Home" },
-//   { path: "/courses", element: <CoursesHome />, breadcrumb: "Courses" },
-//   { path: "/games", element: <Gameshome />, breadcrumb: "Games" },
-//   {
-//     path: "/courses/:courseid",
-//     element: <CoursesRouter />,
-//     breadcrumb: ({ match }: { match: Match }) =>
-//       decodeURIComponent(match.params.courseid ?? ""),
-//   },
-// ];
-
-// const Breadcrumbs = () => {
-//   const breadcrumbs = useBreadcrumbs(routesConfig);
-
-//   return (
-//     <nav className="text-sm text-gray-600 mb-4 dark:text-white/90">
-//       <ol className="flex items-center space-x-2 dark:text-white/90">
-//         {breadcrumbs.map(({ match, breadcrumb }, idx) => {
-//           const isLast = idx === breadcrumbs.length - 1;
-
-//           return (
-//             <li key={match.pathname} className="flex items-center space-x-1 dark:text-white/90">
-//               {idx > 0 && <span className="text-gray-400">/</span>}
-//               {isLast ? (
-//                 <span className="text-gray-800 capitalize dark:text-white/90">{breadcrumb}</span>
-//               ) : (
-//                 <Link to={match.pathname} className="text-blue-600 hover:underline capitalize ">
-//                   {breadcrumb}
-//                 </Link>
-//               )}
-//             </li>
-//           );
-//         })}
-//       </ol>
-//     </nav>
-//   );
-// };
-
+import ParentalGate from "./ParentalGate";
 
 const LayoutContent: React.FC = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+  const { isParentMode, showParentalGate, closeParentalGate, toggleMode } = useMode();
+  const location = useLocation();
+
+  // Determine which navigation to show
+  // 1. Parent Mode takes precedence if active
+  // 2. Child Mode (Kids Zone) if the path is related to games/kids
+  // 3. Standard Sidebar for everything else
+  
+  const isKidsZonePath = location.pathname.startsWith('/games') || 
+                         location.pathname.startsWith('/puzzles') ||
+                         location.pathname.startsWith('/roadmap');
+
+  const renderNav = () => {
+    if (isParentMode) return <ParentNav />;
+    if (isKidsZonePath) return <ChildNav />;
+    return <AppSidebar />;
+  };
+
+  const handleGateSuccess = () => {
+    // Logic for successful gate completion is handled in ModeContext
+    closeParentalGate();
+    toggleMode(); // Ensure Parent Mode is activated
+  };
 
   return (
-    <div>
-      
-        <AppSidebar />
-        <Backdrop />
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
+      {/* Dynamic Navigation Component */}
+      {renderNav()}
+
+      {/* Backdrop for mobile */}
+      {isMobileOpen && <Backdrop />}
+
+      {/* Main Content Area */}
       <div
-        className={`flex-1 transition-all duration-300 ease-in-out ${
-          isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"
-        } ${isMobileOpen ? "ml-0" : ""}`}
+        className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
+          isParentMode ? "lg:ml-0" : 
+          isKidsZonePath ? (isExpanded || isHovered || isMobileOpen ? "lg:ml-[260px]" : "lg:ml-[100px]") :
+          (isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]")
+        }`}
       >
         <AppHeader />
-        <div>
-          {/* <Breadcrumbs/> */}
+        
+        <main className="flex-1 overflow-y-auto relative">
           <Outlet />
-        </div>
+          
+          {/* Parental Gate Overlay */}
+          {showParentalGate && (
+            <ParentalGate 
+              onSuccess={handleGateSuccess} 
+              onClose={closeParentalGate} 
+            />
+          )}
+        </main>
       </div>
     </div>
   );
@@ -91,7 +72,9 @@ const LayoutContent: React.FC = () => {
 const AppLayout: React.FC = () => {
   return (
     <SidebarProvider>
-      <LayoutContent />
+      <ModeProvider>
+        <LayoutContent />
+      </ModeProvider>
     </SidebarProvider>
   );
 };

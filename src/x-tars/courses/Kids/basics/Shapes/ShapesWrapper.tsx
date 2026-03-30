@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import ShapesIntroduction from "./ShapesIntroduction";
-import ShapesLandingPage from "./ShapesLandingPage";
-import BearShapeIntro from "./BearShapeIntro";
-import BusShapes from "./BusShapes";
-import TreeHomeShapeIntro from "./TreeHomeShapeIntro";
+const ShapesIntroduction = React.lazy(() => import("./ShapesIntroduction"));
+const ShapesLandingPage = React.lazy(() => import("./ShapesLandingPage"));
+const BearShapeIntro = React.lazy(() => import("./BearShapeIntro"));
+const BusShapes = React.lazy(() => import("./BusShapes"));
+const TreeHomeShapeIntro = React.lazy(() => import("./TreeHomeShapeIntro"));
 // import NumberCounting from "./NumberCounting";
 // import NumbersGamesLandingPage from "./NumbersGamesLandingPage";
 

@@ -1,20 +1,20 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import AlgebraicIntroduction from "./InteractiveAlgebraicIntroduction";
-import FindingtheUnknownIntroduction from "./FindingtheUnknownIntroduction"
-import RightScaleWeight from "./RightScaleWeight"
-import LhsrhsIntroduction from "./lhsrhsIntroduction"
-import AELikeUnlikeTerms from "./AELikeUnlikeTerms"
-import MonoBinoPolyIdentification from "./MonoBinoPolyIdentification"
-import AlgebraicExpressionIntro from "./CreatingAlgebraicExpressionIntro"
-import VariableCoeffConstIntro from "./VariableCoeffConstIntro"
-import IntroToX from "./IntroductionToX"
-import ActionREactionOnScale from "./ActionReactionOnScale"
-import BalancedScaleToXTransition from "./BalancedScaleToXTransition"
-import SolveTheBasicEquation from "./SolveTheBasicEquation"
-import SolveEquationsAXPlusB from "./solveEquationsAXPlusB"
-import WarModeAlgebraicExpressionIntermediate from "./WarModeAlgebraicExpressionIntermediate"
-import WarModeAlgebraicExpressionBeginner from "./WarModeAlgebraicExpressionBeginner"
+const AlgebraicIntroduction = React.lazy(() => import("./InteractiveAlgebraicIntroduction"));
+const FindingtheUnknownIntroduction = React.lazy(() => import("./FindingtheUnknownIntroduction"));
+const RightScaleWeight = React.lazy(() => import("./RightScaleWeight"));
+const LhsrhsIntroduction = React.lazy(() => import("./lhsrhsIntroduction"));
+const AELikeUnlikeTerms = React.lazy(() => import("./AELikeUnlikeTerms"));
+const MonoBinoPolyIdentification = React.lazy(() => import("./MonoBinoPolyIdentification"));
+const AlgebraicExpressionIntro = React.lazy(() => import("./CreatingAlgebraicExpressionIntro"));
+const VariableCoeffConstIntro = React.lazy(() => import("./VariableCoeffConstIntro"));
+const IntroToX = React.lazy(() => import("./IntroductionToX"));
+const ActionREactionOnScale = React.lazy(() => import("./ActionReactionOnScale"));
+const BalancedScaleToXTransition = React.lazy(() => import("./BalancedScaleToXTransition"));
+const SolveTheBasicEquation = React.lazy(() => import("./SolveTheBasicEquation"));
+const SolveEquationsAXPlusB = React.lazy(() => import("./solveEquationsAXPlusB"));
+const WarModeAlgebraicExpressionIntermediate = React.lazy(() => import("./WarModeAlgebraicExpressionIntermediate"));
+const WarModeAlgebraicExpressionBeginner = React.lazy(() => import("./WarModeAlgebraicExpressionBeginner"));
 
 
 // To handle back from Maths page

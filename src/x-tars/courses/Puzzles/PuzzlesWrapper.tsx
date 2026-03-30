@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import FulfillTheMission from "./puzzlesModule/FulfillTheMission";
-import PuzzlesSubModules from "./PuzzlesMain"
-import MetricSum from "./puzzlesModule/MetricsSum"
-import SacredGame from "./puzzlesModule/TheSacredGame"
+const FulfillTheMission = React.lazy(() => import("./puzzlesModule/FulfillTheMission"));
+const PuzzlesSubModules = React.lazy(() => import("./PuzzlesMain"));
+const MetricSum = React.lazy(() => import("./puzzlesModule/MetricsSum"));
+const SacredGame = React.lazy(() => import("./puzzlesModule/TheSacredGame"));
 // Wrapper for Numbers Games Page (standalone route)
 export const PuzzleRouter: React.FC = () => {
   const navigate = useNavigate();

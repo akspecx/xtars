@@ -1,16 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import PercentageIntro from "./PercentageIntroOne";
+const PercentageIntro = React.lazy(() => import("./PercentageIntroOne"));
 import PercentageCalculation from "./PercentageCalculationTwo"; 
-import PercentageFraction from "./PercentageMostCommonFractionsThree";
-import PercentageFindPerc from "./PercentageSettingGoldenRuleFour";
-import PercentagePercGame from "./PercentageCalculationGameFive";
-import PercentagePercFromTotal from "./FindingPercentageOFTotalSix";
-import PercentagePercKnownGeneric from "./CreatingPercentageGeneralFormulaSeven";
-import PercentagePercValueGodlenFormula from "./PercentageMeaningSetUpEight";
-import PercentagePercIncreasedBy from "./PercentageIncreasedByConceptNine";
-import PercentagePercDecreasedBy from "./PercentageDecreasedByTen";
-import PercentagePercIncreasedDecreased from "./PercentageIncreasedDecreasedSimultaneouslyEleven";
+const PercentageFraction = React.lazy(() => import("./PercentageMostCommonFractionsThree"));
+const PercentageFindPerc = React.lazy(() => import("./PercentageSettingGoldenRuleFour"));
+const PercentagePercGame = React.lazy(() => import("./PercentageCalculationGameFive"));
+const PercentagePercFromTotal = React.lazy(() => import("./FindingPercentageOFTotalSix"));
+const PercentagePercKnownGeneric = React.lazy(() => import("./CreatingPercentageGeneralFormulaSeven"));
+const PercentagePercValueGodlenFormula = React.lazy(() => import("./PercentageMeaningSetUpEight"));
+const PercentagePercIncreasedBy = React.lazy(() => import("./PercentageIncreasedByConceptNine"));
+const PercentagePercDecreasedBy = React.lazy(() => import("./PercentageDecreasedByTen"));
+const PercentagePercIncreasedDecreased = React.lazy(() => import("./PercentageIncreasedDecreasedSimultaneouslyEleven"));
 
 // import AlgebraMainModule from "../maths/AlgebraicExpression/AlgebraMainModule"
 // import MathsMainModule from "./PercentageMainModule"

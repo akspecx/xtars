@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import LinearArrangementMain from "./LinearArrangement/LinearArrangementMain"
-import OrderAndRankingMain from "./OrderAndRanking/OrderAndRankingMain"
-import BloodRelationsMain from "./BloodRelationship/BloodRelationsMain"
-import ClockMain from "./Clock/ClockMain"
+const LinearArrangementMain = React.lazy(() => import("./LinearArrangement/LinearArrangementMain"));
+const OrderAndRankingMain = React.lazy(() => import("./OrderAndRanking/OrderAndRankingMain"));
+const BloodRelationsMain = React.lazy(() => import("./BloodRelationship/BloodRelationsMain"));
+const ClockMain = React.lazy(() => import("./Clock/ClockMain"));
 
 // To handle back from Maths page
 

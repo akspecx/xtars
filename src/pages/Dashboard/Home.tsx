@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useRef, useCallback, memo, useMemo } from 'react';
+import { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  RefreshCcw, Timer, X, Trophy, Sparkles, Volume2, VolumeX,
-  Eye, HelpCircle, ArrowRightCircle, Gamepad2, Star, Zap,
+  Gamepad2, Star, Zap,
   LayoutDashboard, Users, TrendingUp, Clock, CreditCard,
-  MapPin, Play, BookOpen, ChevronRight, Flame, Target, 
-  BarChart3, MousePointerClick, Activity, AlertTriangle,
-  Smartphone, Tablet, Monitor, Calendar, History, ShieldCheck,
-  ChevronDown, Quote, Heart, Award, Users2, Rocket, BarChart,
-  Layers, Filter, Sparkle, BrainCircuit, Globe, Radio, Lightbulb
+  Play, 
+  Flame, 
+  Activity, AlertTriangle,
+  ChevronDown, Rocket, 
+  BrainCircuit, Globe, ShieldCheck
 } from 'lucide-react';
 
 const GAMES_PER_LEVEL = 5;
@@ -19,34 +18,6 @@ const RECENT_MODULES = [
   { id: 1, title: 'Algebraic Balancing', progress: 80, lastDate: '2h ago', icon: '⚖️' },
   { id: 2, title: 'Magic Square Pro', progress: 35, lastDate: 'Yesterday', icon: '🔢' },
   { id: 3, title: 'Nature Path Memory', progress: 100, lastDate: '3 days ago', icon: '🦋' },
-];
-
-const PEER_RECOMMENDATIONS = [
-  { id: 'r1', title: 'Quantum Circuitry', popularity: 98, icon: '⚛️', tag: 'Top Peer Choice' },
-  { id: 'r2', title: 'Fraction Chef', popularity: 92, icon: '🍕', tag: 'Trending' },
-  { id: 'r3', title: 'Geometry Architect', popularity: 85, icon: '📐', tag: 'New Skill' },
-];
-
-const BADGES = [
-  { id: 1, name: 'First Pop', icon: '🎈', status: 'earned', color: 'bg-[#f8d7da]' },
-  { id: 2, name: 'Logic Learner', icon: '🧠', status: 'earned', color: 'bg-[#d1ecf1]' },
-  { id: 3, name: 'Speed Demon', icon: '⚡', status: 'earned', color: 'bg-[#fff3cd]' },
-  { id: 4, name: 'Math Master', icon: '🎓', status: 'locked', color: 'bg-[#e2e3e5]' },
-  { id: 5, name: 'Galaxy King', icon: '👑', status: 'locked', color: 'bg-[#e2e3e5]' },
-];
-
-const NEW_ARRIVALS = [
-  { id: 1, title: 'Quantum Logic', desc: 'Basics of logic gates.', color: 'from-indigo-600 to-indigo-800', subRate: '82%', views: '12.4k' },
-  { id: 2, title: 'Geometry Dash', desc: 'Master angles & area.', color: 'from-emerald-600 to-emerald-800', subRate: '65%', views: '48.2k' },
-  { id: 3, title: 'Fraction Pizza', desc: 'Delicious slicing math.', color: 'from-rose-600 to-rose-800', subRate: '91%', views: '8.1k' },
-];
-
-const MOTIVATIONAL_QUOTES = [
-  { text: "The roots of education are bitter, but the fruit is sweet.", author: "Aristotle" },
-  { text: "Education is what remains after one has forgotten what one has learned in school.", author: "Albert Einstein" },
-  { text: "Education is the most powerful weapon which you can use to change the world.", author: "Nelson Mandela" },
-  { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-  { text: "Intelligence plus character - that is the goal of true education.", author: "Martin Luther King Jr." }
 ];
 
 const MEMORY_CONFIG = [
@@ -60,36 +31,11 @@ const MEMORY_CONFIG = [
 
 const RAINBOW_ROWS = ['bg-[#ff5d8f]', 'bg-[#ff9e00]', 'bg-[#ffd60a]', 'bg-[#38b000]', 'bg-[#00b4d8]'];
 
-// --- INNOVATION UI COMPONENTS ---
 
-const AuroraBackground = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.15]">
-    <motion.div 
-      animate={{ 
-        scale: [1, 1.1, 1],
-        rotate: [0, 45, 0],
-        x: [-10, 10, -10],
-      }}
-      transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-      className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] bg-[radial-gradient(circle_at_center,_#8d6e63_0%,_transparent_60%)] blur-[40px]"
-    />
-  </div>
-);
 
-const ScanningPulse = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-    <motion.div 
-      initial={{ y: "-100%" }}
-      animate={{ y: "200%" }}
-      transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-      className="w-full h-[40%] bg-gradient-to-b from-transparent via-white to-transparent opacity-20"
-    />
-  </div>
-);
-
-const CustomAreaChart = memo(({ data }) => {
+const CustomAreaChart = memo(({ data }: any) => {
   const max = Math.max(...data);
-  const points = data.map((v, i) => `${(i * (100 / (data.length - 1)))},${100 - (v / max * 80)}`).join(' ');
+  const points = data.map((v: any, i: number) => `${(i * (100 / (data.length - 1)))},${100 - (v / max * 80)}`).join(' ');
   const fillPoints = `0,100 ${points} 100,100`;
   return (
     <div className="relative w-full h-32 mt-6">
@@ -114,12 +60,12 @@ const CustomAreaChart = memo(({ data }) => {
   );
 });
 
-const CognitiveMetricCircles = memo(({ pace, accuracy, logic }) => {
+const CognitiveMetricCircles = memo(({ pace, accuracy, logic }: any) => {
   const size = 220;
   const center = size / 2;
   const strokeWidth = 14;
 
-  const CircleRing = ({ radius, value, color, label }) => (
+  const CircleRing = ({ radius, value, color, label }: any) => (
     <g className="group cursor-help">
       <circle cx={center} cy={center} r={radius} fill="none" stroke="#e2e8f0" strokeWidth={strokeWidth} strokeOpacity="0.2" />
       <motion.circle 
@@ -161,7 +107,7 @@ const CognitiveMetricCircles = memo(({ pace, accuracy, logic }) => {
   );
 });
 
-const PeerStandingGauge = memo(({ percentile }) => (
+const PeerStandingGauge = memo(({ percentile }: any) => (
   <div className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-[#3e2723] to-[#1a0f0d] rounded-[3rem] text-white shadow-2xl relative overflow-hidden h-full border-b-[10px] border-black group">
     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 group-hover:scale-110 transition-transform duration-1000" />
     <span className="text-[9px] font-bold tracking-[0.05em] opacity-40 mb-4 z-10">Global Peer Calibration</span>
@@ -185,7 +131,7 @@ const PeerStandingGauge = memo(({ percentile }) => (
   </div>
 ));
 
-const StatCard = memo(({ title, value, sub, icon: Icon, trend, color = "text-[#3e2723]" }) => (
+const StatCard = memo(({ title, value, sub, icon: Icon, trend, color = "text-[#3e2723]" }: any) => (
   <motion.div 
     whileHover={{ y: -5 }}
     className="bg-[#faf9f6] p-6 rounded-[2.5rem] border border-[#c4a484]/20 shadow-[6px_6px_0px_rgba(0,0,0,0.03)] flex flex-col gap-1 relative overflow-hidden group"
@@ -206,49 +152,24 @@ const StatCard = memo(({ title, value, sub, icon: Icon, trend, color = "text-[#3
   </motion.div>
 ));
 
-const DonutChart = memo(({ data }) => {
-  let offset = 0;
-  return (
-    <div className="relative flex items-center justify-center">
-      <svg width="150" height="150" viewBox="0 0 42 42" className="filter drop-shadow-2xl">
-        {data.map((item, i) => {
-          const strokeDasharray = `${item.value} ${100 - item.value}`;
-          const strokeDashoffset = 100 - offset + 25;
-          offset += item.value;
-          return (
-            <circle key={i} cx="21" cy="21" r="15.915" fill="transparent" stroke={item.color} strokeWidth="7" strokeDasharray={strokeDasharray} strokeDashoffset={strokeDashoffset} className="transition-all duration-1000" />
-          );
-        })}
-        <circle cx="21" cy="21" r="11" fill="#faf9f6" className="shadow-inner" />
-      </svg>
-      <div className="absolute text-center flex flex-col">
-         <span className="text-lg font-black text-[#3e2723] leading-none">88%</span>
-         <span className="text-[7px] font-bold opacity-40">Mobile</span>
-      </div>
-    </div>
-  );
-});
-
 // --- MAIN APPLICATION ---
 
-export default function App() {
+export default function Home() {
   const [view, setView] = useState('dashboard'); 
   const [role, setRole] = useState('user'); 
-  const [adIndex, setAdIndex] = useState(0);
-  const [quoteIndex, setQuoteIndex] = useState(0);
-
+  
   // --- Game State ---
   const [levelIdx, setLevelIdx] = useState(0);
   const [gameIdx, setGameIdx] = useState(0); 
   const [time, setTime] = useState(0);
-  const [memoryTargets, setMemoryTargets] = useState([]);
-  const [foundTargets, setFoundTargets] = useState([]);
+  const [memoryTargets, setMemoryTargets] = useState<any[]>([]);
+  const [foundTargets, setFoundTargets] = useState<number[]>([]);
   const [isShowingSequence, setIsShowingSequence] = useState(false);
-  const [errorCell, setErrorCell] = useState(null);
+  const [errorCell, setErrorCell] = useState<number | null>(null);
   const [roundComplete, setRoundComplete] = useState(false);
-  const [autoNextTimer, setAutoNextTimer] = useState(null);
+  const [autoNextTimer, setAutoNextTimer] = useState<number | null>(null);
 
-  const currentLevel = MEMORY_CONFIG[levelIdx];
+
 
   const dynamicGreeting = useMemo(() => {
     const hour = new Date().getHours();
@@ -260,15 +181,11 @@ export default function App() {
     return `${prefix}, ${USER_NAME}!`;
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => setAdIndex((p) => (p + 1) % NEW_ARRIVALS.length), 6000);
-    const qInterval = setInterval(() => setQuoteIndex(p => (p + 1) % MOTIVATIONAL_QUOTES.length), 10000);
-    return () => { clearInterval(interval); clearInterval(qInterval); };
-  }, []);
+
 
   const startRound = useCallback(() => {
     const config = MEMORY_CONFIG[levelIdx];
-    const newTargets = [];
+    const newTargets: any[] = [];
     const availableIndices = Array.from({ length: 25 }, (_, i) => i);
     for (let i = 0; i < config.count; i++) {
       const randomIdx = Math.floor(Math.random() * availableIndices.length);
@@ -285,7 +202,7 @@ export default function App() {
     setTimeout(() => setIsShowingSequence(false), 1200);
   }, [levelIdx]);
 
-  const handlePopClick = (index) => {
+  const handlePopClick = (index: number) => {
     if (isShowingSequence || roundComplete || errorCell !== null) return;
     const target = memoryTargets.find(t => t.index === index);
     if (target) {
@@ -325,10 +242,9 @@ export default function App() {
 
   useEffect(() => { if (view === 'game') startRound(); }, [levelIdx, view, startRound]);
 
-  const formatTime = (s) => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;
+  const formatTime = (s: number) => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;
 
   return (
-    // <div className="h-[100dvh] w-full flex flex-col items-center bg-[#fdf8f1] font-sans select-none overflow-hidden text-[#5d4037]">
     <div className="w-full flex flex-col items-center bg-[#e6dccb] font-sans select-none relative shadow-inner min-h-screen" >
     <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} /> 
   
@@ -379,9 +295,7 @@ export default function App() {
             <motion.div key="dashboard" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10 pb-20">
               
               {role === 'user' ? (
-                /* --- BENCHMARK STUDENT DASHBOARD V10 (INNOVATIVE UI) --- */
                 <>
-                  {/* 1. PERSONAL MESSAGE PANEL */}
                   <motion.div 
                     initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
                     className="lg:col-span-12 bg-[#faf9f6] p-6 sm:p-8 md:p-10 rounded-[3.5rem] border border-[#c4a484]/20 shadow-[10px_10px_0px_rgba(0,0,0,0.015)] flex flex-col md:flex-row justify-between items-center gap-6 overflow-visible relative group min-h-[220px]"
@@ -389,17 +303,14 @@ export default function App() {
                     <div className="absolute top-0 right-0 p-10 opacity-[0.04] -rotate-12 group-hover:scale-110 transition-transform duration-1000"><BrainCircuit size={180} /></div>
                     <div className="relative z-10 text-center md:text-left">
                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-[-0.02em] text-[#3e2723] mb-2 leading-tight max-w-xl break-words">{dynamicGreeting}</h2>
-                       <p className="text-xs sm:text-sm md:text-base font-semibold text-[#5C4033] dark:text-[#3e2723] tracking-[0.01em] text-center md:text-left max-w-2xl">
+                       <p className="text-xs sm:text-sm md:text-base font-semibold text-[#5C4033] tracking-[0.01em] text-center md:text-left max-w-2xl">
                           Ready to learn something new? Pick a subject below to get started.
                        </p>
                     </div>
                     <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-6 bg-[#fdf8f1] px-10 py-6 rounded-[3rem] border border-[#c4a484]/30 shadow-inner relative overflow-hidden group/rank">
                        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/5 to-transparent translate-x-[-100%] group-hover/rank:translate-x-[100%] transition-transform duration-1000" />
                        <div className="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 shadow-xl border-2 border-white relative z-10">
-                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                           <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.3"/>
-                           <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" strokeDasharray="62.8" strokeDashoffset="18.84" strokeLinecap="round"/>
-                         </svg>
+                         <Star size={24} className="fill-current" />
                        </div>
                        <div className="flex flex-col relative z-10">
                           <span className="text-2xl font-black text-[#3e2723] leading-none">3 Courses in Progress</span>
@@ -408,7 +319,6 @@ export default function App() {
                     </motion.div>
                   </motion.div>
 
-                  {/* 2. TELEMETRY PANEL (Stability & Brain Dynamics) */}
                   <motion.div initial={{ x: -30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.1 }} className="lg:col-span-4 bg-[#faf9f6] p-8 rounded-[3rem] border border-[#c4a484]/20 shadow-[8px_8px_0px_rgba(0,0,0,0.02)] flex flex-col justify-between overflow-hidden relative">
                      <div className="absolute -bottom-10 -right-10 opacity-[0.02]"><Zap size={160} /></div>
                      <div className="flex justify-between items-center mb-8 relative z-10">
@@ -421,28 +331,26 @@ export default function App() {
                      <div className="grid grid-cols-7 gap-2 mb-10 px-1 relative z-10">
                         {['M','T','W','T','F','S','S'].map((day, i) => (
                           <div key={day+i} className="flex flex-col items-center gap-2">
-                             <div className={`w-full aspect-square rounded-[1.1rem] shadow-inner border-2 flex items-center justify-center transition-all relative overflow-hidden ${i < 5 ? 'bg-[#3e2723] border-black/5 text-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.2)]' : 'bg-white border-[#c4a484]/10 opacity-30 grayscale'}`}>
-                                {i === 4 && <motion.div animate={{ opacity: [0.1, 0.4, 0.1], scale: [1, 1.5, 1] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute inset-0 bg-amber-400 rounded-full" />}
-                                {i < 5 ? <Zap size={18} fill="currentColor" className="relative z-10" /> : <div className="w-2 h-2 rounded-full bg-current opacity-20" />}
+                             <div className={`w-full aspect-square rounded-[1.1rem] shadow-inner border-2 flex items-center justify-center transition-all relative overflow-hidden ${i < 5 ? 'bg-[#3e2723] border-black/5 text-amber-400' : 'bg-white border-[#c4a484]/10 opacity-30'}`}>
+                                {i < 5 ? <Zap size={18} fill="currentColor" /> : <div className="w-2 h-2 rounded-full bg-current opacity-20" />}
                              </div>
                              <span className="text-[10px] font-black opacity-30">{day}</span>
                           </div>
                         ))}
                      </div>
-                     <div className="bg-[#fdf8f1] p-6 rounded-[2rem] border border-[#c4a484]/20 relative z-10 shadow-inner overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/[0.03] to-transparent" />
-                        <div className="flex justify-between items-end mb-3 relative z-10">
+                     <div className="bg-[#fdf8f1] p-6 rounded-[2rem] border border-[#c4a484]/20 relative z-10 shadow-inner">
+                        <div className="flex justify-between items-end mb-3">
                            <p className="text-[10px] font-bold text-[#8d6e63] tracking-[0.05em]">Neural Retention</p>
                            <span className="text-xs font-black text-[#3e2723]">82%</span>
                         </div>
-                        <div className="h-2 w-full bg-black/[0.03] rounded-full overflow-hidden relative z-10">
+                        <div className="h-2 w-full bg-black/[0.03] rounded-full overflow-hidden">
                            <motion.div initial={{ width: 0 }} animate={{ width: '82%' }} transition={{ duration: 2 }} className="h-full bg-gradient-to-r from-rose-500 to-[#3e2723]" />
                         </div>
                      </div>
                   </motion.div>
 
                   <motion.div initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="lg:col-span-8 bg-[#faf9f6] p-10 rounded-[3rem] border border-[#c4a484]/20 shadow-[8px_8px_0px_rgba(0,0,0,0.02)] relative overflow-hidden h-full">
-                    <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-10 transition-opacity duration-1000"><TrendingUp size={160} /></div>
+                    <div className="absolute top-0 right-0 p-8 opacity-[0.03]"><TrendingUp size={160} /></div>
                     <div className="flex justify-between items-start mb-6">
                        <div className="flex items-center gap-4">
                           <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-100 shadow-sm"><Activity className="text-emerald-600 animate-pulse" /></div>
@@ -451,41 +359,26 @@ export default function App() {
                              <p className="text-[10px] font-normal text-[#5C4033] tracking-[0.02em]">Live Cognitive Complexity Mapping</p>
                           </div>
                        </div>
-                       <motion.div 
-                         whileHover={{ scale: 1.05 }}
-                         className="bg-emerald-50 text-emerald-700 px-5 py-2.5 rounded-2xl border border-emerald-100 text-[10px] font-bold tracking-[0.05em] shadow-sm cursor-default"
-                       >
-                         +22% SYNC RATE
-                       </motion.div>
                     </div>
                     <CustomAreaChart data={[20, 35, 25, 65, 40, 85, 55, 75, 60, 95]} />
-                    <div className="flex justify-between mt-6 text-[10px] font-bold opacity-20 px-8 tracking-[0.05em]"><span>Boot</span><span>Processing</span><span>Optimal</span></div>
                   </motion.div>
 
-                  {/* 3. ACTIVE MISSION DECK & COGNITIVE EXCELLENCE */}
                   <div className="lg:col-span-8 space-y-8">
-                     {/* MISSION DECK */}
                      <div className="bg-[#faf9f6] p-10 rounded-[3.5rem] border border-[#c4a484]/20 shadow-[8px_8px_0px_rgba(0,0,0,0.02)]">
                         <div className="flex items-center justify-between mb-10">
                            <div className="flex items-center gap-4 text-[#3e2723]">
-                              <div className="p-3 bg-indigo-50 rounded-2xl border border-indigo-100 shadow-sm"><Rocket className="text-indigo-600 animate-bounce" size={24} /></div>
-                              <h3 className="text-xl font-bold tracking-[0.05em] leading-none">Active Mission Deck</h3>
+                              <div className="p-3 bg-indigo-50 rounded-2xl border border-indigo-100 shadow-sm"><Rocket className="text-indigo-600" size={24} /></div>
+                              <h3 className="text-xl font-bold tracking-[0.05em]">Active Mission Deck</h3>
                            </div>
-                           <span className="text-[10px] font-black text-indigo-600 px-5 py-2 bg-white border border-indigo-100 rounded-full tracking-widest shadow-inner">3 RESUMABLE</span>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                            {RECENT_MODULES.map(m => (
-                             <motion.div 
-                               key={m.id} whileHover={{ y: -10 }}
-                               className="p-8 bg-[#fdf8f1] rounded-[3rem] border border-[#c4a484]/20 shadow-sm relative overflow-hidden group cursor-pointer min-h-[240px]"
-                             >
-                                <AuroraBackground />
-                                <span className="text-5xl block mb-4 drop-shadow-2xl relative z-10 group-hover:rotate-12 transition-transform">{m.icon}</span>
-                                <h4 className="text-xs font-bold text-[#3e2723] tracking-[0.05em] truncate relative z-10">{m.title}</h4>
-                                <p className="text-[9px] font-normal text-[#5C4033] mt-1 mb-8 opacity-60 relative z-10">{m.lastDate}</p>
-                                <div className="flex items-center gap-3 mb-4 relative z-10">
-                                   <div className="flex-1 h-1.5 bg-black/5 rounded-full overflow-hidden shadow-inner">
-                                      <motion.div initial={{ width: 0 }} animate={{ width: `${m.progress}%` }} transition={{ duration: 1.5 }} className="h-full bg-indigo-500 rounded-full" />
+                             <motion.div key={m.id} whileHover={{ y: -10 }} className="p-8 bg-[#fdf8f1] rounded-[3rem] border border-[#c4a484]/20 shadow-sm">
+                                <span className="text-5xl block mb-4">{m.icon}</span>
+                                <h4 className="text-xs font-bold text-[#3e2723] truncate">{m.title}</h4>
+                                <div className="flex items-center gap-3 mt-4">
+                                   <div className="flex-1 h-1.5 bg-black/5 rounded-full overflow-hidden">
+                                      <motion.div initial={{ width: 0 }} animate={{ width: `${m.progress}%` }} className="h-full bg-indigo-500" />
                                    </div>
                                    <span className="text-[10px] font-black">{m.progress}%</span>
                                 </div>
@@ -493,275 +386,44 @@ export default function App() {
                            ))}
                         </div>
                      </div>
-
-                     {/* PEER DISCOVERY */}
-                     <div className="bg-[#faf9f6] p-10 rounded-[3.5rem] border border-[#c4a484]/20 shadow-[8px_8px_0px_rgba(0,0,0,0.02)] relative overflow-hidden">
-                        <div className="flex items-center justify-between mb-10">
-                           <div className="flex items-center gap-4">
-                              <div className="p-3 bg-amber-50 rounded-2xl border border-amber-100"><Sparkle className="text-amber-600 animate-pulse" size={24} /></div>
-                              <div>
-                                 <h3 className="text-xl font-bold tracking-[0.05em] text-[#3e2723] leading-none">Discovery Hub</h3>
-                                 <p className="text-[10px] font-normal text-[#5C4033] tracking-[0.02em] mt-1">Recommended for students of your age group</p>
-                              </div>
-                           </div>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-8">
-                           {PEER_RECOMMENDATIONS.map(item => (
-                             <motion.div 
-                               key={item.id} whileHover={{ y: -10 }}
-                               className="p-8 bg-white rounded-[3rem] border border-[#c4a484]/20 shadow-sm relative overflow-hidden group cursor-pointer min-h-[260px]"
-                             >
-                                <ScanningPulse />
-                                <span className="text-5xl block mb-4 relative z-10 group-hover:scale-110 transition-transform">{item.icon}</span>
-                                <span className="text-[9px] font-bold bg-indigo-600 text-white px-3 py-1 rounded-full mb-3 inline-block tracking-[0.05em] relative z-10">{item.tag}</span>
-                                <h4 className="text-xs font-bold text-[#3e2723] tracking-[0.05em] truncate mb-6 relative z-10">{item.title}</h4>
-                                <div className="flex flex-col gap-2 relative z-10">
-                                   <div className="flex justify-between items-center px-1">
-                                      <span className="text-[9px] font-bold opacity-30">Global Adoption</span>
-                                      <span className="text-[10px] font-black text-emerald-600">{item.popularity}%</span>
-                                   </div>
-                                   <div className="h-1.5 bg-black/5 rounded-full overflow-hidden shadow-inner">
-                                      <motion.div initial={{ width: 0 }} animate={{ width: `${item.popularity}%` }} transition={{ duration: 2 }} className="h-full bg-emerald-500 rounded-full" />
-                                   </div>
-                                </div>
-                             </motion.div>
-                           ))}
-                        </div>
-                     </div>
                   </div>
 
-                  {/* COGNITIVE MATRIX */}
                   <div className="lg:col-span-4 flex flex-col gap-8">
-                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.5 }} className="bg-[#faf9f6] p-10 rounded-[3.5rem] border border-[#c4a484]/20 shadow-[8px_8px_0px_rgba(0,0,0,0.02)] flex flex-col items-center flex-1 justify-center relative group">
-                        <div className="absolute top-6 left-6 opacity-[0.05] group-hover:rotate-45 transition-transform duration-1000"><BookOpen size={48} /></div>
-                        <h3 className="text-xs font-bold tracking-[0.05em] text-[#8d6e63] mb-12 text-center opacity-60">Neural Profile Matrix</h3>
+                     <div className="bg-[#faf9f6] p-10 rounded-[3.5rem] border border-[#c4a484]/20 shadow-[8px_8px_0px_rgba(0,0,0,0.02)] flex flex-col items-center flex-1 justify-center">
                         <CognitiveMetricCircles pace={92} accuracy={88} logic={75} />
-                        <div className="mt-12 bg-white/40 backdrop-blur-md p-6 rounded-[2rem] border border-black/[0.03] shadow-inner relative overflow-hidden group/text">
-                           <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500/20" />
-                           <p className="text-[11px] text-[#5d4037]/80 text-center italic font-bold leading-relaxed max-w-[210px]">
-                             "{USER_NAME}, your **Pace** is in the top global percentile. Balance Logic modules for total station symmetry."
-                           </p>
-                        </div>
-                     </motion.div>
+                     </div>
                      <PeerStandingGauge percentile={96} />
-                  </div>
-
-                  {/* 4. GLOBAL BENCHMARK & HONOR HALL */}
-                  <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.7 }} className="lg:col-span-7 bg-gradient-to-br from-[#8d6e63] to-[#3e2723] p-12 rounded-[4rem] shadow-2xl text-white relative overflow-hidden border-b-[12px] border-black/40 flex flex-col justify-between group">
-                     <Quote className="absolute top-10 right-10 w-32 h-32 opacity-5 group-hover:rotate-12 transition-all duration-1000" />
-                     <div className="relative z-10">
-                        <div className="flex gap-2 mb-8">
-                           {[1,2,3,4,5].map(s => <Star key={s} size={22} className="fill-amber-400 text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" />)}
-                        </div>
-                        <h3 className="text-4xl font-bold mb-8 tracking-[0.05em] drop-shadow-md">Global Audit Performance</h3>
-                        <div className="bg-black/20 backdrop-blur-md p-10 rounded-[3rem] border border-white/10 shadow-2xl relative group/card overflow-hidden">
-                           <div className="absolute -left-2 top-12 w-4 h-12 bg-amber-400 rounded-full shadow-[0_0_20px_rgba(251,191,36,0.8)]" />
-                           <p className="italic text-xl font-medium leading-relaxed opacity-95 tracking-tight text-white/90 relative z-10">"The skeuomorphic integration within Station Alpha has accelerated Alexander's cognitive mapping to elite levels."</p>
-                           <div className="mt-8 flex items-center gap-4 relative z-10">
-                              <p className="text-[10px] font-normal tracking-[0.02em] text-amber-400 opacity-60">Station Audit Log: Excellent</p>
-                           </div>
-                        </div>
-                     </div>
-                     <div className="flex items-center gap-12 mt-10 relative z-10">
-                        <div className="flex items-center gap-3"><Heart className="text-rose-400 fill-current" size={18} /><span className="text-sm font-bold tracking-[0.05em] text-white/80">12.5k Lab Sessions</span></div>
-                        <div className="flex items-center gap-3"><Award className="text-amber-400" size={18} /><span className="text-sm font-bold tracking-[0.05em] text-white/80">Audit Score: 4.98</span></div>
-                     </div>
-                  </motion.div>
-
-                  <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }} className="lg:col-span-5 bg-[#faf9f6] p-10 rounded-[4rem] border border-[#c4a484]/20 shadow-[10px_10px_0px_rgba(0,0,0,0.015)] flex flex-col justify-center relative group">
-                     <div className="flex items-center justify-between mb-12 relative z-10">
-                        <div className="flex items-center gap-4">
-                           <div className="p-3 bg-[#3e2723] text-white rounded-2xl shadow-xl"><Trophy size={20} /></div>
-                           <h3 className="text-sm font-bold tracking-[0.05em] text-[#3e2723]">Honor Cabinet</h3>
-                        </div>
-                        <span className="text-[10px] font-bold opacity-30 tracking-[0.05em]">3 / 5 Earned</span>
-                     </div>
-                     <div className="grid grid-cols-4 gap-8 px-2 relative z-10">
-                        {BADGES.slice(0,4).map((b) => (
-                          <div key={b.id} className="flex flex-col items-center gap-4">
-                             <motion.div 
-                               whileHover={{ scale: 1.15, rotate: 10, y: -5 }}
-                               className={`w-16 h-16 sm:w-20 sm:h-20 rounded-[1.8rem] flex items-center justify-center text-3xl shadow-xl transition-all ${b.status === 'earned' ? `${b.color} grayscale-0 border-b-6 border-black/20` : 'bg-black/5 border-2 border-dashed border-black/10 opacity-20 cursor-not-allowed'}`}
-                             >
-                                {b.icon}
-                                {b.status === 'earned' && <motion.div animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 4 }} className="absolute inset-0 bg-white/30 rounded-[1.8rem]" />}
-                             </motion.div>
-                             <span className="text-[9px] font-black uppercase tracking-widest opacity-40 text-center leading-tight truncate w-full">{b.name}</span>
-                          </div>
-                        ))}
-                     </div>
-                     <button className="mt-12 py-5 bg-[#3e2723] text-white rounded-[2rem] text-[10px] font-black uppercase tracking-[0.5em] shadow-2xl hover:bg-black transition-all relative z-10 border-b-4 border-black/50">Audit Full Cabinet</button>
-                  </motion.div>
-
-                  {/* 5. HERITAGE WISDOM PLAQUE */}
-                  <div className="lg:col-span-12 mt-12 bg-gradient-to-br from-[#c4a484]/10 to-transparent p-12 rounded-[3.5rem] border-4 border-dashed border-[#c4a484]/30 flex flex-col items-center text-center relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#c4a484]/40 to-transparent" />
-                    <Lightbulb className="text-[#8d6e63] opacity-20 mb-8" size={64} />
-                    <AnimatePresence mode="wait">
-                      <motion.div 
-                        key={quoteIndex}
-                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                        className="max-w-3xl"
-                      >
-                         <p className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-[#3e2723] leading-tight mb-6 italic">
-                           "{MOTIVATIONAL_QUOTES[quoteIndex].text}"
-                         </p>
-                         <div className="flex items-center justify-center gap-3">
-                            <div className="w-10 h-[2px] bg-[#8d6e63] opacity-30" />
-                            <span className="text-[11px] font-black uppercase tracking-[0.5em] text-[#8d6e63]">
-                              — {MOTIVATIONAL_QUOTES[quoteIndex].author}
-                            </span>
-                            <div className="w-10 h-[2px] bg-[#8d6e63] opacity-30" />
-                         </div>
-                      </motion.div>
-                    </AnimatePresence>
                   </div>
                 </>
               ) : (
-                /* --- BENCHMARK ADMIN DASHBOARD V4 --- */
                 <>
-                  <div className="lg:col-span-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                    <StatCard title="Station Runtime" value="1,280h" sub="+12h TODAY" icon={Clock} trend={8} color="text-[#3e2723]" />
+                  <div className="lg:col-span-12 grid grid-cols-2 md:grid-cols-6 gap-6">
+                    <StatCard title="Station Runtime" value="1,280h" sub="+12h TODAY" icon={Clock} trend={8} />
                     <StatCard title="Active Units" value="4,202" sub="GLOBAL REACH" icon={Users} trend={12} color="text-indigo-600" />
                     <StatCard title="Module Return" value="78%" sub="STICKINESS" icon={TrendingUp} trend={3} color="text-emerald-600" />
                     <StatCard title="Acquisition" value="12" sub="FAILED CONV." icon={AlertTriangle} trend={-2} color="text-rose-600" />
                     <StatCard title="Efficiency" value="2.4" sub="AVG ATTEMPTS" icon={Activity} color="text-amber-600" />
                     <StatCard title="Daily Revenue" value="$2.4k" sub="STATION INTAKE" icon={CreditCard} trend={4} />
                   </div>
-
-                  <div className="lg:col-span-12 bg-[#faf9f6] p-10 rounded-[3.5rem] border border-[#c4a484]/20 shadow-[8px_8px_0px_rgba(0,0,0,0.02)]">
-                     <div className="flex items-center justify-between mb-12">
-                        <div className="flex items-center gap-5">
-                           <div className="p-4 bg-emerald-50 rounded-3xl border border-emerald-100 shadow-sm"><Rocket className="text-emerald-600" size={28} /></div>
-                           <div>
-                              <h3 className="text-2xl font-black uppercase tracking-widest text-[#3e2723] leading-none">Market Launch Analytics</h3>
-                              <p className="text-xs font-bold text-[#8d6e63] uppercase tracking-widest mt-2 opacity-60">Real-time performance cycle: Q4 Deployment</p>
-                           </div>
-                        </div>
-                     </div>
-                     <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                        {NEW_ARRIVALS.map(item => (
-                          <motion.div key={item.id} whileHover={{ scale: 1.02 }} className="p-10 bg-white border border-[#c4a484]/20 rounded-[3.5rem] shadow-sm relative overflow-hidden group hover:shadow-xl transition-all">
-                             <div className={`absolute top-0 left-0 w-2.5 h-full bg-[#8d6e63] group-hover:bg-[#3e2723] transition-colors`} />
-                             <h4 className="text-2xl font-black uppercase tracking-tighter mb-2 text-[#3e2723]">{item.title}</h4>
-                             <p className="text-[11px] font-bold opacity-50 mb-12 leading-relaxed">{item.desc}</p>
-                             <div className="flex items-center justify-between bg-[#fdf8f1] p-6 rounded-[2rem] border border-black/5 shadow-inner">
-                                <div>
-                                   <p className="text-[10px] font-black uppercase tracking-widest text-[#8d6e63] mb-1 opacity-60">Acquisition</p>
-                                   <p className="text-3xl font-black text-[#3e2723] tracking-tighter">{item.subRate}</p>
-                                </div>
-                                <motion.div animate={{ rotate: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-md border border-black/5"><TrendingUp size={28} className="text-emerald-500" /></motion.div>
-                             </div>
-                          </motion.div>
-                        ))}
-                     </div>
-                  </div>
-
-                  <div className="lg:col-span-8 bg-[#faf9f6] p-10 rounded-[3.5rem] border border-[#c4a484]/20 shadow-[8px_8px_0px_rgba(0,0,0,0.02)]">
-                    <div className="flex justify-between items-center mb-10 border-b border-black/5 pb-8">
-                       <div className="flex items-center gap-4">
-                          <div className="p-3 bg-indigo-50 rounded-2xl border border-indigo-100"><Filter className="text-indigo-600" size={24} /></div>
-                          <div>
-                             <h3 className="text-xl font-black uppercase text-[#3e2723] leading-none tracking-widest">Conversion Intelligence</h3>
-                             <p className="text-[10px] font-bold text-[#8d6e63] uppercase tracking-widest mt-1">Interactions vs Subscription Yield</p>
-                          </div>
-                       </div>
-                    </div>
-                    <div className="overflow-hidden rounded-[2.5rem] border border-black/5 shadow-inner bg-white">
-                       <table className="w-full text-left text-xs">
-                         <thead className="bg-[#3e2723] text-white uppercase text-[10px] tracking-[0.3em]">
-                           <tr><th className="p-8">Segment</th><th className="p-8 text-center">Engagement</th><th className="p-8 text-center">Conversion</th><th className="p-8 text-right">Heat Index</th></tr>
-                         </thead>
-                         <tbody className="font-black text-[#5d4037]">
-                           {NEW_ARRIVALS.map(item => (
-                             <tr key={item.id} className="border-b border-black/5 hover:bg-[#fdf8f1] transition-colors group">
-                               <td className="p-8 text-sm group-hover:text-[#3e2723] uppercase tracking-tighter">{item.title}</td>
-                               <td className="p-8 text-center text-[#8d6e63] font-mono group-hover:scale-110 transition-transform">{item.views}</td>
-                               <td className="p-8 text-center text-indigo-600 font-mono text-lg">{item.subRate}</td>
-                               <td className="p-8 text-right">
-                                  <div className="w-32 h-2 bg-black/5 rounded-full overflow-hidden ml-auto shadow-inner group-hover:bg-black/10 transition-all">
-                                     <motion.div initial={{ width: 0 }} animate={{ width: item.subRate }} transition={{ duration: 1.5, delay: 0.5 }} className="h-full bg-gradient-to-r from-[#8d6e63] to-[#3e2723] relative overflow-hidden">
-                                        <motion.div animate={{ x: ["-100%", "200%"] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute inset-0 bg-white/20" />
-                                     </motion.div>
-                                  </div>
-                               </td>
-                             </tr>
-                           ))}
-                         </tbody>
-                       </table>
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-4 bg-[#faf9f6] p-10 rounded-[3.5rem] border border-[#c4a484]/20 shadow-[8px_8px_0px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center">
-                     <h3 className="text-xs font-black uppercase tracking-[0.4em] text-[#8d6e63] mb-12">Access Ecosystem</h3>
-                     <DonutChart data={[{value: 65, color: '#3e2723'}, {value: 25, color: '#8d6e63'}, {value: 10, color: '#e6dccb'}]} />
-                     <div className="mt-12 w-full space-y-6 px-4">
-                        <div className="flex justify-between items-center bg-black/5 p-8 rounded-[2.5rem] shadow-inner group hover:bg-white transition-all"><div className="flex items-center gap-4"><Smartphone size={20} className="text-[#3e2723]" /> <span className="text-[9px] font-black uppercase tracking-widest text-[#8d6e63]">Mobile Reach</span></div> <span className="font-black text-xl tabular-nums text-[#3e2723]">65%</span></div>
-                        <div className="flex justify-between items-center p-8 rounded-[2.5rem] group hover:bg-white transition-all"><div className="flex items-center gap-3"><Tablet size={20} className="text-[#3e2723]" /> <span className="text-[9px] font-black uppercase tracking-widest text-[#8d6e63]">Tablet UI</span></div> <span className="font-black text-xl tabular-nums text-[#3e2723]">25%</span></div>
-                     </div>
-                  </div>
                 </>
               )}
             </motion.div>
           ) : (
-            /* --- INNOVATIVE POP-IT GAME VIEW --- */
-            <motion.div key="game" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="relative z-10 w-full h-full flex flex-col items-center justify-center pt-5 sm:pt-10 pb-20 overflow-y-auto">
-                <div className="mb-10 text-center px-4">
-                  <motion.div key={`${levelIdx}-${gameIdx}`} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-[#3e2723] text-white px-10 py-5 rounded-[2.5rem] shadow-2xl border-b-[10px] border-black/40 inline-flex items-center gap-6 relative overflow-hidden">
-                    <Zap className="text-yellow-400 w-10 h-10 fill-current animate-pulse relative z-10" />
-                    <span className="text-xl sm:text-3xl font-black uppercase tracking-tighter relative z-10">{currentLevel.name}</span>
-                  </motion.div>
-                </div>
-                <div className="grid grid-cols-5 gap-3 sm:gap-8 p-6 sm:p-16 bg-[#d7ccc8] rounded-[4rem] sm:rounded-[6rem] border-4 sm:border-[20px] border-[#8d6e63] shadow-[0_50px_100px_rgba(0,0,0,0.5)] relative">
-                  {Array.from({ length: 25 }).map((_, i) => {
-                    const target = memoryTargets.find(t => t.index === i);
-                    const isFound = foundTargets.includes(i);
-                    const isError = errorCell === i;
-                    const rowIndex = Math.floor(i / 5);
-                    return (
-                      <motion.button 
-                        key={i} whileTap={{ scale: 0.7 }} onClick={() => handlePopClick(i)} 
-                        className={`w-12 h-12 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-xl sm:text-8xl transition-all duration-150 relative ${isFound ? `bg-emerald-400 shadow-[inset_0_8px_15px_rgba(0,0,0,0.4)] ring-2 sm:ring-12 ring-emerald-200` : isError ? 'bg-rose-500 shadow-[inset_0_12px_25px_rgba(0,0,0,0.5)] ring-4 sm:ring-12 ring-rose-300' : `${RAINBOW_ROWS[rowIndex]} shadow-[0_8px_0_rgba(0,0,0,0.2),inset_0_-8px_25px_rgba(255,255,255,0.4)] active:translate-y-1`}`}
-                      >
-                        <AnimatePresence>{(isShowingSequence && target) || isFound ? (<motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>{target?.icon}</motion.span>) : null}</AnimatePresence>
-                        {isError && <div className="absolute inset-0 flex items-center justify-center bg-rose-600 rounded-full"><X className="text-white w-8 h-8 sm:w-20 sm:h-20 stroke-[4]" /></div>}
-                      </motion.button>
-                    );
-                  })}
+            <motion.div key="game" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="relative z-10 w-full h-full flex flex-col items-center justify-center py-20">
+                <div className="grid grid-cols-5 gap-3 sm:gap-8 p-6 sm:p-16 bg-[#d7ccc8] rounded-[4rem] border-4 border-[#8d6e63] shadow-2xl relative">
+                  {Array.from({ length: 25 }).map((_, i) => (
+                    <motion.button 
+                      key={i} whileTap={{ scale: 0.7 }} onClick={() => handlePopClick(i)} 
+                      className={`w-12 h-12 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-xl sm:text-8xl transition-all ${foundTargets.includes(i) ? `bg-emerald-400` : errorCell === i ? 'bg-rose-500' : `${RAINBOW_ROWS[Math.floor(i/5)]}`}`}
+                    >
+                      {(isShowingSequence || foundTargets.includes(i)) && <span>{memoryTargets.find(t => t.index === i)?.icon}</span>}
+                    </motion.button>
+                  ))}
                 </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-
-      {/* Lab Console Overlay (Game Mode Only) */}
-      {view === 'game' && (
-        <div className="w-full max-w-7xl flex flex-col items-center mt-2 z-[70] shrink-0 px-4 sm:px-6 pb-6">
-          <div className="bg-[#dfd7cc] p-6 sm:p-8 rounded-[3.5rem] border-b-[10px] sm:border-b-[12px] border-[#c4a484] w-full shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent group-hover:via-white/80 transition-all duration-1000" />
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#3e2723] text-white px-10 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.5em] shadow-2xl z-10 border border-white/5">Neural Interface v.X</div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-8 relative z-10">
-                  <button onClick={startRound} disabled={roundComplete || isShowingSequence} className="flex items-center justify-center gap-4 py-4 sm:py-7 bg-white text-[#3e2723] rounded-[2rem] sm:rounded-[2.5rem] font-black uppercase text-xs sm:text-base shadow-[0_8px_0_#e2e8f0] active:shadow-none active:translate-y-1 hover:bg-[#faf9f6] transition-all relative overflow-hidden group/btn">
-                    <Eye size={22} /> Recall Pulse
-                  </button>
-                  <button onClick={() => { setTime(0); startRound(); }} className="flex items-center justify-center gap-4 py-4 sm:py-7 bg-white text-rose-500 rounded-[2rem] sm:rounded-[2.5rem] font-black uppercase text-xs sm:text-base shadow-[0_8px_0_#fecdd3] active:shadow-none active:translate-y-1 hover:bg-rose-50 transition-all group/btn">
-                    <RefreshCcw size={22} /> Cycle Frame
-                  </button>
-                  <button onClick={() => setAutoNextTimer(0)} disabled={!roundComplete} className={`relative flex items-center justify-center gap-4 py-4 sm:py-7 rounded-[2rem] sm:rounded-[2.5rem] font-black uppercase text-xs sm:text-base shadow-2xl transition-all ${roundComplete ? 'bg-[#3e2723] text-white shadow-[0_12px_0_#000000] scale-105 active:shadow-none active:translate-y-1' : 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-60'}`}>
-                    <div className="flex items-center gap-4">
-                      {autoNextTimer !== null ? <Timer size={24} className="animate-spin text-amber-400" /> : <ArrowRightCircle size={24} className="text-amber-400" />}
-                      <span>{autoNextTimer !== null ? `${autoNextTimer}s` : 'Sync'}</span>
-                    </div>
-                  </button>
-              </div>
-          </div>
-        </div>
-      )}
-
-      <style>{`
-        .grid-cols-24 { grid-template-columns: repeat(24, minmax(0, 1fr)); }
-        .perspective-1000 { perspective: 1000px; }
-      `}</style>
     </div>
   );
 }

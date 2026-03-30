@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import AnimalMatching from "./AnimalMatching";
-import FruitsMatching from "./FruitsMatching";
-import NumberMatching from "./NumberMatching";
-import MemoryBuildingMainPage from "./MemoryBuildingMainPage";
+const AnimalMatching = React.lazy(() => import("./AnimalMatching"));
+const FruitsMatching = React.lazy(() => import("./FruitsMatching"));
+const NumberMatching = React.lazy(() => import("./NumberMatching"));
+const MemoryBuildingMainPage = React.lazy(() => import("./MemoryBuildingMainPage"));
 
 // Wrapper for Memory Games Page (standalone route)
 export const MemoryGamesPageWrapper: React.FC = () => {

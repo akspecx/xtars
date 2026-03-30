@@ -1,33 +1,33 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import LinearArrangementIntro from "./LinearArrangementIntro";
-import LinearArrangementLeftRight from "./LinearArrangementLeftRight";
-import LADirectionMattersLeftRight from "./LinearArrangementDirectionMattersLeftRight";
-import ImmediateRightAndLeft from "./ImmediateRightAndLeft";
-import LinearArrangementBetween from "./LinearArrangementBetween";
-import  LAFirstSecondLeftRight from "./LinearArrangementFirstSecondLeftRight";
-import LANumberOfPeopleSittingBetween from "./LinearArrangementNumberOfPeopleSittingBetween";
-import LAExtremeLeftRight from "./LinearArrangementExtremeLeftRight";
-import LAFollowInstructionIntro from "./LAFollowInstructionIntro"
-import LAFollowInstructionRight from "./LAFollowInstructionRight";
-import LAFollowInstructionLeftRightBoth from "./LAFollowInstructionLeftRightBoth";
-import LAFollowInstructionDirectionLeftRight from "./LAFollowInstructionDirectionLeftRight";
-import LAFollowingInstructionWithBetweenAndExtremeEnd from "./LAFollowingInstructionWithBetweenAndExtremeEnd";
-import LAFollowingInstructionDiffDirectionIntermediate from "./LAFollowingInstructionDiffDirectionIntermediate";
-import LAFollowingInstructionComplexityHigh from "./LAFollowingInstructionComplexityHigh";
-import LAActualWorldIntro from "./LAActualWorldIntro"
-import LAActualWorldNorth from "./LAActualWorldFacingNorth"
-import LAActualWorldSouth from "./LAActualWorldFacingSouth"
-import LAActualWorldSittingParallel from "./LAActualWorldSittingInParallel"
-import LAActualWorldDirectionDoesNotMatter from "./LAActualWorldDirectionDoesNotMatter"
-import LAActualWorldMultipleCaseIntro from "./LAActualWorldMultipleCaseIntro"
-import LAActualWorldMultipleCaseIntermediate from "./LAActualWorldMultipleCaseIntermediate"
-import LAActualWorld2DIntro from "./LAActualWorld2DIntro"
-import LAActualWorld3DIntro from "./LAActualWorld3DIntro"
-import LAInstructionGyaanAnchor from "./LAInstructionGyaanAnchor"
-import LAInstructionGyaanAnchorFromMultipleInstr from "./LAInstructionGyaanAnchorFromMultipleInstr"
-import LAInstructionGyaanLeadingToAnchor from "./LAInstructionGyaanLeadingToAnchor"
-import LAInstructionGyaanUseMultipleInstrForAnchor from "./LAInstructionGyaanUseMultipleInstrForAnchor"
+const LinearArrangementIntro = React.lazy(() => import("./LinearArrangementIntro"));
+const LinearArrangementLeftRight = React.lazy(() => import("./LinearArrangementLeftRight"));
+const LADirectionMattersLeftRight = React.lazy(() => import("./LinearArrangementDirectionMattersLeftRight"));
+const ImmediateRightAndLeft = React.lazy(() => import("./ImmediateRightAndLeft"));
+const LinearArrangementBetween = React.lazy(() => import("./LinearArrangementBetween"));
+const LAFirstSecondLeftRight = React.lazy(() => import("./LinearArrangementFirstSecondLeftRight"));
+const LANumberOfPeopleSittingBetween = React.lazy(() => import("./LinearArrangementNumberOfPeopleSittingBetween"));
+const LAExtremeLeftRight = React.lazy(() => import("./LinearArrangementExtremeLeftRight"));
+const LAFollowInstructionIntro = React.lazy(() => import("./LAFollowInstructionIntro"));
+const LAFollowInstructionRight = React.lazy(() => import("./LAFollowInstructionRight"));
+const LAFollowInstructionLeftRightBoth = React.lazy(() => import("./LAFollowInstructionLeftRightBoth"));
+const LAFollowInstructionDirectionLeftRight = React.lazy(() => import("./LAFollowInstructionDirectionLeftRight"));
+const LAFollowingInstructionWithBetweenAndExtremeEnd = React.lazy(() => import("./LAFollowingInstructionWithBetweenAndExtremeEnd"));
+const LAFollowingInstructionDiffDirectionIntermediate = React.lazy(() => import("./LAFollowingInstructionDiffDirectionIntermediate"));
+const LAFollowingInstructionComplexityHigh = React.lazy(() => import("./LAFollowingInstructionComplexityHigh"));
+const LAActualWorldIntro = React.lazy(() => import("./LAActualWorldIntro"));
+const LAActualWorldNorth = React.lazy(() => import("./LAActualWorldFacingNorth"));
+const LAActualWorldSouth = React.lazy(() => import("./LAActualWorldFacingSouth"));
+const LAActualWorldSittingParallel = React.lazy(() => import("./LAActualWorldSittingInParallel"));
+const LAActualWorldDirectionDoesNotMatter = React.lazy(() => import("./LAActualWorldDirectionDoesNotMatter"));
+const LAActualWorldMultipleCaseIntro = React.lazy(() => import("./LAActualWorldMultipleCaseIntro"));
+const LAActualWorldMultipleCaseIntermediate = React.lazy(() => import("./LAActualWorldMultipleCaseIntermediate"));
+const LAActualWorld2DIntro = React.lazy(() => import("./LAActualWorld2DIntro"));
+const LAActualWorld3DIntro = React.lazy(() => import("./LAActualWorld3DIntro"));
+const LAInstructionGyaanAnchor = React.lazy(() => import("./LAInstructionGyaanAnchor"));
+const LAInstructionGyaanAnchorFromMultipleInstr = React.lazy(() => import("./LAInstructionGyaanAnchorFromMultipleInstr"));
+const LAInstructionGyaanLeadingToAnchor = React.lazy(() => import("./LAInstructionGyaanLeadingToAnchor"));
+const LAInstructionGyaanUseMultipleInstrForAnchor = React.lazy(() => import("./LAInstructionGyaanUseMultipleInstrForAnchor"));
 
 // To handle back from Maths page
 

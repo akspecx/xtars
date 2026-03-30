@@ -4,7 +4,7 @@ import appleArrangementQuiz from "./appleArrangementQuiz";
 import orangeArrangementQuiz from "./orangeArrangementQuiz";
 import orangeComplexArrangement from "./orangeComplexArrangement";
 import giraffeComplexArrangement from "./giraffeComplexArrangement";
-import ArrangementMain from "./ArrangementMain";
+const ArrangementMain = React.lazy(() => import("./ArrangementMain"));
 
 // Wrapper for Puzzles Page (standalone route)
 export const PuzzlesPageWrapper: React.FC = () => {
