@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router"; 
 import { 
   LayoutDashboard, 
   BarChart3, 
@@ -47,8 +47,18 @@ const parentItems = [
 
 const ParentNav: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
-  const { toggleMode } = useMode();
+  const { toggleMode, lastProfilePath } = useMode();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleExitParent = () => {
+    toggleMode(); // Switch back to Child Mode
+    if (lastProfilePath) {
+      navigate(lastProfilePath); // Return to the game/module where the session was triggered
+    } else {
+      navigate("/"); // Fallback to Dashboard
+    }
+  };
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -98,7 +108,7 @@ const ParentNav: React.FC = () => {
 
       <div className="pb-8 mt-auto px-2">
         <button
-          onClick={toggleMode}
+          onClick={handleExitParent}
           className="w-full flex items-center justify-center gap-2 p-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-all shadow-md group overflow-hidden"
         >
           <LogOut className="size-5 transition-transform group-hover:-translate-x-1" />

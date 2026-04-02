@@ -1,9 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import { useProfile } from "../../../../../context/ProfileContext";
 
 // Wrapper for Shapes Games Page (Coming Soon)
 export const ShapesGamesPageWrapper: React.FC = () => {
   const navigate = useNavigate();
+  const { activeProfile } = useProfile();
   
   const handleBack = () => {
     navigate("/games");
@@ -23,12 +25,14 @@ export const ShapesGamesPageWrapper: React.FC = () => {
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.background} p-4 sm:p-8 flex items-center justify-center animate-module-entry`}>
       <div className="text-center relative w-full max-w-xl mx-auto">
-        <button
-          onClick={handleBack}
-          className={`absolute top-0 left-0 flex items-center gap-2 px-4 py-2 rounded-full ${theme.surface} ${theme.text} ${theme.surfaceHover} border ${theme.border} transition-all duration-300 hover:scale-105`}
-        >
-          ← Back to Hub
-        </button>
+        {activeProfile?.type !== 'KIDS' && (
+          <button
+            onClick={handleBack}
+            className={`absolute top-0 left-0 flex items-center gap-2 px-4 py-2 rounded-full ${theme.surface} ${theme.text} ${theme.surfaceHover} border ${theme.border} transition-all duration-300 hover:scale-105`}
+          >
+            ← Back to Hub
+          </button>
+        )}
         <div className="pt-12">
           <div className="text-6xl sm:text-8xl mb-6">🔺</div>
           <h2 className={`text-2xl sm:text-4xl font-bold mb-4 ${theme.text}`}>Shapes</h2>

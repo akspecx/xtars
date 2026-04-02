@@ -1,9 +1,17 @@
-import { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Rocket } from 'lucide-react';
+import { Rocket, Target } from 'lucide-react';
 import { getProgress, recordVisit, ModuleProgress } from '../../../CommonUtility/useModuleProgress';
 import { MasteryProgress, MasteryBadge, NewBadge } from '../../../CommonUtility/ProgressBadge';
+import { useProfile } from '../../../../../context/ProfileContext';
+
+interface VisualLogicLandingPageProps {
+  onBack?: () => void;
+  theme?: any;
+  title?: string;
+  icon?: string;
+}
 
 const visualLogicData = [
   { id: "big",               title: "Big",          subtitle: "Find the big one",      icon: "🐘", path: "/games/visuallogic/big",               category: "size",     totalScenarios: 8 },
@@ -42,10 +50,11 @@ const CartoonWatermarks = () => (
   </div>
 );
 
-export default function VisualLogicLandingPage() {
+const VisualLogicLandingPage: React.FC<VisualLogicLandingPageProps> = ({ onBack }) => {
   const navigate = useNavigate();
   const [progressMap, setProgressMap] = useState<Record<string, ModuleProgress>>({});
   const [currentPage, setCurrentPage] = useState(0);
+  const { activeProfile } = useProfile();
 
   // Load progress for all modules on mount
   useEffect(() => {
@@ -82,25 +91,33 @@ export default function VisualLogicLandingPage() {
 
         {/* Compact Welcome Header */}
         <motion.div
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between gap-4 bg-[#FFFBF2] px-4 sm:px-6 py-3 sm:py-4 rounded-2xl border-[3px] border-[#FFB74D] shadow-[0_6px_16px_rgba(255,183,77,0.15)] w-full"
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-between gap-4 bg-[#FFFBF2] px-4 sm:px-6 py-3 sm:py-4 rounded-2xl border-[3px] border-[#FFB74D] shadow-[0_6px_16px_rgba(255,183,77,0.15)] w-full"
         >
-          <div className="flex items-center gap-3">
-            <div className="p-1.5 sm:p-2 bg-[#FF1744] rounded-full text-white shadow-md shrink-0 cursor-pointer" onClick={() => navigate('/games')}>
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                <Rocket size={20} strokeWidth={3} className="-rotate-45" />
-              </motion.div>
+            <div className="flex items-center gap-3">
+                {activeProfile?.type !== 'KIDS' && onBack && (
+                    <button 
+                        onClick={onBack}
+                        className="p-1.5 sm:p-2 bg-[#FF1744] rounded-full text-white shadow-md shrink-0 cursor-pointer hover:scale-105 transition-transform"
+                    >
+                        <motion.div whileTap={{ scale: 0.9 }}>
+                            <Rocket size={20} strokeWidth={3} className="-rotate-45" />
+                        </motion.div>
+                    </button>
+                )}
+                <div className="p-1.5 sm:p-2 bg-[#3e2723] rounded-full text-white shadow-md shrink-0">
+                    <Target size={20} strokeWidth={3} />
+                </div>
+                <div>
+                    <h2 className="text-lg sm:text-2xl font-black text-[#7A5C3E] tracking-tighter leading-tight">{dynamicGreeting}</h2>
+                    <p className="text-xs sm:text-sm font-bold text-[#A68B7C] tracking-tight opacity-60 leading-none mt-0.5">Pick a game and let's play!</p>
+                </div>
             </div>
-            <div>
-              <h2 className="text-lg sm:text-2xl font-black text-[#7A5C3E] tracking-tighter leading-tight">{dynamicGreeting}</h2>
-              <p className="text-xs sm:text-sm font-semibold text-[#A68B7C] leading-none mt-0.5">Pick a game and let's play!</p>
+            <div className="flex flex-col items-center bg-[#4CAF50] px-4 py-2 rounded-xl text-white shadow-[0_4px_0_#388E3C] border-2 border-white transform rotate-1 shrink-0">
+                <span className="text-xl sm:text-2xl font-black leading-none">{currentPage + 1}/{totalPages}</span>
+                <span className="text-[8px] font-black uppercase tracking-wider opacity-90">Pages</span>
             </div>
-          </div>
-          <div className="flex flex-col items-center bg-[#4CAF50] px-4 py-2 rounded-xl text-white shadow-[0_4px_0_#388E3C] border-2 border-white transform rotate-1 shrink-0">
-             <span className="text-xl sm:text-2xl font-black leading-none">{currentPage + 1}/{totalPages}</span>
-             <span className="text-[8px] font-black uppercase tracking-wider opacity-90">Pages</span>
-          </div>
         </motion.div>
 
         {/* Game Carousel Container */}
@@ -202,3 +219,5 @@ export default function VisualLogicLandingPage() {
     </div>
   );
 }
+
+export default VisualLogicLandingPage;

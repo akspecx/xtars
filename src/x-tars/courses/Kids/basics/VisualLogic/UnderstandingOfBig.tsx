@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  RefreshCcw, CheckCircle2,
-  Hand, Sparkles, Play, MousePointer2,
+  CheckCircle2,
+  Hand, Play, MousePointer2,
   Timer, ChevronRight, Shuffle,
-  XCircle, Volume2, VolumeX,
-  Trophy, Award, Maximize, Star
+  Volume2, VolumeX,
+  Trophy, Maximize, Star
 } from 'lucide-react';
 import { recordCompletion } from '../../../../courses/CommonUtility/useModuleProgress';
+import { useProfile } from '../../../../../context/ProfileContext';
 
 // --- Scenarios updated with Vegetables for Size Comparison ---
 const SCENARIOS = [
@@ -25,6 +26,7 @@ const SCENARIOS = [
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { activeProfile } = useProfile();
   const forcedMode = location.state?.initialMode as 'practice' | 'kid' | null;
 
   const games = [
@@ -43,19 +45,19 @@ export default function App() {
   const [bigSide, setBigSide] = useState<'left' | 'right'>('left');
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [selectedSide, setSelectedSide] = useState(null);
-  const [autoNextTimer, setAutoNextTimer] = useState(null);
+  const [selectedSide, setSelectedSide] = useState<string | null>(null);
+  const [autoNextTimer, setAutoNextTimer] = useState<number | null>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
-  const [virtualHandPos, setVirtualHandPos] = useState(null);
+  const [virtualHandPos, setVirtualHandPos] = useState<{ x: number; y: number } | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const [journeyFinished, setJourneyFinished] = useState(false);
   const [score, setScore] = useState(0);
 
-  const timerIntervalRef = useRef(null);
-  const sideRefs = useRef<any>({ left: null, right: null });
-  const audioCtxRef = useRef<any>(null);
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const sideRefs = useRef<{ left: HTMLButtonElement | null; right: HTMLButtonElement | null }>({ left: null, right: null });
+  const audioCtxRef = useRef<AudioContext | null>(null);
   const tutorialActiveRef = useRef(false);
-  const timeoutsRef = useRef<any>([]);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
     return () => {
@@ -73,21 +75,24 @@ export default function App() {
   const playThud = useCallback((frequency = 150) => {
     if (isMuted) return;
     try {
-      if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtxRef.current.createOscillator();
-      const gain = audioCtxRef.current.createGain();
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+      const ctx = audioCtxRef.current;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(frequency, audioCtxRef.current.currentTime);
-      gain.gain.setValueAtTime(0.05, audioCtxRef.current.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtxRef.current.currentTime + 0.1);
+      osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+      gain.gain.setValueAtTime(0.05, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
       osc.connect(gain);
-      gain.connect(audioCtxRef.current.destination);
+      gain.connect(ctx.destination);
       osc.start();
-      osc.stop(audioCtxRef.current.currentTime + 0.1);
+      osc.stop(ctx.currentTime + 0.1);
     } catch (e) { }
   }, [isMuted]);
 
-  const speak = useCallback((text) => {
+  const speak = useCallback((text: string) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
@@ -100,7 +105,7 @@ export default function App() {
   const resetLevel = useCallback((idx: number, isSequential = false) => {
     setScenarioIdx(idx);
     const newBigSide = Math.random() > 0.5 ? 'left' : 'right';
-    setBigSide(newBigSide);
+    setBigSide(newBigSide as 'left' | 'right');
     setIsAnswered(false);
     setIsCorrect(false);
     setSelectedSide(null);
@@ -126,7 +131,7 @@ export default function App() {
 
   const handleSelect = useCallback((side: string, isTutorial = false) => {
     if (!audioCtxRef.current) {
-      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
     if (audioCtxRef.current.state === 'suspended') {
       audioCtxRef.current.resume();
@@ -149,20 +154,21 @@ export default function App() {
       if (mode === 'kid') {
         if (scenarioIdx === SCENARIOS.length - 1) {
           if (forcedMode === 'kid') {
-            // Not in sequential games, show modal
-            const t = 
-              setTimeout(() => setJourneyFinished(true), 1200);
-            timeoutsRef.current.push(t);
+             const idx = games.indexOf('understandingofbig');
+             if (idx < games.length - 1) {
+               // Navigation logic if needed
+             }
+             const t = setTimeout(() => setJourneyFinished(true), 1200);
+             timeoutsRef.current.push(t);
           } else {
-            const t = 
-              setTimeout(() => setJourneyFinished(true), 1200);
+            const t = setTimeout(() => setJourneyFinished(true), 1200);
             timeoutsRef.current.push(t);
           }
         } else {
-          setAutoNextTimer(10 as any);
+          setAutoNextTimer(10);
         }
       } else {
-        setAutoNextTimer(10 as any);
+        setAutoNextTimer(10);
       }
     } else {
       setIsCorrect(false);
@@ -176,14 +182,14 @@ export default function App() {
         timeoutsRef.current.push(t);
       }
     }
-  }, [bigSide, isAnswered, isCorrect, isAutoPlaying, mode, playThud, currentScenario.name, speak]);
+  }, [bigSide, isAnswered, isCorrect, isAutoPlaying, mode, playThud, currentScenario.name, speak, scenarioIdx, forcedMode, games]);
 
   const moveHandToSide = useCallback((side: 'left' | 'right') => {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       const el = sideRefs.current[side];
       if (!el) return resolve();
       const rect = el.getBoundingClientRect();
-      setVirtualHandPos({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 } as any);
+      setVirtualHandPos({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
       const t = setTimeout(resolve, 1200);
       timeoutsRef.current.push(t);
     });
@@ -225,12 +231,12 @@ export default function App() {
   useEffect(() => {
     if (autoNextTimer !== null && autoNextTimer > 0) {
       timerIntervalRef.current = setInterval(() => {
-        setAutoNextTimer(prev => (prev > 0 ? prev - 1 : 0));
+        setAutoNextTimer(prev => (prev !== null && prev > 0 ? prev - 1 : 0));
       }, 1000);
     } else if (autoNextTimer === 0) {
       handleNextSequential();
     }
-    return () => clearInterval(timerIntervalRef.current);
+    return () => { if (timerIntervalRef.current) clearInterval(timerIntervalRef.current); };
   }, [autoNextTimer, handleNextSequential]);
 
   useEffect(() => { resetLevel(0); }, []);
@@ -238,12 +244,11 @@ export default function App() {
   return (
     <div className="w-full h-full min-h-[calc(100vh-70px)] flex-grow bg-[#FDFBF7] p-1 sm:p-2 pt-1 sm:pt-2 md:pt-2 font-sans select-none flex flex-col items-center justify-start text-[#7A5C3E] overflow-x-hidden relative gap-2 sm:gap-4">
 
-      {/* Light Wooden Header */}
       <div className="w-full max-w-4xl flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 flex-none">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#D9B99B] rounded-xl sm:rounded-2xl shadow-[0_3px_0_#B8977E] flex items-center justify-center text-white border-2 border-[#EADAC4]">
             <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 3 }}>
-              <Maximize strokeWidth={3} className="text-white drop-shadow-sm w-5 h-5 sm:w-6 sm:h-6" />
+              <Maximize strokeWidth={3} className="text-white drop-shadow-md w-5 h-5 sm:w-6 sm:h-6" />
             </motion.div>
           </div>
           <div className="text-left">
@@ -257,34 +262,28 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4 mt-2 sm:mt-0">
-          <div className="group relative bg-[#F3E5D5] p-1 sm:p-2 rounded-xl sm:rounded-2xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-1 sm:gap-2">
-                <div className="absolute top-full mt-2 right-0 w-52 sm:w-60 bg-white p-3 rounded-xl shadow-xl border-2 border-[#EADAC4] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-[100]">
-                    <p className="text-[10px] sm:text-xs font-medium text-[#7A5C3E] leading-snug text-left">
-                        <span className="font-black text-sm">🧸 Kid Mode:</span><br/>Guidance with virtual hand.<br/>
-                        <span className="font-black text-sm mt-1 block">🖐️ Practice:</span><br/>Free play exploration.
-                    </p>
-                </div>
-            <button
-              onClick={() => { setMode('kid'); setScore(0); resetLevel(0); }}
-              
-              className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
-            >
-              <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
-                        <Play fill={mode === 'kid' ? 'white' : 'none'} className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">KID</span>
-                    </div>
-            </button>
-            <button
-              onClick={() => { setMode('practice'); setScore(0); resetLevel(scenarioIdx); }}
-              
-              className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
-            >
-              <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
-                        <MousePointer2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">PRACTICE</span>
-                    </div>
-            </button>
-          </div>
+          {activeProfile?.type !== 'KIDS' && (
+            <div className="group relative bg-[#F3E5D5] p-1 sm:p-2 rounded-xl sm:rounded-2xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-1 sm:gap-2">
+                  <div className="absolute top-full mt-2 right-0 w-52 sm:w-60 bg-white p-3 rounded-xl shadow-xl border-2 border-[#EADAC4] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-[100]">
+                      <p className="text-[10px] sm:text-xs font-medium text-[#7A5C3E] leading-snug text-left">
+                          <span className="font-black text-sm">🧸 Kid Mode:</span><br/>Guidance with virtual hand.<br/>
+                          <span className="font-black text-sm mt-1 block">🖐️ Practice:</span><br/>Free play exploration.
+                      </p>
+                  </div>
+              <button
+                onClick={() => { setMode('kid'); setScore(0); resetLevel(scenarioIdx); }}
+                className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
+              >
+                <Play fill={mode === 'kid' ? 'white' : 'none'} className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+              <button
+                onClick={() => { setMode('practice'); setScore(0); resetLevel(scenarioIdx); }}
+                className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
+              >
+                <MousePointer2 className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+            </div>
+          )}
 
           <button onClick={() => setIsMuted(!isMuted)} className="min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] flex items-center justify-center p-2 sm:p-3 bg-white rounded-xl sm:rounded-2xl shadow-sm border-b-2 sm:border-b-4 border-[#E0E0E0] text-[#A68B7C] hover:bg-gray-50 active:translate-y-1 transition-all">
             {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
@@ -292,10 +291,8 @@ export default function App() {
         </div>
       </div>
 
-      {/* TOY STAGE */}
       <div className="w-full max-w-4xl flex-1 min-h-0 bg-[#EADAC4] rounded-[1.5rem] sm:rounded-[2.5rem] p-3 sm:p-6 shadow-[0_6px_0_#B8977E,0_10px_20px_rgba(184,151,126,0.25)] border-[4px] sm:border-[6px] border-[#D9B99B] relative flex flex-col items-center justify-center mt-6 sm:mt-8 mb-4">
         
-        {/* Floating Instruction Banner */}
         <div className="absolute top-0 transform -translate-y-1/2 z-20">
           <motion.div
             key={scenarioIdx}
@@ -303,35 +300,26 @@ export default function App() {
             animate={{ y: 0, opacity: 1 }}
             className="bg-white px-4 py-2 sm:px-8 sm:py-3 rounded-full shadow-md border-b-[3px] sm:border-b-[4px] border-[#F0F0F0] flex items-center gap-2 sm:gap-4"
           >
-            <Star className="text-yellow-400 fill-yellow-400 w-4 h-4 sm:w-5 sm:h-5" />
-            <h2 className="text-base sm:text-xl font-black text-[#7A5C3E] uppercase tracking-tighter">
-              FIND BIG
-            </h2>
-            <Star className="text-yellow-400 fill-yellow-400 w-4 h-4 sm:w-5 sm:h-5" />
+            {activeProfile?.type !== 'KIDS' && <Star className="text-yellow-400 fill-yellow-400 w-4 h-4 sm:w-5 sm:h-5" />}
+            <h2 className="text-base sm:text-xl font-black text-[#7A5C3E] uppercase tracking-tighter">FIND BIG</h2>
+            {activeProfile?.type !== 'KIDS' && <Star className="text-yellow-400 fill-yellow-400 w-4 h-4 sm:w-5 sm:h-5" />}
           </motion.div>
         </div>
 
-        {/* Progress Tracker */}
-        <div className="absolute top-4 sm:top-5 left-4 sm:left-6 z-20 flex items-center gap-1 sm:gap-1.5">
-            {SCENARIOS.map((_, i) => (
-                <div key={i} className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${i === scenarioIdx ? 'bg-[#7A5C3E] scale-125' : i < scenarioIdx ? 'bg-[#4CAF50]' : 'bg-[#D9B99B] border border-[#a68b7c]/20 bg-opacity-30'}`} />
-            ))}
-        </div>
-        <div className="absolute top-3 sm:top-4 right-4 sm:right-6 z-20 flex items-center gap-1.5 sm:gap-2 bg-white/70 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border-2 sm:border-[3px] border-[#D9B99B] shadow-md backdrop-blur-sm">
+        <div className="absolute top-4 sm:top-5 left-4 sm:left-6 z-20 flex items-center gap-1.5 sm:gap-2 bg-white/70 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border-2 sm:border-[3px] border-[#D9B99B] shadow-md backdrop-blur-sm">
             <Star className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 fill-yellow-400 drop-shadow-[0_2px_4px_rgba(234,179,8,0.5)]" />
             <span className="text-lg sm:text-2xl font-black text-[#7A5C3E]">{score}</span>
         </div>
 
-        {/* Comparison Grid - TWO LARGE BOXES */}
         <div className="w-full grid grid-cols-2 gap-6 sm:gap-12 relative px-4 z-10 pb-4 mt-8 sm:mt-10">
-          {['left', 'right'].map((side) => {
+          {(['left', 'right'] as const).map((side) => {
             const isBigSlot = side === bigSide;
             const isSelected = selectedSide === side;
 
             return (
               <motion.button
                 key={`${scenarioIdx}-${side}`}
-                ref={el => sideRefs.current[side] = el}
+                ref={el => { sideRefs.current[side] = el; }}
                 onClick={() => { if (mode !== 'kid') handleSelect(side); }}
                 whileHover={!isAnswered && mode !== 'kid' ? { scale: 1.05 } : {}}
                 className={`relative aspect-[4/5] sm:aspect-[4/3] w-full bg-[#FFFBF2] rounded-[1.5rem] sm:rounded-[2.5rem] shadow-[inset_0_4px_8px_rgba(0,0,0,0.02),0_8px_16px_rgba(0,0,0,0.08)] border-b-[6px] sm:border-b-[10px] flex flex-col items-center justify-center transition-all duration-500 overflow-hidden ${isSelected
@@ -339,7 +327,6 @@ export default function App() {
                   : isAnswered ? 'opacity-40 border-[#EEE0CB]' : 'border-[#D9B99B] hover:border-[#B8977E]'
                   }`}
               >
-                {/* THE OBJECT - Cleanly fitting 85% of tray without touching borders */}
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{
@@ -352,7 +339,6 @@ export default function App() {
                   {currentScenario.emoji}
                 </motion.div>
 
-                {/* Particle Feedback on Correct Click */}
                 <AnimatePresence>
                   {isSelected && isCorrect && isBigSlot && (
                     <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute inset-0 z-20 pointer-events-none">
@@ -366,14 +352,13 @@ export default function App() {
                             opacity: 0,
                             scale: 0.5
                           }}
-                          className="absolute left-1/2 top-1/2 w-[clamp(10px,2vh,20px)] h-[clamp(10px,2vh,20px)] bg-yellow-400 rounded-full"
+                          className="absolute left-1/2 top-1/2 w-3 h-3 bg-yellow-400 rounded-full"
                         />
                       ))}
                     </motion.div>
                   )}
                 </AnimatePresence>
 
-                {/* Status Feedback Icons */}
                 <AnimatePresence>
                   {isSelected && (
                     <motion.div
@@ -386,8 +371,8 @@ export default function App() {
                         </div>
                       ) : (
                         <div className="bg-[#FFB74D] p-2 sm:p-4 rounded-full shadow-2xl border-[4px] sm:border-[8px] border-white flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16">
-                                            <span className="text-white font-black text-2xl sm:text-4xl leading-none">?</span>
-                                        </div>
+                            <span className="text-white font-black text-2xl sm:text-4xl leading-none">?</span>
+                        </div>
                       )}
                     </motion.div>
                   )}
@@ -397,7 +382,6 @@ export default function App() {
           })}
         </div>
 
-        {/* Completion Modal */}
         <AnimatePresence>
           {journeyFinished && (
             <motion.div
@@ -410,12 +394,8 @@ export default function App() {
                 animate={{ scale: 1, rotate: 0 }}
               >
                 <Trophy className="text-[#FFC107] mb-4 sm:mb-6 animate-bounce drop-shadow-[0_10px_20px_rgba(255,193,7,0.3)] mx-auto w-16 sm:w-20 h-auto" />
-                <h2 className="text-3xl sm:text-5xl font-black text-[#7A5C3E] tracking-tighter uppercase leading-none">
-                  BIG SUCCESS!
-                </h2>
-                <p className="text-[#A68B7C] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] mt-2 sm:mt-4 mb-6 sm:mb-8 text-xs sm:text-sm">
-                  YOU KNOW ALL THE BIG VEGETABLES!
-                </p>
+                <h2 className="text-3xl sm:text-5xl font-black text-[#7A5C3E] tracking-tighter uppercase leading-none">BIG SUCCESS!</h2>
+                <p className="text-[#A68B7C] font-black uppercase tracking-[0.1em] mt-2 sm:mt-4 mb-6 sm:mb-8 text-xs sm:text-sm">YOU KNOW ALL THE BIG VEGETABLES!</p>
                 <button
                   onClick={() => { setMode(forcedMode || 'kid'); setScore(0); resetLevel(0); }}
                   className="bg-[#4CAF50] text-white px-8 py-3 sm:px-10 sm:py-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-xl sm:text-2xl shadow-[0_6px_0_#388E3C] active:translate-y-1 active:shadow-none transition-all"
@@ -428,10 +408,8 @@ export default function App() {
         </AnimatePresence>
       </div>
 
-      {/* FOOTER */}
       <div className="w-full max-w-3xl flex flex-col md:flex-row gap-3 sm:gap-4 items-center flex-none">
         
-        {/* Next One Button */}
         <button
           onClick={handleNextSequential}
           disabled={mode === 'kid' && scenarioIdx === SCENARIOS.length - 1}
@@ -440,10 +418,12 @@ export default function App() {
         >
           <div className="flex items-center justify-center gap-2 sm:gap-3">
             <ChevronRight strokeWidth={4} className="w-6 h-6 sm:w-8 sm:h-8" />
-            <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
-                <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">GO TO</span>
-                <span className="uppercase tracking-tighter leading-none mt-0.5">NEXT</span>
-            </div>
+            {activeProfile?.type !== 'KIDS' && (
+              <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
+                  <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">GO TO</span>
+                  <span className="uppercase tracking-tighter leading-none mt-0.5">NEXT</span>
+              </div>
+            )}
           </div>
 
           {autoNextTimer !== null && (
@@ -454,22 +434,22 @@ export default function App() {
           )}
         </button>
 
-        {/* Shuffle Button */}
         <button 
           onClick={() => resetLevel(Math.floor(Math.random() * SCENARIOS.length))} 
           className="flex items-center justify-center gap-2 sm:gap-3 w-full h-14 sm:h-16 bg-[#D9B99B] hover:bg-[#B8977E] text-white rounded-[1.2rem] sm:rounded-[1.5rem] font-black text-base sm:text-lg transition-all active:translate-y-1 active:shadow-none shadow-[0_4px_0_rgba(0,0,0,0.1)] border-b-[4px] sm:border-b-[6px] border-[#B8977E]"
         >
           <div className="flex items-center justify-center gap-2 sm:gap-3">
-          <Shuffle strokeWidth={4} className="w-6 h-6 sm:w-8 sm:h-8" />
-          <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
-              <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">MIX</span>
-              <span className="uppercase tracking-tighter leading-none mt-0.5">SHUFFLE</span>
+            <Shuffle strokeWidth={4} className="w-6 h-6 sm:w-8 sm:h-8" />
+            {activeProfile?.type !== 'KIDS' && (
+              <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
+                  <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">MIX</span>
+                  <span className="uppercase tracking-tighter leading-none mt-0.5">SHUFFLE</span>
+              </div>
+            )}
           </div>
-        </div>
         </button>
       </div>
 
-      {/* INTERACTIVE TUTORIAL HAND */}
       <AnimatePresence>
         {mode === 'kid' && virtualHandPos && !journeyFinished && (
           <motion.div

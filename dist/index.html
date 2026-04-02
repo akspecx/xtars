@@ -4,8 +4,17 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" crossorigin src="./assets/index-D196FyEW.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-C2KLZ95j.css">
+    <script>
+      window.onerror = function(msg, url, line, col, error) {
+        var extra = !col ? '' : '\ncolumn: ' + col;
+        extra += !error ? '' : '\nerror: ' + error;
+        alert("Error: " + msg + "\nurl: " + url + "\nline: " + line + extra);
+        return false;
+      };
+      console.log("Diagnostic script initialized.");
+    </script>
+    <script type="module" crossorigin src="/assets/index-cTGekwks.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BKQnHOj2.css">
   </head>
   <body class="dark:bg-gray-900">
     <div id="root"></div>

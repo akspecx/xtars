@@ -1,18 +1,15 @@
-import React, { useState, useEffect, memo, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  HashRouter as Router, 
-  Routes, 
-  Route, 
   useNavigate, 
   useParams 
 } from 'react-router-dom';
 import {
-  ChevronRight, BrainCircuit, Lightbulb, 
-  ChevronLeft, Info, Calculator, Target, Star, Rocket
+  BrainCircuit, Lightbulb, 
+  ChevronLeft, Info, Calculator, Target
 } from 'lucide-react';
 import NumberGameCard from "../../../CommonUtility/CardsUtility"
-
+import { useProfile } from '../../../../../context/ProfileContext';
 
 const USER_NAME = "Prabhat"; 
 
@@ -21,8 +18,6 @@ const Shape_Data = [
   { id: "Find the Shapes", title: "Help Bear find the correct shapes", subtitle: "Bear is confused, can we help them?", icon: "🤗", gradient: "from-rose-500 to-amber-500", path: "/games/shapes/bear" },
   { id: "Bus Shapes", title: "Can you locate shapes on different vehicles?", subtitle: "Practice drawing numbers with dotted guides", icon: "✍️", gradient: "from-sky-500 to-blue-500", path: "/games/shapes/bus" },
   { id: "Let's make a tree", title: "Find the correct shapes to build a tree", subtitle: "Correctly match the shapes", icon: "1️⃣2️⃣3️⃣", gradient: "from-orange-500 to-amber-500", path: "/games/shapes/tree" }
-  // { id: "filltheblank", title: "Fill in the blanks", subtitle: "Drag and drop the numbers correctly", icon: "1️⃣_3️⃣", gradient: "from-lime-500 to-green-500", path: "/games/numbers/fill-the-blanks" },
-  // { id: "descending", title: "Descending order", subtitle: "Place the train coaches in descending order", icon: "3️⃣2️⃣1️⃣", gradient: "from-cyan-500 to-blue-500", path: "/games/numbers/descending" }
 ];
 
 
@@ -48,9 +43,10 @@ const AuroraBackground = () => (
 
 const BalanceScaleMission = () => {
   const navigate = useNavigate();
+  const { activeProfile } = useProfile();
   const [showLogic, setShowLogic] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [isCorrect, setIsCorrect] = useState(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const itemCount = 5;
   const totalWeight = 500;
@@ -70,12 +66,14 @@ const BalanceScaleMission = () => {
       <div className="bg-[#faf9f6] p-8 sm:p-12 rounded-[4rem] border-2 border-[#c4a484]/20 shadow-[12px_12px_0px_#a88a6d] relative overflow-hidden">
         <div className="relative z-10 flex flex-col items-center">
           <div className="w-full flex justify-between items-center mb-10 text-[#3e2723]">
-            <motion.button 
-              whileHover={{ x: -5 }} onClick={() => navigate(-1)}
-              className="w-14 h-14 bg-[#3e2723] rounded-2xl flex items-center justify-center text-white shadow-xl border-b-4 border-black"
-            >
-              <ChevronLeft size={24} />
-            </motion.button>
+            {activeProfile?.type !== 'KIDS' && (
+              <motion.button 
+                whileHover={{ x: -5 }} onClick={() => navigate(-1)}
+                className="w-14 h-14 bg-[#3e2723] rounded-2xl flex items-center justify-center text-white shadow-xl border-b-4 border-black"
+              >
+                <ChevronLeft size={24} />
+              </motion.button>
+            )}
             <div className="text-center">
               <span className="text-[11px] font-black uppercase opacity-60 tracking-[0.5em] mb-2 block">Neural Link Calibration</span>
               <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none text-[#3e2723]">Scale Mission</h2>
@@ -122,7 +120,7 @@ const BalanceScaleMission = () => {
         </div>
       </div>
 
-      {/* Numerical Logic Feed with documentation strings */}
+      {/* Numerical Logic Feed */}
       <AnimatePresence>
         {showLogic && (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="bg-[#3e2723] text-white p-10 rounded-[3.5rem] shadow-2xl relative overflow-hidden border-b-8 border-black">
@@ -151,10 +149,18 @@ const BalanceScaleMission = () => {
 
 // --- PRIMARY HUB COMPONENT ---
 
-export default function ShapesLandingPage() {
+interface ShapesLandingPageProps {
+  onBack?: () => void;
+  theme?: any;
+  title?: string;
+  icon?: string;
+}
+
+const ShapesLandingPage: React.FC<ShapesLandingPageProps> = ({ onBack }) => {
   const navigate = useNavigate();
   const { puzzleId } = useParams();
   const [quoteIndex, setQuoteIndex] = useState(0);
+  const { activeProfile } = useProfile();
 
   const dynamicGreeting = useMemo(() => {
     const hour = new Date().getHours();
@@ -170,10 +176,9 @@ export default function ShapesLandingPage() {
 
   return (
     <div className="w-full flex flex-col items-center bg-[#e6dccb] font-sans select-none relative shadow-inner min-h-screen">
-      {/* Wooden Pattern Overlay as requested */}
+      {/* Wooden Pattern Overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} /> 
       
-      {/* Soft Ambient Light layer */}
       <AuroraBackground />
 
       <div className="w-full max-w-7xl p-6 sm:p-10 relative z-10">
@@ -187,6 +192,14 @@ export default function ShapesLandingPage() {
                 <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
                    <div className="text-center md:text-left max-w-2xl text-[#3e2723]">
                       <div className="flex items-center justify-center md:justify-start gap-3 mb-3">
+                         {activeProfile?.type !== 'KIDS' && onBack && (
+                           <button 
+                             onClick={onBack}
+                             className="p-2.5 bg-[#3e2723] rounded-2xl text-white shadow-xl hover:scale-105 transition-transform"
+                           >
+                             <ChevronLeft size={20} />
+                           </button>
+                         )}
                          <div className="p-2.5 bg-[#3e2723] rounded-2xl text-white shadow-xl"><Target size={20} /></div>
                          <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">{String(dynamicGreeting)}</h2>
                       </div>
@@ -203,7 +216,7 @@ export default function ShapesLandingPage() {
                 </div>
               </div>
 
-              {/* Game Tiles Grid using provided Full-Paths */}
+              {/* Game Tiles Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
                  {Shape_Data.map((game) => (
                    <NumberGameCard 
@@ -215,7 +228,6 @@ export default function ShapesLandingPage() {
               </div>
             </motion.div>
           ) : (
-            /* MISSION VIEW (Placeholder logic for demonstration) */
             <BalanceScaleMission key="game" />
           )}
         </AnimatePresence>
@@ -246,3 +258,5 @@ export default function ShapesLandingPage() {
     </div>
   );
 }
+
+export default ShapesLandingPage;

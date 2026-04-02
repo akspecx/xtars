@@ -1,4 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { useProfile } from "../../../../../context/ProfileContext";
+import { Volume2, Play, Music, Sparkles } from "lucide-react";
 
 interface AlphabetCountingItem {
   emoji: string;
@@ -126,6 +128,7 @@ const alphabetCountingCards: AlphabetCountingCard[] = [
 ];
 
 const AlphabetCounting: React.FC = () => {
+  const { activeProfile } = useProfile();
   const [activeLetter, setActiveLetter] = useState<string>(alphabetCountingCards[0].letter);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
@@ -136,26 +139,23 @@ const AlphabetCounting: React.FC = () => {
   }, []);
 
   const activeCard = cardMap.get(activeLetter) ?? alphabetCountingCards[0];
+  const isKids = activeProfile?.type === 'KIDS';
 
   const speak = useCallback(
     (text: string) => {
-      if (
-        typeof window !== "undefined" &&
-        "speechSynthesis" in window &&
-        typeof SpeechSynthesisUtterance !== "undefined" &&
-        !isSpeaking
-      ) {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
         setIsSpeaking(true);
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 0.95;
+        utterance.rate = 0.9;
         utterance.pitch = 1.1;
-        utterance.volume = 0.9;
+        utterance.volume = 1;
         utterance.onend = () => setIsSpeaking(false);
         utterance.onerror = () => setIsSpeaking(false);
         window.speechSynthesis.speak(utterance);
       }
     },
-    [isSpeaking]
+    []
   );
 
   const handlePlayIntro = useCallback(() => {
@@ -163,9 +163,7 @@ const AlphabetCounting: React.FC = () => {
   }, [speak]);
 
   const handlePlayLetterStory = useCallback(() => {
-    speak(
-      `Letter ${activeCard.letter} says ${activeCard.sound}. ${activeCard.description} Try our chant: ${activeCard.chant}. ${activeCard.story}`
-    );
+    speak(`Letter ${activeCard.letter} says ${activeCard.sound}. ${activeCard.description} Try our chant: ${activeCard.chant}. ${activeCard.story}`);
   }, [activeCard, speak]);
 
   return (
@@ -176,46 +174,44 @@ const AlphabetCounting: React.FC = () => {
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <header className="text-center mb-10">
-          <div className="inline-block mb-4">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-rose-500 via-amber-500 to-sky-500 bg-clip-text text-transparent drop-shadow-lg mb-4">
-              Alphabet Sound Garden
-            </h1>
-            <div className="h-1 w-24 bg-gradient-to-r from-rose-400 via-amber-400 to-sky-400 mx-auto rounded-full"></div>
-          </div>
-          <p className="max-w-2xl mx-auto text-base sm:text-lg text-gray-700 font-medium">
-            Tap a letter tile to see kid-friendly pictures, chants, and motions that match the letter’s sound. Listen to the story and copy the moves!
-          </p>
+        <header className="text-center mb-10 flex flex-col items-center">
+          <h1 className="text-4xl md:text-7xl font-black bg-gradient-to-r from-rose-500 via-amber-500 to-sky-500 bg-clip-text text-transparent drop-shadow-lg mb-4 uppercase tracking-tighter">
+            {isKids ? "ABC SOUNDS!" : "Alphabet Sound Garden"}
+          </h1>
+          {!isKids && (
+              <p className="max-w-2xl mx-auto text-lg text-gray-700 font-medium">
+                  Tap a letter tile to see kid-friendly pictures, chants, and motions that match the letter’s sound. Listen to the story and copy the moves!
+              </p>
+          )}
           <button
             onClick={handlePlayIntro}
-            className="mt-6 inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-rose-400 via-amber-400 to-sky-400 text-white font-semibold shadow-xl transition-transform duration-300 hover:scale-105"
+            className="mt-6 flex items-center gap-4 px-10 py-5 rounded-full bg-white text-rose-500 font-black shadow-2xl transition-all hover:scale-105 active:scale-95 border-4 border-rose-100"
           >
-            <span>🎧</span>
-            <span>Play Instructions</span>
+            <Volume2 size={32} />
+            {!isKids && <span className="text-xl">Play Instructions</span>}
           </button>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <section className="lg:col-span-1 space-y-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Tap a Letter</h2>
-              <div className="h-1 w-16 bg-gradient-to-r from-rose-400 to-sky-400 mx-auto rounded-full"></div>
+              <h2 className="text-2xl font-black text-gray-800 uppercase tracking-widest">{isKids ? "TAP!" : "Tap a Letter"}</h2>
             </div>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               {alphabetCountingCards.map((card) => {
                 const isActive = card.letter === activeLetter;
                 return (
                   <button
                     key={card.letter}
                     onClick={() => setActiveLetter(card.letter)}
-                    className={`relative rounded-2xl px-4 py-5 text-center transition-all duration-300 transform border ${
+                    className={`relative rounded-[2rem] px-4 py-6 text-center transition-all duration-300 transform border-4 ${
                       isActive
-                        ? `bg-gradient-to-br ${card.gradient} text-white shadow-2xl scale-105 ring-4 ring-white/70`
-                        : "bg-white text-gray-800 border-gray-200 hover:border-rose-200 hover:shadow-lg hover:-translate-y-1"
+                        ? `bg-gradient-to-br ${card.gradient} text-white shadow-2xl scale-110 border-white`
+                        : "bg-white text-gray-800 border-gray-100 hover:border-rose-200 hover:shadow-xl hover:-translate-y-1"
                     }`}
                   >
-                    <div className={`text-3xl font-extrabold mb-1 ${isActive ? "text-white" : card.color}`}>{card.letter}</div>
-                    <div className={`text-xs font-semibold uppercase tracking-wide ${isActive ? "text-white/90" : "text-gray-500"}`}>{card.name.split(" ")[0]}</div>
+                    <div className={`text-5xl font-black mb-1 ${isActive ? "text-white" : card.color}`}>{card.letter}</div>
+                    {!isKids && <div className={`text-xs font-bold uppercase tracking-widest ${isActive ? "text-white/90" : "text-gray-500"}`}>{card.name.split(" ")[0]}</div>}
                   </button>
                 );
               })}
@@ -223,39 +219,36 @@ const AlphabetCounting: React.FC = () => {
           </section>
 
           <section className="lg:col-span-2">
-            <div className="bg-white/80 backdrop-blur-md border border-rose-100 rounded-3xl p-6 sm:p-8 shadow-2xl">
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div>
-                    <div className="text-sm font-semibold text-rose-400 uppercase tracking-wide">Sound focus</div>
-                    <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 flex items-center gap-3">
-                      <span
-                        className={`inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br ${activeCard.gradient} text-white text-3xl shadow-lg`}
-                      >
+            <div className="bg-white/90 backdrop-blur-xl border-4 border-rose-100 rounded-[3rem] p-8 shadow-3xl">
+              <div className="flex flex-col gap-8">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                  <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+                    {!isKids && <div className="text-sm font-bold text-rose-400 uppercase tracking-widest mb-1">Sound focus</div>}
+                    <h2 className="text-4xl md:text-6xl font-black text-gray-900 flex items-center gap-4">
+                      <span className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br ${activeCard.gradient} text-white text-4xl shadow-2xl border-4 border-white`}>
                         {activeCard.letter}
                       </span>
                       <span>{activeCard.name}</span>
                     </h2>
-                    <p className="text-gray-600 mt-2 text-base sm:text-lg">{activeCard.headline}</p>
-                    <p className="text-sm text-gray-500 mt-1">{activeCard.description}</p>
+                    {!isKids && <p className="text-gray-600 mt-2 text-xl">{activeCard.headline}</p>}
                   </div>
-                  <div className="flex flex-col items-center sm:items-end gap-2 text-sm text-gray-600">
-                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 text-rose-600 font-semibold">🎵 Phonics Play</span>
-                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-600 font-semibold">🌟 Ages 3 - 6</span>
+                  <div className="flex flex-col items-center sm:items-end gap-3">
+                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-100 text-rose-600 font-black uppercase text-sm shadow-sm"><Music size={18} /> Phonics</span>
+                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 text-amber-600 font-black uppercase text-sm shadow-sm"><Sparkles size={18} /> Kids</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-rose-50 rounded-2xl p-5 border border-rose-100 flex flex-col gap-4">
-                    <div>
-                      <h3 className="text-lg font-bold text-rose-700 mb-2">Picture Connections</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="bg-rose-50/50 rounded-[2.5rem] p-6 border-4 border-rose-100 flex flex-col gap-6">
+                    <div className="space-y-4">
+                      {isKids ? null : <h3 className="text-xl font-black text-rose-700 uppercase tracing-widest">Picture Connections</h3>}
                       <div className="grid grid-cols-1 gap-4">
                         {activeCard.items.map((item, index) => (
-                          <div key={index} className="rounded-3xl bg-white/90 border border-rose-100 shadow-lg p-4 flex gap-4">
-                            <div className="text-4xl drop-shadow-md">{item.emoji}</div>
+                          <div key={index} className="rounded-[2rem] bg-white p-5 flex items-center gap-6 shadow-xl border-2 border-rose-100 transition-transform hover:scale-105">
+                            <div className="text-5xl">{item.emoji}</div>
                             <div>
-                              <div className="text-lg font-bold text-rose-700">{item.word}</div>
-                              <p className="text-sm text-rose-600 font-medium">{item.sentence}</p>
+                              <div className="text-2xl font-black text-rose-700">{item.word}</div>
+                              {!isKids && <p className="text-sm text-rose-600 font-bold">{item.sentence}</p>}
                             </div>
                           </div>
                         ))}
@@ -263,29 +256,36 @@ const AlphabetCounting: React.FC = () => {
                     </div>
                     <button
                       onClick={handlePlayLetterStory}
-                      className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-rose-400 via-amber-400 to-sky-400 text-white font-semibold shadow-lg transition-transform duration-300 hover:scale-105"
+                      className="mt-auto flex items-center justify-center gap-4 py-6 rounded-full bg-gradient-to-r from-rose-400 via-amber-400 to-sky-400 text-white font-black text-xl shadow-2xl hover:scale-105 active:scale-95 transition-all"
                     >
-                      <span>🔊</span>
-                      <span>Play Letter Story</span>
+                      <Play size={28} fill="currentColor" />
+                      {!isKids && <span>Listen</span>}
                     </button>
                   </div>
-                  <div className="bg-amber-50 rounded-2xl p-5 border border-amber-100 flex flex-col gap-4">
+
+                  <div className="bg-amber-50/50 rounded-[2.5rem] p-6 border-4 border-amber-100 flex flex-col gap-6">
                     <div>
-                      <h3 className="text-lg font-bold text-amber-700 mb-2">Move & Chant</h3>
-                      <p className="text-base text-amber-800 font-semibold text-center bg-white/70 rounded-2xl py-3 px-4 shadow-inner">{activeCard.chant}</p>
+                      {isKids ? null : <h3 className="text-xl font-black text-amber-700 uppercase tracking-widest mb-4">Move & Chant</h3>}
+                      <p className="text-2xl font-black text-amber-800 text-center bg-white rounded-[2rem] py-8 px-6 shadow-xl border-2 border-amber-100">
+                          {activeCard.chant}
+                      </p>
                     </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-amber-600 uppercase tracking-wide mb-1">Try these actions</h4>
-                      <ul className="space-y-2 text-sm text-amber-700 font-medium list-disc list-inside">
-                        {activeCard.actions.map((action, index) => (
-                          <li key={index}>{action}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="bg-white/80 rounded-2xl p-4 border border-amber-100">
-                      <h4 className="text-sm font-semibold text-amber-600 uppercase tracking-wide mb-2">Imagination moment</h4>
-                      <p className="text-sm text-amber-700">{activeCard.story}</p>
-                    </div>
+                    {!isKids && (
+                        <>
+                            <div>
+                                <h4 className="text-sm font-bold text-amber-600 uppercase tracking-widest mb-2">Try these actions</h4>
+                                <ul className="space-y-2 text-md text-amber-700 font-bold list-disc list-inside">
+                                    {activeCard.actions.map((action, index) => (
+                                        <li key={index}>{action}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="bg-white/80 rounded-2xl p-4 border border-amber-100 mt-auto">
+                                <h4 className="text-sm font-bold text-amber-600 uppercase tracking-widest mb-1">Imagination moment</h4>
+                                <p className="text-sm text-amber-700 font-medium">{activeCard.story}</p>
+                            </div>
+                        </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -300,17 +300,11 @@ const AlphabetCounting: React.FC = () => {
           33% { transform: translate(30px, -40px) scale(1.05); }
           66% { transform: translate(-20px, 30px) scale(0.95); }
         }
-        .animate-blob {
-          animation: blob 8s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
+        .animate-blob { animation: blob 8s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
       `}</style>
     </div>
   );
 };
 
 export default AlphabetCounting;
-
-

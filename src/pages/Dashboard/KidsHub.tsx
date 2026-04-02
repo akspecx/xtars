@@ -8,9 +8,12 @@ import {
   Play, 
   Trophy,
   Rocket,
-  Sparkles
+  Sparkles,
+  Lock,
+  Users
 } from 'lucide-react';
 import { useMode } from '../../context/ModeContext';
+import { useProfile } from '../../context/ProfileContext';
 
 const SubjectCard = ({ title, icon: Icon, path, color, progress, lessons }: any) => {
   const navigate = useNavigate();
@@ -81,7 +84,14 @@ const SubjectCard = ({ title, icon: Icon, path, color, progress, lessons }: any)
 };
 
 const KidsHub: React.FC = () => {
-  const { childProfile } = useMode();
+  const { childProfile, openParentalGate } = useMode();
+  const { clearProfile } = useProfile();
+  const navigate = useNavigate();
+
+  const handleSwitchProfile = () => {
+    clearProfile();
+    navigate('/profiles');
+  };
 
   const kidsZoneModules = [
     { title: "Visual Logic", icon: Puzzle, path: "/games/visuallogic", color: "bg-indigo-500", progress: 45, lessons: 17 },
@@ -127,7 +137,36 @@ const KidsHub: React.FC = () => {
            <span className="text-3xl font-black leading-none">{currentPage + 1}/{totalPages}</span>
            <span className="text-[10px] font-black uppercase tracking-wider opacity-90">Pages</span>
         </div>
+
+        {/* Optimized Action Buttons (Restores user requirement for position & visibility) */}
+        <div className="absolute top-6 right-6 z-20">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={openParentalGate}
+            className="p-5 bg-indigo-600 text-white rounded-[2rem] shadow-xl shadow-indigo-200 border-4 border-white flex items-center justify-center group transition-all"
+            title="Parent Mode"
+          >
+            <Lock size={32} strokeWidth={3} />
+          </motion.button>
+        </div>
       </header>
+
+      {/* Floating Switch Profile Button (Bottom Left) */}
+      <div className="fixed bottom-8 left-8 z-[9999]">
+        <motion.button
+          whileHover={{ scale: 1.1, rotate: 10 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={handleSwitchProfile}
+          className="p-6 bg-rose-500 text-white rounded-[2rem] shadow-[0_8px_0_#be123c] border-4 border-white flex items-center justify-center group transition-all"
+          title="Switch Profile"
+        >
+          <Users size={32} strokeWidth={3} />
+          <span className="max-w-0 overflow-hidden group-hover:max-w-xs group-hover:ml-3 transition-all duration-300 font-black uppercase tracking-widest text-sm whitespace-nowrap">
+            Switch Profile
+          </span>
+        </motion.button>
+      </div>
 
       <div className="relative flex items-center justify-center gap-4 min-h-[500px]">
         {/* Navigation - Left */}

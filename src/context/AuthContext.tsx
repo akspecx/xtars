@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { useProfile } from "./ProfileContext";
 
 interface User {
   id: string;
@@ -129,8 +130,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  const { clearProfile } = useProfile();
+
   const signOut = () => {
     setUser(null);
+    clearProfile();
     localStorage.removeItem("user");
     window.google?.accounts.id.disableAutoSelect();
     navigate("/signin");

@@ -9,12 +9,13 @@ type ChildProfile = {
 
 type ModeContextType = {
   isParentMode: boolean;
-  toggleMode: () => void;
+  toggleMode: (path?: string) => void;
   showParentalGate: boolean;
   openParentalGate: () => void;
   closeParentalGate: () => void;
   childProfile: ChildProfile;
   updateProfile: (profile: Partial<ChildProfile>) => void;
+  lastProfilePath: string | null;
 };
 
 const DEFAULT_PROFILE: ChildProfile = {
@@ -52,6 +53,7 @@ export const ModeProvider: React.FC<ModeProviderProps> = ({ children }) => {
   });
 
   const [showParentalGate, setShowParentalGate] = useState(false);
+  const [lastProfilePath, setLastProfilePath] = useState<string | null>(null);
 
   useEffect(() => {
     localStorage.setItem('xtars_is_parent_mode', JSON.stringify(isParentMode));
@@ -61,7 +63,8 @@ export const ModeProvider: React.FC<ModeProviderProps> = ({ children }) => {
     localStorage.setItem('xtars_child_profile', JSON.stringify(childProfile));
   }, [childProfile]);
 
-  const toggleMode = () => {
+  const toggleMode = (path?: string) => {
+    if (path) setLastProfilePath(path);
     setIsParentMode(prevMode => !prevMode);
   };
 
@@ -85,7 +88,8 @@ export const ModeProvider: React.FC<ModeProviderProps> = ({ children }) => {
       openParentalGate, 
       closeParentalGate,
       childProfile,
-      updateProfile
+      updateProfile,
+      lastProfilePath
     }}>
       {children}
     </ModeContext.Provider>

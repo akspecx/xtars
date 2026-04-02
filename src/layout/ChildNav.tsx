@@ -7,6 +7,7 @@ import {
   Gamepad2, 
   Brain, 
   UserCircle,
+  Users,
   Sparkles 
 } from "lucide-react";
 import { useSidebar } from "../context/SidebarContext";
@@ -48,6 +49,12 @@ const childNavItems: NavItem[] = [
     icon: <UserCircle size={32} />,
     path: "/profile",
     color: "bg-violet-400"
+  },
+  {
+    name: "Switch Profile",
+    icon: <Users size={32} />,
+    path: "/profiles",
+    color: "bg-orange-400"
   }
 ];
 

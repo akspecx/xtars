@@ -5,7 +5,7 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: './', // Change this to './' for Capacitor/Mobile compatibility
+  base: '/', // Use root-relative paths for Capacitor with 'https' scheme
   plugins: [
     react(),
     svgr({

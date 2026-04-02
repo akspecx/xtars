@@ -9,6 +9,7 @@ import {
   Trophy, ArrowUp, Star
 } from 'lucide-react';
 import { recordCompletion } from '../../../../courses/CommonUtility/useModuleProgress';
+import { useProfile } from '../../../../../context/ProfileContext';
 
 const SCENARIOS = [
   { id: 1, name: 'Giraffe', emoji: '🦒' },
@@ -24,6 +25,7 @@ const SCENARIOS = [
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { activeProfile } = useProfile();
   const forcedMode = location.state?.initialMode as 'practice' | 'kid' | null;
   const games = [
     'understandingofsamepictures', 'understandingofabove', 'understandingofbelow',
@@ -234,34 +236,36 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4 mt-2 sm:mt-0">
-            <div className="group relative bg-[#F3E5D5] p-1 sm:p-2 rounded-xl sm:rounded-2xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-1 sm:gap-2">
-                <div className="absolute top-full mt-2 right-0 w-52 sm:w-60 bg-white p-3 rounded-xl shadow-xl border-2 border-[#EADAC4] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-[100]">
-                    <p className="text-[10px] sm:text-xs font-medium text-[#7A5C3E] leading-snug text-left">
-                        <span className="font-black text-sm">🧸 Kid Mode:</span><br/>Guidance with virtual hand.<br/>
-                        <span className="font-black text-sm mt-1 block">🖐️ Practice:</span><br/>Free play exploration.
-                    </p>
-                </div>
-                <button 
-                    onClick={() => { setMode('kid'); setScore(0); resetLevel(0); }}
-                    
-                    className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
-                >
-                    <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
-                        <Play size={14} fill={mode === 'kid' ? 'white' : 'none'} className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">KID</span>
-                    </div>
-                </button>
-                <button 
-                    onClick={() => { setMode('practice'); setScore(0); resetLevel(scenarioIdx); }}
-                    
-                    className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
-                >
-                    <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
-                        <MousePointer2 size={14} className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">PRACTICE</span>
-                    </div>
-                </button>
-            </div>
+            {activeProfile?.type !== 'KIDS' && (
+              <div className="group relative bg-[#F3E5D5] p-1 sm:p-2 rounded-xl sm:rounded-2xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-1 sm:gap-2">
+                  <div className="absolute top-full mt-2 right-0 w-52 sm:w-60 bg-white p-3 rounded-xl shadow-xl border-2 border-[#EADAC4] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-[100]">
+                      <p className="text-[10px] sm:text-xs font-medium text-[#7A5C3E] leading-snug text-left">
+                          <span className="font-black text-sm">🧸 Kid Mode:</span><br/>Guidance with virtual hand.<br/>
+                          <span className="font-black text-sm mt-1 block">🖐️ Practice:</span><br/>Free play exploration.
+                      </p>
+                  </div>
+                  <button 
+                      onClick={() => { setMode('kid'); setScore(0); resetLevel(0); }}
+                      
+                      className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
+                  >
+                      <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
+                          <Play size={14} fill={mode === 'kid' ? 'white' : 'none'} className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">KID</span>
+                      </div>
+                  </button>
+                  <button 
+                      onClick={() => { setMode('practice'); setScore(0); resetLevel(scenarioIdx); }}
+                      
+                      className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
+                  >
+                      <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
+                          <MousePointer2 size={14} className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">PRACTICE</span>
+                      </div>
+                  </button>
+              </div>
+            )}
             
             <button onClick={() => setIsMuted(!isMuted)} className="min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] flex items-center justify-center p-2 sm:p-3 bg-white rounded-xl sm:rounded-2xl shadow-sm border-b-2 sm:border-b-4 border-[#E0E0E0] text-[#A68B7C] hover:bg-gray-50 active:translate-y-1 transition-all">
                 {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
@@ -279,9 +283,9 @@ export default function App() {
                 animate={{ y: 0, opacity: 1 }}
                 className="bg-white px-6 py-2 sm:px-10 sm:py-4 rounded-full shadow-md border-b-[3px] sm:border-b-[4px] border-[#F0F0F0] flex items-center gap-2 sm:gap-4"
             >
-                <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />
+                {activeProfile?.type !== 'KIDS' && <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />}
                 <h2 className="text-lg sm:text-2xl font-black text-[#7A5C3E] uppercase tracking-tighter">FIND TALL</h2>
-                <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />
+                {activeProfile?.type !== 'KIDS' && <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />}
             </motion.div>
         </div>
 
@@ -387,11 +391,13 @@ export default function App() {
           }`}
         >
           <div className="flex items-center justify-center gap-2 sm:gap-3">
-            <ChevronRight strokeWidth={4} className="w-6 h-6 sm:w-8 sm:h-8" />
-            <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
-                <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">GO TO</span>
-                <span className="uppercase tracking-tighter leading-none mt-0.5">NEXT</span>
-            </div>
+            <ChevronRight strokeWidth={4} className="w-10 h-10 sm:w-12 sm:h-12" />
+            {activeProfile?.type !== 'KIDS' && (
+              <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
+                  <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">GO TO</span>
+                  <span className="uppercase tracking-tighter leading-none mt-0.5">NEXT</span>
+              </div>
+            )}
           </div>
           {autoNextTimer !== null && (
             <div className="bg-black/10 px-2 py-1 rounded-full flex items-center gap-1 sm:gap-2 ml-2">
@@ -406,11 +412,13 @@ export default function App() {
           className="flex items-center justify-center gap-2 sm:gap-3 w-full h-14 sm:h-16 bg-[#D9B99B] hover:bg-[#B8977E] text-white rounded-[1.2rem] sm:rounded-[1.5rem] font-black text-base sm:text-lg transition-all active:translate-y-1 active:shadow-none shadow-[0_4px_0_rgba(0,0,0,0.1)] border-b-[4px] sm:border-b-[6px] border-[#B8977E]"
         >
           <div className="flex items-center justify-center gap-2 sm:gap-3">
-          <Shuffle strokeWidth={4} className="w-6 h-6 sm:w-8 sm:h-8" />
-          <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
-              <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">MIX</span>
-              <span className="uppercase tracking-tighter leading-none mt-0.5">SHUFFLE</span>
-          </div>
+          <Shuffle strokeWidth={4} className="w-10 h-10 sm:w-12 sm:h-12" />
+          {activeProfile?.type !== 'KIDS' && (
+            <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
+                <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">MIX</span>
+                <span className="uppercase tracking-tighter leading-none mt-0.5">SHUFFLE</span>
+            </div>
+          )}
         </div>
         </button>
       </div>

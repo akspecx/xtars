@@ -5,10 +5,11 @@ import {
   CheckCircle2, 
   Hand, Play, MousePointer2, 
   Timer, ChevronRight, Shuffle, 
-  XCircle, Volume2, VolumeX,
+  Volume2, VolumeX,
   Trophy, ArrowUp, ArrowDown, Star
 } from 'lucide-react';
 import { recordCompletion } from '../../../../courses/CommonUtility/useModuleProgress';
+import { useProfile } from '../../../../../context/ProfileContext';
 
 const SCENARIOS = [
   { id: 1, name: 'Giraffe', emoji: '🦒' },
@@ -32,12 +33,16 @@ const SCENARIOS = [
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { activeProfile } = useProfile();
   const forcedMode = location.state?.initialMode as 'practice' | 'kid' | null;
 
   const games = [
-    'understandingofsamepictures', 'understandingofabove', 'understandingofbigandsmallmix',
-    'understandingoffullandempty', 'understandingofinsideandoutsidemix',
-    'understandingoftallandshort', 'understandingofsmall', 'understandingofoutside'
+    'understandingofsamepictures', 'understandingofabove', 'understandingofbelow',
+    'understandingofbig', 'understandingofsmall', 'understandingoftall',
+    'understandingofshort', 'understandingoffull', 'understandingofempty',
+    'understandingofinside', 'understandingofoutside', 'understandingofaboveandbelow',
+    'understandingofbigandsmallmix', 'understandingoffullandemptymix',
+    'understandingofinsideandoutsidemix', 'understandingoftallandshort'
   ];
   
   const [mode, setMode] = useState<'practice' | 'kid'>(forcedMode || 'kid'); 
@@ -64,7 +69,7 @@ export default function App() {
   const playThud = useCallback((frequency = 150) => {
     if (isMuted) return;
     try {
-      if (!audioCtxRef.current) audioCtxRef.current = new AudioContext();
+      if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
       const ctx = audioCtxRef.current;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -91,8 +96,8 @@ export default function App() {
 
   const resetLevel = useCallback((idx: number, isSequential = false) => {
     setScenarioIdx(idx);
-    setTallSide((Math.random() > 0.5 ? 'left' : 'right') as 'left' | 'right');
-    const newTarget = (Math.random() > 0.5 ? 'tall' : 'short') as 'tall' | 'short';
+    setTallSide(Math.random() > 0.5 ? 'left' : 'right');
+    const newTarget = Math.random() > 0.5 ? 'tall' : 'short';
     setTargetType(newTarget);
     setIsAnswered(false);
     setIsCorrect(false);
@@ -134,15 +139,15 @@ export default function App() {
       if (mode === 'kid') {
         if (scenarioIdx === SCENARIOS.length - 1) {
           if (forcedMode === 'kid') {
-            const idx = games.indexOf('understandingoftallandshort');
-            if (idx < games.length - 1) {
-              setTimeout(() => navigate(`/xtars/games/visuallogic/${games[idx + 1]}`, { state: { initialMode: 'kid' } }), 3000);
+            const currentGame = 'understandingoftallandshort';
+            const currentIndex = games.indexOf(currentGame);
+            if (currentIndex < games.length - 1) {
+              const nextGame = games[currentIndex + 1];
+              setTimeout(() => navigate(`/xtars/games/visuallogic/${nextGame}`, { state: { initialMode: 'kid' } }), 3000);
             } else {
-              
               setTimeout(() => setJourneyFinished(true), 1200);
             }
           } else {
-            
               setTimeout(() => setJourneyFinished(true), 1200);
           }
         } else {
@@ -223,22 +228,16 @@ export default function App() {
   return (
     <div className="w-full h-full min-h-[calc(100vh-70px)] flex-grow bg-[#FDFBF7] p-1 sm:p-2 pt-1 sm:pt-2 md:pt-2 font-sans select-none flex flex-col items-center justify-start text-[#7A5C3E] overflow-x-hidden relative gap-2 sm:gap-4">
       
-      {/* Header */}
       <div className="w-full max-w-4xl flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 flex-none">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#D9B99B] rounded-xl sm:rounded-2xl shadow-[0_3px_0_#B8977E] flex items-center justify-center text-white border-2 border-[#EADAC4]">
-              <motion.div 
-                key={targetType}
-                initial={{ scaleY: 0.5 }} 
-                animate={{ scaleY: 1 }}
-                transition={{ type: 'spring' }}
-              >
+              <motion.div key={targetType} initial={{ scaleY: 0.5 }} animate={{ scaleY: 1 }} transition={{ type: 'spring' }}>
                 {targetType === 'tall' ? <ArrowUp strokeWidth={3} className="text-white w-5 h-5 sm:w-6 sm:h-6 drop-shadow-md" /> : <ArrowDown strokeWidth={3} className="text-white w-5 h-5 sm:w-6 sm:h-6 drop-shadow-md" />}
               </motion.div>
           </div>
           <div className="text-left">
             <h1 className="text-lg sm:text-2xl font-black text-[#5D4037] tracking-tighter leading-none uppercase">
-              Tall &amp; Short Fun
+              Tall & Short Fun
             </h1>
             <div className="flex items-center gap-2 mt-1 hidden sm:flex">
                <p className="text-[10px] font-bold text-[#A68B7C] uppercase tracking-[0.1em]">Visual Logic Discovery</p>
@@ -247,34 +246,28 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4 mt-2 sm:mt-0">
+          {activeProfile?.type !== 'KIDS' && (
             <div className="group relative bg-[#F3E5D5] p-1 sm:p-2 rounded-xl sm:rounded-2xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-1 sm:gap-2">
-                <div className="absolute top-full mt-2 right-0 w-52 sm:w-60 bg-white p-3 rounded-xl shadow-xl border-2 border-[#EADAC4] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-[100]">
-                    <p className="text-[10px] sm:text-xs font-medium text-[#7A5C3E] leading-snug text-left">
-                        <span className="font-black text-sm">🧸 Kid Mode:</span><br/>Guidance with virtual hand.<br/>
-                        <span className="font-black text-sm mt-1 block">🖐️ Practice:</span><br/>Free play exploration.
-                    </p>
-                </div>
+                  <div className="absolute top-full mt-2 right-0 w-52 sm:w-60 bg-white p-3 rounded-xl shadow-xl border-2 border-[#EADAC4] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-[100]">
+                      <p className="text-[10px] sm:text-xs font-medium text-[#7A5C3E] leading-snug text-left">
+                          <span className="font-black text-sm">🧸 Kid Mode:</span><br/>Guidance with virtual hand.<br/>
+                          <span className="font-black text-sm mt-1 block">🖐️ Practice:</span><br/>Free play exploration.
+                      </p>
+                  </div>
                 <button 
-                    onClick={() => { setMode('kid'); setScore(0); resetLevel(0); }}
-                    
+                    onClick={() => { setMode('kid'); setScore(0); resetLevel(scenarioIdx); }}
                     className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
                 >
-                    <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
-                        <Play size={14} fill={mode === 'kid' ? 'white' : 'none'} className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">KID</span>
-                    </div>
+                    <Play size={14} fill={mode === 'kid' ? 'white' : 'none'} className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 <button 
                     onClick={() => { setMode('practice'); setScore(0); resetLevel(scenarioIdx); }}
-                    
                     className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
                 >
-                    <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1">
-                        <MousePointer2 size={14} className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="text-[8px] sm:text-[10px] font-black tracking-widest hidden sm:block">PRACTICE</span>
-                    </div>
+                    <MousePointer2 size={14} className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
             </div>
+          )}
             
             <button onClick={() => setIsMuted(!isMuted)} className="min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] flex items-center justify-center p-2 sm:p-3 bg-white rounded-xl sm:rounded-2xl shadow-sm border-b-2 sm:border-b-4 border-[#E0E0E0] text-[#A68B7C] hover:bg-gray-50 active:translate-y-1 transition-all">
                 {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
@@ -282,7 +275,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* TOY STAGE */}
       <div className="w-full max-w-3xl flex-1 min-h-0 bg-[#EADAC4] rounded-[1.5rem] sm:rounded-[2.5rem] p-2 sm:p-4 shadow-[0_6px_0_#B8977E,0_10px_20px_rgba(184,151,126,0.25)] border-[4px] sm:border-[6px] border-[#D9B99B] relative flex flex-col items-center justify-center mt-6 sm:mt-7 mb-3">
         
         <div className="absolute top-0 transform -translate-y-1/2 z-20">
@@ -292,15 +284,12 @@ export default function App() {
                 animate={{ y: 0, opacity: 1 }}
                 className="bg-white px-6 py-2 sm:px-10 sm:py-4 rounded-full shadow-md border-b-[3px] sm:border-b-[4px] border-[#F0F0F0] flex items-center gap-2 sm:gap-4"
             >
-                <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />
-                <h2 className="text-lg sm:text-2xl font-black text-[#7A5C3E] uppercase tracking-tighter">
-                  FIND {targetType.toUpperCase()}
-                </h2>
-                <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />
+                {activeProfile?.type !== 'KIDS' && <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />}
+                <h2 className="text-lg sm:text-2xl font-black text-[#7A5C3E] uppercase tracking-tighter">FIND {targetType.toUpperCase()}</h2>
+                {activeProfile?.type !== 'KIDS' && <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />}
             </motion.div>
         </div>
 
-        {/* Progress Tracker */}
         <div className="absolute top-4 sm:top-5 left-4 sm:left-6 z-20 flex items-center gap-1 sm:gap-1.5">
             {SCENARIOS.map((_, i) => (
                 <div key={i} className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${i === scenarioIdx ? 'bg-[#7A5C3E] scale-125' : i < scenarioIdx ? 'bg-[#4CAF50]' : 'bg-[#D9B99B] border border-[#a68b7c]/20 bg-opacity-30'}`} />
@@ -321,7 +310,7 @@ export default function App() {
                         key={`${scenarioIdx}-${side}`}
                         ref={el => { sideRefs.current[side] = el; }}
                         onClick={() => { if (mode !== 'kid') handleSelect(side); }}
-                        whileHover={!isAnswered ? { scale: 1.02, y: -3 } : {}}
+                        whileHover={!isAnswered && mode !== 'kid' ? { scale: 1.02, y: -3 } : {}}
                         className={`relative aspect-[4/5] sm:aspect-[3/4] w-full bg-[#FFFBF2] rounded-[1.5rem] sm:rounded-[2.5rem] shadow-[inset_0_4px_8px_rgba(0,0,0,0.02),0_8px_16px_rgba(0,0,0,0.08)] border-b-[6px] sm:border-b-[10px] flex flex-col items-center justify-center transition-all duration-500 overflow-hidden ${
                             isSelected 
                                 ? (isCorrect && isCorrectChoice ? 'border-[#4CAF50] bg-[#F1FCEF]' : 'border-[#FFB74D] animate-wobble')
@@ -331,10 +320,10 @@ export default function App() {
                         <motion.div
                             initial={{ scale: 0 }}
                             animate={{
-                              scaleX: 1,
-                              scaleY: isTallSlot ? 1.35 : 0.7,
-                              scale: 1,
-                              filter: isSelected && !isCorrectChoice ? 'grayscale(1)' : 'grayscale(0)'
+                                scaleX: 1,
+                                scaleY: isTallSlot ? 1.35 : 0.7,
+                                scale: 1,
+                                filter: isSelected && !isCorrectChoice ? 'grayscale(1)' : 'grayscale(0)'
                             }}
                             transition={{ type: 'spring', damping: 12, stiffness: 80 }}
                             className="text-[clamp(5rem,min(22vh,26vw),14rem)] drop-shadow-xl z-10 origin-bottom select-none"
@@ -378,9 +367,7 @@ export default function App() {
                     >
                         <Trophy className="text-[#FFC107] mb-4 sm:mb-6 animate-bounce drop-shadow-[0_10px_20px_rgba(255,193,7,0.3)] mx-auto w-16 sm:w-20 h-auto" />
                         <h2 className="text-3xl sm:text-5xl font-black text-[#7A5C3E] tracking-tighter uppercase leading-none">YOU DID IT!</h2>
-                        <p className="text-[#A68B7C] font-black uppercase tracking-[0.1em] mt-2 sm:mt-4 mb-6 sm:mb-8 text-xs sm:text-sm">
-                          YOU ARE A HEIGHT EXPERT!
-                        </p>
+                        <p className="text-[#A68B7C] font-black uppercase tracking-[0.1em] mt-2 sm:mt-4 mb-6 sm:mb-8 text-xs sm:text-sm">YOU ARE A HEIGHT EXPERT!</p>
                         <button 
                             onClick={() => { setMode(forcedMode || 'kid'); setScore(0); resetLevel(0); }}
                             className="bg-[#4CAF50] text-white px-8 py-3 sm:px-10 sm:py-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-xl sm:text-2xl shadow-[0_6px_0_#388E3C] active:translate-y-1 active:shadow-none transition-all"
@@ -393,7 +380,6 @@ export default function App() {
         </AnimatePresence>
       </div>
 
-      {/* FOOTER */}
       <div className="w-full max-w-3xl flex flex-col md:flex-row gap-3 sm:gap-4 items-center flex-none">
         <button
           onClick={handleNextSequential}
@@ -404,10 +390,12 @@ export default function App() {
         >
           <div className="flex items-center justify-center gap-2 sm:gap-3">
             <ChevronRight strokeWidth={4} className="w-6 h-6 sm:w-8 sm:h-8" />
-            <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
-                <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">GO TO</span>
-                <span className="uppercase tracking-tighter leading-none mt-0.5">NEXT</span>
-            </div>
+            {activeProfile?.type !== 'KIDS' && (
+              <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
+                  <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">GO TO</span>
+                  <span className="uppercase tracking-tighter leading-none mt-0.5">NEXT</span>
+              </div>
+            )}
           </div>
           {autoNextTimer !== null && (
             <div className="bg-black/10 px-2 py-1 rounded-full flex items-center gap-1 sm:gap-2 ml-2">
@@ -423,10 +411,12 @@ export default function App() {
         >
           <div className="flex items-center justify-center gap-2 sm:gap-3">
           <Shuffle strokeWidth={4} className="w-6 h-6 sm:w-8 sm:h-8" />
-          <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
-              <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">MIX</span>
-              <span className="uppercase tracking-tighter leading-none mt-0.5">SHUFFLE</span>
-          </div>
+          {activeProfile?.type !== 'KIDS' && (
+            <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
+                <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">MIX</span>
+                <span className="uppercase tracking-tighter leading-none mt-0.5">SHUFFLE</span>
+            </div>
+          )}
         </div>
         </button>
       </div>

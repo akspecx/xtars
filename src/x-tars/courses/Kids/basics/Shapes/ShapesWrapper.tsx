@@ -1,14 +1,34 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import { useProfile } from "../../../../../context/ProfileContext";
+
 const ShapesIntroduction = React.lazy(() => import("./ShapesIntroduction"));
 const ShapesLandingPage = React.lazy(() => import("./ShapesLandingPage"));
 const BearShapeIntro = React.lazy(() => import("./BearShapeIntro"));
 const BusShapes = React.lazy(() => import("./BusShapes"));
 const TreeHomeShapeIntro = React.lazy(() => import("./TreeHomeShapeIntro"));
-// import NumberCounting from "./NumberCounting";
-// import NumbersGamesLandingPage from "./NumbersGamesLandingPage";
 
-// Wrapper for Numbers Games Page (standalone route)
+// Shared Wrapper to handle conditional navigation visibility
+const GameWrapper: React.FC<{ children: React.ReactNode; menuPath: string }> = ({ children, menuPath }) => {
+  const navigate = useNavigate();
+  const { activeProfile } = useProfile();
+  
+  return (
+    <div className="min-h-screen">
+      {activeProfile?.type !== 'KIDS' && (
+        <button
+          onClick={() => navigate(menuPath)}
+          className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
+        >
+          ← Back to Shapes Menu
+        </button>
+      )}
+      {children}
+    </div>
+  );
+};
+
+// Wrapper for Shapes Landing Page
 export const ShapesGamesPageWrapper: React.FC = () => {
     const navigate = useNavigate();
     
@@ -31,91 +51,33 @@ export const ShapesGamesPageWrapper: React.FC = () => {
       <ShapesLandingPage 
         onBack={handleBack}
         theme={theme}
-        title="Numbers"
-        icon="🔢"
+        title="Shapes"
+        icon="🔺"
       />
     );
   };
   
   // Wrapper for Shapes Introduction
-  export const ShapesIntroductionWrapper: React.FC = () => {
-    const navigate = useNavigate();
-    
-    const handleBack = () => {
-      navigate("/games/numbers");
-    };
-  
-    return (
-      <div className="min-h-screen">
-        <button
-          onClick={handleBack}
-          className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-        >
-          ← Back to Numbers Menu
-        </button>
-        <ShapesIntroduction />
-      </div>
-    );
-  };
+  export const ShapesIntroductionWrapper: React.FC = () => (
+    <GameWrapper menuPath="/games/shapes">
+      <ShapesIntroduction />
+    </GameWrapper>
+  );
 
-  export const ShapesBearWrapper: React.FC = () => {
-    const navigate = useNavigate();
-    
-    const handleBack = () => {
-      navigate("/games/numbers");
-    };
-  
-    return (
-      <div className="min-h-screen">
-        <button
-          onClick={handleBack}
-          className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-        >
-          ← Back to Numbers Menu
-        </button>
-        <BearShapeIntro />
-      </div>
-    );
-  };
+  export const ShapesBearWrapper: React.FC = () => (
+    <GameWrapper menuPath="/games/shapes">
+      <BearShapeIntro />
+    </GameWrapper>
+  );
 
-  export const ShapesBusWrapper: React.FC = () => {
-    const navigate = useNavigate();
-    
-    const handleBack = () => {
-      navigate("/games/shapes");
-    };
-  
-    return (
-      <div className="min-h-screen">
-        <button
-          onClick={handleBack}
-          className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-        >
-          ← Back to Numbers Menu
-        </button>
-        <BusShapes />
-      </div>
-    );
-  };
+  export const ShapesBusWrapper: React.FC = () => (
+    <GameWrapper menuPath="/games/shapes">
+      <BusShapes />
+    </GameWrapper>
+  );
 
-  export const ShapesTreeWrapper: React.FC = () => {
-    const navigate = useNavigate();
-    
-    const handleBack = () => {
-      navigate("/games/shapes");
-    };
-  
-    return (
-      <div className="min-h-screen">
-        <button
-          onClick={handleBack}
-          className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-        >
-          ← Back to Numbers Menu
-        </button>
-        <TreeHomeShapeIntro />
-      </div>
-    );
-  };
-  
-  
+  export const ShapesTreeWrapper: React.FC = () => (
+    <GameWrapper menuPath="/games/shapes">
+      <TreeHomeShapeIntro />
+    </GameWrapper>
+  );

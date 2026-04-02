@@ -1,38 +1,43 @@
-import React from 'react';
-import { SidebarProvider, useSidebar } from "../context/SidebarContext";
-import { ModeProvider, useMode } from "../context/ModeContext";
-import { Outlet, useLocation } from "react-router"; 
+import { useSidebar } from "../context/SidebarContext";
+import { useMode } from "../context/ModeContext";
+import { Outlet, useLocation, useNavigate } from "react-router"; 
+import { useProfile } from "../context/ProfileContext";
 import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
 import ParentNav from "./ParentNav";
-import ChildNav from "./ChildNav";
 import AppSidebar from "./AppSidebar";
 import ParentalGate from "./ParentalGate";
+import KidsBackButton from "../components/common/KidsBackButton";
 
 const LayoutContent: React.FC = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
   const { isParentMode, showParentalGate, closeParentalGate, toggleMode } = useMode();
+  const { activeProfile } = useProfile();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Determine which navigation to show
   // 1. Parent Mode takes precedence if active
-  // 2. Child Mode (Kids Zone) if the path is related to games/kids
-  // 3. Standard Sidebar for everything else
+  // 2. Profile-specific navigation (restores lost 2-day work)
+  // 3. Current path logic as fallback
   
   const isKidsZonePath = location.pathname.startsWith('/games') || 
                          location.pathname.startsWith('/puzzles') ||
                          location.pathname.startsWith('/roadmap');
-
   const renderNav = () => {
     if (isParentMode) return <ParentNav />;
-    if (isKidsZonePath) return <ChildNav />;
+    
+    // Kids profile-specific logic: No sidebar for any Kids module (Restores user requirement)
+    if (activeProfile?.type === 'KIDS') return null;
+
     return <AppSidebar />;
   };
 
   const handleGateSuccess = () => {
     // Logic for successful gate completion is handled in ModeContext
     closeParentalGate();
-    toggleMode(); // Ensure Parent Mode is activated
+    toggleMode(location.pathname); // Save current path before switching (Restores user requirement)
+    navigate('/parent'); // Redirect to Parent Dashboard immediately
   };
 
   return (
@@ -46,7 +51,7 @@ const LayoutContent: React.FC = () => {
       {/* Main Content Area */}
       <div
         className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
-          isParentMode ? "lg:ml-0" : 
+          isParentMode || activeProfile?.type === 'KIDS' ? "lg:ml-0" : 
           isKidsZonePath ? (isExpanded || isHovered || isMobileOpen ? "lg:ml-[260px]" : "lg:ml-[100px]") :
           (isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]")
         }`}
@@ -55,6 +60,9 @@ const LayoutContent: React.FC = () => {
         
         <main className="flex-1 overflow-y-auto relative">
           <Outlet />
+          
+          {/* Large Back Button for Kids (Restores lost 2-day work) */}
+          <KidsBackButton />
           
           {/* Parental Gate Overlay */}
           {showParentalGate && (
@@ -70,13 +78,7 @@ const LayoutContent: React.FC = () => {
 };
 
 const AppLayout: React.FC = () => {
-  return (
-    <SidebarProvider>
-      <ModeProvider>
-        <LayoutContent />
-      </ModeProvider>
-    </SidebarProvider>
-  );
+  return <LayoutContent />;
 };
 
 export default AppLayout;

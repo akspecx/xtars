@@ -1,5 +1,7 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { useNavigate } from "react-router";
+import { GameWrapper } from "../Numbers/NumbersGameWrappers";
+
 const VisualLogicLandingPage = React.lazy(() => import("./VisualLogicLandingPage"));
 const UnderstandingofSamePictures = React.lazy(() => import("./UnderstandingofSamePictures"));
 const UnderstandingOfAbove = React.lazy(() => import("./UnderstandingOfAbove"));
@@ -19,6 +21,23 @@ const UnderstandingOfInside = React.lazy(() => import("./UnderstandingOfInside")
 const UnderstandingOfOutside = React.lazy(() => import("./UnderstandingOfOutside"));
 const UnderstandingOfInsideAndOutsideMix = React.lazy(() => import("./UnderstandingOfInsideAndOutsideMix"));
 
+const LoadingFallback: React.FC = () => (
+  <div className="flex h-screen items-center justify-center bg-gray-50">
+    <div className="text-xl font-bold animate-pulse text-gray-400">Loading Game...</div>
+  </div>
+);
+
+// Theme for Visual Logic
+const visualLogicTheme = {
+  background: 'from-gray-900 to-black',
+  surface: 'bg-gray-800 border-gray-700',
+  surfaceHover: 'hover:bg-gray-700',
+  text: 'text-white',
+  textSecondary: 'text-gray-300',
+  border: 'border-gray-700',
+  shadow: 'shadow-lg shadow-black/50'
+};
+
 // Wrapper for Visual Logic Games Page (standalone route)
 export const VisualLogicGamesPageWrapper: React.FC = () => {
     const navigate = useNavigate();
@@ -27,113 +46,50 @@ export const VisualLogicGamesPageWrapper: React.FC = () => {
       navigate("/games");
     };
   
-    // Default theme (dark theme)
-    const theme = {
-      background: 'from-gray-900 to-black',
-      surface: 'bg-gray-800 border-gray-700',
-      surfaceHover: 'hover:bg-gray-700',
-      text: 'text-white',
-      textSecondary: 'text-gray-300',
-      border: 'border-gray-700',
-      shadow: 'shadow-lg shadow-black/50'
-    };
-  
     return (
-      <VisualLogicLandingPage 
-        onBack={handleBack}
-        theme={theme}
-        title="Visual Logic"
-        icon="🧠"
-      />
+      <Suspense fallback={<LoadingFallback />}>
+        <VisualLogicLandingPage 
+          onBack={handleBack}
+          theme={visualLogicTheme}
+          title="Visual Logic"
+          icon="🧠"
+        />
+      </Suspense>
     );
   };
 
-  // Wrapper for Understanding of Same
-  export const VisualLogicSameWrapper: React.FC = () => {
-    return <UnderstandingofSamePictures />;
-  };
-  
-  // Wrapper for Understanding of Above and Below
-  export const VisualLogicAboveAndBelowWrapper: React.FC = () => {
-    return <UnderstandingOfAboveAndBelow />;
-  };
-  
-  // Wrapper for Understanding of Tall and Short
-  export const VisualLogicTallAndShortWrapper: React.FC = () => {
-    return <UnderstandingOfTallAndShort />;
-  };
-  
-  // Wrapper for Understanding of Tall
-  export const VisualLogicTallWrapper: React.FC = () => {
-    return <UnderstandingOfTall />;
-  };
-  
-  // Wrapper for Understanding of Short
-  export const VisualLogicShortWrapper: React.FC = () => {
-    return <UnderstandingOfShort />;
-  };
-  
-  // Wrapper for Understanding of Full and Empty
-  export const VisualLogicFullAndEmptyWrapper: React.FC = () => {
-    return <UnderstandingOfFullAndEmpty />;
-  };
-  
-  // Wrapper for Understanding of Full
-  export const VisualLogicFullWrapper: React.FC = () => {
-    return <UnderstandingOfFull />;
-  };
-  
-  // Wrapper for Understanding of Empty
-  export const VisualLogicEmptyWrapper: React.FC = () => {
-    return <UnderstandingOfEmpty />;
-  };
-  
-  // Wrapper for Understanding of Different
-  export const VisualLogicDifferentWrapper: React.FC = () => {
-    return <UnderstandingOfDifferent />;
-  };
-  
-  // Wrapper for Understanding of Big
-  export const VisualLogicBigWrapper: React.FC = () => {
-    return <UnderstandingOfBig />;
-  };
-  
-  // Wrapper for Understanding of Small
-  export const VisualLogicSmallWrapper: React.FC = () => {
-    return <UnderstandingofSmall />;
-  };
-  
-  // Wrapper for Understanding of Above
-  export const VisualLogicAboveWrapper: React.FC = () => {
-    return <UnderstandingOfAbove />;
-  };
-  
-  // Wrapper for Understanding of Below
-  export const VisualLogicBelowWrapper: React.FC = () => {
-    return <UnderstandingOfBelow />;
-  };
-  
-  // Wrapper for Understanding of Above and Below Mix
-  export const VisualLogicAboveAndBelowMixWrapper: React.FC = () => {
-    return <UnderstandingOfAboveAndBelow />;
-  };
-  
-  // Wrapper for Understanding of Big and Small Mix
-  export const VisualLogicBigAndSmallMixWrapper: React.FC = () => {
-    return <UnderstandingOfBigAndSmallMix />;
-  };
-  
-  // Wrapper for Understanding of Inside
-  export const VisualLogicInsideWrapper: React.FC = () => {
-    return <UnderstandingOfInside />;
-  };
-  
-  // Wrapper for Understanding of Outside
-  export const VisualLogicOutsideWrapper: React.FC = () => {
-    return <UnderstandingOfOutside />;
-  };
-  
-  // Wrapper for Understanding of Inside and Outside Mix
-  export const VisualLogicInsideAndOutsideMixWrapper: React.FC = () => {
-    return <UnderstandingOfInsideAndOutsideMix />;
-  };
+// Reusable Component Wrapper for Visual Logic sub-games
+const VisualLogicGame: React.FC<{ Component: React.LazyExoticComponent<React.FC<any>> }> = ({ Component }) => {
+  const navigate = useNavigate();
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <GameWrapper 
+        onBack={() => navigate("/games/visuallogic")}
+        theme={visualLogicTheme}
+        title="Visual Logic Hub"
+        icon="🧠"
+      >
+        <Component />
+      </GameWrapper>
+    </Suspense>
+  );
+};
+
+export const VisualLogicSameWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingofSamePictures} />;
+export const VisualLogicAboveAndBelowWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfAboveAndBelow} />;
+export const VisualLogicTallAndShortWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfTallAndShort} />;
+export const VisualLogicTallWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfTall} />;
+export const VisualLogicShortWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfShort} />;
+export const VisualLogicFullAndEmptyWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfFullAndEmpty} />;
+export const VisualLogicFullWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfFull} />;
+export const VisualLogicEmptyWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfEmpty} />;
+export const VisualLogicDifferentWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfDifferent} />;
+export const VisualLogicBigWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfBig} />;
+export const VisualLogicSmallWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingofSmall} />;
+export const VisualLogicAboveWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfAbove} />;
+export const VisualLogicBelowWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfBelow} />;
+export const VisualLogicAboveAndBelowMixWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfAboveAndBelow} />;
+export const VisualLogicBigAndSmallMixWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfBigAndSmallMix} />;
+export const VisualLogicInsideWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfInside} />;
+export const VisualLogicOutsideWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfOutside} />;
+export const VisualLogicInsideAndOutsideMixWrapper: React.FC = () => <VisualLogicGame Component={UnderstandingOfInsideAndOutsideMix} />;

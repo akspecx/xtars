@@ -1,5 +1,49 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import { useProfile } from "../../../../../context/ProfileContext";
+
+export interface GameWrapperProps {
+  children: React.ReactNode;
+  menuPath?: string;
+  onBack?: () => void;
+  theme?: any;
+  title?: string;
+  icon?: string;
+}
+
+// Shared Wrapper to handle conditional navigation visibility
+export const GameWrapper: React.FC<GameWrapperProps> = ({ 
+  children, 
+  menuPath, 
+  onBack,
+  theme,
+  title,
+  icon
+}) => {
+  const navigate = useNavigate();
+  const { activeProfile } = useProfile();
+  
+  const handleBack = onBack || (() => menuPath && navigate(menuPath));
+
+  return (
+    <div className="min-h-screen">
+      {activeProfile?.type !== 'KIDS' && handleBack && (
+        <button
+          onClick={handleBack}
+          className={`absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full border shadow-md transition-all duration-300 ${
+            theme?.surface || 'bg-white dark:bg-gray-800'
+          } ${theme?.text || 'text-gray-900 dark:text-white'} ${
+            theme?.border || 'border-gray-200 dark:border-gray-700'
+          } ${theme?.surfaceHover || 'hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+        >
+          {icon || '←'} {title ? `Back to ${title}` : 'Back to Menu'}
+        </button>
+      )}
+      {children}
+    </div>
+  );
+};
+
 const TrainMovingArrangingNumbers = React.lazy(() => import("./age4-5/TrainMovingArrangingNumbers"));
 const FillInTheBlanksTrainModule = React.lazy(() => import("./age4-5/FillInTheBlanksTrainModule"));
 const DescendingOrder = React.lazy(() => import("./age5-6/DescendingOrder"));
@@ -68,510 +112,203 @@ export const NumbersGamesPageWrapper: React.FC = () => {
 };
 
 // Wrapper for Sequence Game
-export const NumberSequenceGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  
-  const handleBack = () => {
-    navigate("/games/numbers");
-  };
+export const NumberSequenceGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <TrainMovingArrangingNumbers />
+  </GameWrapper>
+);
 
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <TrainMovingArrangingNumbers />
-    </div>
-  );
-};
+export const NumberIntroductionWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <NumbersIntroduction />
+  </GameWrapper>
+);
 
-export const NumberIntroductionWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  
-  const handleBack = () => {
-    navigate("/games/numbers");
-  };
-
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <NumbersIntroduction />
-    </div>
-  );
-};
-
-
-export const NumberFocusWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  
-  const handleBack = () => {
-    navigate("/games/numbers");
-  };
-
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <NumberFocus />
-    </div>
-  );
-};
+export const NumberFocusWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <NumberFocus />
+  </GameWrapper>
+);
 
 // Wrapper for Fill in the Blanks Game
-export const FillInTheBlanksGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  
-  const handleBack = () => {
-    navigate("/games/numbers");
-  };
-
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <FillInTheBlanksTrainModule />
-    </div>
-  );
-};
+export const FillInTheBlanksGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <FillInTheBlanksTrainModule />
+  </GameWrapper>
+);
 
 // Wrapper for Descending Order Game
-export const DescendingOrderGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  
-  const handleBack = () => {
-    navigate("/games/numbers");
-  };
-
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <DescendingOrder />
-    </div>
-  );
-};
+export const DescendingOrderGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <DescendingOrder />
+  </GameWrapper>
+);
 
 // Wrapper for Number Identification Game
-export const NumberIdentificationGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  
-  const handleBack = () => {
-    navigate("/games/numbers");
-  };
-
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <NumberIdentification />
-    </div>
-  );
-};
+export const NumberIdentificationGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <NumberIdentification />
+  </GameWrapper>
+);
 
 // Wrapper for Number Tracing Game
-export const NumberTracingGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  
-  const handleBack = () => {
-    navigate("/games/numbers");
-  };
-
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <NumberTracing />
-    </div>
-  );
-};
+export const NumberTracingGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <NumberTracing />
+  </GameWrapper>
+);
 
 // Wrapper for Number Counting Page
-export const NumberCountingGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  
-  const handleBack = () => {
-    navigate("/games/numbers");
-  };
-
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <NumberCounting />
-    </div>
-  );
-};
+export const NumberCountingGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <NumberCounting />
+  </GameWrapper>
+);
 
 // --- Age 3–4 wrappers ---
+export const DotDashRocketsGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <DotDashRockets />
+  </GameWrapper>
+);
 
-export const DotDashRocketsGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <DotDashRockets />
-    </div>
-  );
-};
+export const LadybugSpotsMatchGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <LadybugSpotsMatch />
+  </GameWrapper>
+);
 
-export const LadybugSpotsMatchGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <LadybugSpotsMatch />
-    </div>
-  );
-};
+export const MoreOrLessMarketGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <MoreUnderstanding />
+  </GameWrapper>
+);
 
-export const MoreOrLessMarketGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <MoreUnderstanding />
-    </div>
-  );
-};
+export const LessGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <LessUnderstanding />
+  </GameWrapper>
+);
 
-export const LessGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <LessUnderstanding />
-    </div>
-  );
-};
+export const CleanUpCountGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <CleanUpCount />
+  </GameWrapper>
+);
 
-export const CleanUpCountGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <CleanUpCount />
-    </div>
-  );
-};
-
-export const UnderstandingEqualGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <UnderstandingEqual />
-    </div>
-  );
-};
+export const UnderstandingEqualGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <UnderstandingEqual />
+  </GameWrapper>
+);
 
 // --- Age 4–5 wrappers ---
+export const NumberBridgeGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <NumberBridgeBuilder />
+  </GameWrapper>
+);
 
-export const NumberBridgeGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <NumberBridgeBuilder />
-    </div>
-  );
-};
+export const PatternTrainCarsGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <PatternTrainCars />
+  </GameWrapper>
+);
 
-export const PatternTrainCarsGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <PatternTrainCars />
-    </div>
-  );
-};
-
-export const SnackSharingPartyGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <SnackSharingParty />
-    </div>
-  );
-};
+export const SnackSharingPartyGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <SnackSharingParty />
+  </GameWrapper>
+);
 
 // --- Age 5–6 wrappers ---
+export const TenFrameGardenGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <TenFrameGarden />
+  </GameWrapper>
+);
 
-export const TenFrameGardenGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <TenFrameGarden />
-    </div>
-  );
-};
+export const AddTheAnimalsGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <AddTheAnimals />
+  </GameWrapper>
+);
 
-export const AddTheAnimalsGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <AddTheAnimals />
-    </div>
-  );
-};
+export const NumberBondsBubblesGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <NumberBondsBubbles />
+  </GameWrapper>
+);
 
-export const NumberBondsBubblesGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <NumberBondsBubbles />
-    </div>
-  );
-};
+export const JumpingFrogsGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <JumpingFrogs />
+  </GameWrapper>
+);
 
-export const JumpingFrogsGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <JumpingFrogs />
-    </div>
-  );
-};
-
-export const FillTheBucketGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button
-        onClick={handleBack}
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md"
-      >
-        ← Back to Numbers Menu
-      </button>
-      <FillTheBucket />
-    </div>
-  );
-};
+export const FillTheBucketGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <FillTheBucket />
+  </GameWrapper>
+);
 
 // NEW MODULE WRAPPERS
-export const ZeroTheHeroGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Numbers Menu</button>
-      <ZeroTheHero />
-    </div>
-  );
-};
+export const ZeroTheHeroGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <ZeroTheHero />
+  </GameWrapper>
+);
 
-export const PizzaPartySharingGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Numbers Menu</button>
-      <PizzaPartySharing />
-    </div>
-  );
-};
+export const PizzaPartySharingGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <PizzaPartySharing />
+  </GameWrapper>
+);
 
-export const CoinCollectorGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Numbers Menu</button>
-      <CoinCollector />
-    </div>
-  );
-};
+export const CoinCollectorGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <CoinCollector />
+  </GameWrapper>
+);
 
-export const OrdinalRaceTrackGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Numbers Menu</button>
-      <OrdinalRaceTrack />
-    </div>
-  );
-};
+export const OrdinalRaceTrackGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <OrdinalRaceTrack />
+  </GameWrapper>
+);
 
-export const ShapeNumberPuzzlesGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Numbers Menu</button>
-      <ShapeNumberPuzzles />
-    </div>
-  );
-};
+export const ShapeNumberPuzzlesGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <ShapeNumberPuzzles />
+  </GameWrapper>
+);
 
-export const ClockTowerTimeGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Numbers Menu</button>
-      <ClockTowerTime />
-    </div>
-  );
-};
+export const ClockTowerTimeGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <ClockTowerTime />
+  </GameWrapper>
+);
 
-export const NumberDetectiveGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Numbers Menu</button>
-      <NumberDetective />
-    </div>
-  );
-};
+export const NumberDetectiveGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <NumberDetective />
+  </GameWrapper>
+);
 
-export const SubtractTheSnacksGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Numbers Menu</button>
-      <SubtractTheSnacks />
-    </div>
-  );
-};
+export const SubtractTheSnacksGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <SubtractTheSnacks />
+  </GameWrapper>
+);
 
-export const MeasureTheMonstersGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Numbers Menu</button>
-      <MeasureTheMonsters />
-    </div>
-  );
-};
+export const MeasureTheMonstersGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <MeasureTheMonsters />
+  </GameWrapper>
+);
 
-export const NumberLineJumperGameWrapper: React.FC = () => {
-  const navigate = useNavigate();
-  const handleBack = () => navigate("/games/numbers");
-  return (
-    <div className="min-h-screen">
-      <button onClick={handleBack} className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-md">← Back to Numbers Menu</button>
-      <NumberLineJumper />
-    </div>
-  );
-};
-
+export const NumberLineJumperGameWrapper: React.FC = () => (
+  <GameWrapper menuPath="/games/numbers">
+    <NumberLineJumper />
+  </GameWrapper>
+);

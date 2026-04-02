@@ -1,4 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { useProfile } from "../../../../../context/ProfileContext";
+import { Volume2, Search, Sparkles, CheckCircle2 } from "lucide-react";
 
 interface SceneConfig {
   id: string;
@@ -7,7 +9,7 @@ interface SceneConfig {
   targetLetter: string;
   color: string;
   gradient: string;
-  cells: string[]; // mixture of letters and scene emojis
+  cells: string[];
 }
 
 const scenes: SceneConfig[] = [
@@ -32,6 +34,7 @@ const scenes: SceneConfig[] = [
 ];
 
 const AlphabetFindTapScene: React.FC = () => {
+  const { activeProfile } = useProfile();
   const [activeSceneId, setActiveSceneId] = useState<string>(scenes[0].id);
   const [foundIndices, setFoundIndices] = useState<Set<number>>(new Set());
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -42,171 +45,140 @@ const AlphabetFindTapScene: React.FC = () => {
   );
 
   const activeScene = sceneMap.get(activeSceneId) ?? scenes[0];
+  const isKids = activeProfile?.type === 'KIDS';
 
   const speak = useCallback(
     (text: string) => {
-      if (
-        typeof window !== "undefined" &&
-        "speechSynthesis" in window &&
-        typeof SpeechSynthesisUtterance !== "undefined" &&
-        !isSpeaking
-      ) {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
         window.speechSynthesis.cancel();
         setIsSpeaking(true);
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 0.95;
         utterance.pitch = 1.1;
-        utterance.volume = 0.9;
+        utterance.volume = 1;
         utterance.onend = () => setIsSpeaking(false);
+        utterance.onerror = () => setIsSpeaking(false);
         window.speechSynthesis.speak(utterance);
       }
     },
-    [isSpeaking]
+    []
   );
 
   const resetScene = (id: string) => {
     setActiveSceneId(id);
     setFoundIndices(new Set());
+    speak(`New scene! Can you find all the letter ${sceneMap.get(id)?.targetLetter}?`);
   };
 
   const handlePlayInstructions = () => {
-    speak(
-      `Look carefully in the picture. Tap every ${activeScene.targetLetter} you can find.`
-    );
+    speak(`Look carefully in the picture. Tap every ${activeScene.targetLetter} you can find.`);
   };
 
   const handleCellClick = (value: string, index: number) => {
     if (value !== activeScene.targetLetter) {
-      speak(
-        `That is ${value}. We are searching for the letter ${activeScene.targetLetter}.`
-      );
-      return;
+        speak(`That is ${value}. We are looking for ${activeScene.targetLetter}!`);
+        return;
     }
+    
+    if (foundIndices.has(index)) return;
+
     setFoundIndices((prev) => {
-      if (prev.has(index)) {
-        return prev;
-      }
       const next = new Set(prev);
       next.add(index);
-      const totalTargets = activeScene.cells.filter(
-        (v) => v === activeScene.targetLetter
-      ).length;
+      const totalTargets = activeScene.cells.filter((v) => v === activeScene.targetLetter).length;
+      
       if (next.size === totalTargets) {
-        speak(
-          `You found all the ${activeScene.targetLetter} letters! Great searching eyes.`
-        );
+        speak(`You found them all! Great job finding the letter ${activeScene.targetLetter}!`);
       } else {
-        speak(
-          `Nice! You found a ${activeScene.targetLetter}. Keep looking for more.`
-        );
+        speak(`You found one! Keep looking for more letter ${activeScene.targetLetter}.`);
       }
       return next;
     });
   };
 
-  const totalTargets = activeScene.cells.filter(
-    (v) => v === activeScene.targetLetter
-  ).length;
-  const progress =
-    (foundIndices.size / Math.max(totalTargets, 1)) * 100;
+  const totalTargets = activeScene.cells.filter((v) => v === activeScene.targetLetter).length;
+  const progress = (foundIndices.size / Math.max(totalTargets, 1)) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-sky-50 to-lime-50 p-4 sm:p-8">
-      <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
-        <div className="text-center">
-          <h1 className="text-3xl sm:text-5xl font-extrabold bg-gradient-to-r from-emerald-600 via-sky-600 to-lime-600 bg-clip-text text-transparent drop-shadow-md mb-3">
-            Find & Tap the Letters
-          </h1>
-          <p className="text-base sm:text-lg text-gray-700 max-w-2xl mx-auto">
-            Look carefully around the scene. Some tiles are pictures; some are letters. Tap all the tiles that match the target letter.
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-sky-50 to-lime-50 p-4 md:p-8 flex flex-col items-center">
+      <header className="text-center mb-8 flex flex-col items-center w-full">
+        <h1 className="text-4xl md:text-7xl font-black bg-gradient-to-r from-emerald-600 via-sky-600 to-lime-600 bg-clip-text text-transparent drop-shadow-xl mb-4 uppercase tracking-tighter">
+          {isKids ? "FIND THE LETTERS!" : "Find & Tap the Letters"}
+        </h1>
+        {!isKids && (
+          <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto font-medium">
+            Look carefully around the scene. Tap all the tiles that match the target letter.
           </p>
-        </div>
+        )}
+      </header>
 
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+      <div className="w-full max-w-6xl flex flex-col gap-6 md:gap-10">
+        <div className="flex flex-wrap justify-center gap-4">
           {scenes.map((scene) => {
             const isActive = scene.id === activeSceneId;
             return (
               <button
                 key={scene.id}
                 onClick={() => resetScene(scene.id)}
-                className={`
-                  px-4 py-2 rounded-full text-sm sm:text-base font-semibold shadow-md transition-all
-                  border-2
-                  ${
-                    isActive
-                      ? "bg-gradient-to-r from-emerald-400 to-sky-400 text-white border-transparent scale-105"
-                      : "bg-white text-gray-800 border-emerald-200 hover:border-emerald-400 hover:scale-105"
-                  }
-                `}
+                className={`px-8 py-4 rounded-full text-xl font-black shadow-xl transition-all border-4 flex items-center gap-3 ${isActive ? "bg-gradient-to-r from-emerald-400 to-sky-400 text-white border-white scale-110" : "bg-white text-gray-800 border-emerald-100 hover:border-emerald-300 hover:scale-105"}`}
               >
-                {scene.title}
+                <Search size={24} />
+                {!isKids && scene.title}
               </button>
             );
           })}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
           <div className="lg:col-span-1">
-            <div className="h-full rounded-3xl bg-white/95 shadow-xl border border-emerald-100 p-6 sm:p-7 flex flex-col justify-between gap-4">
-              <div className="space-y-4">
-                <h2
-                  className={`text-xl sm:text-2xl font-extrabold ${activeScene.color}`}
-                >
+            <div className="h-full rounded-[3rem] bg-white/95 backdrop-blur-xl shadow-2xl border-4 border-white p-8 flex flex-col justify-between gap-8">
+              <div className="space-y-6 flex flex-col items-center text-center">
+                <h2 className={`text-3xl md:text-5xl font-black ${activeCard ? activeScene.color : 'text-emerald-600'} uppercase tracking-tighter`}>
                   {activeScene.title}
                 </h2>
-                <p className="text-sm sm:text-base text-gray-700">
-                  {activeScene.description}
-                </p>
+                {!isKids && <p className="text-xl text-gray-700 font-medium">{activeScene.description}</p>}
 
-                <div className="inline-flex items-center gap-2 rounded-2xl px-4 py-2 bg-gradient-to-br from-emerald-400 to-sky-400 text-white shadow-md">
-                  <span className="text-xs font-semibold uppercase">
-                    Target Letter
-                  </span>
-                  <span className="text-2xl font-extrabold">
-                    {activeScene.targetLetter}
-                  </span>
-                </div>
-
-                <div className="max-w-xs">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs font-semibold text-gray-600">
-                      Letters found
-                    </span>
-                    <span className="text-xs font-bold text-emerald-600">
-                      {foundIndices.size} / {totalTargets}
-                    </span>
+                <div className="flex flex-col items-center gap-4 w-full">
+                  <div className="flex items-center gap-4 rounded-3xl p-6 bg-gradient-to-br from-emerald-400 to-sky-400 text-white shadow-2xl border-4 border-white/30 w-full justify-center">
+                    {!isKids && <span className="text-sm font-black uppercase tracking-widest">Find</span>}
+                    <span className="text-6xl font-black drop-shadow-lg">{activeScene.targetLetter}</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-emerald-400 to-sky-500 rounded-full transition-all duration-500"
-                      style={{ width: `${progress}%` }}
-                    />
+
+                  <div className="w-full space-y-4">
+                    <div className="flex justify-between items-center px-4">
+                      <span className="text-2xl font-black text-emerald-600 uppercase tracking-tighter">
+                          ⭐ {foundIndices.size} / {totalTargets}
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-6 border-4 border-white shadow-inner overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-emerald-400 to-sky-500 transition-all duration-700 rounded-full" style={{ width: `${progress}%` }} />
+                    </div>
                   </div>
                 </div>
               </div>
 
               <button
                 onClick={handlePlayInstructions}
-                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-500 text-white font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] transition-all text-sm sm:text-base disabled:opacity-60"
+                className="w-full flex items-center justify-center gap-4 py-6 rounded-full bg-gradient-to-r from-emerald-500 to-sky-500 text-white font-black text-xl shadow-2xl hover:scale-105 active:scale-95 transition-all border-4 border-white/30"
                 disabled={isSpeaking}
               >
-                🔊 Hear Instructions
+                <Volume2 size={32} />
+                {!isKids && <span>Instructions</span>}
               </button>
             </div>
           </div>
 
           <div className="lg:col-span-2">
-            <div className="rounded-3xl bg-white/95 shadow-xl border border-sky-100 p-5 sm:p-6">
-              <h3 className="text-lg sm:text-xl font-bold text-sky-700 mb-2">
-                Tap all the {activeScene.targetLetter} letters
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Some tiles are pictures like trees and books; some tiles are the letter{" "}
-                <span className="font-semibold">{activeScene.targetLetter}</span>. Tap every
-                <span className="font-semibold"> {activeScene.targetLetter}</span> you see.
-              </p>
+            <div className="rounded-[3rem] bg-white/95 backdrop-blur-xl shadow-2xl border-4 border-sky-100 p-8">
+              {!isKids && (
+                <div className="mb-8">
+                    <h3 className="text-2xl font-black text-sky-700 uppercase tracking-widest flex items-center gap-3">
+                        <Sparkles size={28} /> Tap all the {activeScene.targetLetter} letters
+                    </h3>
+                </div>
+              )}
 
-              <div className="grid grid-cols-4 sm:grid-cols-6 gap-3 sm:gap-4 justify-items-center">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-6 justify-items-center">
                 {activeScene.cells.map((value, index) => {
                   const isFound = foundIndices.has(index);
                   const isLetter = value === activeScene.targetLetter;
@@ -216,18 +188,12 @@ const AlphabetFindTapScene: React.FC = () => {
                       key={`${activeScene.id}-cell-${index}`}
                       onClick={() => handleCellClick(value, index)}
                       className={`
-                        w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-extrabold
-                        transition-all shadow-sm
-                        ${
-                          isFound
-                            ? "bg-gradient-to-br from-emerald-400 to-sky-400 text-white shadow-md scale-105"
-                            : isLetter
-                            ? "bg-gradient-to-br from-white to-emerald-50 border border-emerald-300 text-emerald-700 hover:border-emerald-500 hover:shadow-md hover:scale-[1.03]"
-                            : "bg-white border border-gray-200 text-gray-700 hover:border-sky-300 hover:shadow-md hover:scale-[1.03]"
-                        }
+                        w-20 h-20 md:w-32 md:h-32 rounded-[2rem] md:rounded-[2.5rem] flex items-center justify-center text-5xl md:text-7xl font-black
+                        transition-all shadow-xl border-4
+                        ${isFound ? "bg-gradient-to-br from-green-400 to-emerald-500 text-white border-white scale-110 shadow-2xl" : isLetter ? "bg-white border-emerald-100 text-emerald-700 hover:scale-110 hover:border-emerald-400" : "bg-white border-sky-50 text-gray-700 hover:scale-110 hover:border-sky-300"}
                       `}
                     >
-                      {value}
+                      {isFound ? <CheckCircle2 size={48} strokeWidth={4} /> : value}
                     </button>
                   );
                 })}
@@ -241,5 +207,3 @@ const AlphabetFindTapScene: React.FC = () => {
 };
 
 export default AlphabetFindTapScene;
-
-

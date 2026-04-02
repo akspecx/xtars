@@ -7,11 +7,13 @@ import SettingsDropdown from "../components/header/SettingsDropdown";
 import { useMode } from "../context/ModeContext";
 import { useLocation } from "react-router";
 import { Lock } from "lucide-react";
+import { useProfile } from "../context/ProfileContext";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
   const { isParentMode, openParentalGate } = useMode();
+  const { activeProfile } = useProfile();
   const location = useLocation();
   const isKidsZonePath = location.pathname.startsWith('/games') || 
                          location.pathname.startsWith('/puzzles') ||
@@ -43,6 +45,9 @@ const AppHeader: React.FC = () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  // Hide header for Kids Profile (Restores lost 2-day work)
+  if (activeProfile?.type === 'KIDS') return null;
 
   return (
     <header className="sticky top-0 flex w-full bg-white border-gray-200 z-99999 dark:border-gray-800 dark:bg-[#3e2723] lg:border-b">
@@ -178,7 +183,7 @@ const AppHeader: React.FC = () => {
               </>
             )}
             
-            {!isParentMode && (
+            {!isParentMode && activeProfile?.type !== 'ASPIRANTS' && (
               <li>
                 <button
                   onClick={openParentalGate}

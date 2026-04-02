@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router";
+import { HashRouter as Router, Routes, Route } from "react-router";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
 import NotFound from "./pages/OtherPage/NotFound";
@@ -8,11 +8,13 @@ import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import { SettingsProvider } from "./contexts/SettingsContext";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext.tsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import { ProfileProtectedRoute } from "./components/auth/ProfileProtectedRoute";
 import FeedBackComponent from "./pages/Feedback";
 
 // Lazy-loaded major sections
+const ProfileSelection = lazy(() => import("./pages/AuthPages/ProfileSelection"));
 const ParentDashboard = lazy(() => import("./pages/ParentDashboard"));
 const Progress = lazy(() => import("./pages/parent/Progress"));
 const PlatformIntro = lazy(() => import("./pages/parent/PlatformIntro"));
@@ -320,8 +322,12 @@ export default function App() {
           }>
             <ScrollToTop />
             <Routes>
-            {/* Dashboard Layout - Protected Routes */}
-            <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+              {/* Profile Selection - Initial Entry Point */}
+              <Route path="/profiles" element={<ProtectedRoute><ProfileSelection /></ProtectedRoute>} />
+              <Route path="/select-profile" element={<ProtectedRoute><ProfileSelection /></ProtectedRoute>} />
+
+              {/* Dashboard Layout - Protected Routes */}
+              <Route element={<ProtectedRoute><ProfileProtectedRoute><AppLayout /></ProfileProtectedRoute></ProtectedRoute>}>
               {/* Dashboard */}
               <Route index element={<Home />} />
               <Route path="/dashboard" element={<Home />} />

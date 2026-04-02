@@ -8,18 +8,15 @@ import {
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  ListIcon,
-  PageIcon,
-  PieChartIcon,
   PlugInIcon,
-  TableIcon,
   UserCircleIcon,
 } from "../icons";
 import { AcademicCapIcon } from "@heroicons/react/24/outline";
 import { useSidebar } from "../context/SidebarContext";
+import { useProfile } from "../context/ProfileContext";
 import SidebarWidget from "./SidebarWidget";
 import { BookOpenIcon, ChatBubbleBottomCenterIcon } from "@heroicons/react/24/solid";
-import { Gamepad2Icon,Puzzle,Brain } from "lucide-react";
+import { Gamepad2Icon, Puzzle, Brain, Users } from "lucide-react";
 
 type NavItem = {
   name: string;
@@ -61,6 +58,11 @@ const accountItems: NavItem[] = [
     icon: <UserCircleIcon />,
     name: "User Profile",
     path: "/profile",
+  },
+  {
+    icon: <Users size={20} />,
+    name: "Switch Profile",
+    path: "/profiles",
   },
   {
     icon: <PlugInIcon />,
@@ -105,10 +107,11 @@ const othersItems: NavItem[] = [
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
+  const { activeProfile } = useProfile();
   const location = useLocation();
 
   const [openSubmenu, setOpenSubmenu] = useState<{
-    type: "main" | "others";
+    type: "content" | "account" | "others";
     index: number;
   } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
@@ -350,7 +353,13 @@ const AppSidebar: React.FC = () => {
                   <HorizontaLDots className="size-6" />
                 )}
               </h2>
-              {renderMenuItems(contentItems, "content")}
+              {renderMenuItems(
+                contentItems.filter(item => {
+                  if (item.name === "Kids Zone" && activeProfile?.type !== "KIDS") return false;
+                  return true;
+                }), 
+                "content"
+              )}
             </div>
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
               <h2
