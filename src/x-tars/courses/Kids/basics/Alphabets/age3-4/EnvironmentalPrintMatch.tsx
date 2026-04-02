@@ -125,13 +125,12 @@ const EnvironmentalPrintMatch: React.FC = () => {
               key={letter}
               onClick={() => handleLetterSelect(letter)}
               disabled={showFeedback}
-              className={`aspect-square rounded-xl transition-all transform ${
-                selectedLetter === letter
+              className={`aspect-square rounded-xl transition-all transform ${selectedLetter === letter
                   ? isCorrect
                     ? 'bg-green-500 text-white scale-110'
                     : 'bg-red-500 text-white scale-110'
                   : 'bg-gradient-to-br from-white to-gray-100 text-gray-800 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg'
-              } disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-extrabold text-lg sm:text-xl`}
+                } disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-extrabold text-lg sm:text-xl`}
             >
               {letter}
             </button>
@@ -139,9 +138,8 @@ const EnvironmentalPrintMatch: React.FC = () => {
         </div>
 
         {showFeedback && (
-          <div className={`text-center p-6 rounded-2xl ${
-            isCorrect ? 'bg-gradient-to-r from-green-400 to-emerald-500 animate-pulse' : 'bg-gradient-to-r from-red-400 to-pink-500'
-          }`}>
+          <div className={`text-center p-6 rounded-2xl ${isCorrect ? 'bg-gradient-to-r from-green-400 to-emerald-500 animate-pulse' : 'bg-gradient-to-r from-red-400 to-pink-500'
+            }`}>
             <div className="text-6xl mb-2">{isCorrect ? '🎉' : '🤔'}</div>
             <div className="text-2xl font-extrabold text-white">
               {isCorrect ? `Correct! ${currentBrand.name} starts with ${currentBrand.firstLetter}!` : 'Try again!'}
@@ -153,9 +151,8 @@ const EnvironmentalPrintMatch: React.FC = () => {
           {brands.map((_, index) => (
             <div
               key={index}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentBrandIndex ? 'bg-cyan-600 w-6' : index < currentBrandIndex ? 'bg-green-500' : 'bg-gray-300'
-              }`}
+              className={`w-2 h-2 rounded-full transition-all ${index === currentBrandIndex ? 'bg-cyan-600 w-6' : index < currentBrandIndex ? 'bg-green-500' : 'bg-gray-300'
+                }`}
             />
           ))}
         </div>

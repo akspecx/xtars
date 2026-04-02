@@ -1,6 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import { useProfile } from "../../../../../context/ProfileContext";
-import { Volume2, Music, Sparkles, Shuffle, ListOrdered } from 'lucide-react';
 
 interface LetterAction {
   letter: string;
@@ -40,139 +38,134 @@ const letterActions: LetterAction[] = [
 ];
 
 const AlphabetDanceParty: React.FC = () => {
-  const { activeProfile } = useProfile();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPerforming, setIsPerforming] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [score, setScore] = useState(0);
-  const [mode, setMode] = useState<'sequential' | 'random'>('random');
+  const [mode, setMode] = useState<'sequential' | 'random'>('sequential');
 
   const currentLetter = letterActions[currentIndex];
-  const isKids = activeProfile?.type === 'KIDS';
 
   const speak = useCallback((text: string) => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    if (
+      typeof window !== 'undefined' &&
+      'speechSynthesis' in window &&
+      typeof SpeechSynthesisUtterance !== 'undefined' &&
+      !isSpeaking
+    ) {
       window.speechSynthesis.cancel();
       setIsSpeaking(true);
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.9;
+      utterance.rate = 0.85;
       utterance.pitch = 1.3;
-      utterance.volume = 1;
+      utterance.volume = 0.9;
       utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
       window.speechSynthesis.speak(utterance);
     }
-  }, []);
+  }, [isSpeaking]);
 
-  const handleLetterClick = (letterAction: LetterAction, index: number) => {
-    if (isPerforming) return;
-    
-    setCurrentIndex(index);
+  const handleLetterClick = (letterAction: LetterAction) => {
     setIsPerforming(true);
     setScore(prev => prev + 1);
-    speak(`${letterAction.letter}! Time to ${letterAction.action}! ${letterAction.instruction}`);
+    speak(`Letter ${letterAction.letter}! ${letterAction.action}! ${letterAction.instruction}`);
 
     setTimeout(() => {
       setIsPerforming(false);
-    }, 4000);
+      if (mode === 'sequential') {
+        if (currentIndex < letterActions.length - 1) {
+          setCurrentIndex(prev => prev + 1);
+        } else {
+          setCurrentIndex(0);
+        }
+      } else {
+        const randomIndex = Math.floor(Math.random() * letterActions.length);
+        setCurrentIndex(randomIndex);
+      }
+    }, 3000);
   };
 
   const handlePlayInstructions = () => {
-    speak(`Welcome to the Alphabet Dance Party! Tap any letter to see its special dance move! Let's get moving!`);
+    speak(`Welcome to the Alphabet Dance Party! Tap each letter to see its special dance move! Letter ${currentLetter.letter} says ${currentLetter.action}!`);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 p-4 md:p-8 flex flex-col items-center">
-      <header className="text-center mb-8 flex flex-col items-center w-full">
-        <h1 className="text-4xl md:text-7xl font-black bg-gradient-to-r from-pink-600 via-purple-600 to-blue-500 bg-clip-text text-transparent drop-shadow-xl mb-4 uppercase tracking-tighter">
-          {isKids ? "DANCE PARTY!" : "💃 Alphabet Dance Party"}
-        </h1>
-        {!isKids && (
-          <p className="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto font-medium">
-            Learn letters through fun actions! Tap a letter to see its move.
-          </p>
-        )}
-      </header>
-
-      <div className="w-full max-w-6xl flex flex-col gap-8 md:gap-12">
-        <div className="flex flex-wrap justify-center gap-4">
-          <button
-             onClick={handlePlayInstructions}
-             className="bg-blue-500 hover:bg-blue-600 text-white p-6 rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 border-4 border-white/30"
-          >
-            <Volume2 size={32} />
-          </button>
-          
-          {!isKids && (
-              <button
-                onClick={() => setMode(m => m === 'sequential' ? 'random' : 'sequential')}
-                className="bg-purple-500 hover:bg-purple-600 text-white px-8 py-4 rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 border-4 border-white/30 flex items-center gap-3 font-black text-xl"
-              >
-                {mode === 'sequential' ? <ListOrdered size={28} /> : <Shuffle size={28} />}
-                {mode === 'sequential' ? 'Order' : 'Random'}
-              </button>
-          )}
-
-          <div className="px-10 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-[2rem] font-black text-2xl shadow-2xl border-4 border-white/30 flex items-center gap-3">
-            <Music size={28} /> ⭐ {score}
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 flex items-center justify-center p-4">
+      <div className="max-w-6xl w-full bg-white rounded-3xl shadow-2xl p-6 sm:p-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-pink-700 flex items-center gap-2">
+              <span>💃 Alphabet Dance Party</span>
+            </h1>
+            <p className="text-sm sm:text-base text-gray-600 mt-1">
+              Learn letters through fun actions!
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={handlePlayInstructions}
+              className="px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold shadow-md active:scale-95 transition-transform"
+            >
+              🔊 Instructions
+            </button>
+            <button
+              onClick={() => setMode(m => m === 'sequential' ? 'random' : 'sequential')}
+              className="px-4 py-2 rounded-full bg-purple-500 hover:bg-purple-600 text-white text-sm font-semibold shadow-md active:scale-95 transition-transform"
+            >
+              {mode === 'sequential' ? '🔀 Random' : '📝 Sequential'}
+            </button>
           </div>
         </div>
 
-        {/* Action Stage */}
-        <div className="w-full flex justify-center">
-            <div className={`w-full max-w-2xl rounded-[4rem] p-10 md:p-16 bg-white/40 backdrop-blur-xl border-4 border-white shadow-3xl text-center relative overflow-hidden flex flex-col items-center gap-6 min-h-[400px] justify-center ${isPerforming ? currentLetter.animation : 'animate-pulse'}`}>
-                {isPerforming ? (
-                    <>
-                        <div className="text-[12rem] md:text-[15rem] leading-none drop-shadow-2xl">{currentLetter.emoji}</div>
-                        <div className="text-8xl md:text-[10rem] font-black text-pink-700 leading-none drop-shadow-lg -mt-4">{currentLetter.letter}</div>
-                        <div className="text-3xl md:text-5xl font-black text-purple-800 uppercase tracking-tighter">{currentLetter.action}</div>
-                        {!isKids && <div className="text-xl md:text-2xl font-bold text-gray-600 italic">"{currentLetter.instruction}"</div>}
-                    </>
-                ) : (
-                    <div className="flex flex-col items-center gap-8">
-                        <Sparkles size={120} className="text-yellow-400 animate-spin-slow" />
-                        <h2 className="text-4xl font-black text-gray-400 uppercase tracking-widest">{isKids ? "TAP A LETTER!" : "Ready to dance?"}</h2>
-                    </div>
-                )}
-            </div>
+        {/* Score */}
+        <div className="text-center mb-6">
+          <div className="inline-block px-6 py-2 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-bold text-lg shadow-lg">
+            Dances Performed: {score}
+          </div>
         </div>
 
-        {/* Input Grid */}
-        <div className="w-full bg-white/60 backdrop-blur-xl p-8 rounded-[4rem] shadow-3xl border-4 border-white">
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-13 gap-3">
-            {letterActions.map((la, index) => (
-              <button
-                key={la.letter}
-                onClick={() => handleLetterClick(la, index)}
-                disabled={isPerforming}
-                className={`aspect-square rounded-[1.5rem] md:rounded-[2rem] transition-all transform flex flex-col items-center justify-center p-2 border-4 ${index === currentIndex && isPerforming ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white border-white scale-110 shadow-2xl rotate-6' : 'bg-white border-pink-50 text-gray-800 hover:scale-110 active:scale-90 hover:border-pink-300 shadow-xl'}`}
-              >
-                <div className="text-2xl md:text-4xl font-black">{la.letter}</div>
-                <div className="text-xl md:text-3xl">{la.emoji}</div>
-              </button>
+        {/* Current Letter Display */}
+        {isPerforming && (
+          <div className={`mb-6 p-8 rounded-3xl bg-gradient-to-br from-yellow-200 to-orange-300 text-center ${currentLetter.animation}`}>
+            <div className="text-9xl mb-4">{currentLetter.emoji}</div>
+            <div className="text-6xl font-extrabold text-gray-800 mb-2">{currentLetter.letter}</div>
+            <div className="text-3xl font-bold text-gray-700 mb-2">{currentLetter.action}</div>
+            <div className="text-xl font-semibold text-gray-600">{currentLetter.instruction}</div>
+          </div>
+        )}
+
+        {/* Alphabet Grid */}
+        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-13 gap-2 mb-6">
+          {letterActions.map((letterAction, index) => (
+            <button
+              key={letterAction.letter}
+              onClick={() => handleLetterClick(letterAction)}
+              disabled={isPerforming}
+              className={`aspect-square rounded-xl transition-all transform ${index === currentIndex && !isPerforming
+                  ? 'bg-gradient-to-br from-pink-400 to-purple-500 text-white scale-110 shadow-xl animate-pulse'
+                  : isPerforming && index === currentIndex
+                    ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white scale-110'
+                    : 'bg-gradient-to-br from-white to-gray-100 text-gray-800 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg'
+                } disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center text-center p-1`}
+            >
+              <div className="text-2xl sm:text-3xl font-extrabold">{letterAction.letter}</div>
+              <div className="text-lg">{letterAction.emoji}</div>
+            </button>
+          ))}
+        </div>
+
+        {/* Action Guide */}
+        <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl">
+          <h3 className="text-center font-bold text-gray-700 mb-3">Quick Reference</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-sm">
+            {letterActions.slice(0, 12).map((la) => (
+              <div key={la.letter} className="bg-white px-2 py-1 rounded-lg text-center">
+                <span className="font-bold text-pink-600">{la.letter}</span> = {la.action}
+              </div>
             ))}
           </div>
         </div>
-
-        {!isKids && (
-          <div className="w-full max-w-4xl bg-blue-50/50 p-8 rounded-[3rem] border-4 border-blue-100">
-            <h3 className="text-2xl font-black text-center text-blue-800 uppercase mb-6 tracking-widest">Guide</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {letterActions.slice(0, 12).map((la) => (
-                <div key={la.letter} className="bg-white p-4 rounded-2xl shadow-md border-2 border-blue-50 flex items-center justify-center gap-3">
-                  <span className="font-black text-pink-600 text-xl">{la.letter}</span>
-                  <span className="text-gray-500 font-bold">{la.action}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
-      
-      <style>{`
-          .animate-spin-slow { animation: spin 8s linear infinite; }
-          @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      `}</style>
     </div>
   );
 };

@@ -175,10 +175,9 @@ const AlphabetBeginningSoundPicker: React.FC = () => {
                 className={`
                   px-4 py-2 rounded-full text-lg sm:text-xl font-bold shadow-md transition-all
                   border-2
-                  ${
-                    isActive
-                      ? `bg-gradient-to-r ${card.gradient} text-white border-transparent scale-110`
-                      : "bg-white text-gray-800 border-indigo-200 hover:border-indigo-400 hover:scale-105"
+                  ${isActive
+                    ? `bg-gradient-to-r ${card.gradient} text-white border-transparent scale-110`
+                    : "bg-white text-gray-800 border-indigo-200 hover:border-indigo-400 hover:scale-105"
                   }
                 `}
               >
@@ -265,10 +264,9 @@ const AlphabetBeginningSoundPicker: React.FC = () => {
                       className={`
                         relative rounded-2xl border-2 p-3 sm:p-4 bg-white flex flex-col items-center text-center gap-2
                         shadow-sm transition-all
-                        ${
-                          isCorrectPicked
-                            ? "border-emerald-400 bg-emerald-50 scale-105 shadow-md"
-                            : isIncorrect
+                        ${isCorrectPicked
+                          ? "border-emerald-400 bg-emerald-50 scale-105 shadow-md"
+                          : isIncorrect
                             ? "border-red-400 bg-red-50 animate-shake"
                             : "border-gray-200 hover:border-indigo-300 hover:shadow-md hover:scale-[1.03]"
                         }

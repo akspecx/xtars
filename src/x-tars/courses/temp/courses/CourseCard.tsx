@@ -198,7 +198,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
                   <ArrowRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>

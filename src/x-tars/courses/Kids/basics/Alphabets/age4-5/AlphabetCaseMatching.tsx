@@ -252,8 +252,8 @@ const AlphabetCaseMatching: React.FC = () => {
                       ${isMatched
                         ? 'bg-gradient-to-br from-blue-200 to-indigo-300 border-blue-500 opacity-70 scale-95'
                         : isSelected
-                        ? `bg-gradient-to-br ${pair?.gradient || 'from-gray-400 to-gray-500'} border-4 border-blue-500 scale-110 shadow-2xl ring-4 ring-blue-300`
-                        : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow-xl hover:scale-105 active:scale-95'
+                          ? `bg-gradient-to-br ${pair?.gradient || 'from-gray-400 to-gray-500'} border-4 border-blue-500 scale-110 shadow-2xl ring-4 ring-blue-300`
+                          : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow-xl hover:scale-105 active:scale-95'
                       }
                     `}
                   >
@@ -301,8 +301,8 @@ const AlphabetCaseMatching: React.FC = () => {
                       ${isMatched
                         ? 'bg-gradient-to-br from-blue-200 to-indigo-300 border-blue-500 opacity-70 scale-95'
                         : isSelected
-                        ? 'bg-gradient-to-br from-indigo-200 to-purple-300 border-4 border-indigo-500 scale-110 shadow-2xl ring-4 ring-indigo-300 animate-shake'
-                        : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow-xl hover:scale-105 active:scale-95'
+                          ? 'bg-gradient-to-br from-indigo-200 to-purple-300 border-4 border-indigo-500 scale-110 shadow-2xl ring-4 ring-indigo-300 animate-shake'
+                          : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow-xl hover:scale-105 active:scale-95'
                       }
                     `}
                   >

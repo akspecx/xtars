@@ -185,9 +185,8 @@ const AlphabetFillInTheBlanks: React.FC = () => {
     onDragStart: (e: React.DragEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => void;
   }> = ({ letter, colors, isDropZone = false, isEmpty = false, isAvailable = false, isDragged = false, isDropTarget = false, onDragStart }) => (
     <div
-      className={`relative transition-all duration-300 ${isDragged ? 'scale-110 z-10 opacity-70' : ''} ${
-        isAvailable ? 'cursor-grab active:cursor-grabbing' : ''
-      } ${isDropTarget ? 'scale-105' : ''}`}
+      className={`relative transition-all duration-300 ${isDragged ? 'scale-110 z-10 opacity-70' : ''} ${isAvailable ? 'cursor-grab active:cursor-grabbing' : ''
+        } ${isDropTarget ? 'scale-105' : ''}`}
       draggable={isAvailable}
       onDragStart={onDragStart}
       onTouchStart={onDragStart}
@@ -208,17 +207,14 @@ const AlphabetFillInTheBlanks: React.FC = () => {
         )}
       </div>
 
-      <div className={`absolute -bottom-1 sm:-bottom-2 left-1 sm:left-2 w-3 h-3 sm:w-4 sm:h-4 ${
-        isEmpty ? (isDark ? 'bg-gray-500 border-gray-600' : 'bg-gray-300 border-gray-400') : 'bg-gray-800 border-gray-900'
-      } rounded-full border-2`}></div>
-      <div className={`absolute -bottom-1 sm:-bottom-2 right-1 sm:right-2 w-3 h-3 sm:w-4 sm:h-4 ${
-        isEmpty ? (isDark ? 'bg-gray-500 border-gray-600' : 'bg-gray-300 border-gray-400') : 'bg-gray-800 border-gray-900'
-      } rounded-full border-2`}></div>
+      <div className={`absolute -bottom-1 sm:-bottom-2 left-1 sm:left-2 w-3 h-3 sm:w-4 sm:h-4 ${isEmpty ? (isDark ? 'bg-gray-500 border-gray-600' : 'bg-gray-300 border-gray-400') : 'bg-gray-800 border-gray-900'
+        } rounded-full border-2`}></div>
+      <div className={`absolute -bottom-1 sm:-bottom-2 right-1 sm:right-2 w-3 h-3 sm:w-4 sm:h-4 ${isEmpty ? (isDark ? 'bg-gray-500 border-gray-600' : 'bg-gray-300 border-gray-400') : 'bg-gray-800 border-gray-900'
+        } rounded-full border-2`}></div>
 
-      <div className={`absolute -top-1 sm:-top-2 left-0.5 sm:left-1 right-0.5 sm:right-1 h-2 sm:h-3 ${
-        isEmpty ? (isDark ? 'bg-gray-600 border-gray-700 border-dashed' : 'bg-gray-200 border-gray-400 border-dashed') :
+      <div className={`absolute -top-1 sm:-top-2 left-0.5 sm:left-1 right-0.5 sm:right-1 h-2 sm:h-3 ${isEmpty ? (isDark ? 'bg-gray-600 border-gray-700 border-dashed' : 'bg-gray-200 border-gray-400 border-dashed') :
           `${colors.roof} border-2 ${colors.border}`
-      } rounded-t-lg `}></div>
+        } rounded-t-lg `}></div>
 
       {!isEmpty && (
         <>
@@ -255,26 +251,21 @@ const AlphabetFillInTheBlanks: React.FC = () => {
 
   if (!gameStarted) {
     return (
-      <div className={`min-h-screen transition-colors duration-300 ${
-        isDark ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-b from-sky-200 to-green-200'
-      }`}>
+      <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-b from-sky-200 to-green-200'
+        }`}>
         <div className="flex flex-col items-center justify-center min-h-screen p-4">
-          <div className={`text-center max-w-md mx-auto p-8 rounded-xl shadow-2xl ${
-            isDark ? 'bg-gray-800' : 'bg-white'
-          }`}>
-            <h1 className={`text-2xl sm:text-4xl md:text-5xl font-bold mb-4 ${
-              isDark ? 'text-purple-300' : 'text-blue-800'
+          <div className={`text-center max-w-md mx-auto p-8 rounded-xl shadow-2xl ${isDark ? 'bg-gray-800' : 'bg-white'
             }`}>
+            <h1 className={`text-2xl sm:text-4xl md:text-5xl font-bold mb-4 ${isDark ? 'text-purple-300' : 'text-blue-800'
+              }`}>
               🚂 Alphabet Train Game 🚂
             </h1>
-            <p className={`text-lg sm:text-xl mb-4 sm:mb-6 ${
-              isDark ? 'text-gray-300' : 'text-gray-700'
-            }`}>
+            <p className={`text-lg sm:text-xl mb-4 sm:mb-6 ${isDark ? 'text-gray-300' : 'text-gray-700'
+              }`}>
               Help arrange the colorful letter cars in the right order!
             </p>
-            <p className={`text-base sm:text-lg mb-6 sm:mb-8 ${
-              isDark ? 'text-gray-400' : 'text-gray-600'
-            }`}>
+            <p className={`text-base sm:text-lg mb-6 sm:mb-8 ${isDark ? 'text-gray-400' : 'text-gray-600'
+              }`}>
               Drag a letter car and drop it into a spot on the track to place it in sequence: A, B, C, D, E
             </p>
 
@@ -301,9 +292,8 @@ const AlphabetFillInTheBlanks: React.FC = () => {
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 p-2 sm:p-4 ${
-      isDark ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-b from-sky-200 to-green-200 text-gray-800'
-    }`}>
+    <div className={`min-h-screen transition-colors duration-300 p-2 sm:p-4 ${isDark ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-b from-sky-200 to-green-200 text-gray-800'
+      }`}>
       <style>
         {`
         @keyframes move-forward {
@@ -402,7 +392,7 @@ const AlphabetFillInTheBlanks: React.FC = () => {
                     colors={letter !== null ? letterCarColors[letter] : {} as LetterCarColors}
                     isDropZone={true}
                     isEmpty={letter === null}
-                    onDragStart={() => {}}
+                    onDragStart={() => { }}
                   />
                 </div>
               ))}
@@ -459,9 +449,8 @@ const AlphabetFillInTheBlanks: React.FC = () => {
           </button>
         </div>
 
-        <div className={`text-center rounded-lg p-4 mx-4 sm:mx-0 shadow-inner ${
-          isDark ? 'bg-gray-700 bg-opacity-70 text-gray-200' : 'bg-white bg-opacity-70 text-gray-700'
-        }`}>
+        <div className={`text-center rounded-lg p-4 mx-4 sm:mx-0 shadow-inner ${isDark ? 'bg-gray-700 bg-opacity-70 text-gray-200' : 'bg-white bg-opacity-70 text-gray-700'
+          }`}>
           <p className="text-sm sm:text-lg">
             <span className="font-bold">How to play:</span> Drag the colorful letter cars from the bottom to the empty spaces on the track in order:
             <span className="inline-block mx-1">🩷A</span>

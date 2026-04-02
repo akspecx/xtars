@@ -133,13 +133,12 @@ const KidsHub: React.FC = () => {
             </p>
           </div>
         </div>
-        <div className="flex flex-col items-center bg-rose-500 px-6 py-3 rounded-2xl text-white shadow-[0_6px_0_#be123c] border-2 border-white transform rotate-3">
-           <span className="text-3xl font-black leading-none">{currentPage + 1}/{totalPages}</span>
-           <span className="text-[10px] font-black uppercase tracking-wider opacity-90">Pages</span>
-        </div>
+        <div className="flex items-center gap-4 relative z-10 flex-none md:flex-row flex-col">
+          <div className="flex flex-col items-center bg-rose-500 px-6 py-3 rounded-2xl text-white shadow-[0_6px_0_#be123c] border-2 border-white transform rotate-3">
+             <span className="text-3xl font-black leading-none">{currentPage + 1}/{totalPages}</span>
+             <span className="text-[10px] font-black uppercase tracking-wider opacity-90">Pages</span>
+          </div>
 
-        {/* Optimized Action Buttons (Restores user requirement for position & visibility) */}
-        <div className="absolute top-6 right-6 z-20">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}

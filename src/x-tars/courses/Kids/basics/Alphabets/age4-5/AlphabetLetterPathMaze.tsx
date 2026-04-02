@@ -148,10 +148,9 @@ const AlphabetLetterPathMaze: React.FC = () => {
                 className={`
                   px-4 py-2 rounded-full text-sm sm:text-base font-semibold shadow-md transition-all
                   border-2
-                  ${
-                    isActive
-                      ? "bg-gradient-to-r from-amber-400 to-rose-400 text-white border-transparent scale-105"
-                      : "bg-white text-gray-800 border-amber-200 hover:border-amber-400 hover:scale-105"
+                  ${isActive
+                    ? "bg-gradient-to-r from-amber-400 to-rose-400 text-white border-transparent scale-105"
+                    : "bg-white text-gray-800 border-amber-200 hover:border-amber-400 hover:scale-105"
                   }
                 `}
               >
@@ -185,10 +184,9 @@ const AlphabetLetterPathMaze: React.FC = () => {
                           key={`${activeMaze.id}-${letter}-${index}`}
                           className={`
                             w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
-                            ${
-                              isDone
-                                ? "bg-emerald-500 text-white"
-                                : isNext
+                            ${isDone
+                              ? "bg-emerald-500 text-white"
+                              : isNext
                                 ? "bg-amber-500 text-white animate-pulse"
                                 : "bg-white text-amber-700 border border-amber-200"
                             }
@@ -257,10 +255,9 @@ const AlphabetLetterPathMaze: React.FC = () => {
                         relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center
                         text-2xl sm:text-3xl font-extrabold
                         transition-all shadow-sm
-                        ${
-                          isTapped
-                            ? "bg-gradient-to-br from-emerald-400 to-amber-400 text-white shadow-md scale-105"
-                            : "bg-white border border-rose-200 text-rose-700 hover:border-rose-400 hover:shadow-md hover:scale-[1.03]"
+                        ${isTapped
+                          ? "bg-gradient-to-br from-emerald-400 to-amber-400 text-white shadow-md scale-105"
+                          : "bg-white border border-rose-200 text-rose-700 hover:border-rose-400 hover:shadow-md hover:scale-[1.03]"
                         }
                       `}
                     >
@@ -270,10 +267,9 @@ const AlphabetLetterPathMaze: React.FC = () => {
                           className={`
                             absolute -top-2 -right-2 w-5 h-5 rounded-full text-[10px] sm:text-xs
                             flex items-center justify-center
-                            ${
-                              isCurrent
-                                ? "bg-emerald-500 text-white animate-pulse"
-                                : "bg-emerald-400 text-white"
+                            ${isCurrent
+                              ? "bg-emerald-500 text-white animate-pulse"
+                              : "bg-emerald-400 text-white"
                             }
                           `}
                         >

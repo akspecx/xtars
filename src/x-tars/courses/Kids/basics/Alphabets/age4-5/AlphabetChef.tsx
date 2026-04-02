@@ -27,7 +27,7 @@ const AlphabetChef: React.FC = () => {
     if (builtWord.length < current.letters.length) {
       setBuiltWord([...builtWord, letter]);
       setAvailableLetters(prev => prev.filter(l => l !== letter));
-      
+
       if (builtWord.length + 1 === current.letters.length) {
         const word = [...builtWord, letter].join('');
         if (word === current.food) {

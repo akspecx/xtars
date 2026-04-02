@@ -138,10 +138,9 @@ const AlphabetLetterPuzzle: React.FC = () => {
                 className={`
                   px-4 py-2 rounded-full text-lg sm:text-xl font-bold shadow-md transition-all
                   border-2
-                  ${
-                    isActive
-                      ? `bg-gradient-to-r ${card.gradient} text-white border-transparent scale-110`
-                      : "bg-white text-gray-800 border-violet-200 hover:border-violet-400 hover:scale-105"
+                  ${isActive
+                    ? `bg-gradient-to-r ${card.gradient} text-white border-transparent scale-110`
+                    : "bg-white text-gray-800 border-violet-200 hover:border-violet-400 hover:scale-105"
                   }
                 `}
               >
@@ -182,10 +181,9 @@ const AlphabetLetterPuzzle: React.FC = () => {
                         className={`
                           absolute ${pos} w-5 h-5 sm:w-6 sm:h-6 rounded-full
                           transition-all duration-300
-                          ${
-                            isPlaced
-                              ? "bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.9)] scale-110"
-                              : "bg-white/40 border border-white/70"
+                          ${isPlaced
+                            ? "bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.9)] scale-110"
+                            : "bg-white/40 border border-white/70"
                           }
                         `}
                       />
@@ -261,10 +259,9 @@ const AlphabetLetterPuzzle: React.FC = () => {
                       className={`
                         rounded-2xl border-2 p-4 bg-white flex flex-col items-center text-center gap-2
                         shadow-sm transition-all
-                        ${
-                          isPlaced
-                            ? `bg-gradient-to-br ${gradient} border-emerald-400 text-white scale-105 shadow-md`
-                            : "border-gray-200 hover:border-emerald-300 hover:shadow-md hover:scale-[1.03]"
+                        ${isPlaced
+                          ? `bg-gradient-to-br ${gradient} border-emerald-400 text-white scale-105 shadow-md`
+                          : "border-gray-200 hover:border-emerald-300 hover:shadow-md hover:scale-[1.03]"
                         }
                       `}
                     >
@@ -278,8 +275,7 @@ const AlphabetLetterPuzzle: React.FC = () => {
                       </div>
                       <div
                         className={`
-                          text-sm sm:text-base font-bold ${
-                            isPlaced ? "text-white" : "text-gray-800"
+                          text-sm sm:text-base font-bold ${isPlaced ? "text-white" : "text-gray-800"
                           }
                         `}
                       >
@@ -287,8 +283,7 @@ const AlphabetLetterPuzzle: React.FC = () => {
                       </div>
                       <p
                         className={`
-                          text-xs sm:text-sm ${
-                            isPlaced ? "text-emerald-50" : "text-gray-600"
+                          text-xs sm:text-sm ${isPlaced ? "text-emerald-50" : "text-gray-600"
                           }
                         `}
                       >

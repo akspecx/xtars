@@ -16,11 +16,11 @@ const KidsBackButton: React.FC = () => {
   if (activeProfile?.type !== 'KIDS' || isParentMode) return null;
 
   // Don't show on the main Hub or Selection screens
-  const isHubPage = location.pathname === '/' || 
-                   location.pathname === '/games' || 
-                   location.pathname === '/profiles' ||
-                   location.pathname === '/select-profile';
-  
+  const isHubPage = location.pathname === '/' ||
+    location.pathname === '/games' ||
+    location.pathname === '/profiles' ||
+    location.pathname === '/select-profile';
+
   if (isHubPage) return null;
 
   return (
@@ -39,13 +39,13 @@ const KidsBackButton: React.FC = () => {
           animate={{ x: [0, -2, 2, 0], y: [0, -2, 2, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
         >
-          <Rocket 
-            className="text-white rotate-[-135deg] group-hover:translate-x-[-2px] group-hover:translate-y-[2px] transition-transform" 
-            size={48} 
-            strokeWidth={3} 
+          <Rocket
+            className="text-white rotate-[-135deg] group-hover:translate-x-[-2px] group-hover:translate-y-[2px] transition-transform"
+            size={48}
+            strokeWidth={3}
           />
         </motion.div>
-        
+
         {/* Playful tooltip-like text */}
         <span className="absolute -top-12 bg-white text-rose-600 px-4 py-1 rounded-full font-black text-sm uppercase tracking-widest border-2 border-rose-200 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
           Go Back! 🚀

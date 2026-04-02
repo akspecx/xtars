@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  CheckCircle2, 
   Hand, Play, MousePointer2, 
   Timer, ChevronRight, Shuffle, 
   Volume2, VolumeX,
@@ -10,6 +9,7 @@ import {
 } from 'lucide-react';
 import { recordCompletion } from '../../../../courses/CommonUtility/useModuleProgress';
 import { useProfile } from '../../../../../context/ProfileContext';
+import VisualLogicCard from './shared/VisualLogicCard';
 
 const SCENARIOS = [
   { id: 1, name: 'Giraffe', emoji: '🦒' },
@@ -157,9 +157,9 @@ export default function App() {
     }
   }, [shortSide, isAnswered, isCorrect, isAutoPlaying, mode, playThud, currentScenario.name, speak, scenarioIdx, forcedMode, games, navigate]);
 
-  const moveHandToSide = useCallback((side: 'left' | 'right') => {
+  const moveHandToSide = useCallback((side: string) => {
     return new Promise<void>(resolve => {
-      const el = sideRefs.current[side];
+      const el = sideRefs.current[side as 'left' | 'right'];
       if (!el) return resolve();
       const rect = el.getBoundingClientRect();
       setVirtualHandPos({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
@@ -234,28 +234,28 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4 mt-2 sm:mt-0">
-          {activeProfile?.type !== 'KIDS' && (
-            <div className="group relative bg-[#F3E5D5] p-1 sm:p-2 rounded-xl sm:rounded-2xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-1 sm:gap-2">
-                  <div className="absolute top-full mt-2 right-0 w-52 sm:w-60 bg-white p-3 rounded-xl shadow-xl border-2 border-[#EADAC4] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-[100]">
-                      <p className="text-[10px] sm:text-xs font-medium text-[#7A5C3E] leading-snug text-left">
-                          <span className="font-black text-sm">🧸 Kid Mode:</span><br/>Guidance with virtual hand.<br/>
-                          <span className="font-black text-sm mt-1 block">🖐️ Practice:</span><br/>Free play exploration.
-                      </p>
-                  </div>
-                <button 
-                    onClick={() => { setMode('kid'); setScore(0); resetLevel(scenarioIdx); }}
-                    className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
-                >
-                    <Play size={14} fill={mode === 'kid' ? 'white' : 'none'} className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
-                <button 
-                    onClick={() => { setMode('practice'); setScore(0); resetLevel(scenarioIdx); }}
-                    className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
-                >
-                    <MousePointer2 size={14} className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
-            </div>
-          )}
+          <div className="group relative bg-[#F3E5D5] p-1 sm:p-2 rounded-xl sm:rounded-2xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-1 sm:gap-2">
+            {activeProfile?.type !== 'KIDS' && (
+              <div className="absolute top-full mt-2 right-0 w-52 sm:w-60 bg-white p-3 rounded-xl shadow-xl border-2 border-[#EADAC4] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-[100]">
+                <p className="text-[10px] sm:text-xs font-medium text-[#7A5C3E] leading-snug text-left">
+                  <span className="font-black text-sm">🧸 Kid Mode:</span><br/>Guidance with virtual hand.<br/>
+                  <span className="font-black text-sm mt-1 block">🖐️ Practice:</span><br/>Free play exploration.
+                </p>
+              </div>
+            )}
+            <button 
+                onClick={() => { setMode('kid'); setScore(0); resetLevel(scenarioIdx); }}
+                className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
+            >
+                <Play fill={mode === 'kid' ? 'white' : 'none'} className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+            <button 
+                onClick={() => { setMode('practice'); setScore(0); resetLevel(scenarioIdx); }}
+                className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
+            >
+                <MousePointer2 className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          </div>
             
             <button onClick={() => setIsMuted(!isMuted)} className="min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] flex items-center justify-center p-2 sm:p-3 bg-white rounded-xl sm:rounded-2xl shadow-sm border-b-2 sm:border-b-4 border-[#E0E0E0] text-[#A68B7C] hover:bg-gray-50 active:translate-y-1 transition-all">
                 {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
@@ -263,7 +263,7 @@ export default function App() {
         </div>
       </div>
 
-      <div className="w-full max-w-3xl flex-1 min-h-0 bg-[#EADAC4] rounded-[1.5rem] sm:rounded-[2.5rem] p-2 sm:p-4 shadow-[0_6px_0_#B8977E,0_10px_20px_rgba(184,151,126,0.25)] border-[4px] sm:border-[6px] border-[#D9B99B] relative flex flex-col items-center justify-center mt-6 sm:mt-7 mb-3">
+      <div className="w-full max-w-4xl flex-1 min-h-0 bg-[#EADAC4] rounded-[1.5rem] sm:rounded-[2.5rem] p-3 sm:p-6 shadow-[0_6px_0_#B8977E,0_10px_20px_rgba(184,151,126,0.25)] border-[4px] sm:border-[6px] border-[#D9B99B] relative flex flex-col items-center justify-center mt-6 sm:mt-8 mb-4">
         
         <div className="absolute top-0 transform -translate-y-1/2 z-20">
             <motion.div 
@@ -288,56 +288,25 @@ export default function App() {
             <span className="text-lg sm:text-2xl font-black text-[#7A5C3E]">{score}</span>
         </div>
 
-        <div className="w-full grid grid-cols-2 gap-4 sm:gap-8 relative px-4 z-10 pb-4 mt-4 sm:mt-5">
+        {/* Comparison Grid */}
+        <div className="w-full flex justify-center items-center gap-4 sm:gap-8 relative px-4 z-10 pb-4 mt-8 sm:mt-10">
             {(['left', 'right'] as const).map((side) => {
                 const isShortSlot = side === shortSide;
                 const isSelected = selectedSide === side;
                 
                 return (
-                    <motion.button
+                    <VisualLogicCard
                         key={`${scenarioIdx}-${side}`}
                         ref={el => { sideRefs.current[side] = el; }}
+                        emoji={currentScenario.emoji}
+                        scaleYOverride={isShortSlot ? 0.7 : 1.35}
+                        isTargetCard={isShortSlot}
+                        isSelected={isSelected}
+                        isCorrect={isCorrect}
+                        isAnswered={isAnswered}
+                        className="flex-1 max-w-[280px]"
                         onClick={() => { if (mode !== 'kid') handleSelect(side); }}
-                        whileHover={!isAnswered && mode !== 'kid' ? { scale: 1.02 } : {}}
-                        className={`relative aspect-[4/5] sm:aspect-[3/4] w-full bg-[#FFFBF2] rounded-[1.5rem] sm:rounded-[2.5rem] shadow-[inset_0_4px_8px_rgba(0,0,0,0.02),0_8px_16px_rgba(0,0,0,0.08)] border-b-[6px] sm:border-b-[10px] flex flex-col items-center justify-center transition-all duration-500 overflow-hidden ${
-                            isSelected 
-                                ? (isCorrect && isShortSlot ? 'border-[#4CAF50] bg-[#F1FCEF]' : 'border-[#FFB74D] animate-wobble')
-                                : isAnswered ? 'opacity-40 border-[#EEE0CB]' : 'border-[#D9B99B] hover:border-[#B8977E]'
-                        }`}
-                    >
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{
-                              scaleX: 1,
-                              scaleY: isShortSlot ? 0.7 : 1.35,
-                              scale: 1,
-                              filter: isSelected && !isShortSlot ? 'grayscale(1)' : 'grayscale(0)'
-                            }}
-                            transition={{ type: 'spring', damping: 12, stiffness: 80 }}
-                            className={`text-[clamp(5rem,min(22vh,26vw),14rem)] drop-shadow-xl z-10 origin-bottom select-none`}
-                        >
-                            {currentScenario.emoji}
-                        </motion.div>
-
-                        <AnimatePresence>
-                            {isSelected && (
-                                <motion.div 
-                                    initial={{ scale: 0, y: 30 }} animate={{ scale: 1.2, y: -40 }} exit={{ scale: 0 }}
-                                    className="absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none"
-                                >
-                                    {isCorrect && isShortSlot ? (
-                                        <div className="bg-[#4CAF50] p-2 sm:p-4 rounded-full shadow-2xl border-[4px] sm:border-[8px] border-white">
-                                            <CheckCircle2 className="text-white w-6 h-6 sm:w-8 sm:h-8" />
-                                        </div>
-                                    ) : (
-                                        <div className="bg-[#FFB74D] p-2 sm:p-4 rounded-full shadow-2xl border-[4px] sm:border-[8px] border-white flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16">
-                                            <span className="text-white font-black text-2xl sm:text-4xl leading-none">?</span>
-                                        </div>
-                                    )}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </motion.button>
+                    />
                 );
             })}
         </div>
@@ -426,11 +395,6 @@ export default function App() {
             </motion.div>
         )}
       </AnimatePresence>
-
-      <style>{`
-        @keyframes wobble { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
-        .animate-wobble { animation: wobble 0.5s ease-in-out; }
-      `}</style>
     </div>
   );
 }
