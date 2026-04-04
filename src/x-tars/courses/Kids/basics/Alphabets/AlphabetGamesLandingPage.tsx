@@ -1,289 +1,49 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  useNavigate, 
-  useParams 
-} from 'react-router-dom';
-import {
-  BrainCircuit, Lightbulb, 
-  ChevronLeft, Info, Calculator, Target
-} from 'lucide-react';
-import NumberGameCard from "../../../CommonUtility/CardsUtility"
-import { useProfile } from '../../../../../context/ProfileContext';
+import React from 'react';
+import KidsModuleLandingPage, { KidsGameEntry } from '../../../CommonUtility/KidsModuleLandingPage';
 
-const USER_NAME = "Prabhat"; 
-
-const Alphabet_Data = [
-  { id: "match", title: "Letter Match", subtitle: "Correctly match the alphabets", icon: "🔠", gradient: "from-orange-500 to-amber-500", path: "/games/alphabets/letter-match" },
-  { id: "arrange", title: "Arranging Alphabets", subtitle: "Arrange the alphabets in order", icon: "🇦🇧🇨", gradient: "from-lime-500 to-green-500", path: "/games/alphabets/sequence" },
-  { id: "fruitNaming", title: "Fruit Naming", subtitle: "Practice fruit naming with letters", icon: "🍎", gradient: "from-cyan-500 to-blue-500", path: "/games/alphabets/fruit-naming" },
-  { id: "randomAlphabets", title: "Random Alphabet Mapping", subtitle: "Select the correct alphabets", icon: "❓", gradient: "from-purple-500 to-fuchsia-500", path: "/games/alphabets/random-balloon" },
-  { id: "tracing", title: "Trace the Letters", subtitle: "Follow dotted guides & strokes", icon: "✍️", gradient: "from-pink-500 to-purple-500", path: "/games/alphabets/tracing" },
-  { id: "soundGarden", title: "Alphabet Sound Garden", subtitle: "Hear stories & chants", icon: "🎵", gradient: "from-emerald-500 to-teal-500", path: "/games/alphabets/counting" },
-  { id: "storyCards", title: "Alphabet Story Cards", subtitle: "Tiny stories & chants for each letter", icon: "📖", gradient: "from-amber-400 to-orange-500", path: "/games/alphabets/story-cards" },
-  { id: "fillBlanks", title: "Fill in the Blanks", subtitle: "Drag letters to complete sequences", icon: "🚂", gradient: "from-indigo-500 to-purple-500", path: "/games/alphabets/fill-blanks" },
-  { id: "objectMatching", title: "Letter-Object Matching", subtitle: "Match letters with objects", icon: "🎯", gradient: "from-rose-500 to-pink-500", path: "/games/alphabets/object-matching" },
-  { id: "caseMatching", title: "Uppercase / Lowercase", subtitle: "Match uppercase with lowercase", icon: "🔤", gradient: "from-blue-500 to-indigo-500", path: "/games/alphabets/case-matching" },
-  { id: "sorting", title: "Letter Sorting", subtitle: "Sort by vowels, curves, and more", icon: "📦", gradient: "from-green-500 to-emerald-500", path: "/games/alphabets/sorting" },
-  { id: "descending", title: "Reverse Alphabet", subtitle: "Arrange letters in reverse order", icon: "🔙", gradient: "from-orange-500 to-red-500", path: "/games/alphabets/descending" },
-  { id: "beginSound", title: "Beginning Sound Picker", subtitle: "Pick pictures by starting sound", icon: "🔈", gradient: "from-sky-500 to-cyan-500", path: "/games/alphabets/begin-sound" },
-  { id: "letterPuzzle", title: "Build the Letter", subtitle: "Snap pieces to build letters", icon: "🧩", gradient: "from-violet-500 to-indigo-500", path: "/games/alphabets/letter-puzzle" },
-  { id: "letterMaze", title: "Letter Path Maze", subtitle: "Tap letters in order to make a path", icon: "🧭", gradient: "from-yellow-500 to-amber-500", path: "/games/alphabets/path-maze" },
-  { id: "rhyming", title: "Rhyming Friends", subtitle: "Find words that rhyme", icon: "🎵", gradient: "from-fuchsia-500 to-rose-500", path: "/games/alphabets/rhyming" },
-  { id: "nameBuilder", title: "Build Your Name", subtitle: "Use letters to build your name", icon: "✍️", gradient: "from-teal-500 to-emerald-500", path: "/games/alphabets/name-builder" },
-  { id: "findTap", title: "Find & Tap Letters", subtitle: "Search scenes for hidden letters", icon: "🔍", gradient: "from-emerald-400 to-sky-400", path: "/games/alphabets/find-tap" },
-  { id: "uppercaseUsage", title: "Uppercase or Lowercase?", subtitle: "Choose letters that should be uppercase", icon: "🔡", gradient: "from-slate-500 to-indigo-500", path: "/games/alphabets/uppercase-usage" },
-  
-  // NEW MODULES
-  { id: "letter-safari", title: "Letter Hunt Safari", subtitle: "Find animals by starting letter (Age 3–4)", icon: "🦁", gradient: "from-amber-500 to-orange-500", path: "/games/alphabets/letter-safari" },
-  { id: "dance-party", title: "Alphabet Dance Party", subtitle: "Learn letters through actions (Age 3–4)", icon: "💃", gradient: "from-pink-500 to-purple-500", path: "/games/alphabets/dance-party" },
-  { id: "size-sorting", title: "Letter Size Sorting", subtitle: "Sort big and small letters (Age 3–4)", icon: "📐", gradient: "from-yellow-500 to-orange-500", path: "/games/alphabets/size-sorting" },
-  { id: "print-match", title: "Environmental Print Match", subtitle: "Match brands with letters (Age 3–4)", icon: "🏪", gradient: "from-cyan-500 to-blue-500", path: "/games/alphabets/print-match" },
-  { id: "cvc-builder", title: "CVC Word Builder", subtitle: "Build 3-letter words (Age 4–5)", icon: "🏗️", gradient: "from-green-500 to-emerald-500", path: "/games/alphabets/cvc-builder" },
-  { id: "word-families", title: "Word Family Houses", subtitle: "Sort rhyming word families (Age 4–5)", icon: "🏠", gradient: "from-orange-500 to-red-500", path: "/games/alphabets/word-families" },
-  { id: "alphabet-chef", title: "Alphabet Chef", subtitle: "Spell food words (Age 4–5)", icon: "👨‍🍳", gradient: "from-rose-500 to-pink-500", path: "/games/alphabets/alphabet-chef" },
-  { id: "sight-words", title: "Sight Word Stars", subtitle: "Catch falling sight words (Age 4–5)", icon: "⭐", gradient: "from-indigo-500 to-purple-500", path: "/games/alphabets/sight-words" },
-  { id: "pre-writing", title: "Pre-Writing Strokes", subtitle: "Practice writing strokes (Age 4–5)", icon: "✏️", gradient: "from-blue-500 to-purple-500", path: "/games/alphabets/pre-writing" },
-  { id: "blending", title: "Blending Bridge", subtitle: "Blend sounds to make words (Age 5–6)", icon: "🌉", gradient: "from-sky-500 to-blue-500", path: "/games/alphabets/blending" },
-  { id: "sentence-builder", title: "Sentence Builder", subtitle: "Build complete sentences (Age 5–6)", icon: "📝", gradient: "from-teal-500 to-cyan-500", path: "/games/alphabets/sentence-builder" },
-  { id: "compound-words", title: "Compound Word Factory", subtitle: "Combine words to make new ones (Age 5–6)", icon: "🏭", gradient: "from-purple-500 to-pink-500", path: "/games/alphabets/compound-words" }
+const alphabetsData: KidsGameEntry[] = [
+  { id: 'match',          title: 'Letter Match',              subtitle: 'Correctly match the alphabets',       icon: '🔠', path: '/games/alphabets/letter-match',     gradient: 'from-orange-500 to-amber-500' },
+  { id: 'arrange',        title: 'Arranging Alphabets',       subtitle: 'Arrange in order',                    icon: '🔡', path: '/games/alphabets/sequence',         gradient: 'from-lime-500 to-green-500' },
+  { id: 'fruitNaming',    title: 'Fruit Naming',              subtitle: 'Practice fruit naming with letters',  icon: '🍎', path: '/games/alphabets/fruit-naming',     gradient: 'from-cyan-500 to-blue-500' },
+  { id: 'randomAlphabets', title: 'Random Alphabet Mapping',  subtitle: 'Select the correct alphabets',        icon: '❓', path: '/games/alphabets/random-balloon',   gradient: 'from-purple-500 to-fuchsia-500' },
+  { id: 'tracing',        title: 'Trace the Letters',         subtitle: 'Follow dotted guides and strokes',    icon: '✍️', path: '/games/alphabets/tracing',          gradient: 'from-pink-500 to-purple-500' },
+  { id: 'soundGarden',    title: 'Alphabet Sound Garden',     subtitle: 'Hear stories and chants',             icon: '🎵', path: '/games/alphabets/counting',         gradient: 'from-emerald-500 to-teal-500' },
+  { id: 'storyCards',     title: 'Alphabet Story Cards',      subtitle: 'Tiny stories for each letter',        icon: '📖', path: '/games/alphabets/story-cards',      gradient: 'from-amber-400 to-orange-500' },
+  { id: 'fillBlanks',     title: 'Fill in the Blanks',        subtitle: 'Drag letters to complete sequences',  icon: '🚂', path: '/games/alphabets/fill-blanks',      gradient: 'from-indigo-500 to-purple-500' },
+  { id: 'objectMatching', title: 'Letter-Object Matching',    subtitle: 'Match letters with objects',          icon: '🎯', path: '/games/alphabets/object-matching',  gradient: 'from-rose-500 to-pink-500' },
+  { id: 'caseMatching',   title: 'Uppercase / Lowercase',     subtitle: 'Match uppercase with lowercase',      icon: '🔤', path: '/games/alphabets/case-matching',    gradient: 'from-blue-500 to-indigo-500' },
+  { id: 'sorting',        title: 'Letter Sorting',            subtitle: 'Sort by vowels, curves, and more',    icon: '📦', path: '/games/alphabets/sorting',          gradient: 'from-green-500 to-emerald-500' },
+  { id: 'descending',     title: 'Reverse Alphabet',          subtitle: 'Arrange letters in reverse',          icon: '🔙', path: '/games/alphabets/descending',       gradient: 'from-orange-500 to-red-500' },
+  { id: 'beginSound',     title: 'Beginning Sound Picker',    subtitle: 'Pick pictures by starting sound',     icon: '🔈', path: '/games/alphabets/begin-sound',      gradient: 'from-sky-500 to-cyan-500' },
+  { id: 'letterPuzzle',   title: 'Build the Letter',          subtitle: 'Snap pieces to build letters',        icon: '🧩', path: '/games/alphabets/letter-puzzle',    gradient: 'from-violet-500 to-indigo-500' },
+  { id: 'letterMaze',     title: 'Letter Path Maze',          subtitle: 'Tap letters in order',                icon: '🧭', path: '/games/alphabets/path-maze',        gradient: 'from-yellow-500 to-amber-500' },
+  { id: 'rhyming',        title: 'Rhyming Friends',           subtitle: 'Find words that rhyme',               icon: '🎵', path: '/games/alphabets/rhyming',          gradient: 'from-fuchsia-500 to-rose-500' },
+  { id: 'nameBuilder',    title: 'Build Your Name',           subtitle: 'Use letters to build your name',      icon: '✍️', path: '/games/alphabets/name-builder',     gradient: 'from-teal-500 to-emerald-500' },
+  { id: 'findTap',        title: 'Find & Tap Letters',        subtitle: 'Search scenes for hidden letters',    icon: '🔍', path: '/games/alphabets/find-tap',         gradient: 'from-emerald-400 to-sky-400' },
+  { id: 'uppercaseUsage', title: 'Uppercase or Lowercase?',   subtitle: 'Choose letters that should be uppercase', icon: '🔡', path: '/games/alphabets/uppercase-usage', gradient: 'from-slate-500 to-indigo-500' },
+  { id: 'letter-safari',  title: 'Letter Hunt Safari',        subtitle: 'Find animals by starting letter',     icon: '🦁', path: '/games/alphabets/letter-safari',    gradient: 'from-amber-500 to-orange-500' },
+  { id: 'dance-party',    title: 'Alphabet Dance Party',      subtitle: 'Learn letters through actions',        icon: '💃', path: '/games/alphabets/dance-party',      gradient: 'from-pink-500 to-purple-500' },
+  { id: 'size-sorting',   title: 'Letter Size Sorting',       subtitle: 'Sort big and small letters',           icon: '📐', path: '/games/alphabets/size-sorting',     gradient: 'from-yellow-500 to-orange-500' },
+  { id: 'print-match',    title: 'Environmental Print Match', subtitle: 'Match brands with letters',            icon: '🏪', path: '/games/alphabets/print-match',      gradient: 'from-cyan-500 to-blue-500' },
+  { id: 'cvc-builder',    title: 'CVC Word Builder',          subtitle: 'Build 3-letter words',                 icon: '🏗️', path: '/games/alphabets/cvc-builder',      gradient: 'from-green-500 to-emerald-500' },
+  { id: 'word-families',  title: 'Word Family Houses',        subtitle: 'Sort rhyming word families',           icon: '🏠', path: '/games/alphabets/word-families',    gradient: 'from-orange-500 to-red-500' },
+  { id: 'alphabet-chef',  title: 'Alphabet Chef',             subtitle: 'Spell food words',                     icon: '👨‍🍳', path: '/games/alphabets/alphabet-chef',  gradient: 'from-rose-500 to-pink-500' },
+  { id: 'sight-words',    title: 'Sight Word Stars',          subtitle: 'Catch falling sight words',            icon: '⭐', path: '/games/alphabets/sight-words',      gradient: 'from-indigo-500 to-purple-500' },
+  { id: 'pre-writing',    title: 'Pre-Writing Strokes',       subtitle: 'Practice writing strokes',             icon: '✏️', path: '/games/alphabets/pre-writing',      gradient: 'from-blue-500 to-purple-500' },
+  { id: 'blending',       title: 'Blending Bridge',           subtitle: 'Blend sounds to make words',           icon: '🌉', path: '/games/alphabets/blending',         gradient: 'from-sky-500 to-blue-500' },
+  { id: 'sentence-builder', title: 'Sentence Builder',        subtitle: 'Build complete sentences',             icon: '📝', path: '/games/alphabets/sentence-builder', gradient: 'from-teal-500 to-cyan-500' },
+  { id: 'compound-words', title: 'Compound Word Factory',     subtitle: 'Combine words to make new ones',       icon: '🏭', path: '/games/alphabets/compound-words',   gradient: 'from-purple-500 to-pink-500' },
 ];
 
-const MOTIVATIONAL_QUOTES = [
-  { text: "The roots of education are bitter, but the fruit is sweet.", author: "Aristotle" },
-  { text: "Education is what remains after one has forgotten what one has learned in school.", author: "Albert Einstein" },
-  { text: "Intelligence plus character - that is the goal of true education.", author: "Martin Luther King Jr." }
-];
-
-const AuroraBackground = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.05]">
-    <motion.div 
-      animate={{ scale: [1, 1.1, 1], rotate: [0, 45, 0], x: [-10, 10, -10] }}
-      transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-      className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] bg-[radial-gradient(circle_at_center,_#ffffff_0%,_transparent_60%)] blur-[40px]"
-    />
-  </div>
+const AlphabetGamesLandingPage: React.FC<{ onBack?: () => void }> = ({ onBack }) => (
+  <KidsModuleLandingPage
+    moduleTitle="Alphabets"
+    moduleEmoji="🔤"
+    headerGradient="from-rose-500 to-pink-500"
+    bgColor="#fff0f5"
+    games={alphabetsData}
+    onBack={onBack}
+  />
 );
-
-// --- MISSION MODULE: BALANCE SCALE ---
-
-const BalanceScaleMission = () => {
-  const navigate = useNavigate();
-  const { activeProfile } = useProfile();
-  const [showLogic, setShowLogic] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-
-  const itemCount = 5;
-  const totalWeight = 500;
-  const correctValue = totalWeight / itemCount;
-
-  const handleCheck = () => {
-    if (parseInt(inputValue) === correctValue) {
-      setIsCorrect(true);
-    } else {
-      setIsCorrect(false);
-      setTimeout(() => setIsCorrect(null), 1500);
-    }
-  };
-
-  return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full flex flex-col gap-6">
-      <div className="bg-[#faf9f6] p-8 sm:p-12 rounded-[4rem] border-2 border-[#c4a484]/20 shadow-[12px_12px_0px_#a88a6d] relative overflow-hidden">
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="w-full flex justify-between items-center mb-10 text-[#3e2723]">
-            {activeProfile?.type !== 'KIDS' && (
-              <motion.button 
-                whileHover={{ x: -5 }} onClick={() => navigate(-1)}
-                className="w-14 h-14 bg-[#3e2723] rounded-2xl flex items-center justify-center text-white shadow-xl border-b-4 border-black"
-              >
-                <ChevronLeft size={24} />
-              </motion.button>
-            )}
-            <div className="text-center">
-              <span className="text-[11px] font-black uppercase opacity-60 tracking-[0.5em] mb-2 block">Neural Link Calibration</span>
-              <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none text-[#3e2723]">Scale Mission</h2>
-            </div>
-            <button 
-              onClick={() => setShowLogic(!showLogic)} 
-              className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all shadow-xl border-b-4 ${showLogic ? 'bg-[#8d6e63] text-white border-[#3e2723]' : 'bg-[#3e2723] text-white border-black'}`}
-            >
-              <Calculator size={24} />
-            </button>
-          </div>
-
-          <div className="relative w-full max-w-2xl aspect-[2.2/1] bg-[#231714]/5 rounded-[3rem] p-8 border border-[#c4a484]/20 mb-10 flex items-center justify-center shadow-inner overflow-hidden">
-            <svg viewBox="0 0 400 200" className="w-full h-full drop-shadow-[0_20px_30px_rgba(0,0,0,0.15)]">
-              <rect x="180" y="165" width="40" height="15" rx="4" fill="#3e2723" />
-              <path d="M 200 160 L 200 60" stroke="#3e2723" strokeWidth="10" strokeLinecap="round" />
-              <motion.g animate={{ rotate: isCorrect ? 0 : [0, -1.2, 1.2, 0] }} transition={{ duration: 5, repeat: Infinity }}>
-                <line x1="80" y1="60" x2="320" y2="60" stroke="#5d4037" strokeWidth="8" strokeLinecap="round" />
-                <g transform="translate(80, 60)">
-                  <line x1="0" y1="0" x2="0" y2="50" stroke="#8d6e63" strokeWidth="2" />
-                  <path d="M -45 50 Q 0 85 45 50 Z" fill="#dfd7cc" stroke="#3e2723" strokeWidth="2" />
-                  <text x="0" y="42" textAnchor="middle" fontSize="26" className="pointer-events-none select-none">🍎🍎🍎🍎🍎</text>
-                </g>
-                <g transform="translate(320, 60)">
-                  <line x1="0" y1="0" x2="0" y2="50" stroke="#8d6e63" strokeWidth="2" />
-                  <path d="M -45 50 Q 0 85 45 50 Z" fill="#dfd7cc" stroke="#3e2723" strokeWidth="2" />
-                  <rect x="-25" y="15" width="50" height="35" rx="6" fill="#3e2723" />
-                  <text x="0" y="38" textAnchor="middle" fontSize="16" fontWeight="900" fill="white">{String(totalWeight)}g</text>
-                </g>
-              </motion.g>
-            </svg>
-          </div>
-
-          <div className="flex flex-col items-center gap-6 w-full max-w-md">
-            <p className="text-sm font-black uppercase text-[#8d6e63] tracking-[0.2em] text-center italic">Determine individual unit weight</p>
-            <div className="flex w-full gap-4">
-              <input 
-                type="number" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="---"
-                className={`flex-1 bg-white border-2 rounded-[1.5rem] px-6 py-4 text-3xl font-black text-center focus:outline-none transition-all shadow-inner ${isCorrect === true ? 'border-emerald-500 text-emerald-600 shadow-xl' : isCorrect === false ? 'border-rose-500 animate-shake' : 'border-[#c4a484]/30 text-[#3e2723]'}`}
-              />
-              <motion.button whileTap={{ scale: 0.95 }} onClick={handleCheck} className="bg-[#3e2723] text-white px-10 rounded-[1.5rem] font-black uppercase text-xs tracking-widest shadow-[0_6px_0_#000] active:translate-y-1 active:shadow-none transition-all">Validate</motion.button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {showLogic && (
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="bg-[#3e2723] text-white p-10 rounded-[3.5rem] shadow-2xl relative overflow-hidden border-b-8 border-black">
-             <div className="absolute top-0 right-0 p-8 opacity-5 rotate-12"><BrainCircuit size={160} /></div>
-             <div className="flex items-center gap-4 mb-10"><Info className="text-amber-400" /><h3 className="text-xl font-black uppercase tracking-widest leading-none">Neural Logic Feed</h3></div>
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {[
-                  { label: "Balance Equality", formula: "Weight Left = Weight Right", desc: "Total weight on right scale = Total weight of left scale as it is balanced scale." },
-                  { label: "Multiplication Formula", formula: "$$5 \\times unit = 500g$$", desc: "Number of fruits multiplied by weight of one apple equals 500 grams." },
-                  { label: "Division Logic", formula: "$$Weight = 500g \\div 5$$", desc: "Therefore, the weight of one apple equals the total weight divided by the number of apples." }
-                ].map((item, idx) => (
-                  <div key={idx} className="bg-white/5 p-7 rounded-[2.5rem] border border-white/10 group hover:bg-white/10 transition-colors">
-                    <span className="text-[10px] font-black uppercase text-amber-400 mb-2 block tracking-widest leading-none">Phase 0{idx + 1}</span>
-                    <h4 className="text-sm font-black uppercase mb-1">{String(item.label)}</h4>
-                    <div className="text-lg font-black text-white mb-4 leading-tight">{String(item.formula)}</div>
-                    <p className="text-[11px] font-medium opacity-60 leading-relaxed italic group-hover:opacity-100 transition-opacity">"{String(item.desc)}"</p>
-                  </div>
-                ))}
-             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-};
-
-// --- PRIMARY HUB COMPONENT ---
-
-interface AlphabetGamesLandingPageProps {
-  onBack?: () => void;
-  theme?: any;
-  title?: string;
-  icon?: string;
-}
-
-const AlphabetGamesLandingPage: React.FC<AlphabetGamesLandingPageProps> = ({ onBack }) => {
-  const navigate = useNavigate();
-  const { puzzleId } = useParams();
-  const [quoteIndex, setQuoteIndex] = useState(0);
-  const { activeProfile } = useProfile();
-
-  const dynamicGreeting = useMemo(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) return `Rise and shine, ${USER_NAME}!`;
-    if (hour < 17) return `Good afternoon, ${USER_NAME}!`;
-    return `Good evening, ${USER_NAME}!`;
-  }, []);
-
-  useEffect(() => {
-    const qInterval = setInterval(() => setQuoteIndex(p => (p + 1) % MOTIVATIONAL_QUOTES.length), 10000);
-    return () => clearInterval(qInterval);
-  }, []);
-
-  return (
-    <div className="w-full flex flex-col items-center bg-[#e6dccb] font-sans select-none relative shadow-inner min-h-screen">
-      {/* Wooden Pattern Overlay */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/wood-pattern.png')` }} /> 
-      
-      <AuroraBackground />
-
-      <div className="w-full max-w-7xl p-6 sm:p-10 relative z-10">
-        <AnimatePresence mode="wait">
-          {!puzzleId ? (
-            /* HUB VIEW */
-            <motion.div key="hub" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col gap-10 pb-24">
-              
-              {/* Header Plank Tile */}
-              <div className="bg-[#faf9f6] p-5 sm:p-8 rounded-[3.5rem] border-2 border-[#c4a484]/30 shadow-[8px_8px_0px_#a88a6d,12px_12px_30px_rgba(0,0,0,0.05)] relative overflow-hidden group">
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
-                   <div className="text-center md:text-left max-w-2xl text-[#3e2723]">
-                      <div className="flex items-center justify-center md:justify-start gap-3 mb-3">
-                         {activeProfile?.type !== 'KIDS' && onBack && (
-                           <button 
-                             onClick={onBack}
-                             className="p-2.5 bg-[#3e2723] rounded-2xl text-white shadow-xl hover:scale-105 transition-transform"
-                           >
-                             <ChevronLeft size={20} />
-                           </button>
-                         )}
-                         <div className="p-2.5 bg-[#3e2723] rounded-2xl text-white shadow-xl"><Target size={20} /></div>
-                         <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">{String(dynamicGreeting)}</h2>
-                      </div>
-                      <p className="text-xs sm:text-sm font-bold tracking-[0.05em] leading-relaxed opacity-60">
-                        Learn letters and sounds with fun, interactive games. Pick a game to start!
-                      </p>
-                   </div>
-                   <div className="flex items-center gap-4 shrink-0 bg-[#3e2723] p-6 rounded-[2.5rem] text-white shadow-2xl border-b-8 border-black">
-                      <div className="text-center">
-                        <span className="text-[11px] font-black uppercase block mb-2 tracking-widest opacity-40">Active Links</span>
-                        <span className="text-5xl font-black tabular-nums">{String(Alphabet_Data.length)}</span>
-                      </div>
-                   </div>
-                </div>
-              </div>
-
-              {/* Game Tiles Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
-                 {Alphabet_Data.map((game) => (
-                   <NumberGameCard 
-                    key={String(game.id)} 
-                    {...game} 
-                    onClick={() => navigate(game.path)} 
-                   />
-                 ))}
-              </div>
-            </motion.div>
-          ) : (
-            <BalanceScaleMission key="game" />
-          )}
-        </AnimatePresence>
-
-        {!puzzleId && (
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-12 bg-[#3e2723]/5 backdrop-blur-sm p-6 sm:p-8 rounded-[3rem] border-2 border-dashed border-[#c4a484]/30 flex flex-col items-center text-center relative overflow-hidden z-10 group">
-            <Lightbulb className="text-[#c4a484] opacity-50 mb-6 w-14 h-14 group-hover:scale-110 transition-transform duration-1000" />
-            <AnimatePresence mode="wait">
-              <motion.div key={quoteIndex} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-4xl px-4">
-                 <p className="text-lg sm:text-xl font-bold tracking-[0.04em] text-[#3e2723] leading-tight mb-4 italic drop-shadow-sm">"{String(MOTIVATIONAL_QUOTES[quoteIndex].text)}"</p>
-                 <div className="flex items-center justify-center gap-3 text-[#c4a484]">
-                    <div className="w-12 h-[1.5px] bg-current opacity-30" />
-                    <span className="text-xs font-bold tracking-[0.03em]">
-                       — {String(MOTIVATIONAL_QUOTES[quoteIndex].author)}
-                    </span>
-                    <div className="w-12 h-[1.5px] bg-current opacity-30" />
-                 </div>
-              </motion.div>
-            </AnimatePresence>
-          </motion.div>
-        )}
-      </div>
-
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-        .animate-shake { animation: shake 0.2s ease-in-out 0s 2; }
-      `}</style>
-    </div>
-  );
-}
 
 export default AlphabetGamesLandingPage;

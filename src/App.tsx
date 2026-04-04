@@ -326,8 +326,20 @@ export default function App() {
               <Route path="/profiles" element={<ProtectedRoute><ProfileSelection /></ProtectedRoute>} />
               <Route path="/select-profile" element={<ProtectedRoute><ProfileSelection /></ProtectedRoute>} />
 
+              {/* Kids Zone - Standalone (no AppLayout) */}
+              <Route path="/games" element={<ProtectedRoute><ProfileProtectedRoute><KidsHub /></ProfileProtectedRoute></ProtectedRoute>} />
+
+              {/* Kids Module Landing Pages - Standalone (no AppLayout sidebar) */}
+              <Route path="/games/visuallogic" element={<ProtectedRoute><ProfileProtectedRoute><VisualLogicGamesPageWrapper /></ProfileProtectedRoute></ProtectedRoute>} />
+              <Route path="/games/numbers" element={<ProtectedRoute><ProfileProtectedRoute><NumbersGamesPageWrapper /></ProfileProtectedRoute></ProtectedRoute>} />
+              <Route path="/games/alphabets" element={<ProtectedRoute><ProfileProtectedRoute><AlphabetGamesPageWrapper /></ProfileProtectedRoute></ProtectedRoute>} />
+              <Route path="/games/shapes" element={<ProtectedRoute><ProfileProtectedRoute><ShapesGamesPageWrapper /></ProfileProtectedRoute></ProtectedRoute>} />
+              <Route path="/games/memory" element={<ProtectedRoute><ProfileProtectedRoute><MemoryGamesPageWrapper /></ProfileProtectedRoute></ProtectedRoute>} />
+              <Route path="/puzzles" element={<ProtectedRoute><ProfileProtectedRoute><PuzzleRouter /></ProfileProtectedRoute></ProtectedRoute>} />
+
               {/* Dashboard Layout - Protected Routes */}
               <Route element={<ProtectedRoute><ProfileProtectedRoute><AppLayout /></ProfileProtectedRoute></ProtectedRoute>}>
+
               {/* Dashboard */}
               <Route index element={<Home />} />
               <Route path="/dashboard" element={<Home />} />
@@ -480,9 +492,6 @@ export default function App() {
 
               
       
-
-              {/* Kids Zone Entrance */}
-              <Route path="/games" element={<KidsHub />} />
 
               {/* Puzzle module router */}
 

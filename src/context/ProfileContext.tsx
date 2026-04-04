@@ -16,15 +16,32 @@ export const DEFAULT_PROFILES: UserProfile[] = [
     type: 'KIDS',
     name: 'Kids',
     subtitle: '3-6 Years',
-    avatar: '🧒'
+    avatar: 'bird'
   }
+];
+
+// All available avatar options (shared across profile creation & account settings)
+export const AVATAR_OPTIONS = [
+  { id: 'bird',  label: 'Bird'   },
+  { id: '🧒',   label: 'Kid'    },
+  { id: '👦',   label: 'Boy'    },
+  { id: '👧',   label: 'Girl'   },
+  { id: '🦊',   label: 'Fox'    },
+  { id: '🐱',   label: 'Cat'    },
+  { id: '🐶',   label: 'Dog'    },
+  { id: '🐸',   label: 'Frog'   },
+  { id: '🦁',   label: 'Lion'   },
+  { id: '🐼',   label: 'Panda'  },
+  { id: '🦄',   label: 'Unicorn'},
+  { id: '🐯',   label: 'Tiger'  },
 ];
 
 interface ProfileContextType {
   activeProfile: UserProfile | null;
   selectProfile: (profileId: string) => void;
   clearProfile: () => void;
-  addProfile: (name: string, type: ProfileType) => void;
+  addProfile: (name: string, type: ProfileType, activate?: boolean, avatar?: string) => void;
+  updateAvatar: (profileId: string, avatar: string) => void;
   removeProfile: (profileId: string) => void;
   availableProfiles: UserProfile[];
   hasSelectedSessionProfile: boolean;
@@ -95,16 +112,16 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     setActiveProfile(null);
   };
 
-  const addProfile = (name: string, type: ProfileType) => {
+  const addProfile = (name: string, type: ProfileType, activate = false, avatarOverride?: string) => {
     if (availableProfiles.length >= 3) return;
 
-    const avatars = {
-      'KIDS': '🧒',
+    const defaultAvatars: Record<ProfileType, string> = {
+      'KIDS': 'bird',
       'STUDENTS': '🎓',
       'ASPIRANTS': '🚀'
     };
 
-    const subtitles = {
+    const subtitles: Record<ProfileType, string> = {
       'KIDS': '3-6 Years',
       'STUDENTS': '7-17 Years',
       'ASPIRANTS': 'Completed Schooling'
@@ -114,11 +131,24 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: `profile-${Date.now()}`,
       type,
       name,
-      avatar: avatars[type],
+      avatar: avatarOverride ?? defaultAvatars[type],
       subtitle: subtitles[type]
     };
 
     setAvailableProfiles(prev => [...prev, newProfile]);
+    if (activate) {
+      setActiveProfile(newProfile);
+      setHasSelectedSessionProfile(true);
+    }
+  };
+
+  const updateAvatar = (profileId: string, avatar: string) => {
+    setAvailableProfiles(prev =>
+      prev.map(p => p.id === profileId ? { ...p, avatar } : p)
+    );
+    setActiveProfile(prev =>
+      prev?.id === profileId ? { ...prev, avatar } : prev
+    );
   };
 
   const removeProfile = (profileId: string) => {
@@ -131,6 +161,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       selectProfile,
       clearProfile,
       addProfile,
+      updateAvatar,
       removeProfile,
       availableProfiles,
       hasSelectedSessionProfile,
