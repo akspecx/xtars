@@ -1,7 +1,7 @@
 import React from 'react';
 import SizeGame from './SizeGameBase';
 
-interface Props { onBack?: () => void; }
-export default function UnderstandingofSmall({ onBack }: Props) {
-  return <SizeGame target="small" moduleId="small" onBack={onBack} />;
+interface Props { onBack?: () => void; onNext?: () => void; }
+export default function UnderstandingofSmall({ onBack, onNext }: Props) {
+  return <SizeGame target="small" moduleId="small" onBack={onBack} onNext={onNext} />;
 }

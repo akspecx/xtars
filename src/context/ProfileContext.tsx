@@ -39,6 +39,7 @@ export const AVATAR_OPTIONS = [
 interface ProfileContextType {
   activeProfile: UserProfile | null;
   selectProfile: (profileId: string) => void;
+  selectAndSyncProfile: (profileId: string, avatarFromServer?: string) => void;
   clearProfile: () => void;
   addProfile: (name: string, type: ProfileType, activate?: boolean, avatar?: string) => void;
   updateAvatar: (profileId: string, avatar: string) => void;
@@ -108,6 +109,20 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   };
 
+  // Atomically syncs server avatar + activates profile.
+  // avatarFromServer is only applied when it is a real custom avatar (not 'bird'/empty),
+  // so locally-chosen avatars are never overwritten by the server default.
+  const selectAndSyncProfile = (profileId: string, avatarFromServer?: string) => {
+    const realAvatar = avatarFromServer && avatarFromServer !== 'bird' ? avatarFromServer : undefined;
+    const updatedProfiles = realAvatar
+      ? availableProfiles.map(p => p.id === profileId ? { ...p, avatar: realAvatar } : p)
+      : availableProfiles;
+    setAvailableProfiles(updatedProfiles);
+    const profile = updatedProfiles.find(p => p.id === profileId);
+    if (profile) setActiveProfile(profile);
+    setHasSelectedSessionProfile(true);
+  };
+
   const clearProfile = () => {
     setActiveProfile(null);
   };
@@ -159,6 +174,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     <ProfileContext.Provider value={{
       activeProfile,
       selectProfile,
+      selectAndSyncProfile,
       clearProfile,
       addProfile,
       updateAvatar,

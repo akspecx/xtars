@@ -88,11 +88,14 @@ const VisualLogicGame: React.FC<VLGameProps> = ({ Component, id }) => {
 
 // ── Size-game wrapper: SizeGame owns its own full header, no KidsPageHeader ──
 
-const SizeGameWrapper: React.FC<VLGameProps> = ({ Component }) => {
+const SizeGameWrapper: React.FC<VLGameProps & { onNext?: string }> = ({ Component, onNext }) => {
   const navigate = useNavigate();
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <Component onBack={() => navigate("/games/visuallogic")} />
+      <Component
+        onBack={() => navigate('/games/visuallogic')}
+        onNext={onNext ? () => navigate(onNext) : undefined}
+      />
     </Suspense>
   );
 };
@@ -108,10 +111,10 @@ export const VisualLogicFullAndEmptyWrapper:      React.FC = () => <VisualLogicG
 export const VisualLogicFullWrapper:              React.FC = () => <VisualLogicGame id="full"           Component={UnderstandingOfFull}                  />;
 export const VisualLogicEmptyWrapper:             React.FC = () => <VisualLogicGame id="empty"          Component={UnderstandingOfEmpty}                 />;
 export const VisualLogicDifferentWrapper:         React.FC = () => <VisualLogicGame id="different"      Component={UnderstandingOfDifferent}             />;
-/* Big / Small / Mix — own integrated header, no KidsPageHeader wrapper */
-export const VisualLogicBigWrapper:               React.FC = () => <SizeGameWrapper id="big"            Component={UnderstandingOfBig}                   />;
-export const VisualLogicSmallWrapper:             React.FC = () => <SizeGameWrapper id="small"          Component={UnderstandingofSmall}                 />;
-export const VisualLogicBigAndSmallMixWrapper:    React.FC = () => <SizeGameWrapper id="big-small"      Component={UnderstandingOfBigAndSmallMix}        />;
+/* Big → Small → Mix chained navigation */
+export const VisualLogicBigWrapper:               React.FC = () => <SizeGameWrapper id="big"        Component={UnderstandingOfBig}            onNext="/games/visuallogic/small"     />;
+export const VisualLogicSmallWrapper:             React.FC = () => <SizeGameWrapper id="small"      Component={UnderstandingofSmall}          onNext="/games/visuallogic/big-small-mix" />;
+export const VisualLogicBigAndSmallMixWrapper:    React.FC = () => <SizeGameWrapper id="big-small"  Component={UnderstandingOfBigAndSmallMix} onNext="/games/visuallogic"           />;
 export const VisualLogicAboveWrapper:             React.FC = () => <VisualLogicGame id="above"          Component={UnderstandingOfAbove}                 />;
 export const VisualLogicBelowWrapper:             React.FC = () => <VisualLogicGame id="below"          Component={UnderstandingOfBelow}                 />;
 export const VisualLogicAboveAndBelowMixWrapper:  React.FC = () => <VisualLogicGame id="above-below"    Component={UnderstandingOfAboveAndBelow}         />;

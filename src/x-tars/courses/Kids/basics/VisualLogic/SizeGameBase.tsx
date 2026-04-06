@@ -32,6 +32,15 @@ type Phase     = 'question' | 'correct' | 'wrong' | 'concept' | 'done' | 'walkin
 interface Side  { emoji: string; name: string }
 interface Pair  { big: Side; small: Side }
 
+const MODE_STORAGE_KEY = 'kids_game_mode';
+const getStoredMode = (): GameMode => {
+  try { return (localStorage.getItem(MODE_STORAGE_KEY) as GameMode) || 'play'; }
+  catch { return 'play'; }
+};
+const storeMode = (m: GameMode) => {
+  try { localStorage.setItem(MODE_STORAGE_KEY, m); } catch { /* ignore */ }
+};
+
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const PAIRS: Pair[] = [
@@ -147,14 +156,16 @@ interface ObjectCardProps {
   cardRef?: React.RefObject<HTMLButtonElement>;
 }
 
-const ObjectCard: React.FC<ObjectCardProps & { isDark?: boolean }> = ({
-  side, isBig, isSelected, isTarget, phase, animateScale, onClick, cardRef, isDark = false,
+const ObjectCard: React.FC<ObjectCardProps & { isDark?: boolean; playWrongHover?: boolean }> = ({
+  side, isBig, isSelected, isTarget, phase, animateScale, onClick, cardRef, isDark = false, playWrongHover = false,
 }) => {
   const isAnswered = phase === 'correct' || phase === 'wrong';
   const showBurst  = isAnswered && isTarget && phase === 'correct';
   const isWrong    = isAnswered && isSelected === true && !isTarget && phase === 'wrong';
 
-  const borderCls = isAnswered
+  const borderCls = playWrongHover
+    ? 'border-red-400'
+    : isAnswered
     ? isTarget
       ? 'border-emerald-400 shadow-emerald-200 shadow-xl'
       : isDark ? 'border-gray-700 opacity-50' : 'border-gray-100 opacity-50'
@@ -185,6 +196,8 @@ const ObjectCard: React.FC<ObjectCardProps & { isDark?: boolean }> = ({
             ? isDark ? 'bg-emerald-950' : 'bg-emerald-50'
             : isWrong
             ? isDark ? 'bg-red-950' : 'bg-red-50'
+            : playWrongHover
+            ? isDark ? 'bg-red-950/40' : 'bg-red-50'
             : isDark ? 'bg-gray-800' : 'bg-white'
           }
           ${borderCls}
@@ -202,7 +215,7 @@ const ObjectCard: React.FC<ObjectCardProps & { isDark?: boolean }> = ({
         )}
 
         <motion.span
-          className={`select-none leading-none ${isBig ? 'text-[108px] sm:text-[124px]' : 'text-[58px] sm:text-[68px]'}`}
+          className={`select-none leading-none ${isBig ? 'text-[115px] sm:text-[130px]' : 'text-[65px] sm:text-[76px]'}`}
           animate={!isAnswered ? {
             rotate: [-2, 2, -2],
             y:      [0, -4, 0],
@@ -211,6 +224,16 @@ const ObjectCard: React.FC<ObjectCardProps & { isDark?: boolean }> = ({
         >
           {side.emoji}
         </motion.span>
+
+        {/* ✗ overlay on wrong hover in play mode */}
+        {playWrongHover && (
+          <motion.div
+            initial={{ scale: 0 }} animate={{ scale: 1 }}
+            className="absolute inset-0 flex items-center justify-center rounded-3xl bg-red-400/20"
+          >
+            <span className="text-red-500 font-black text-5xl pointer-events-none">✗</span>
+          </motion.div>
+        )}
 
         {/* "✓" overlay on correct target */}
         {isAnswered && isTarget && phase === 'correct' && (
@@ -330,6 +353,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
 const VirtualPointer: React.FC<{ x: number; y: number }> = ({ x, y }) => (
   <motion.div
     className="fixed z-[600] pointer-events-none"
+    initial={{ left: x, top: y }}
     animate={{ left: x, top: y }}
     transition={{ duration: 0.9, ease: 'easeInOut' }}
     style={{ transform: 'translate(-50%, -50%)' }}
@@ -357,9 +381,19 @@ interface ConceptPanelProps {
   onDone: () => void;
 }
 
-const ConceptPanel: React.FC<ConceptPanelProps & { isDark?: boolean }> = ({ pair, asking, onDone, isDark = false }) => {
+const ConceptPanel: React.FC<ConceptPanelProps & { isDark?: boolean; autoAdvance?: boolean }> = ({
+  pair, asking, onDone, isDark = false, autoAdvance = false,
+}) => {
   const target = asking === 'big' ? pair.big : pair.small;
   const other  = asking === 'big' ? pair.small : pair.big;
+  const [secs, setSecs] = useState(5);
+
+  useEffect(() => {
+    if (!autoAdvance) return;
+    const iv = setInterval(() => setSecs(s => Math.max(0, s - 1)), 1000);
+    const dt = setTimeout(onDone, 5000);
+    return () => { clearInterval(iv); clearTimeout(dt); };
+  }, [autoAdvance, onDone]);
 
   return (
     <motion.div
@@ -374,6 +408,23 @@ const ConceptPanel: React.FC<ConceptPanelProps & { isDark?: boolean }> = ({ pair
     >
       {/* Handle */}
       <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
+
+      {/* Auto-advance progress bar */}
+      {autoAdvance && (
+        <div className="w-full h-1.5 bg-gray-200 rounded-full mb-3 overflow-hidden">
+          <motion.div
+            initial={{ width: '100%' }}
+            animate={{ width: '0%' }}
+            transition={{ duration: 5, ease: 'linear' }}
+            className={`h-full rounded-full ${asking === 'big' ? 'bg-amber-400' : 'bg-sky-400'}`}
+          />
+        </div>
+      )}
+      {autoAdvance && (
+        <p className={`text-center text-xs mb-3 ${isDark ? 'text-gray-400' : 'text-gray-400'}`}>
+          Continuing in {secs}s…
+        </p>
+      )}
 
       <h3 className={`text-center text-lg font-black mb-4 ${
         isDark ? 'text-gray-100' : 'text-gray-800'
@@ -637,16 +688,25 @@ interface SizeGameProps {
   target: GameTarget;
   moduleId: string;
   onBack?: () => void;
+  onNext?: () => void;   // navigate directly to the next module
 }
 
-const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
+const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack, onNext }) => {
   const { activeProfile } = useProfile();
   const { theme }   = useTheme();
   const isDark      = theme === 'dark';
-  const kidName   = activeProfile?.name ?? 'Friend';
-  const kidAvatar = activeProfile?.avatar ?? 'bird';
+  const kidName = (() => {
+    if (activeProfile?.name) return activeProfile.name;
+    try { return JSON.parse(localStorage.getItem('xtars_active_profile') || 'null')?.name ?? 'Friend'; }
+    catch { return 'Friend'; }
+  })();
+  const kidAvatar = (() => {
+    if (activeProfile?.avatar) return activeProfile.avatar;
+    try { return JSON.parse(localStorage.getItem('xtars_active_profile') || 'null')?.avatar ?? 'bird'; }
+    catch { return 'bird'; }
+  })();
 
-  const [mode,        setMode]        = useState<GameMode>('play');
+  const [mode,        setMode]        = useState<GameMode>(getStoredMode);
   const [pairIdx,     setPairIdx]     = useState(0);
   const [asking,      setAsking]      = useState<'big' | 'small'>('big');
   const [leftIsBig,   setLeftIsBig]   = useState(true);
@@ -656,6 +716,7 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
   const [score,       setScore]       = useState(0);
   const [showConcept,    setShowConcept]    = useState(false);
   const [pointer,        setPointer]        = useState<{ x: number; y: number } | null>(null);
+  const [hoverSide,      setHoverSide]      = useState<'left' | 'right' | null>(null);
   const [shownConcept,   setShownConcept]   = useState(false);
   const [celebrating,    setCelebrating]    = useState(false);
   const [modeDropOpen,   setModeDropOpen]   = useState(false);
@@ -700,6 +761,8 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
     timerRef.current.forEach(clearTimeout);
     timerRef.current = [];
     setPointer(null);
+    setHoverSide(null);
+    setCelebrating(false);
     playRef.current = false;
     cancel();
   }, [cancel]);
@@ -799,6 +862,7 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
       const r = wrongEl.getBoundingClientRect();
       setPointer({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
     }
+    setHoverSide(wrongSide as 'left' | 'right');
     speak(`Hmm… is it this one?`, 0.9, 1.2);
 
     await new Promise<void>(r => { after(1800, r); });
@@ -813,8 +877,11 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
       setPointer({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
     }
     speak(`Yes! ${correctObj.name} is ${resolvedAsking === 'big' ? 'BIG' : 'SMALL'}! Let me tap it!`);
+    // Wait for the pointer animation (0.9s) to finish arriving at correct card, THEN clear red
+    await new Promise<void>(r => { after(950, r); });
+    setHoverSide(null);
 
-    await new Promise<void>(r => { after(1600, r); });
+    await new Promise<void>(r => { after(700, r); });
     setPointer(null);
     handleAnswer(correctSide);
     playRef.current = false;
@@ -841,6 +908,7 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
   const handleModeSwitch = (m: GameMode) => {
     clearAll();
     setMode(m);
+    storeMode(m);
     setScore(0);
     setShownConcept(false);
     setModeDropOpen(false);
@@ -932,20 +1000,14 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
           </motion.button>
         )}
 
-        {/* Module badge + title */}
+        {/* Module badge + title: just the topic name */}
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          {/* Circular amber badge */}
           <div className="w-12 h-12 rounded-full bg-amber-400 border-[3px] border-amber-300 flex items-center justify-center flex-none shadow-md">
             <span className="text-2xl leading-none">{targetEmoji}</span>
           </div>
-          <div className="min-w-0">
-            <p className="text-white font-black text-base leading-tight">
-              Module {pairIdx + 1} of {PAIRS.length}
-            </p>
-            <p className="text-white/80 text-xs font-bold leading-tight">
-              {targetLabel} · Visual Logic
-            </p>
-          </div>
+          <p className="text-white font-black text-xl leading-tight">
+            {targetLabel}
+          </p>
         </div>
 
         {/* MODE dropdown — dark pill */}
@@ -1007,24 +1069,26 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
       </div>
 
       {/* ── Big title ── */}
-      <div className="flex-none pt-3 pb-1 px-4 text-center">
+      <div className="flex-none pt-3 pb-2 px-4 text-center">
         <motion.h1
           key={`title-${pairIdx}`}
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-3xl font-black uppercase tracking-wide leading-tight"
+          className="text-4xl font-black uppercase tracking-wide leading-tight"
           style={{ color: '#7DC244', letterSpacing: '0.05em' }}
         >
           {resolvedAsking === 'big' ? 'Find the Big One' : 'Find the Small One'}
         </motion.h1>
-        {progressDots}
+        <div className="mt-2">{progressDots}</div>
       </div>
 
-      {/* ── Cards ── */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 min-h-0 gap-3">
+      {/* ── Cards (content boundary) ── */}
+      <div className={`flex-1 flex flex-col items-center justify-center mx-4 rounded-3xl min-h-0 ${
+        isDark ? 'bg-gray-800 border border-gray-700' : 'bg-gray-50 border border-gray-200'
+      }`}>
         <motion.div
           key={`cards-${pairIdx}`}
-          className="flex items-center justify-center gap-6 sm:gap-14 w-full"
+          className="flex items-center justify-center gap-6 sm:gap-14 w-full px-4"
           initial={{ opacity: 0, scale: 0.88 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.32, type: 'spring', stiffness: 340, damping: 26 }}
@@ -1034,6 +1098,8 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
             const isBig    = side === 'left' ? leftIsBig : !leftIsBig;
             const isTarget = side === correctSide;
             const thisRef  = side === 'left' ? leftCardRef : rightCardRef;
+            // In play mode the pointer hovers over wrong side — highlight it red briefly
+            const isPlayWrongHover = mode === 'play' && hoverSide === side && !isTarget;
             return (
               <ObjectCard
                 key={side}
@@ -1048,6 +1114,7 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
                   : undefined}
                 cardRef={thisRef as React.RefObject<HTMLButtonElement>}
                 isDark={isDark}
+                playWrongHover={isPlayWrongHover}
               />
             );
           })}
@@ -1058,7 +1125,7 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
           key={`instr-${pairIdx}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className={`text-base font-black text-center ${
+          className={`text-xl font-black text-center px-4 pb-4 ${
             isDark ? 'text-gray-200' : 'text-gray-700'
           }`}
         >
@@ -1083,20 +1150,15 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
         </AnimatePresence>
       </div>
 
-      {/* ── Need Help button ── */}
-      <div className={`flex-none px-4 pb-5 pt-1 flex justify-center ${
-        isDark ? 'bg-gray-900' : 'bg-white'
-      }`}>
-        <motion.button
-          whileTap={{ scale: 0.94 }}
-          onClick={() => setShowConcept(true)}
-          className="flex items-center gap-2 px-6 py-2.5 rounded-full font-black text-sm text-white shadow-md"
-          style={{ background: '#F5A623' }}
-        >
-          <Play size={13} fill="white" />
-          Need help?
-        </motion.button>
-      </div>
+      {/* Floating ? help badge — bottom-right corner */}
+      <motion.button
+        whileTap={{ scale: 0.88 }}
+        onClick={() => setShowConcept(true)}
+        className="fixed right-5 bottom-6 z-[100] w-12 h-12 rounded-full flex items-center justify-center shadow-lg text-white font-black text-2xl"
+        style={{ background: '#F5A623' }}
+      >
+        ?
+      </motion.button>
 
       {/* Celebrating — only confetti particles now; avatar reacts inline in SpeechBubble */}
       <AnimatePresence>
@@ -1138,7 +1200,7 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="fixed inset-0 z-[300] bg-black/30 backdrop-blur-sm"
             />
-            <ConceptPanel pair={pair} asking={resolvedAsking} onDone={onConceptDone} isDark={isDark} />
+            <ConceptPanel pair={pair} asking={resolvedAsking} onDone={onConceptDone} isDark={isDark} autoAdvance={mode === 'play'} />
           </>
         )}
       </AnimatePresence>
@@ -1159,8 +1221,11 @@ const SizeGame: React.FC<SizeGameProps> = ({ target, moduleId, onBack }) => {
             isDark={isDark}
             onDone={() => {
               clearAll();
-              if (onBack) onBack();
-              else {
+              if (onNext) {
+                onNext();
+              } else if (onBack) {
+                onBack();
+              } else {
                 setScore(0); setShownConcept(false); setCelebrating(false);
                 resetRound(0, target === 'small' ? 'small' : 'big');
               }

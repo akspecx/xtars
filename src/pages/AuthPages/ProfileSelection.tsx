@@ -72,13 +72,14 @@ export default function ProfileSelection() {
     );
 
     if (existingProfile) {
-      // Profile already in context — select it
+      // Use the context profile's avatar as-is — it was set locally and is correct.
+      // Never overwrite it with the server avatar (server may not store custom avatars).
       selectContextProfile(existingProfile.id);
       setHasSelectedSessionProfile(true);
     } else {
-      // Profile not in context (e.g. ASPIRANTS added via API) — add and activate in one step
-      console.log('Profile not in context, adding + activating:', profile.name, profile.type);
-      addProfile(profile.name, profile.type, true);
+      // Profile not in context — add and activate. Use server avatar if it has one,
+      // otherwise default to bird.
+      addProfile(profile.name, profile.type, true, profile.avatar || 'bird');
     }
     
     // Navigate immediately — route guard bypasses checks via fromProfileSelection state
@@ -194,7 +195,16 @@ export default function ProfileSelection() {
                   >
                     <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-2xl md:rounded-3xl bg-gray-800 border-2 border-gray-700 flex flex-col items-center justify-center mb-2 md:mb-3 transition-all duration-300 group-hover:border-brand-400 group-hover:bg-gray-750 group-hover:shadow-[0_0_40px_rgba(70,95,255,0.25)] will-change-transform relative overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-brand-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl group-hover:scale-110 transition-transform duration-500 relative z-10">{profile.avatar}</span>
+                      <div className="relative z-10 group-hover:scale-110 transition-transform duration-500">
+                        <KidAvatar
+                          avatar={
+                            contextProfiles.find(
+                              p => p.name.toLowerCase() === profile.name.toLowerCase() && p.type === profile.type
+                            )?.avatar || profile.avatar || 'bird'
+                          }
+                          size={60}
+                        />
+                      </div>
                     </div>
                     <h3 className="text-xs sm:text-sm md:text-base lg:text-lg font-bold text-gray-200 group-hover:text-white transition-colors truncate w-full text-center px-1">{profile.name}</h3>
                     <p className="text-[9px] sm:text-[10px] md:text-xs font-medium text-gray-500 mt-0.5 uppercase tracking-wider">{profile.type}</p>

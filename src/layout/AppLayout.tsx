@@ -7,7 +7,7 @@ import Backdrop from "./Backdrop";
 import ParentNav from "./ParentNav";
 import AppSidebar from "./AppSidebar";
 import ParentalGate from "./ParentalGate";
-import KidsBackButton from "../components/common/KidsBackButton";
+
 
 const LayoutContent: React.FC = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
@@ -61,8 +61,7 @@ const LayoutContent: React.FC = () => {
         <main className="flex-1 overflow-y-auto relative">
           <Outlet />
           
-          {/* Large Back Button for Kids (Restores lost 2-day work) */}
-          <KidsBackButton />
+
           
           {/* Parental Gate Overlay */}
           {showParentalGate && (
