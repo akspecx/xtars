@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getProgress, recordVisit, ModuleProgress } from './useModuleProgress';
+import { useTheme } from '../../../context/ThemeContext';
 
 // ─── Public Types ──────────────────────────────────────────────────────────────
 
@@ -267,6 +268,8 @@ const KidsModuleLandingPage: React.FC<KidsModuleLandingPageProps> = ({
   onBack,
 }) => {
   const navigate      = useNavigate();
+  const { theme }     = useTheme();
+  const isDark        = theme === 'dark';
   const [page, setPage] = useState(0);
   const [progressMap, setProgressMap] = useState<Record<string, ModuleProgress>>({});
 
@@ -321,7 +324,7 @@ const KidsModuleLandingPage: React.FC<KidsModuleLandingPageProps> = ({
   return (
     <div 
       className="w-full min-h-screen flex flex-col relative overflow-hidden select-none"
-      style={{ backgroundColor: bgColor }}
+      style={{ backgroundColor: isDark ? '#111827' : bgColor }}
     >
       <Watermarks emoji={moduleEmoji} />
 

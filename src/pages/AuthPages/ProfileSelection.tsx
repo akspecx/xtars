@@ -72,23 +72,17 @@ export default function ProfileSelection() {
     );
 
     if (existingProfile) {
-      // Use the context profile's avatar as-is — it was set locally and is correct.
-      // Never overwrite it with the server avatar (server may not store custom avatars).
       selectContextProfile(existingProfile.id);
       setHasSelectedSessionProfile(true);
     } else {
-      // Profile not in context — add and activate. Use server avatar if it has one,
-      // otherwise default to bird.
       addProfile(profile.name, profile.type, true, profile.avatar || 'bird');
     }
     
-    // Navigate immediately — route guard bypasses checks via fromProfileSelection state
+    // Small delay lets React commit the selectProfile state before navigation renders the new route
     const targetPath = profile.type === 'KIDS' ? '/games' : '/dashboard';
-    console.log(`Navigating to ${targetPath} for profile type: ${profile.type}`);
-    navigate(targetPath, { 
-      replace: true,
-      state: { fromProfileSelection: true }
-    });
+    setTimeout(() => {
+      navigate(targetPath, { replace: true, state: { fromProfileSelection: true } });
+    }, 50);
   };
 
   const handleAddProfile = async (e: React.FormEvent) => {
