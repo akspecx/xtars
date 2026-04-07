@@ -117,7 +117,7 @@ function borderClass(
   if (isSelected) {
     return isCorrect && isTargetCard
       ? 'border-[#4CAF50] bg-[#F1FCEF]'
-      : 'border-[#FFB74D] animate-wobble';
+      : 'border-[#FCA5A5] bg-[#FFF1F0] animate-wobble';
   }
   if (isAnswered) return 'opacity-40 border-[#EEE0CB]';
   return 'border-[#D9B99B] hover:border-[#B8977E]';

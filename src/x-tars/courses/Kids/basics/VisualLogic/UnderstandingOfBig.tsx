@@ -1,7 +1,236 @@
-import React from 'react';
-import SizeGame from './SizeGameBase';
+/**
+ * UnderstandingOfBig.tsx
+ * All pairs, voice, and rendering live here.
+ * Uses useComparisonGame + wooden dark/light theme.
+ */
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, Volume2, VolumeX, Play, MousePointer2, Check } from 'lucide-react';
+import { useTheme }   from '../../../../../context/ThemeContext';
+import { useProfile } from '../../../../../context/ProfileContext';
+import { useComparisonGame, WOOD_LIGHT, WOOD_DARK } from '../../../../kids-ui/useComparisonGame';
+import WoodCard     from '../../../../kids-ui/WoodCard';
+import AvatarBubble from '../../../../kids-ui/AvatarBubble';
+import TouchRipple  from '../../../../kids-ui/TouchRipple';
+import ConceptSheet from '../../../../kids-ui/ConceptSheet';
+import WinScreen    from '../../../../kids-ui/WinScreen';
+import type { GamePair, VoiceScript, AvatarMessages } from '../../../../kids-ui/types';
+
+const PAIRS: GamePair[] = [
+  { primary: { emoji: '🐘', name: 'Elephant'  }, secondary: { emoji: '🐜', name: 'Ant'       } },
+  { primary: { emoji: '🏠', name: 'House'     }, secondary: { emoji: '🧸', name: 'Toy'       } },
+  { primary: { emoji: '🦕', name: 'Dino'      }, secondary: { emoji: '🐝', name: 'Bee'       } },
+  { primary: { emoji: '🚌', name: 'Bus'       }, secondary: { emoji: '🚗', name: 'Car'       } },
+  { primary: { emoji: '🌕', name: 'Moon'      }, secondary: { emoji: '⭐', name: 'Star'      } },
+  { primary: { emoji: '🦁', name: 'Lion'      }, secondary: { emoji: '🐭', name: 'Mouse'     } },
+  { primary: { emoji: '🏔️', name: 'Mountain'  }, secondary: { emoji: '🪨', name: 'Rock'      } },
+  { primary: { emoji: '🎪', name: 'Circus'    }, secondary: { emoji: '⛺', name: 'Tent'      } },
+  { primary: { emoji: '🐋', name: 'Whale'     }, secondary: { emoji: '🐟', name: 'Fish'      } },
+  { primary: { emoji: '🎂', name: 'Cake'      }, secondary: { emoji: '🍪', name: 'Cookie'    } },
+  { primary: { emoji: '🌻', name: 'Sunflower' }, secondary: { emoji: '🍄', name: 'Mushroom'  } },
+  { primary: { emoji: '🦋', name: 'Butterfly' }, secondary: { emoji: '🐛', name: 'Bug'       } },
+];
+
+const VOICE: VoiceScript = {
+  intro:       (_p, _s, kid) => `Hi ${kid}! Let's find the BIG one!`,
+  question:    (lbl, kid)   => `${kid}, which one is ${lbl}?`,
+  correct:     (name, _l, kid) => `Yes! ${name} is BIG! Well done, ${kid}!`,
+  wrong:       ()           => `Oops! Look for the bigger one!`,
+  playWrong:   ()           => `Hmm, is this the big one?`,
+  playThink:   ()           => `Wait, let me look again...`,
+  playCorrect: (name)       => `Yes! ${name} is BIG! Let me tap it!`,
+  done:        (kid)        => `Woohoo, ${kid}! You got them all!`,
+  concept:     (_lbl, shown) => `${shown} is BIG! Look how big!`,
+};
+
+const MSG: AvatarMessages = {
+  question: lbl  => `Which one is ${lbl}?`,
+  correct:  name => `${name} is BIG! 🎉`,
+  wrong:              `Try again! 👀`,
+};
+
+const ACCENT        = '#8B5533';
+const PRIMARY_LBL   = 'BIG';
+const SECONDARY_LBL = 'SMALL';
+const HEADER_ICON   = '🐘';
+const SCALE_MODE    = 'size' as const;
+const MODULE_ID     = 'big';
+const TARGET        = 'primary' as const;
 
 interface Props { onBack?: () => void; onNext?: () => void; }
+
 export default function UnderstandingOfBig({ onBack, onNext }: Props) {
-  return <SizeGame target="big" moduleId="big" onBack={onBack} onNext={onNext} />;
+  const { theme: colorMode } = useTheme();
+  const theme = colorMode === 'dark' ? WOOD_DARK : WOOD_LIGHT;
+
+  const { activeProfile, availableProfiles } = useProfile() as any;
+  const kidName = useMemo(() => {
+    if (activeProfile?.name) return activeProfile.name;
+    try { return JSON.parse(localStorage.getItem('xtars_active_profile') || 'null')?.name ?? 'Friend'; }
+    catch { return 'Friend'; }
+  }, [activeProfile]);
+  const kidAvatar = useMemo(() => {
+    if (activeProfile?.avatar) return activeProfile.avatar;
+    try {
+      const id = JSON.parse(localStorage.getItem('xtars_active_profile') || 'null')?.id;
+      const fromList = id ? availableProfiles?.find((p: any) => p.id === id) : null;
+      return fromList?.avatar ?? JSON.parse(localStorage.getItem('xtars_active_profile') || 'null')?.avatar ?? 'bird';
+    } catch { return 'bird'; }
+  }, [activeProfile, availableProfiles]);
+
+  const game = useComparisonGame({
+    moduleId: MODULE_ID, target: TARGET,
+    primaryLabel: PRIMARY_LBL, secondaryLabel: SECONDARY_LBL,
+    pairs: PAIRS, voice: VOICE, kidName,
+  });
+
+  const [modeOpen, setModeOpen] = useState(false);
+  const dropRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const h = (e: MouseEvent) => {
+      if (dropRef.current && !dropRef.current.contains(e.target as Node)) setModeOpen(false);
+    };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+
+  const bubbleText = game.phase === 'correct'
+    ? MSG.correct(game.correctObj.name)
+    : game.phase === 'wrong' ? MSG.wrong : MSG.question(game.askLabel);
+  const bubbleHighlight = game.phase === 'question' ? game.askLabel : undefined;
+
+  return (
+    <div className="flex flex-col h-screen select-none overflow-hidden" style={{ background: theme.pageBg }}>
+
+      {/* Header */}
+      <div className="flex items-center gap-3 px-4 flex-none"
+        style={{ background: ACCENT, paddingTop: 'env(safe-area-inset-top, 14px)', paddingBottom: 12 }}>
+        {onBack && (
+          <motion.button whileTap={{ scale: 0.85 }} onClick={onBack}
+            className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white flex-none">
+            <ChevronLeft size={20} strokeWidth={3} />
+          </motion.button>
+        )}
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <div className="w-11 h-11 rounded-full bg-white/25 border-[3px] border-white/35 flex items-center justify-center flex-none shadow">
+            <span className="text-2xl leading-none">{HEADER_ICON}</span>
+          </div>
+          <p className="text-white font-black text-lg leading-tight truncate">
+            {game.resolvedAskPrimary ? PRIMARY_LBL : SECONDARY_LBL}
+          </p>
+        </div>
+        <div className="relative flex-none" ref={dropRef}>
+          <button onClick={() => setModeOpen(o => !o)}
+            className="w-11 h-11 rounded-full flex items-center justify-center shadow-md bg-black/25">
+            <span className="text-white text-[9px] font-black tracking-widest uppercase leading-none">
+              {game.mode === 'play' ? 'PLAY' : 'PRAC'}
+            </span>
+          </button>
+          <AnimatePresence>
+            {modeOpen && (
+              <motion.div initial={{ opacity: 0, y: -6, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.95 }} transition={{ duration: 0.14 }}
+                className="absolute right-0 top-full mt-2 rounded-2xl shadow-xl overflow-hidden z-[200] w-44"
+                style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}` }}>
+                {(['play', 'practice'] as const).map(opt => (
+                  <button key={opt} onClick={() => { game.switchMode(opt); setModeOpen(false); }}
+                    className="w-full flex items-center gap-2 px-3 py-2.5 text-left"
+                    style={{ background: game.mode === opt ? theme.areaRing + '55' : 'transparent' }}>
+                    <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-none" style={{ background: theme.areaRing }}>
+                      {opt === 'play' ? <Play size={11} fill={ACCENT} style={{ color: ACCENT }} /> : <MousePointer2 size={11} style={{ color: '#10B981' }} />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-black truncate" style={{ color: theme.text }}>{opt === 'play' ? 'Play Mode' : 'Practice'}</p>
+                      <p className="text-[10px] truncate" style={{ color: theme.textMuted }}>{opt === 'play' ? 'Watch & learn' : 'Your turn!'}</p>
+                    </div>
+                    {game.mode === opt && <Check size={11} style={{ color: '#10B981' }} />}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        <button onClick={() => game.setIsMuted(!game.isMuted)}
+          className="w-11 h-11 flex items-center justify-center rounded-xl flex-none bg-white/20">
+          {game.isMuted ? <VolumeX size={20} className="text-white/60" /> : <Volume2 size={20} className="text-white" />}
+        </button>
+      </div>
+
+      {/* Title + dots */}
+      <div className="flex-none pt-3 pb-2 px-4 text-center">
+        <motion.h1 key={`t-${game.pairIdx}`} initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+          className="text-3xl font-black uppercase tracking-wide" style={{ color: ACCENT }}>
+          Tap the {game.askLabel} one
+        </motion.h1>
+        <div className="flex gap-2 justify-center mt-2">
+          {game.sessionPairs.map((_, i) => (
+            <motion.div key={i} animate={{ scale: i === game.pairIdx ? 1.25 : 1 }}
+              className="w-2.5 h-2.5 rounded-full"
+              style={{ background: i < game.pairIdx ? '#22C55E' : i === game.pairIdx ? ACCENT : theme.dot }} />
+          ))}
+        </div>
+      </div>
+
+      {/* Card area */}
+      <div className="flex-1 flex flex-col items-center justify-center mx-4 mt-1 mb-3 rounded-3xl min-h-0"
+        style={{ background: theme.areaBg, border: `2px solid ${theme.areaRing}` }}>
+        <motion.div key={`cards-${game.pairIdx}`}
+          className="flex items-center justify-center gap-6 sm:gap-12 w-full px-4"
+          initial={{ opacity: 0, scale: 0.88 }} animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, type: 'spring', stiffness: 340, damping: 26 }}>
+          {(['left', 'right'] as const).map(side => (
+            <WoodCard key={side}
+              side={side === 'left' ? game.leftSide : game.rightSide}
+              isPrimary={side === 'left' ? game.leftSide === game.pair.primary : game.rightSide === game.pair.primary}
+              isTarget={side === game.correctSide}
+              isSelected={game.selected === side ? true : null}
+              phase={game.phase} scaleMode={SCALE_MODE} theme={theme}
+              onClick={game.mode === 'practice' && game.phase === 'question' ? () => game.handleAnswer(side) : undefined}
+              cardRef={side === 'left' ? game.leftRef : game.rightRef}
+            />
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Avatar bubble */}
+      <div className="flex-none px-4 pt-2 pb-4" style={{ background: theme.pageBg }}>
+        <AnimatePresence mode="wait">
+          <AvatarBubble key={`bubble-${game.pairIdx}-${game.phase}`}
+            avatar={kidAvatar} text={bubbleText} highlight={bubbleHighlight}
+            celebrating={game.celebrating} theme={theme} />
+        </AnimatePresence>
+      </div>
+
+      {/* ? button */}
+      <motion.button whileTap={{ scale: 0.86 }} onClick={() => game.setShowConcept(true)}
+        className="fixed right-5 bottom-6 z-[100] w-12 h-12 rounded-full flex items-center justify-center shadow-lg text-white font-black text-xl"
+        style={{ background: '#FBBF24' }}>?</motion.button>
+
+      {/* Touch ripple */}
+      <AnimatePresence>{game.pointer && <TouchRipple x={game.pointer.x} y={game.pointer.y} />}</AnimatePresence>
+
+      {/* Concept sheet */}
+      <AnimatePresence>
+        {game.showConcept && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[300] bg-black/30 backdrop-blur-sm" onClick={game.onConceptDone} />
+            <ConceptSheet pair={game.pair} askPrimary={game.resolvedAskPrimary}
+              primaryLabel={PRIMARY_LBL} secondaryLabel={SECONDARY_LBL}
+              autoAdvance={game.mode === 'play'} theme={theme} onDone={game.onConceptDone} />
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Win screen */}
+      <AnimatePresence>
+        {game.done && (
+          <WinScreen avatar={kidAvatar} name={kidName} score={game.score}
+            total={game.sessionPairs.length} accent={ACCENT}
+            onDone={() => { if (onNext) { onNext(); return; } if (onBack) { onBack(); return; } game.replay(); }}
+            onReplay={game.replay} />
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }
