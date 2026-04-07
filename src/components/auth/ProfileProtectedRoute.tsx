@@ -46,6 +46,6 @@ export const ProfileProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
     return <Navigate to="/" replace />;
   }
 
-  // No active profile — force profile selection
-  return <Navigate to="/profiles" replace />;
+  // All checks passed — render the route
+  return <>{children}</>;
 };
