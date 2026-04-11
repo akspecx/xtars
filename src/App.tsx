@@ -45,6 +45,11 @@ const DailyObjectsModuleWrapper    = lazy(() => AlphabetGames().then(m => ({ def
 const LetterIntroModuleWrapper     = lazy(() => AlphabetGames().then(m => ({ default: m.LetterIntroModuleWrapper })));
 const LetterQuizModuleWrapper      = lazy(() => AlphabetGames().then(m => ({ default: m.LetterQuizModuleWrapper })));
 const BubblePopModuleWrapper       = lazy(() => AlphabetGames().then(m => ({ default: m.BubblePopModuleWrapper })));
+const SteppingStonesModuleWrapper  = lazy(() => AlphabetGames().then(m => ({ default: m.SteppingStonesModuleWrapper })));
+const BuildingBlocksModuleWrapper  = lazy(() => AlphabetGames().then(m => ({ default: m.BuildingBlocksModuleWrapper })));
+const FrogJumpModuleWrapper        = lazy(() => AlphabetGames().then(m => ({ default: m.FrogJumpModuleWrapper })));
+const HungryCaterpillarModuleWrapper = lazy(() => AlphabetGames().then(m => ({ default: m.HungryCaterpillarModuleWrapper })));
+const AlphabetTrainModuleWrapper   = lazy(() => AlphabetGames().then(m => ({ default: m.AlphabetTrainModuleWrapper })));
 const StartsWithQuizWrapper        = lazy(() => AlphabetGames().then(m => ({ default: m.StartsWithQuizWrapper })));
 const LetterMatchGameWrapper = lazy(() => AlphabetGames().then(m => ({ default: m.LetterMatchGameWrapper })));
 const AlphabetSequenceGameWrapper = lazy(() => AlphabetGames().then(m => ({ default: m.AlphabetSequenceGameWrapper })));
@@ -516,6 +521,11 @@ export default function App() {
               <Route path="/games/alphabets/letter-intro/:letter" element={<LetterIntroModuleWrapper />} />
               <Route path="/games/alphabets/letter-quiz/:letter"  element={<LetterQuizModuleWrapper />} />
               <Route path="/games/alphabets/bubble-pop"           element={<BubblePopModuleWrapper />} />
+              <Route path="/games/alphabets/stepping-stones"      element={<SteppingStonesModuleWrapper />} />
+              <Route path="/games/alphabets/building-blocks"      element={<BuildingBlocksModuleWrapper />} />
+              <Route path="/games/alphabets/frog-jump"            element={<FrogJumpModuleWrapper />} />
+              <Route path="/games/alphabets/hungry-caterpillar" element={<HungryCaterpillarModuleWrapper />} />
+              <Route path="/games/alphabets/abc-train"            element={<AlphabetTrainModuleWrapper />} />
               <Route path="/games/alphabets/starts-with/:letter"  element={<StartsWithQuizWrapper />} />
               <Route path="/games/alphabets/letter-match" element={<LetterMatchGameWrapper />} />
               <Route path="/games/alphabets/sequence" element={<AlphabetSequenceGameWrapper />} />

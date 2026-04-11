@@ -38,6 +38,26 @@ const GAMES: AlphGame[] = [
   { id: 'bubble-pop', title: 'Bubble Pop', path: '/games/alphabets/bubble-pop', total: 26,
     emoji1: '\uD83E\uDEE7', emoji2: 'A', cardGrad: 'linear-gradient(135deg,#e0f2fe,#bae6fd,#0284c7)', isNew: true,
     extraEmojis: ['\uD83E\uDEE7', 'B', '\uD83E\uDEE7', 'C', '\uD83E\uDEE7', 'D', '\uD83E\uDEE7', 'E'] },
+  // ★ Module 5 — Stepping Stones A to Z
+  { id: 'stepping-stones', title: 'Stepping Stones A\u2192Z', path: '/games/alphabets/stepping-stones', total: 26,
+    emoji1: '\uD83E\uDEA8', emoji2: 'A', cardGrad: 'linear-gradient(135deg,#f0fdf4,#86efac,#16a34a)', isNew: true,
+    extraEmojis: ['\uD83E\uDEA8', 'B', '\uD83E\uDEA8', 'C', '\uD83E\uDEA8', 'Z'] },
+  // ★ Module 6 — Building Blocks
+  { id: 'building-blocks', title: 'Building Blocks', path: '/games/alphabets/building-blocks', total: 26,
+    emoji1: '\uD83E\uDDF1', emoji2: 'A', cardGrad: 'linear-gradient(135deg,#fff7ed,#fdba74,#ea580c)', isNew: true,
+    extraEmojis: ['\uD83E\uDDF1', 'B', '\uD83E\uDDF1', 'C', '\uD83E\uDDF1', 'D'] },
+  // ★ Module 7 — Frog Jump
+  { id: 'frog-jump', title: 'Frog Jump', path: '/games/alphabets/frog-jump', total: 26,
+    emoji1: '\uD83D\uDC38', emoji2: '?', cardGrad: 'linear-gradient(135deg,#f0fdf4,#4ade80,#15803d)', isNew: true,
+    extraEmojis: ['A', '\uD83D\uDC38', 'B', '\uD83D\uDC38', '?'] },
+  // ★ Module 8 — Hungry Caterpillar
+  { id: 'hungry-caterpillar', title: 'Hungry Caterpillar', path: '/games/alphabets/hungry-caterpillar', total: 26,
+    emoji1: '🐛', emoji2: 'B', cardGrad: 'linear-gradient(135deg,#f0fdf4,#86efac,#15803d)', isNew: true,
+    extraEmojis: ['🍃', 'A', '🐛', 'C', '🍃'] },
+  // ★ Module 9 — Alphabet Train
+  { id: 'abc-train', title: 'Alphabet Train', path: '/games/alphabets/abc-train', total: 26,
+    emoji1: '\uD83D\uDE82', emoji2: 'ABC', cardGrad: 'linear-gradient(135deg,#eff6ff,#93c5fd,#1d4ed8)', isNew: true,
+    extraEmojis: ['\uD83D\uDE82', 'A', 'B', 'C', '\uD83D\uDE83'] },
   // ★ Module 4 — A for? (quiz: which letter do they start with?)
   { id: 'letter-quiz-A', title: 'A for?', path: '/games/alphabets/letter-quiz/A', total: 26,
     emoji1: '\uD83C\uDF4E', emoji2: '\uD83D\uDC1C', cardGrad: 'linear-gradient(135deg,#fff7cc,#fbeb5b,#d97706)', isNew: true,
@@ -131,7 +151,7 @@ const LevelDots: React.FC<{ pct: number; color: string }> = ({ pct, color }) => 
 };
 
 // ─── Game card ────────────────────────────────────────────────────────────────
-const GameCard: React.FC<{ g: AlphGame; onClick: () => void }> = ({ g, onClick }) => {
+const GameCard: React.FC<{ g: AlphGame; onClick: () => void; index: number }> = ({ g, onClick, index }) => {
   const prog = getProgress(g.id, g.total);
   const done = prog ? prog.scenariosCompletedBest : 0;
   const pct  = Math.round((done / Math.max(g.total, 1)) * 100);
@@ -140,10 +160,9 @@ const GameCard: React.FC<{ g: AlphGame; onClick: () => void }> = ({ g, onClick }
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-30px' }}
-      transition={{ duration: 0.38 }}
+      initial={{ opacity: 0, y: 20, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.32, delay: index * 0.07, ease: 'easeOut' }}
       className="rounded-2xl overflow-hidden shadow-lg"
       style={{ background: '#fff', border: '2px solid #fbeb5b' }}
     >
@@ -250,10 +269,11 @@ const AlphabetGamesLandingPage: React.FC = () => {
       {/* ── Cards grid ── */}
       <main className="flex-1 px-4 py-5 pb-24">
         <div className="grid grid-cols-2 gap-4">
-          {GAMES.map((g) => (
+          {GAMES.map((g, idx) => (
             <GameCard
               key={g.id}
               g={g}
+              index={idx}
               onClick={() => navigate(g.path)}
             />
           ))}

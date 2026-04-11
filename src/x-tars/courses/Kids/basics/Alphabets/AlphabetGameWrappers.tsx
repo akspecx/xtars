@@ -105,6 +105,11 @@ const DailyObjectsModuleComponent   = React.lazy(() => import("./modules/DailyOb
 const LetterIntroModuleComponent    = React.lazy(() => import("./modules/LetterIntroModule"));
 const LetterQuizModuleComponent     = React.lazy(() => import("./modules/LetterQuizModule"));
 const BubblePopModuleComponent      = React.lazy(() => import("./modules/BubblePopModule"));
+const SteppingStonesModuleComponent  = React.lazy(() => import("./modules/SteppingStonesModule"));
+const BuildingBlocksModuleComponent = React.lazy(() => import("./modules/BuildingBlocksModule"));
+const FrogJumpModuleComponent       = React.lazy(() => import("./modules/FrogJumpModule"));
+const HungryCaterpillarModuleComponent = React.lazy(() => import("./modules/HungryCaterpillarModule"));
+const AlphabetTrainModuleComponent  = React.lazy(() => import("./modules/AlphabetTrainModule"));
 const StartsWithQuizComponent       = React.lazy(() => import("./modules/StartsWithQuiz"));
 
 // Age 3-4 modules
@@ -174,6 +179,21 @@ export const LetterQuizModuleWrapper: React.FC = () => (
 );
 export const BubblePopModuleWrapper: React.FC = () => (
   <React.Suspense fallback={FALLBACK}><BubblePopModuleComponent /></React.Suspense>
+);
+export const SteppingStonesModuleWrapper: React.FC = () => (
+  <React.Suspense fallback={FALLBACK}><SteppingStonesModuleComponent /></React.Suspense>
+);
+export const BuildingBlocksModuleWrapper: React.FC = () => (
+  <React.Suspense fallback={FALLBACK}><BuildingBlocksModuleComponent /></React.Suspense>
+);
+export const FrogJumpModuleWrapper: React.FC = () => (
+  <React.Suspense fallback={FALLBACK}><FrogJumpModuleComponent /></React.Suspense>
+);
+export const HungryCaterpillarModuleWrapper: React.FC = () => (
+  <React.Suspense fallback={FALLBACK}><HungryCaterpillarModuleComponent /></React.Suspense>
+);
+export const AlphabetTrainModuleWrapper: React.FC = () => (
+  <React.Suspense fallback={FALLBACK}><AlphabetTrainModuleComponent /></React.Suspense>
 );
 export const StartsWithQuizWrapper: React.FC = () => (
   <React.Suspense fallback={FALLBACK}><StartsWithQuizComponent /></React.Suspense>

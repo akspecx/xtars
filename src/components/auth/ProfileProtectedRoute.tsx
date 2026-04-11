@@ -13,18 +13,25 @@ export const ProfileProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
 
   const fromProfileSelection = location.state?.fromProfileSelection === true;
 
-  // On every fresh app session (hasSelectedSessionProfile=false in memory),
-  // always redirect to profile selection — even if localStorage has a stored profile.
-  // This ensures profile selection is shown on each new session start.
-  if (!hasSelectedSessionProfile && !fromProfileSelection && !isProfileSelectionPath) {
-    return <Navigate to="/profiles" replace />;
-  }
-
   const isKidsZonePath = location.pathname.startsWith('/games');
   const isParentPath = location.pathname.startsWith('/parent');
   const isAuthPath = location.pathname.startsWith('/profiles') || 
                      location.pathname.startsWith('/auth') || 
                      location.pathname.startsWith('/signin');
+
+  // Allow if activeProfile already matches the route type —
+  // this handles in-app navigation (back buttons inside modules) without
+  // forcing the user back to profile selection mid-session.
+  const profileMatchesRoute =
+    (activeProfile?.type === 'KIDS' && isKidsZonePath) ||
+    (activeProfile && activeProfile.type !== 'KIDS' && !isKidsZonePath);
+
+  // On every fresh app session (hasSelectedSessionProfile=false in memory),
+  // redirect to profile selection — UNLESS the profile already matches the route
+  // (so navigating back from a game module still works).
+  if (!hasSelectedSessionProfile && !fromProfileSelection && !isProfileSelectionPath && !profileMatchesRoute) {
+    return <Navigate to="/profiles" replace />;
+  }
 
   if (!activeProfile) return <Navigate to="/profiles" replace />;
 
@@ -43,3 +50,4 @@ export const ProfileProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   // All checks passed — render the route
   return <>{children}</>;
 };
+
