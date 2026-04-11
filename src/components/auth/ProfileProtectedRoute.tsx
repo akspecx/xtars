@@ -11,18 +11,12 @@ export const ProfileProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   const isProfileSelectionPath = location.pathname.startsWith('/profiles') || 
                                 location.pathname.startsWith('/select-profile');
 
-  // If navigating directly from profile selection, trust it and render immediately
-  // (React state may not have propagated yet at this point)
-  // Also check localStorage as robust fallback (handles navigation back from modules)
-  const storedProfile = (() => {
-    try { return JSON.parse(localStorage.getItem('xtars_active_profile') || 'null'); }
-    catch { return null; }
-  })();
-
   const fromProfileSelection = location.state?.fromProfileSelection === true;
-  if (fromProfileSelection || activeProfile || storedProfile) {
-    // Profile exists — fall through to type-based routing below
-  } else if (!hasSelectedSessionProfile && !isProfileSelectionPath) {
+
+  // On every fresh app session (hasSelectedSessionProfile=false in memory),
+  // always redirect to profile selection — even if localStorage has a stored profile.
+  // This ensures profile selection is shown on each new session start.
+  if (!hasSelectedSessionProfile && !fromProfileSelection && !isProfileSelectionPath) {
     return <Navigate to="/profiles" replace />;
   }
 

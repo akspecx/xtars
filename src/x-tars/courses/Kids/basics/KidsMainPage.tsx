@@ -1,23 +1,57 @@
 import { useMemo, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Smile } from 'lucide-react';
 import { getProgress, recordVisit, ModuleProgress, getAggregateProgress } from '../../CommonUtility/useModuleProgress';
-import { StarRow, MasteryBadge, NewBadge, ParentTooltip } from '../../CommonUtility/ProgressBadge';
 
 const KIDS_DATA = [
-  { id: "alphabets",   title: "Alphabets",    subtitle: "Learn letters A to Z",        icon: "🔤", path: "/games/alphabets",    category: "language", totalScenarios: 26 },
-  { id: "numbers",     title: "Numbers",      subtitle: "Counting and basic math",      icon: "🔢", path: "/games/numbers",      category: "math",     totalScenarios: 10 },
-  { id: "shapes",      title: "Shapes",       subtitle: "Geometric shapes and colours", icon: "🔺", path: "/games/shapes",       category: "math",     totalScenarios: 8  },
-  { id: "visuallogic", title: "Visual Logic", subtitle: "Big, small, above, below",     icon: "👁️", path: "/games/visuallogic",  category: "logic",    totalScenarios: 17 },
-  { id: "memory",      title: "Memory",       subtitle: "Match the pairs",              icon: "🧠", path: "/games/memory",       category: "logic",    totalScenarios: 10 },
-  { id: "puzzles",     title: "Puzzles",      subtitle: "Solve fun brain teasers",      icon: "🧩", path: "/games/puzzles",      category: "logic",    totalScenarios: 10 },
+  { id: "alphabets",   title: "Alphabets",    subtitle: "Learn letters A to Z",        icon: "🔤", path: "/games/alphabets",    category: "language", totalScenarios: 26,
+    icons: ["🍎","A","🍌","B","🐱","C","🐕","D","🐘","E"] },
+  { id: "numbers",     title: "Numbers",      subtitle: "Counting and basic math",      icon: "🔢", path: "/games/numbers",      category: "math",     totalScenarios: 10,
+    icons: ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣"] },
+  { id: "shapes",      title: "Shapes",       subtitle: "Geometric shapes and colours", icon: "🔺", path: "/games/shapes",       category: "math",     totalScenarios: 8,
+    icons: ["🔴","🔵","🔺","🟨","⭐","🟣"] },
+  { id: "visuallogic", title: "Visual Logic", subtitle: "Big, small, above, below",     icon: "👁️", path: "/games/visuallogic",  category: "logic",    totalScenarios: 17,
+    icons: ["🦒","Tall","🐜","Small","🐘","Big","🌱","Short"] },
+  { id: "memory",      title: "Memory",       subtitle: "Match the pairs",              icon: "🧠", path: "/games/memory",       category: "logic",    totalScenarios: 10,
+    icons: ["🐶","❓","🐶","🐱","❓","🐱"] },
+  { id: "puzzles",     title: "Puzzles",      subtitle: "Solve fun brain teasers",      icon: "🧩", path: "/games/puzzles",      category: "logic",    totalScenarios: 10,
+    icons: ["🧩","🔔","❓","💡","🌟"] },
 ];
 
-const categoryColors: Record<string, { bg: string; border: string; badge: string; glow: string }> = {
-  language: { bg: "bg-indigo-50",  border: "border-indigo-200",  badge: "bg-indigo-100 text-indigo-700",  glow: "ring-indigo-300" },
-  math:     { bg: "bg-amber-50",   border: "border-amber-200",   badge: "bg-amber-100 text-amber-700",    glow: "ring-amber-300" },
-  logic:    { bg: "bg-violet-50",  border: "border-violet-200",  badge: "bg-violet-100 text-violet-700",  glow: "ring-violet-300" },
+const categoryColors: Record<string, { bg: string; ring: string; barColor: string; titleColor: string }> = {
+  language: { bg: '#EFF6FF', ring: '#60A5FA', barColor: '#3B82F6', titleColor: '#1D4ED8' },
+  math:     { bg: '#FFF7ED', ring: '#FB923C', barColor: '#F97316', titleColor: '#9A3412' },
+  logic:    { bg: '#F5F3FF', ring: '#A78BFA', barColor: '#8B5CF6', titleColor: '#6D28D9' },
+};
+
+// Cycles through a list of icons/labels one by one with spring animation
+const AnimatedCardIcon = ({ icons, delay = 0 }: { icons: string[]; delay?: number }) => {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIdx(i => (i + 1) % icons.length), 1000 + delay);
+    return () => clearInterval(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [icons.length]);
+  const curr = icons[idx];
+  const isText = ['A','B','C','D','E','Tall','Small','Big','Short'].includes(curr);
+  return (
+    <div style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={idx}
+          className="leading-none select-none"
+          style={isText ? { fontSize: 42, fontWeight: 900 } : { fontSize: 56 }}
+          initial={{ opacity: 0, scale: 0.4, y: 22 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.5, y: -20 }}
+          transition={{ duration: 0.36, type: 'spring', stiffness: 320, damping: 22 }}
+        >
+          {curr}
+        </motion.span>
+      </AnimatePresence>
+    </div>
+  );
 };
 
 const CartoonWatermarks = () => (
@@ -79,10 +113,6 @@ export default function KidsMainPage() {
               <p className="text-xs sm:text-sm font-semibold text-[#A68B7C] leading-none mt-0.5">What do you want to learn today?</p>
             </div>
           </div>
-          <div className="flex flex-col items-center bg-[#4CAF50] px-4 py-2 rounded-xl text-white shadow-[0_4px_0_#388E3C] border-2 border-white transform rotate-1 shrink-0">
-            <span className="text-[9px] font-black uppercase tracking-wider opacity-90">Topics</span>
-            <span className="text-2xl font-black leading-none">{KIDS_DATA.length}</span>
-          </div>
         </motion.div>
 
         {/* 4-per-row grid */}
@@ -96,43 +126,61 @@ export default function KidsMainPage() {
             const colors = categoryColors[game.category] ?? categoryColors.logic;
             const prog = progressMap[game.id];
             const isNew = !prog || prog.visitCount === 0;
-            const isGold = prog?.masteryLevel === 3;
+            const pct  = prog
+              ? Math.round((prog.scenariosCompletedBest / Math.max(prog.totalScenarios, 1)) * 100)
+              : 0;
+            const isDone = pct >= 100;
 
             return (
               <motion.button
                 key={game.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.05 }}
-                whileHover={{ y: -4, scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.35, delay: (idx % 2) * 0.08 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   recordVisit(game.id, game.totalScenarios);
                   navigate(game.path);
                 }}
-                className={`relative aspect-[4/3] flex flex-col items-center justify-center gap-1 sm:gap-1.5 rounded-2xl sm:rounded-3xl border-[3px] ${colors.bg} ${colors.border} shadow-[0_4px_0_rgba(0,0,0,0.08)] hover:shadow-[0_6px_0_rgba(0,0,0,0.12)] transition-all cursor-pointer group p-2 ${isGold ? `ring-2 ${colors.glow}` : ''}`}
+                className="relative flex flex-col items-center gap-2 rounded-3xl p-4 text-center shadow-md active:shadow-sm border-2 transition-all"
+                style={{ background: colors.bg, borderColor: colors.ring + '55' }}
               >
-                {prog && <MasteryBadge level={prog.masteryLevel} />}
-                {isNew && <NewBadge />}
-                {prog && <ParentTooltip progress={prog} />}
+                {/* Status sticker */}
+                {isNew && (
+                  <motion.span
+                    animate={{ scale: [1, 1.15, 1] }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
+                    className="absolute top-2 right-2 bg-rose-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full leading-none"
+                  >
+                    NEW
+                  </motion.span>
+                )}
+                {isDone && (
+                  <span className="absolute top-2 right-2 text-[15px] leading-none">⭐</span>
+                )}
 
-                <motion.span
-                  className="text-5xl sm:text-6xl md:text-7xl leading-none drop-shadow-md"
-                  animate={{ rotate: [0, 3, -3, 0] }}
-                  transition={{ repeat: Infinity, duration: 4 + idx * 0.3, ease: "easeInOut" }}
-                >
-                  {game.icon}
-                </motion.span>
+                {/* Big emoji — cycles through subject-specific icons */}
+                <AnimatedCardIcon icons={game.icons} delay={idx * 180} />
 
-                <span className="text-xs sm:text-sm font-black text-[#5D4037] tracking-tight leading-none text-center">
+                {/* Title only — no subtitle, no category badge */}
+                <span className="font-black text-[15px] leading-tight" style={{ color: colors.titleColor }}>
                   {game.title}
                 </span>
 
-                {prog && prog.visitCount > 0 && <StarRow progress={prog} />}
-
-                <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full ${colors.badge}`}>
-                  {game.category}
-                </span>
+                {/* Progress bar — no percentage text */}
+                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: colors.ring + '30' }}>
+                  {!isNew && (
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${pct}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: (idx % 2) * 0.08 + 0.2 }}
+                      className="h-full rounded-full"
+                      style={{ background: colors.barColor }}
+                    />
+                  )}
+                </div>
               </motion.button>
             );
           })}

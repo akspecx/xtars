@@ -1,62 +1,58 @@
 /**
- * UnderstandingofSmall.tsx
- * All pairs, voice, and rendering live here.
- * Uses useComparisonGame + wooden dark/light theme.
+ * UnderstandingofSmall.tsx — Visual Logic module (BIG/SMALL)
+ * PhotoCard design: gradient cards, no text labels, Kid/Practice mode toggle.
  */
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, Volume2, VolumeX, Play, MousePointer2, Check } from 'lucide-react';
+import { X, Volume2, VolumeX } from 'lucide-react';
 import { useTheme }   from '../../../../../context/ThemeContext';
 import { useProfile } from '../../../../../context/ProfileContext';
 import { useComparisonGame, WOOD_LIGHT, WOOD_DARK } from '../../../../kids-ui/useComparisonGame';
-import WoodCard     from '../../../../kids-ui/WoodCard';
-import AvatarBubble from '../../../../kids-ui/AvatarBubble';
-import TouchRipple  from '../../../../kids-ui/TouchRipple';
-import ConceptSheet from '../../../../kids-ui/ConceptSheet';
-import WinScreen    from '../../../../kids-ui/WinScreen';
+import PhotoCard      from '../../../../kids-ui/PhotoCard';
+import KidAvatar      from '../../../CommonUtility/KidAvatar';
+import TouchRipple    from '../../../../kids-ui/TouchRipple';
+import ConceptSheet   from '../../../../kids-ui/ConceptSheet';
+import WinScreen      from '../../../../kids-ui/WinScreen';
+import StarBurst      from '../../../../kids-ui/StarBurst';
 import type { GamePair, VoiceScript, AvatarMessages } from '../../../../kids-ui/types';
 
-// Tiny things are the "small" (secondary) side
 const PAIRS: GamePair[] = [
-  { primary: { emoji: '🐘', name: 'Elephant'  }, secondary: { emoji: '🐜', name: 'Ant'       } },
-  { primary: { emoji: '🏠', name: 'House'     }, secondary: { emoji: '🧸', name: 'Toy'       } },
-  { primary: { emoji: '🦕', name: 'Dino'      }, secondary: { emoji: '🐝', name: 'Bee'       } },
-  { primary: { emoji: '🚌', name: 'Bus'       }, secondary: { emoji: '🚗', name: 'Car'       } },
-  { primary: { emoji: '🌕', name: 'Moon'      }, secondary: { emoji: '⭐', name: 'Star'      } },
-  { primary: { emoji: '🦁', name: 'Lion'      }, secondary: { emoji: '🐭', name: 'Mouse'     } },
-  { primary: { emoji: '🏔️', name: 'Mountain'  }, secondary: { emoji: '🪨', name: 'Rock'      } },
-  { primary: { emoji: '🎪', name: 'Circus'    }, secondary: { emoji: '⛺', name: 'Tent'      } },
-  { primary: { emoji: '🐋', name: 'Whale'     }, secondary: { emoji: '🐟', name: 'Fish'      } },
-  { primary: { emoji: '🎂', name: 'Cake'      }, secondary: { emoji: '🍪', name: 'Cookie'    } },
-  { primary: { emoji: '🌻', name: 'Sunflower' }, secondary: { emoji: '🍄', name: 'Mushroom'  } },
-  { primary: { emoji: '🦋', name: 'Butterfly' }, secondary: { emoji: '🐛', name: 'Bug'       } },
+  { primary: { emoji: '🐘', name: 'Elephant'  }, secondary: { emoji: '🐜', name: 'Ant'      } },
+  { primary: { emoji: '🐋', name: 'Whale'     }, secondary: { emoji: '🐟', name: 'Fish'     } },
+  { primary: { emoji: '🦁', name: 'Lion'      }, secondary: { emoji: '🐭', name: 'Mouse'    } },
+  { primary: { emoji: '🏔️', name: 'Mountain'  }, secondary: { emoji: '🪨', name: 'Pebble'   } },
+  { primary: { emoji: '🌲', name: 'Tree'      }, secondary: { emoji: '🍄', name: 'Mushroom' } },
+  { primary: { emoji: '🚌', name: 'Bus'       }, secondary: { emoji: '🚲', name: 'Bicycle'  } },
+  { primary: { emoji: '🦕', name: 'Dino'      }, secondary: { emoji: '🐝', name: 'Bee'      } },
+  { primary: { emoji: '🏠', name: 'House'     }, secondary: { emoji: '🧸', name: 'Toy'      } },
 ];
 
 const VOICE: VoiceScript = {
   intro:       (_p, _s, kid) => `Hi ${kid}! Find the SMALL one!`,
-  question:    (lbl, kid)   => `${kid}, tap the ${lbl} one!`,
-  correct:     (name, _l, kid) => `Yes! ${name} is little! Great, ${kid}!`,
-  wrong:       ()           => `Not that one! Find the tiny one!`,
-  playWrong:   ()           => `Hmm, is this the small one?`,
-  playThink:   ()           => `Let me look more carefully…`,
-  playCorrect: (name)       => `Yes! ${name} is SMALL! Tapping it now!`,
-  done:        (kid)        => `Amazing, ${kid}! All done!`,
-  concept:     (lbl, shown) => `${shown} is ${lbl}! So tiny!`,
+  question:    (lbl, kid)   => `${kid}, which one is ${lbl}?`,
+  correct:     (name, _l, kid) => `Yes! ${name} is SMALL! Great job, ${kid}!`,
+  wrong:       ()           => `Look again! Find the BIG one!`,
+  playWrong:   ()           => `Hmm, is this the BIG one?`,
+  playThink:   ()           => `Let me look again...`,
+  playCorrect: (name)       => `Yes! ${name} is BIG! I'll tap it!`,
+  done:        (kid)        => `Great job, ${kid}! You got them all! 🎉`,
+  concept:     (_lbl, shown) => `${shown} is BIG! Look!`,
 };
 
 const MSG: AvatarMessages = {
   question: lbl  => `Tap the ${lbl} one!`,
-  correct:  name => `Yes! ${name} is SMALL! ✨`,
+  correct:  name => `${name} is SMALL! ✨`,
   wrong:              `Look for the tiny one! 🐜`,
 };
 
-const ACCENT        = '#5C7A3E';
-const PRIMARY_LBL   = 'BIG';
+const DEFINITION   = `SMALL means something is tiny and takes up very little space — like an ant or a little bee! 🐜`;
+const ACCENT       = '#2D6A4F';
+const PRIMARY_LBL  = 'BIG';
 const SECONDARY_LBL = 'SMALL';
-const HEADER_ICON   = '🐜';
-const SCALE_MODE    = 'size' as const;
-const MODULE_ID     = 'small';
-const TARGET        = 'secondary' as const;
+const MODULE_ID    = 'small';
+const TARGET       = 'secondary' as const;
+const PRIMARY_GRAD   = 'linear-gradient(145deg,#a8edea,#3dd6cb,#1a9e96)';
+const SECONDARY_GRAD = 'linear-gradient(145deg,#ffe896,#ffd743,#e5a020)';
 
 interface Props { onBack?: () => void; onNext?: () => void; }
 
@@ -85,135 +81,201 @@ export default function UnderstandingofSmall({ onBack, onNext }: Props) {
     pairs: PAIRS, voice: VOICE, kidName,
   });
 
-  const [modeOpen, setModeOpen] = useState(false);
-  const dropRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const h = (e: MouseEvent) => {
-      if (dropRef.current && !dropRef.current.contains(e.target as Node)) setModeOpen(false);
-    };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
-
   const bubbleText = game.phase === 'correct'
     ? MSG.correct(game.correctObj.name)
     : game.phase === 'wrong' ? MSG.wrong : MSG.question(game.askLabel);
-  const bubbleHighlight = game.phase === 'question' ? game.askLabel : undefined;
+
+  const DOTS = game.sessionPairs.slice(0, 8);
 
   return (
-    <div className="flex flex-col h-screen select-none overflow-hidden" style={{ background: theme.pageBg }}>
-      <div className="flex items-center gap-3 px-4 flex-none"
-        style={{ background: ACCENT, paddingTop: 'env(safe-area-inset-top, 14px)', paddingBottom: 12 }}>
-        {onBack && (
-          <motion.button whileTap={{ scale: 0.85 }} onClick={onBack}
-            className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white flex-none">
-            <ChevronLeft size={20} strokeWidth={3} />
-          </motion.button>
-        )}
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className="w-11 h-11 rounded-full bg-white/25 border-[3px] border-white/35 flex items-center justify-center flex-none shadow">
-            <span className="text-2xl leading-none">{HEADER_ICON}</span>
-          </div>
-          <p className="text-white font-black text-lg leading-tight truncate">
-            {game.resolvedAskPrimary ? PRIMARY_LBL : SECONDARY_LBL}
-          </p>
-        </div>
-        <div className="relative flex-none" ref={dropRef}>
-          <button onClick={() => setModeOpen(o => !o)}
-            className="w-11 h-11 rounded-full flex items-center justify-center shadow-md bg-black/25">
-            <span className="text-white text-[9px] font-black tracking-widest uppercase leading-none">
-              {game.mode === 'play' ? 'PLAY' : 'PRAC'}
-            </span>
+    <div
+      className="flex flex-col h-screen select-none overflow-hidden"
+      style={{ background: 'linear-gradient(160deg, #b2ece8 0%, #7dd8d0 30%, #4dbfb5 60%, #37a09a 100%)' }}
+    >
+      {/* Light-ray overlay */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[20, 50, 75].map((left, i) => (
+          <div key={i}
+            className="absolute top-0 w-[2px] opacity-10"
+            style={{
+              left: `${left}%`,
+              height: '55%',
+              background: 'linear-gradient(to bottom, white, transparent)',
+              transform: `rotate(${(i - 1) * 7}deg)`,
+              transformOrigin: 'top',
+            }}
+          />
+        ))}
+      </div>
+
+      {/* ── Top bar ─────────────────────────────────────────────────── */}
+      <div
+        className="flex-none flex flex-col items-center px-5"
+        style={{ paddingTop: 'env(safe-area-inset-top, 16px)', paddingBottom: 8 }}
+      >
+        {/* Close + mute + mode toggle row */}
+        <div className="w-full flex items-center justify-between gap-2 mb-2">
+          {/* Mode toggle */}
+          <button
+            onClick={() => game.switchMode(game.mode === 'play' ? 'practice' : 'play')}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black"
+            style={{
+              background: game.mode === 'practice' ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.4)',
+              color: '#1a3c28',
+              backdropFilter: 'blur(6px)',
+            }}
+          >
+            <span>{game.mode === 'practice' ? '✏️ Practice' : '🤖 Kid Mode'}</span>
           </button>
-          <AnimatePresence>
-            {modeOpen && (
-              <motion.div initial={{ opacity: 0, y: -6, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -6, scale: 0.95 }} transition={{ duration: 0.14 }}
-                className="absolute right-0 top-full mt-2 rounded-2xl shadow-xl overflow-hidden z-[200] w-44"
-                style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}` }}>
-                {(['play', 'practice'] as const).map(opt => (
-                  <button key={opt} onClick={() => { game.switchMode(opt); setModeOpen(false); }}
-                    className="w-full flex items-center gap-2 px-3 py-2.5 text-left"
-                    style={{ background: game.mode === opt ? theme.areaRing + '55' : 'transparent' }}>
-                    <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-none" style={{ background: theme.areaRing }}>
-                      {opt === 'play' ? <Play size={11} fill={ACCENT} style={{ color: ACCENT }} /> : <MousePointer2 size={11} style={{ color: '#10B981' }} />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-black truncate" style={{ color: theme.text }}>{opt === 'play' ? 'Play Mode' : 'Practice'}</p>
-                      <p className="text-[10px] truncate" style={{ color: theme.textMuted }}>{opt === 'play' ? 'Watch & learn' : 'Your turn!'}</p>
-                    </div>
-                    {game.mode === opt && <Check size={11} style={{ color: '#10B981' }} />}
-                  </button>
-                ))}
-              </motion.div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => game.setIsMuted(!game.isMuted)}
+              className="w-10 h-10 rounded-full bg-white/60 backdrop-blur-sm flex items-center justify-center shadow-sm">
+              {game.isMuted ? <VolumeX size={20} color="#1a3c28" /> : <Volume2 size={20} color="#1a3c28" />}
+            </button>
+            {(onBack || onNext) && (
+              <button
+                onClick={() => { if (onBack) onBack(); }}
+                className="w-11 h-11 rounded-2xl bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md"
+              >
+                <X size={22} color="#1a3c28" strokeWidth={2.5} />
+              </button>
             )}
-          </AnimatePresence>
+          </div>
         </div>
-        <button onClick={() => game.setIsMuted(!game.isMuted)}
-          className="w-11 h-11 flex items-center justify-center rounded-xl flex-none bg-white/20">
-          {game.isMuted ? <VolumeX size={20} className="text-white/60" /> : <Volume2 size={20} className="text-white" />}
-        </button>
-      </div>
-      <div className="flex-none pt-3 pb-2 px-4 text-center">
-        <motion.h1 key={`t-${game.pairIdx}`} initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-          className="text-3xl font-black uppercase tracking-wide" style={{ color: ACCENT }}>
-          Tap the {game.askLabel} one
-        </motion.h1>
-        <div className="flex gap-2 justify-center mt-2">
-          {game.sessionPairs.map((_, i) => (
-            <motion.div key={i} animate={{ scale: i === game.pairIdx ? 1.25 : 1 }}
-              className="w-2.5 h-2.5 rounded-full"
-              style={{ background: i < game.pairIdx ? '#22C55E' : i === game.pairIdx ? ACCENT : theme.dot }} />
-          ))}
+
+        {/* Centred title */}
+        <h1
+          className="font-black text-center leading-tight"
+          style={{ fontSize: 28, color: '#1a3c28', letterSpacing: 1.5, textTransform: 'uppercase' }}
+        >
+          {PRIMARY_LBL} OR {SECONDARY_LBL}?
+        </h1>
+
+        {/* Progress dots */}
+        <div className="flex items-center justify-center mt-2">
+          <div className="flex items-center gap-[6px] bg-white/70 backdrop-blur-sm px-3 py-2 rounded-full shadow-sm">
+            {DOTS.map((_, i) => {
+              const done    = i < game.pairIdx;
+              const current = i === game.pairIdx;
+              const bg = done ? '#2d6a4f' : current ? '#f4c842' : 'rgba(255,255,255,0.5)';
+              return (
+                <motion.div key={i}
+                  animate={{ scale: current ? 1.25 : 1 }}
+                  className="rounded-full"
+                  style={{ width: current ? 14 : 10, height: current ? 14 : 10, background: bg, border: '1.5px solid rgba(255,255,255,0.6)' }}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
-      <div className="flex-1 flex flex-col items-center justify-center mx-4 mt-1 mb-3 rounded-3xl min-h-0"
-        style={{ background: theme.areaBg, border: `2px solid ${theme.areaRing}` }}>
-        <motion.div key={`cards-${game.pairIdx}`}
-          className="flex items-center justify-center gap-6 sm:gap-12 w-full px-4"
-          initial={{ opacity: 0, scale: 0.88 }} animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, type: 'spring', stiffness: 340, damping: 26 }}>
-          {(['left', 'right'] as const).map(side => (
-            <WoodCard key={side}
-              side={side === 'left' ? game.leftSide : game.rightSide}
-              isPrimary={side === 'left' ? game.leftSide === game.pair.primary : game.rightSide === game.pair.primary}
-              isTarget={side === game.correctSide}
-              isSelected={game.selected === side ? true : null}
-              phase={game.phase} scaleMode={SCALE_MODE} theme={theme}
-              onClick={game.mode === 'practice' && game.phase === 'question' ? () => game.handleAnswer(side) : undefined}
-              cardRef={side === 'left' ? game.leftRef : game.rightRef}
-            />
-          ))}
+
+      {/* ── Cards ─────────────────────────────────────────────────── */}
+      <div className="flex-1 flex items-center justify-center px-5 min-h-0">
+        <motion.div
+          key={`cards-${game.pairIdx}`}
+          className="flex items-end justify-center gap-5 w-full"
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, type: 'spring', stiffness: 300, damping: 24 }}
+        >
+          {(['left', 'right'] as const).map(side => {
+            const obj       = side === 'left' ? game.leftSide  : game.rightSide;
+            const isPrimary = side === 'left'
+              ? game.leftSide === game.pair.primary
+              : game.rightSide === game.pair.primary;
+            return (
+              <PhotoCard
+                key={side}
+                side={obj}
+                isPrimary={isPrimary}
+                isTarget={side === game.correctSide}
+                isSelected={game.selected === side ? true : null}
+                phase={game.phase}
+                primaryGrad={PRIMARY_GRAD}
+                secondaryGrad={SECONDARY_GRAD}
+                cardRef={side === 'left' ? game.leftRef : game.rightRef}
+                onClick={
+                  game.mode === 'practice' && game.phase === 'question'
+                    ? () => game.handleAnswer(side)
+                    : undefined
+                }
+              />
+            );
+          })}
         </motion.div>
       </div>
-      <div className="flex-none px-4 pt-2 pb-4" style={{ background: theme.pageBg }}>
+
+      {/* ── Mascot + speech bubble ────────────────────────────────── */}
+      <div
+        className="flex-none flex items-end gap-3 px-4"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}
+      >
+        <div className="w-[80px] h-[80px] rounded-2xl overflow-hidden shadow-lg shrink-0 bg-teal-700 flex items-center justify-center">
+          <KidAvatar avatar={kidAvatar} size={70} />
+        </div>
         <AnimatePresence mode="wait">
-          <AvatarBubble key={`bubble-${game.pairIdx}-${game.phase}`}
-            avatar={kidAvatar} text={bubbleText} highlight={bubbleHighlight}
-            celebrating={game.celebrating} theme={theme} />
+          <motion.div
+            key={`bubble-${game.pairIdx}-${game.phase}`}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            transition={{ duration: 0.2 }}
+            className="flex-1 flex items-center gap-2 bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-md mb-3"
+          >
+            <button
+              onClick={() => game.setIsMuted(!game.isMuted)}
+              className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+              style={{ background: '#40b0aa' }}
+            >
+              <Volume2 size={16} color="white" />
+            </button>
+            <p className="font-black text-base text-gray-800 leading-snug">{bubbleText}</p>
+          </motion.div>
         </AnimatePresence>
       </div>
-      <motion.button whileTap={{ scale: 0.86 }} onClick={() => game.setShowConcept(true)}
-        className="fixed right-5 bottom-6 z-[100] w-12 h-12 rounded-full flex items-center justify-center shadow-lg text-white font-black text-xl"
-        style={{ background: '#FBBF24' }}>?</motion.button>
+
+      {/* Touch ripple */}
       <AnimatePresence>{game.pointer && <TouchRipple x={game.pointer.x} y={game.pointer.y} />}</AnimatePresence>
+
+      {/* Concept sheet */}
       <AnimatePresence>
         {game.showConcept && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[300] bg-black/30 backdrop-blur-sm" onClick={game.onConceptDone} />
-            <ConceptSheet pair={game.pair} askPrimary={game.resolvedAskPrimary}
-              primaryLabel={PRIMARY_LBL} secondaryLabel={SECONDARY_LBL}
-              autoAdvance={game.mode === 'play'} theme={theme} onDone={game.onConceptDone} />
+              className="fixed inset-0 z-[300] bg-black/30 backdrop-blur-sm"
+              onClick={game.onConceptDone} />
+            <ConceptSheet
+              pair={game.pair}
+              askPrimary={game.resolvedAskPrimary}
+              primaryLabel={PRIMARY_LBL}
+              secondaryLabel={SECONDARY_LBL}
+              definition={DEFINITION}
+              autoAdvance={game.mode === 'play'}
+              theme={theme}
+              onDone={game.onConceptDone}
+            />
           </>
         )}
       </AnimatePresence>
+
+      {/* ? hint button */}
+      <motion.button
+        whileTap={{ scale: 0.86 }}
+        onClick={() => game.setShowConcept(true)}
+        className="fixed right-5 bottom-28 z-[100] w-12 h-12 rounded-full flex items-center justify-center shadow-lg text-white font-black text-xl"
+        style={{ background: '#FBBF24' }}
+      >?</motion.button>
+
+      {/* Win screen */}
       <AnimatePresence>
         {game.done && (
-          <WinScreen avatar={kidAvatar} name={kidName} score={game.score}
+          <WinScreen
+            avatar={kidAvatar} name={kidName} score={game.score}
             total={game.sessionPairs.length} accent={ACCENT}
             onDone={() => { if (onNext) { onNext(); return; } if (onBack) { onBack(); return; } game.replay(); }}
-            onReplay={game.replay} />
+            onReplay={game.replay}
+          />
         )}
       </AnimatePresence>
     </div>

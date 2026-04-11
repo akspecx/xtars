@@ -1,18 +1,24 @@
+"""Helper: overwrite KidsModuleLandingPage.tsx with new Screen-2/5 design."""
+import os, pathlib
+
+TARGET = pathlib.Path(__file__).parent / "KidsModuleLandingPage.tsx"
+
+NEW_CONTENT = '''\
 /**
  * KidsModuleLandingPage.tsx
  * Mobile  (Screen 2): back + title + Level badge + vertical card list
  * Desktop (Screen 5): sidebar + 4-col grid + progress stats
  */
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from \'react\';
+import { motion } from \'framer-motion\';
+import { useNavigate } from \'react-router-dom\';
 import {
   ChevronLeft, Home, LayoutDashboard,
   FlaskConical, Palette, BookA,
-} from 'lucide-react';
-import { getProgress, recordVisit, ModuleProgress } from './useModuleProgress';
-import KidAvatar from './KidAvatar';
-import { useProfile } from '../../../context/ProfileContext';
+} from \'lucide-react\';
+import { getProgress, recordVisit, ModuleProgress } from \'./useModuleProgress\';
+import KidAvatar from \'./KidAvatar\';
+import { useProfile } from \'../../../context/ProfileContext\';
 
 // ─── Public Types ─────────────────────────────────────────────────────────────
 export interface KidsGameEntry {
@@ -53,7 +59,7 @@ export const KidsPageHeader: React.FC<KidsPageHeaderProps> = ({
 }) => (
   <div
     className="relative z-10 w-full bg-white border-b border-gray-100 shadow-sm"
-    style={{ paddingTop: 'env(safe-area-inset-top, 12px)' }}
+    style={{ paddingTop: \'env(safe-area-inset-top, 12px)\' }}
   >
     <div className="flex items-center gap-3 px-4 pt-3 pb-3">
       <motion.button
@@ -79,11 +85,11 @@ export const KidsPageHeader: React.FC<KidsPageHeaderProps> = ({
 
 // ─── Desktop Sidebar ──────────────────────────────────────────────────────────
 const SIDEBAR_NAV = [
-  { id: 'home',    label: 'Home',         Icon: Home,            path: '/games' },
-  { id: 'numbers', label: 'Numbers',      Icon: LayoutDashboard, path: '/games/numbers' },
-  { id: 'shapes',  label: 'Shapes',       Icon: FlaskConical,    path: '/games/shapes' },
-  { id: 'alpha',   label: 'Alphabets',    Icon: Palette,         path: '/games/alphabets' },
-  { id: 'logic',   label: 'Visual Logic', Icon: BookA,           path: '/games/visuallogic' },
+  { id: \'home\',    label: \'Home\',         Icon: Home,            path: \'/games\' },
+  { id: \'numbers\', label: \'Numbers\',      Icon: LayoutDashboard, path: \'/games/numbers\' },
+  { id: \'shapes\',  label: \'Shapes\',       Icon: FlaskConical,    path: \'/games/shapes\' },
+  { id: \'alpha\',   label: \'Alphabets\',    Icon: Palette,         path: \'/games/alphabets\' },
+  { id: \'logic\',   label: \'Visual Logic\', Icon: BookA,           path: \'/games/visuallogic\' },
 ];
 
 const DesktopSidebar: React.FC = () => {
@@ -93,7 +99,7 @@ const DesktopSidebar: React.FC = () => {
     <div className="hidden lg:flex flex-col w-[220px] flex-none bg-white border-r border-gray-100 h-full">
       <div className="flex flex-col items-center pt-8 pb-5 px-4 border-b border-gray-50">
         <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center shadow-sm mb-3">
-          <KidAvatar avatar={activeProfile?.avatar ?? 'bird'} size={52} />
+          <KidAvatar avatar={activeProfile?.avatar ?? \'bird\'} size={52} />
         </div>
         <p className="font-black text-sm text-gray-800">Hi, Explorer!</p>
         <p className="text-xs text-gray-400 mt-0.5">Level 12 Scholar</p>
@@ -112,7 +118,7 @@ const DesktopSidebar: React.FC = () => {
       </nav>
       <div className="px-3 pb-6">
         <button
-          onClick={() => navigate('/games/visuallogic', { state: { fromProfileSelection: true } })}
+          onClick={() => navigate(\'/games/visuallogic\', { state: { fromProfileSelection: true } })}
           className="w-full py-3 bg-gradient-to-r from-violet-500 to-indigo-600 text-white font-black text-sm rounded-xl shadow-md"
         >
           Daily Quest
@@ -134,7 +140,7 @@ const MobileCard: React.FC<MobileCardProps> = ({ entry, progress, index, onTap }
   const pct = progress
     ? Math.round((progress.scenariosCompletedBest / Math.max(progress.totalScenarios, 1)) * 100)
     : 0;
-  const grad = entry.imageGradient ?? entry.gradient ?? 'from-indigo-400 to-purple-500';
+  const grad = entry.imageGradient ?? entry.gradient ?? \'from-indigo-400 to-purple-500\';
 
   const handleTap = () => {
     if (entry.id) recordVisit(entry.id, entry.totalScenarios ?? 8);
@@ -149,7 +155,7 @@ const MobileCard: React.FC<MobileCardProps> = ({ entry, progress, index, onTap }
       whileTap={{ scale: 0.97 }}
       onClick={handleTap}
       className="w-full bg-white rounded-2xl overflow-hidden shadow-sm text-left"
-      style={{ border: '1.5px solid #F0F4FF' }}
+      style={{ border: \'1.5px solid #F0F4FF\' }}
     >
       <div
         className={`w-full flex items-center justify-center bg-gradient-to-br ${grad} relative overflow-hidden`}
@@ -157,7 +163,7 @@ const MobileCard: React.FC<MobileCardProps> = ({ entry, progress, index, onTap }
       >
         <span
           className="absolute opacity-10 text-[120px] leading-none select-none pointer-events-none"
-          style={{ right: '-5%', bottom: '-15%' }}
+          style={{ right: \'-5%\', bottom: \'-15%\' }}
         >
           {entry.iconPair ? entry.iconPair[0] : entry.icon}
         </span>
@@ -166,14 +172,14 @@ const MobileCard: React.FC<MobileCardProps> = ({ entry, progress, index, onTap }
             <motion.span
               className="text-[68px] leading-none select-none drop-shadow-xl"
               animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: \'easeInOut\' }}
             >
               {entry.iconPair[0]}
             </motion.span>
             <motion.span
               className="text-[44px] leading-none select-none drop-shadow-lg mb-1"
               animate={{ y: [0, 5, 0] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: \'easeInOut\', delay: 0.5 }}
             >
               {entry.iconPair[1]}
             </motion.span>
@@ -220,9 +226,9 @@ const DesktopCard: React.FC<DesktopCardProps> = ({ entry, progress, index, onTap
   const done = progress?.scenariosCompletedBest ?? 0;
   const total = progress?.totalScenarios ?? (entry.totalScenarios ?? 20);
   const label =
-    pct >= 100 ? 'Mastered!' : pct === 0 ? 'Not Started' : pct < 10 ? 'Started' : `${pct}% Complete`;
-  const labelColor = pct >= 100 ? '#10B981' : pct === 0 ? '#9CA3AF' : '#3B82F6';
-  const grad = entry.imageGradient ?? entry.gradient ?? 'from-indigo-400 to-purple-500';
+    pct >= 100 ? \'Mastered!\' : pct === 0 ? \'Not Started\' : pct < 10 ? \'Started\' : `${pct}% Complete`;
+  const labelColor = pct >= 100 ? \'#10B981\' : pct === 0 ? \'#9CA3AF\' : \'#3B82F6\';
+  const grad = entry.imageGradient ?? entry.gradient ?? \'from-indigo-400 to-purple-500\';
 
   return (
     <motion.button
@@ -242,7 +248,7 @@ const DesktopCard: React.FC<DesktopCardProps> = ({ entry, progress, index, onTap
       >
         <span
           className="absolute opacity-10 text-[80px] leading-none select-none"
-          style={{ right: '-5%', bottom: '-5%' }}
+          style={{ right: \'-5%\', bottom: \'-5%\' }}
         >
           {entry.iconPair ? entry.iconPair[0] : entry.icon}
         </span>
@@ -277,7 +283,7 @@ const DesktopCard: React.FC<DesktopCardProps> = ({ entry, progress, index, onTap
         <div className="w-full h-1.5 rounded-full bg-gray-100 overflow-hidden">
           <div
             className="h-full rounded-full"
-            style={{ width: `${pct}%`, background: pct >= 100 ? '#10B981' : '#3B82F6' }}
+            style={{ width: `${pct}%`, background: pct >= 100 ? \'#10B981\' : \'#3B82F6\' }}
           />
         </div>
       </div>
@@ -289,11 +295,11 @@ const DesktopCard: React.FC<DesktopCardProps> = ({ entry, progress, index, onTap
 const KidsModuleLandingPage: React.FC<KidsModuleLandingPageProps> = ({
   moduleTitle,
   moduleEmoji,
-  bgColor = '#F8FBFF',
+  bgColor = \'#F8FBFF\',
   games,
   footer,
   onBack,
-  sectionTitle = 'Compare & Learn',
+  sectionTitle = \'Compare & Learn\',
 }) => {
   const navigate = useNavigate();
   const [progressMap, setProgressMap] = useState<Record<string, ModuleProgress>>({});
@@ -335,7 +341,7 @@ const KidsModuleLandingPage: React.FC<KidsModuleLandingPageProps> = ({
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-8 py-6" style={{ scrollbarWidth: 'none' }}>
+          <div className="flex-1 overflow-y-auto px-8 py-6" style={{ scrollbarWidth: \'none\' }}>
             <div className="grid grid-cols-4 gap-4 mb-8">
               {games.map((entry, i) => (
                 <DesktopCard
@@ -374,7 +380,7 @@ const KidsModuleLandingPage: React.FC<KidsModuleLandingPageProps> = ({
       <div className="lg:hidden flex flex-col h-full overflow-hidden">
         <div
           className="flex-none bg-white border-b border-gray-100 shadow-sm"
-          style={{ paddingTop: 'env(safe-area-inset-top, 14px)' }}
+          style={{ paddingTop: \'env(safe-area-inset-top, 14px)\' }}
         >
           <div className="flex items-center gap-3 px-4 pt-3 pb-3">
             <motion.button
@@ -399,7 +405,7 @@ const KidsModuleLandingPage: React.FC<KidsModuleLandingPageProps> = ({
 
         <div
           className="flex-1 overflow-y-auto px-5 pb-6 space-y-4"
-          style={{ scrollbarWidth: 'none' }}
+          style={{ scrollbarWidth: \'none\' }}
         >
           {games.map((entry, i) => (
             <MobileCard
@@ -418,3 +424,8 @@ const KidsModuleLandingPage: React.FC<KidsModuleLandingPageProps> = ({
 };
 
 export default KidsModuleLandingPage;
+'''
+
+TARGET.write_text(NEW_CONTENT)
+lines = NEW_CONTENT.count('\n')
+print(f"Written {lines} lines to {TARGET.name}")

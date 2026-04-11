@@ -39,6 +39,13 @@ const BarChart = lazy(() => import("./pages/Charts/BarChart"));
 // Dynamic Alphabet Game Wrappers
 const AlphabetGames = () => import("./x-tars/courses/Kids/basics/Alphabets/AlphabetGameWrappers");
 const AlphabetGamesPageWrapper = lazy(() => AlphabetGames().then(m => ({ default: m.AlphabetGamesPageWrapper })));
+const AlphabetJourneyModuleWrapper = lazy(() => AlphabetGames().then(m => ({ default: m.AlphabetJourneyModuleWrapper })));
+const AlphabetLearningHubWrapper   = lazy(() => AlphabetGames().then(m => ({ default: m.AlphabetLearningHubWrapper })));
+const DailyObjectsModuleWrapper    = lazy(() => AlphabetGames().then(m => ({ default: m.DailyObjectsModuleWrapper })));
+const LetterIntroModuleWrapper     = lazy(() => AlphabetGames().then(m => ({ default: m.LetterIntroModuleWrapper })));
+const LetterQuizModuleWrapper      = lazy(() => AlphabetGames().then(m => ({ default: m.LetterQuizModuleWrapper })));
+const BubblePopModuleWrapper       = lazy(() => AlphabetGames().then(m => ({ default: m.BubblePopModuleWrapper })));
+const StartsWithQuizWrapper        = lazy(() => AlphabetGames().then(m => ({ default: m.StartsWithQuizWrapper })));
 const LetterMatchGameWrapper = lazy(() => AlphabetGames().then(m => ({ default: m.LetterMatchGameWrapper })));
 const AlphabetSequenceGameWrapper = lazy(() => AlphabetGames().then(m => ({ default: m.AlphabetSequenceGameWrapper })));
 const FruitNamingGameWrapper = lazy(() => AlphabetGames().then(m => ({ default: m.FruitNamingGameWrapper })));
@@ -503,6 +510,13 @@ export default function App() {
               <Route path="/games/alphabets" element={<AlphabetGamesPageWrapper />} />
               
               {/* Alphabet Games */}
+              <Route path="/games/alphabets/letter-journey" element={<AlphabetJourneyModuleWrapper />} />
+              <Route path="/games/alphabets/hub"            element={<AlphabetLearningHubWrapper />} />
+              <Route path="/games/alphabets/daily-objects"  element={<DailyObjectsModuleWrapper />} />
+              <Route path="/games/alphabets/letter-intro/:letter" element={<LetterIntroModuleWrapper />} />
+              <Route path="/games/alphabets/letter-quiz/:letter"  element={<LetterQuizModuleWrapper />} />
+              <Route path="/games/alphabets/bubble-pop"           element={<BubblePopModuleWrapper />} />
+              <Route path="/games/alphabets/starts-with/:letter"  element={<StartsWithQuizWrapper />} />
               <Route path="/games/alphabets/letter-match" element={<LetterMatchGameWrapper />} />
               <Route path="/games/alphabets/sequence" element={<AlphabetSequenceGameWrapper />} />
               <Route path="/games/alphabets/fruit-naming" element={<FruitNamingGameWrapper />} />

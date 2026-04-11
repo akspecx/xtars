@@ -1,422 +1,281 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+/**
+ * UnderstandingOfFull.tsx — Visual Logic module (FULL/EMPTY)
+ * PhotoCard design: gradient cards, no text labels, Kid/Practice mode toggle.
+ */
+import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  Hand, Play, MousePointer2, 
-  Timer, ChevronRight, Shuffle, 
-  Volume2, VolumeX,
-  Trophy, BatteryFull, Star
-} from 'lucide-react';
-import { recordCompletion } from '../../../../courses/CommonUtility/useModuleProgress';
+import { X, Volume2, VolumeX } from 'lucide-react';
+import { useTheme }   from '../../../../../context/ThemeContext';
 import { useProfile } from '../../../../../context/ProfileContext';
-import VisualLogicCard from './shared/VisualLogicCard';
+import { useComparisonGame, WOOD_LIGHT, WOOD_DARK } from '../../../../kids-ui/useComparisonGame';
+import PhotoCard      from '../../../../kids-ui/PhotoCard';
+import KidAvatar      from '../../../CommonUtility/KidAvatar';
+import TouchRipple    from '../../../../kids-ui/TouchRipple';
+import ConceptSheet   from '../../../../kids-ui/ConceptSheet';
+import WinScreen      from '../../../../kids-ui/WinScreen';
+import StarBurst      from '../../../../kids-ui/StarBurst';
+import type { GamePair, VoiceScript, AvatarMessages } from '../../../../kids-ui/types';
 
-// --- Scenarios: Container and Object pairings ---
-const SCENARIOS = [
-  { id: 1, name: 'Basket', container: '🧺', object: '🍎' },
-  { id: 2, name: 'Jar', container: '🫙', object: '🍪' },
-  { id: 3, name: 'Box', container: '📦', object: '🧸' },
-  { id: 4, name: 'Nest', container: '🪹', object: '🥚' },
-  { id: 5, name: 'Cart', container: '🛒', object: '🍌' },
-  { id: 6, name: 'Plate', container: '🍽️', object: '🧁' },
-  { id: 7, name: 'Bowl', container: '🥣', object: '🍓' },
-  { id: 8, name: 'Bag', container: '🛍️', object: '🎁' },
+const PAIRS: GamePair[] = [
+  { primary: { emoji: '🧃', name: 'Full Juice'   }, secondary: { emoji: '🫗', name: 'Empty Cup'    } },
+  { primary: { emoji: '🍯', name: 'Full Jar'     }, secondary: { emoji: '🫙', name: 'Empty Jar'    } },
+  { primary: { emoji: '🥣', name: 'Full Bowl'    }, secondary: { emoji: '🍽️', name: 'Empty Plate'  } },
+  { primary: { emoji: '🎒', name: 'Full Bag'     }, secondary: { emoji: '👜', name: 'Empty Bag'    } },
+  { primary: { emoji: '🛒', name: 'Full Cart'    }, secondary: { emoji: '📦', name: 'Empty Box'    } },
+  { primary: { emoji: '🍱', name: 'Full Lunchbox'}, secondary: { emoji: '🥡', name: 'Empty Box'    } },
+  { primary: { emoji: '🪣', name: 'Full Bucket'  }, secondary: { emoji: '🧺', name: 'Empty Basket' } },
+  { primary: { emoji: '🍶', name: 'Full Bottle'  }, secondary: { emoji: '🧴', name: 'Empty Bottle' } },
 ];
 
-export default function App() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { activeProfile } = useProfile();
-  const forcedMode = location.state?.initialMode as 'practice' | 'kid' | null;
-  const games = [
-    'understandingofsamepictures', 'understandingofabove', 'understandingofbelow',
-    'understandingofbig', 'understandingofsmall', 'understandingoftall',
-    'understandingofshort', 'understandingoffull', 'understandingofempty',
-    'understandingofinside', 'understandingofoutside', 'understandingofaboveandbelow',
-    'understandingofbigandsmallmix', 'understandingoffullandemptymix',
-    'understandingofinsideandoutsidemix', 'understandingoftallandshort'
-  ];
-  
-  const [mode, setMode] = useState<'practice' | 'kid'>(forcedMode || 'kid'); 
-  const [scenarioIdx, setScenarioIdx] = useState(0);
-  const [fullSide, setFullSide] = useState<'left' | 'right'>('left'); 
-  const [isAnswered, setIsAnswered] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
-  const [selectedSide, setSelectedSide] = useState<string | null>(null);
-  const [autoNextTimer, setAutoNextTimer] = useState<number | null>(null);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
-  const [virtualHandPos, setVirtualHandPos] = useState<{ x: number; y: number } | null>(null);
-  const [isMuted, setIsMuted] = useState(false);
-  const [journeyFinished, setJourneyFinished] = useState(false);
-  const [score, setScore] = useState(0);
-  
-  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const sideRefs = useRef<{ left: HTMLButtonElement | null; right: HTMLButtonElement | null }>({ left: null, right: null });
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const tutorialActiveRef = useRef(false);
+const VOICE: VoiceScript = {
+  intro:       (_p, _s, kid) => `Hi ${kid}! Find the FULL container!`,
+  question:    (lbl, kid)   => `${kid}, which one is ${lbl}?`,
+  correct:     (name, _l, kid) => `Yes! That is FULL! Well done, ${kid}!`,
+  wrong:       ()           => `Look again! Find the FULL one!`,
+  playWrong:   ()           => `Hmm, is this the FULL one?`,
+  playThink:   ()           => `Let me look again...`,
+  playCorrect: (name)       => `Yes! ${name} is FULL! I'll tap it!`,
+  done:        (kid)        => `Great job, ${kid}! You got them all! 🎉`,
+  concept:     (_lbl, shown) => `${shown} is FULL! Look!`,
+};
 
-  const currentScenario = SCENARIOS[scenarioIdx];
+const MSG: AvatarMessages = {
+  question: lbl  => `Tap the ${lbl} one!`,
+  correct:  name => `That one is FULL! 🎉`,
+  wrong:              `Find the one with lots inside! 🧃`,
+};
 
-  const playThud = useCallback((frequency = 150) => {
-    if (isMuted) return;
+const DEFINITION   = `FULL means a container has lots of stuff inside — no more room! Like a full glass of juice! 🧃`;
+const ACCENT       = '#2D6A4F';
+const PRIMARY_LBL  = 'FULL';
+const SECONDARY_LBL = 'EMPTY';
+const MODULE_ID    = 'full';
+const TARGET       = 'primary' as const;
+const PRIMARY_GRAD   = 'linear-gradient(145deg,#bac8ff,#748ffc,#3b5bdb)';
+const SECONDARY_GRAD = 'linear-gradient(145deg,#fff3bf,#ffe066,#cc9900)';
+
+interface Props { onBack?: () => void; onNext?: () => void; }
+
+export default function UnderstandingOfFull({ onBack, onNext }: Props) {
+  const { theme: colorMode } = useTheme();
+  const theme = colorMode === 'dark' ? WOOD_DARK : WOOD_LIGHT;
+
+  const { activeProfile, availableProfiles } = useProfile() as any;
+  const kidName = useMemo(() => {
+    if (activeProfile?.name) return activeProfile.name;
+    try { return JSON.parse(localStorage.getItem('xtars_active_profile') || 'null')?.name ?? 'Friend'; }
+    catch { return 'Friend'; }
+  }, [activeProfile]);
+  const kidAvatar = useMemo(() => {
+    if (activeProfile?.avatar) return activeProfile.avatar;
     try {
-      if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const ctx = audioCtxRef.current;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(frequency, ctx.currentTime);
-      gain.gain.setValueAtTime(0.05, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.1);
-    } catch (e) {}
-  }, [isMuted]);
+      const id = JSON.parse(localStorage.getItem('xtars_active_profile') || 'null')?.id;
+      const fromList = id ? availableProfiles?.find((p: any) => p.id === id) : null;
+      return fromList?.avatar ?? JSON.parse(localStorage.getItem('xtars_active_profile') || 'null')?.avatar ?? 'bird';
+    } catch { return 'bird'; }
+  }, [activeProfile, availableProfiles]);
 
-  const speak = useCallback((text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95;
-      utterance.pitch = 1.2; 
-      window.speechSynthesis.speak(utterance);
-    }
-  }, []);
+  const game = useComparisonGame({
+    moduleId: MODULE_ID, target: TARGET,
+    primaryLabel: PRIMARY_LBL, secondaryLabel: SECONDARY_LBL,
+    pairs: PAIRS, voice: VOICE, kidName,
+  });
 
-  const resetLevel = useCallback((idx: number, isSequential = false) => {
-    setScenarioIdx(idx);
-    const newFullSide = Math.random() > 0.5 ? 'left' : 'right';
-    setFullSide(newFullSide as 'left' | 'right');
-    setIsAnswered(false);
-    setIsCorrect(false);
-    setSelectedSide(null);
-    setAutoNextTimer(null);
-    setIsAutoPlaying(false);
-    setVirtualHandPos(null);
-    setJourneyFinished(false);
-    tutorialActiveRef.current = false;
+  const bubbleText = game.phase === 'correct'
+    ? MSG.correct(game.correctObj.name)
+    : game.phase === 'wrong' ? MSG.wrong : MSG.question(game.askLabel);
 
-    if (mode === 'practice' || (mode === 'kid' && !isSequential)) {
-      speak(`Find the full ${SCENARIOS[idx].name}!`);
-    }
-  }, [mode, speak]);
-
-  const handleNextSequential = useCallback(() => {
-    if (scenarioIdx < SCENARIOS.length - 1) {
-      resetLevel(scenarioIdx + 1, true);
-    } else {
-      if (mode === 'practice') resetLevel(0, true);
-    }
-  }, [scenarioIdx, resetLevel, mode]);
-
-  const handleSelect = useCallback((side: string, isTutorial = false) => {
-    if (!isTutorial && isAutoPlaying) return;
-    if (isAnswered && isCorrect) return;
-
-    setSelectedSide(side);
-    setIsAnswered(true);
-
-    const isWinnerSide = (side === fullSide);
-
-    if (isWinnerSide) {
-      setIsCorrect(true);
-      setScore(s => { const ns = s + 1; recordCompletion('full', 8, ns); return ns; });
-      playThud(440); 
-      speak(`Correct! The ${currentScenario.name} is full!`);
-      
-      if (mode === 'kid') {
-        if (scenarioIdx === SCENARIOS.length - 1) {
-          if (forcedMode === 'kid') {
-            const currentGameIndex = games.indexOf('understandingoffull');
-            const nextGameIndex = currentGameIndex + 1;
-            if (nextGameIndex < games.length) {
-              const nextGame = games[nextGameIndex];
-              setTimeout(() => navigate(`/xtars/games/visuallogic/${nextGame}`, { state: { initialMode: 'kid' } }), 3000);
-            } else {
-              setTimeout(() => setJourneyFinished(true), 1200);
-            }
-          } else {
-              setTimeout(() => setJourneyFinished(true), 1200);
-          }
-        } else {
-          setAutoNextTimer(10);
-        }
-      } else {
-        setAutoNextTimer(10); 
-      }
-    } else {
-      setIsCorrect(false);
-      playThud(100); 
-      speak("Oops, try again! We can find it!");
-      if (!isTutorial) {
-        setTimeout(() => {
-          setIsAnswered(false);
-          setSelectedSide(null);
-        }, 2500);
-      }
-    }
-  }, [fullSide, isAnswered, isCorrect, isAutoPlaying, mode, playThud, currentScenario.name, speak, scenarioIdx, forcedMode, games, navigate]);
-
-  const moveHandToSide = useCallback((side: string) => {
-    return new Promise<void>(resolve => {
-      const el = sideRefs.current[side as 'left' | 'right'];
-      if (!el) return resolve();
-      const rect = el.getBoundingClientRect();
-      setVirtualHandPos({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
-      setTimeout(resolve, 1200);
-    });
-  }, []);
-
-  const startKidModeTutorial = useCallback(async () => {
-    if (tutorialActiveRef.current || journeyFinished) return;
-    tutorialActiveRef.current = true;
-    setIsAutoPlaying(true);
-    
-    speak(`Let's find the ${currentScenario.name} that is full.`);
-    await new Promise(r => setTimeout(r, 1800));
-    
-    const correctSide = fullSide;
-    const wrongSide = fullSide === 'left' ? 'right' : 'left';
-    
-    await moveHandToSide(wrongSide);
-    handleSelect(wrongSide, true); 
-    await new Promise(r => setTimeout(r, 3500)); 
-    
-    setIsAnswered(false);
-    setSelectedSide(null);
-    await new Promise(r => setTimeout(r, 1000));
-
-    await moveHandToSide(correctSide);
-    handleSelect(correctSide, true);
-    
-    setIsAutoPlaying(false);
-    setVirtualHandPos(null);
-  }, [currentScenario, fullSide, moveHandToSide, handleSelect, speak, journeyFinished]);
-
-  useEffect(() => {
-    if (mode === 'kid' && !isCorrect && !tutorialActiveRef.current && !journeyFinished) {
-        const timer = setTimeout(() => startKidModeTutorial(), 5500);
-        return () => clearTimeout(timer);
-    }
-  }, [scenarioIdx, mode, isCorrect, startKidModeTutorial, journeyFinished]);
-
-  useEffect(() => {
-    if (autoNextTimer !== null && autoNextTimer > 0) {
-      timerIntervalRef.current = setInterval(() => {
-        setAutoNextTimer(prev => (prev !== null && prev > 0 ? prev - 1 : 0));
-      }, 1000);
-    } else if (autoNextTimer === 0) {
-      handleNextSequential();
-    }
-    return () => { if (timerIntervalRef.current) clearInterval(timerIntervalRef.current); };
-  }, [autoNextTimer, handleNextSequential]);
-
-  useEffect(() => { resetLevel(0); }, []);
+  const DOTS = game.sessionPairs.slice(0, 8);
 
   return (
-    <div className="w-full h-full min-h-[calc(100vh-70px)] flex-grow bg-[#FDFBF7] p-1 sm:p-2 pt-1 sm:pt-2 md:pt-2 font-sans select-none flex flex-col items-center justify-start text-[#7A5C3E] overflow-x-hidden relative gap-2 sm:gap-4">
-      
-      <div className="w-full max-w-4xl flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 flex-none">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#D9B99Be] rounded-xl sm:rounded-2xl shadow-[0_3px_0_#B8977E] flex items-center justify-center text-white border-2 border-[#EADAC4]">
-              <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 4 }}>
-                <BatteryFull strokeWidth={3} className="text-white drop-shadow-md w-5 h-5 sm:w-6 sm:h-6" />
-              </motion.div>
-          </div>
-          <div className="text-left">
-            <h1 className="text-lg sm:text-2xl font-black text-[#5D4037] tracking-tighter leading-none uppercase">
-              Finding Full
-            </h1>
-            <div className="flex items-center gap-2 mt-1 hidden sm:flex">
-               <p className="text-[10px] font-bold text-[#A68B7C] uppercase tracking-[0.1em]">Visual Logic Discovery</p>
-            </div>
+    <div
+      className="flex flex-col h-screen select-none overflow-hidden"
+      style={{ background: 'linear-gradient(160deg, #d0ebff 0%, #74c0fc 30%, #4dabf7 60%, #1c7ed6 100%)' }}
+    >
+      {/* Light-ray overlay */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[20, 50, 75].map((left, i) => (
+          <div key={i}
+            className="absolute top-0 w-[2px] opacity-10"
+            style={{
+              left: `${left}%`,
+              height: '55%',
+              background: 'linear-gradient(to bottom, white, transparent)',
+              transform: `rotate(${(i - 1) * 7}deg)`,
+              transformOrigin: 'top',
+            }}
+          />
+        ))}
+      </div>
+
+      {/* ── Top bar ─────────────────────────────────────────────────── */}
+      <div
+        className="flex-none flex flex-col items-center px-5"
+        style={{ paddingTop: 'env(safe-area-inset-top, 16px)', paddingBottom: 8 }}
+      >
+        {/* Close + mute + mode toggle row */}
+        <div className="w-full flex items-center justify-between gap-2 mb-2">
+          {/* Mode toggle */}
+          <button
+            onClick={() => game.switchMode(game.mode === 'play' ? 'practice' : 'play')}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black"
+            style={{
+              background: game.mode === 'practice' ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.4)',
+              color: '#1a3c28',
+              backdropFilter: 'blur(6px)',
+            }}
+          >
+            <span>{game.mode === 'practice' ? '✏️ Practice' : '🤖 Kid Mode'}</span>
+          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => game.setIsMuted(!game.isMuted)}
+              className="w-10 h-10 rounded-full bg-white/60 backdrop-blur-sm flex items-center justify-center shadow-sm">
+              {game.isMuted ? <VolumeX size={20} color="#1a3c28" /> : <Volume2 size={20} color="#1a3c28" />}
+            </button>
+            {(onBack || onNext) && (
+              <button
+                onClick={() => { if (onBack) onBack(); }}
+                className="w-11 h-11 rounded-2xl bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md"
+              >
+                <X size={22} color="#1a3c28" strokeWidth={2.5} />
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-4 mt-2 sm:mt-0">
-          <div className="group relative bg-[#F3E5D5] p-1 sm:p-2 rounded-xl sm:rounded-2xl shadow-inner border-2 border-[#EADAC4] flex items-center gap-1 sm:gap-2">
-            {activeProfile?.type !== 'KIDS' && (
-              <div className="absolute top-full mt-2 right-0 w-52 sm:w-60 bg-white p-3 rounded-xl shadow-xl border-2 border-[#EADAC4] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-[100]">
-                <p className="text-[10px] sm:text-xs font-medium text-[#7A5C3E] leading-snug text-left">
-                  <span className="font-black text-sm">🧸 Kid Mode:</span><br/>Guidance with virtual hand.<br/>
-                  <span className="font-black text-sm mt-1 block">🖐️ Practice:</span><br/>Free play exploration.
-                </p>
-              </div>
-            )}
-            <button 
-                onClick={() => { setMode('kid'); setScore(0); resetLevel(scenarioIdx); }}
-                className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'kid' ? 'bg-[#7A5C3E] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
-            >
-                <Play fill={mode === 'kid' ? 'white' : 'none'} className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-            <button 
-                onClick={() => { setMode('practice'); setScore(0); resetLevel(scenarioIdx); }}
-                className={`min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] justify-center flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] font-black transition-all ${mode === 'practice' ? 'bg-[#4CAF50] text-white shadow-md scale-105' : 'text-[#A68B7C] hover:bg-[#EADAC4]'}`}
-            >
-                <MousePointer2 className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
+        {/* Centred title */}
+        <h1
+          className="font-black text-center leading-tight"
+          style={{ fontSize: 28, color: '#1a3c28', letterSpacing: 1.5, textTransform: 'uppercase' }}
+        >
+          {PRIMARY_LBL} OR {SECONDARY_LBL}?
+        </h1>
+
+        {/* Progress dots */}
+        <div className="flex items-center justify-center mt-2">
+          <div className="flex items-center gap-[6px] bg-white/70 backdrop-blur-sm px-3 py-2 rounded-full shadow-sm">
+            {DOTS.map((_, i) => {
+              const done    = i < game.pairIdx;
+              const current = i === game.pairIdx;
+              const bg = done ? '#2d6a4f' : current ? '#f4c842' : 'rgba(255,255,255,0.5)';
+              return (
+                <motion.div key={i}
+                  animate={{ scale: current ? 1.25 : 1 }}
+                  className="rounded-full"
+                  style={{ width: current ? 14 : 10, height: current ? 14 : 10, background: bg, border: '1.5px solid rgba(255,255,255,0.6)' }}
+                />
+              );
+            })}
           </div>
-            
-            <button onClick={() => setIsMuted(!isMuted)} className="min-w-[44px] min-h-[44px] sm:min-w-[56px] sm:min-h-[56px] flex items-center justify-center p-2 sm:p-3 bg-white rounded-xl sm:rounded-2xl shadow-sm border-b-2 sm:border-b-4 border-[#E0E0E0] text-[#A68B7C] hover:bg-gray-50 active:translate-y-1 transition-all">
-                {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
-            </button>
         </div>
       </div>
 
-      <div className="w-full max-w-4xl flex-1 min-h-0 bg-[#EADAC4] rounded-[1.5rem] sm:rounded-[2.5rem] p-3 sm:p-6 shadow-[0_6px_0_#B8977E,0_10px_20px_rgba(184,151,126,0.25)] border-[4px] sm:border-[6px] border-[#D9B99B] relative flex flex-col items-center justify-center mt-6 sm:mt-8 mb-4">
-        
-        <div className="absolute top-0 transform -translate-y-1/2 z-20">
-            <motion.div 
-                key={scenarioIdx}
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="bg-white px-6 py-2 sm:px-10 sm:py-4 rounded-full shadow-md border-b-[3px] sm:border-b-[4px] border-[#F0F0F0] flex items-center gap-2 sm:gap-4"
+      {/* ── Cards ─────────────────────────────────────────────────── */}
+      <div className="flex-1 flex items-center justify-center px-5 min-h-0">
+        <motion.div
+          key={`cards-${game.pairIdx}`}
+          className="flex items-end justify-center gap-5 w-full"
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, type: 'spring', stiffness: 300, damping: 24 }}
+        >
+          {(['left', 'right'] as const).map(side => {
+            const obj       = side === 'left' ? game.leftSide  : game.rightSide;
+            const isPrimary = side === 'left'
+              ? game.leftSide === game.pair.primary
+              : game.rightSide === game.pair.primary;
+            return (
+              <PhotoCard
+                key={side}
+                side={obj}
+                isPrimary={isPrimary}
+                isTarget={side === game.correctSide}
+                isSelected={game.selected === side ? true : null}
+                phase={game.phase}
+                primaryGrad={PRIMARY_GRAD}
+                secondaryGrad={SECONDARY_GRAD}
+                cardRef={side === 'left' ? game.leftRef : game.rightRef}
+                onClick={
+                  game.mode === 'practice' && game.phase === 'question'
+                    ? () => game.handleAnswer(side)
+                    : undefined
+                }
+              />
+            );
+          })}
+        </motion.div>
+      </div>
+
+      {/* ── Mascot + speech bubble ────────────────────────────────── */}
+      <div
+        className="flex-none flex items-end gap-3 px-4"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}
+      >
+        <div className="w-[80px] h-[80px] rounded-2xl overflow-hidden shadow-lg shrink-0 bg-teal-700 flex items-center justify-center">
+          <KidAvatar avatar={kidAvatar} size={70} />
+        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`bubble-${game.pairIdx}-${game.phase}`}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            transition={{ duration: 0.2 }}
+            className="flex-1 flex items-center gap-2 bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-md mb-3"
+          >
+            <button
+              onClick={() => game.setIsMuted(!game.isMuted)}
+              className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+              style={{ background: '#40b0aa' }}
             >
-                {activeProfile?.type !== 'KIDS' && <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />}
-                <h2 className="text-lg sm:text-2xl font-black text-[#7A5C3E] uppercase tracking-tighter">FIND FULL</h2>
-                {activeProfile?.type !== 'KIDS' && <Star className="text-yellow-400 fill-yellow-400 w-5 h-5 sm:w-6 sm:h-6" />}
-            </motion.div>
-        </div>
-
-        <div className="absolute top-4 sm:top-5 left-4 sm:left-6 z-20 flex items-center gap-1 sm:gap-1.5">
-            {SCENARIOS.map((_, i) => (
-                <div key={i} className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${i === scenarioIdx ? 'bg-[#7A5C3E] scale-125' : i < scenarioIdx ? 'bg-[#4CAF50]' : 'bg-[#D9B99B] border border-[#a68b7c]/20 bg-opacity-30'}`} />
-            ))}
-        </div>
-        <div className="absolute top-3 sm:top-4 right-4 sm:right-6 z-20 flex items-center gap-1.5 sm:gap-2 bg-white/70 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border-2 sm:border-[3px] border-[#D9B99B] shadow-md backdrop-blur-sm">
-            <Star className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 fill-yellow-400 drop-shadow-[0_2px_4px_rgba(234,179,8,0.5)]" />
-            <span className="text-lg sm:text-2xl font-black text-[#7A5C3E]">{score}</span>
-        </div>
-
-        {/* Comparison Grid */}
-        <div className="w-full flex justify-center items-center gap-4 sm:gap-8 relative px-4 z-10 pb-4 mt-8 sm:mt-10">
-            {(['left', 'right'] as const).map((side) => {
-                const isFullSlot = side === fullSide;
-                const isSelected = selectedSide === side;
-                
-                return (
-                    <VisualLogicCard
-                        key={`${scenarioIdx}-${side}`}
-                        ref={el => { sideRefs.current[side] = el; }}
-                        emoji={currentScenario.container}
-                        isTargetCard={isFullSlot}
-                        isSelected={isSelected}
-                        isCorrect={isCorrect}
-                        isAnswered={isAnswered}
-                        className="flex-1 max-w-[280px]"
-                        onClick={() => { if (mode !== 'kid') handleSelect(side); }}
-                    >
-                        <div className="relative w-full h-full flex items-center justify-center perspective-[1000px]">
-                            <motion.div
-                                animate={{ scale: 1.1 }}
-                                className="text-[clamp(5rem,min(22vh,26vw),14rem)] drop-shadow-xl z-10 leading-none flex items-center justify-center"
-                            >
-                                {currentScenario.container}
-                            </motion.div>
-
-                            {isFullSlot && (
-                                <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                                    <motion.div initial={{ scale: 0, y: "-50%" }} animate={{ scale: 0.5, y: "10%" }} className="absolute text-[clamp(5rem,min(22vh,26vw),14rem)] drop-shadow-md leading-none">
-                                        {currentScenario.object}
-                                    </motion.div>
-                                    <motion.div initial={{ scale: 0, x: "-50%" }} animate={{ scale: 0.4, x: "-40%", y: "20%", rotate: -15 }} className="absolute text-[clamp(5rem,min(22vh,26vw),14rem)] drop-shadow-md leading-none">
-                                        {currentScenario.object}
-                                    </motion.div>
-                                    <motion.div initial={{ scale: 0, x: "50%" }} animate={{ scale: 0.4, x: "40%", y: "20%", rotate: 15 }} className="absolute text-[clamp(5rem,min(22vh,26vw),14rem)] drop-shadow-md leading-none">
-                                        {currentScenario.object}
-                                    </motion.div>
-                                </div>
-                            )}
-                        </div>
-                    </VisualLogicCard>
-                );
-            })}
-        </div>
-
-        <AnimatePresence>
-            {journeyFinished && (
-                <motion.div 
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    className="absolute inset-0 z-[100] bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-8 text-center rounded-[1rem] sm:rounded-[2rem] overflow-hidden"
-                >
-                    <motion.div 
-                      className="bg-[#FFFBF2] p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] border-b-[8px] sm:border-b-[12px] border-[#D9B99B] shadow-[0_20px_40px_rgba(0,0,0,0.1)] w-full max-w-2xl"
-                      initial={{ scale: 0.5, rotate: -10 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                    >
-                        <Trophy className="text-[#FFC107] mb-4 sm:mb-6 animate-bounce drop-shadow-[0_10px_20px_rgba(255,193,7,0.3)] mx-auto w-16 sm:w-20 h-auto" />
-                        <h2 className="text-3xl sm:text-5xl font-black text-[#7A5C3E] tracking-tighter uppercase leading-none">YOU DID IT!</h2>
-                        <p className="text-[#A68B7C] font-black uppercase tracking-[0.1em] mt-2 sm:mt-4 mb-6 sm:mb-8 text-xs sm:text-sm">YOU FOUND ALL THE FULL ONES!</p>
-                        <button 
-                            onClick={() => { setMode(forcedMode || 'kid'); setScore(0); resetLevel(0); }}
-                            className="bg-[#4CAF50] text-white px-8 py-3 sm:px-10 sm:py-4 rounded-[1.5rem] sm:rounded-[2rem] font-black text-xl sm:text-2xl shadow-[0_6px_0_#388E3C] active:translate-y-1 active:shadow-none transition-all"
-                        >
-                            PLAY AGAIN
-                        </button>
-                    </motion.div>
-                </motion.div>
-            )}
+              <Volume2 size={16} color="white" />
+            </button>
+            <p className="font-black text-base text-gray-800 leading-snug">{bubbleText}</p>
+          </motion.div>
         </AnimatePresence>
       </div>
 
-      <div className="w-full max-w-3xl flex flex-col md:flex-row gap-3 sm:gap-4 items-center flex-none">
-        <button
-          onClick={handleNextSequential}
-          disabled={mode === 'kid' && scenarioIdx === SCENARIOS.length - 1}
-          className={`flex items-center justify-center gap-2 sm:gap-3 w-full h-14 sm:h-16 rounded-[1.2rem] sm:rounded-[1.5rem] font-black text-base sm:text-lg transition-all active:translate-y-1 active:shadow-none shadow-[0_4px_0_rgba(0,0,0,0.1)] border-b-[4px] sm:border-b-[6px] ${
-            autoNextTimer !== null ? 'bg-[#4CAF50] text-white border-[#388E3C]' : 'bg-[#D9B99B] hover:bg-[#B8977E] text-white border-[#B8977E] disabled:opacity-50 disabled:shadow-none'
-          }`}
-        >
-          <div className="flex items-center justify-center gap-2 sm:gap-3">
-            <ChevronRight strokeWidth={4} className="w-10 h-10 sm:w-12 sm:h-12" />
-            {activeProfile?.type !== 'KIDS' && (
-              <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
-                  <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">GO TO</span>
-                  <span className="uppercase tracking-tighter leading-none mt-0.5">NEXT</span>
-              </div>
-            )}
-          </div>
-          {autoNextTimer !== null && (
-            <div className="bg-black/10 px-2 py-1 rounded-full flex items-center gap-1 sm:gap-2 ml-2">
-              <Timer className="animate-spin text-white w-4 h-4" />
-              <span className="text-sm sm:text-base text-white font-mono">{autoNextTimer}</span>
-            </div>
-          )}
-        </button>
+      {/* Touch ripple */}
+      <AnimatePresence>{game.pointer && <TouchRipple x={game.pointer.x} y={game.pointer.y} />}</AnimatePresence>
 
-        <button 
-          onClick={() => resetLevel(Math.floor(Math.random() * SCENARIOS.length))} 
-          className="flex items-center justify-center gap-2 sm:gap-3 w-full h-14 sm:h-16 bg-[#D9B99B] hover:bg-[#B8977E] text-white rounded-[1.2rem] sm:rounded-[1.5rem] font-black text-base sm:text-lg transition-all active:translate-y-1 active:shadow-none shadow-[0_4px_0_rgba(0,0,0,0.1)] border-b-[4px] sm:border-b-[6px] border-[#B8977E]"
-        >
-          <div className="flex items-center justify-center gap-2 sm:gap-3">
-          <Shuffle strokeWidth={4} className="w-10 h-10 sm:w-12 sm:h-12" />
-          {activeProfile?.type !== 'KIDS' && (
-            <div className="flex flex-col items-start translate-y-0.5 hidden sm:flex">
-                <span className="text-[10px] sm:text-xs font-bold opacity-80 leading-none">MIX</span>
-                <span className="uppercase tracking-tighter leading-none mt-0.5">SHUFFLE</span>
-            </div>
-          )}
-        </div>
-        </button>
-      </div>
-
+      {/* Concept sheet */}
       <AnimatePresence>
-        {mode === 'kid' && virtualHandPos && !journeyFinished && (
-            <motion.div 
-                key="v-hand"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1, left: virtualHandPos.x, top: virtualHandPos.y }}
-                transition={{ duration: 1.2, ease: "easeInOut" }}
-                className="fixed pointer-events-none z-[500] -translate-x-1/2 -translate-y-1/2"
-                style={{ position: 'fixed' }}
-            >
-                <div className="relative">
-                    <Hand className="text-[#7A5C3E] w-20 h-20 sm:w-32 sm:h-32 drop-shadow-2xl" fill="#FFFBF2" />
-                    <motion.div animate={{ scale: [1, 2, 1], opacity: [0.3, 0, 0.3] }} transition={{ repeat: Infinity, duration: 1.5 }} className="absolute inset-0 bg-yellow-300 rounded-full blur-[40px] -z-10" />
-                </div>
-            </motion.div>
+        {game.showConcept && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[300] bg-black/30 backdrop-blur-sm"
+              onClick={game.onConceptDone} />
+            <ConceptSheet
+              pair={game.pair}
+              askPrimary={game.resolvedAskPrimary}
+              primaryLabel={PRIMARY_LBL}
+              secondaryLabel={SECONDARY_LBL}
+              definition={DEFINITION}
+              autoAdvance={game.mode === 'play'}
+              theme={theme}
+              onDone={game.onConceptDone}
+            />
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ? hint button */}
+      <motion.button
+        whileTap={{ scale: 0.86 }}
+        onClick={() => game.setShowConcept(true)}
+        className="fixed right-5 bottom-28 z-[100] w-12 h-12 rounded-full flex items-center justify-center shadow-lg text-white font-black text-xl"
+        style={{ background: '#FBBF24' }}
+      >?</motion.button>
+
+      {/* Win screen */}
+      <AnimatePresence>
+        {game.done && (
+          <WinScreen
+            avatar={kidAvatar} name={kidName} score={game.score}
+            total={game.sessionPairs.length} accent={ACCENT}
+            onDone={() => { if (onNext) { onNext(); return; } if (onBack) { onBack(); return; } game.replay(); }}
+            onReplay={game.replay}
+          />
         )}
       </AnimatePresence>
     </div>
